@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Stefan Lendl"
+      user-mail-address "")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -19,7 +19,11 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "monospace" :size 14))
+(setq
+ doom-font (font-spec :family "monospace" :size 14)
+ doom-big-font (font-spec :family "monospace" :size 20))
+ ;;doom-variable-pitch-font (font-spec :family "Avenir Next" :size 12)
+
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -34,6 +38,8 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+(setq projectile-project-search-path
+      (cddr (directory-files "~/work" t))) ;;add one layer down https://github.com/bbatsov/projectile/issues/1500
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

@@ -1,11 +1,10 @@
-* doom.d
+* my doom-emacs config
 
-[[github:hlissner/doom-emacs][doom-emacs]]
+[[https://github.com/hlissner/doom-emacs][doom-emacs]]
 
 ** Installation
 
-
-#+BEGIN_SRC
+#+BEGIN_SRC sh
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 git clone https://github.com/stfl/doom.d  ~/.doom.d
 ~/.emacs.d/bin/doom install
@@ -14,5 +13,5 @@ git clone https://github.com/stfl/doom.d  ~/.doom.d
 ** Initial Config
 
 Install fonts.
+~M-x all-the-icons-install-fonts~
 
-`M-x` all-the-icons-install-fonts
