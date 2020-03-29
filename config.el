@@ -39,7 +39,14 @@
 (setq display-line-numbers-type t)
 
 (setq projectile-project-search-path
-      (cddr (directory-files "~/work" t))) ;;add one layer down https://github.com/bbatsov/projectile/issues/1500
+      (cddr (directory-files "~/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
+
+;; (setq rustic-lsp-server 'rust-analyzer)
+(map! (:when (featurep! :tools lsp)
+        :map lsp-mode-map
+        :desc "Diagnostic for Workspace"
+        :leader
+        :n "c X" #'lsp-ui-flycheck-list))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -57,3 +64,7 @@
 ;;
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
+
+(use-package! lsp-treemacs
+  :after lsp-mode  ;; and treemacs
+  :config (lsp-treemacs-sync-mode 1))
