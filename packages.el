@@ -51,3 +51,5 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! lsp-treemacs)
+;; (package! posframe)
+(package! ztree)
