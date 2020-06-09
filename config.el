@@ -37,7 +37,7 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-(setq which-key-idle-delay 0.2)
+(setq which-key-idle-delay 0.5)
 
 (after! projectile
   ;; (setq projectile-project-search-path
