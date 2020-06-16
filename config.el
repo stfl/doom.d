@@ -37,13 +37,13 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-(setq which-key-idle-delay 0.5)
+(setq which-key-idle-delay 0.3)
 
-(after! projectile
-  ;; (setq projectile-project-search-path
-  ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
-  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
-  )
+;; (after! projectile
+;;   ;; (setq projectile-project-search-path
+;;   ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
+;;   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
+;;   )
 
 (setq rustic-lsp-server 'rust-analyzer)
 ;; (map! (:when (featurep! :tools lsp)
@@ -75,7 +75,14 @@
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1))
+  :config (lsp-treemacs-sync-mode 1)
+  )
+
+;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
+(after! lsp-mode
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq gc-cons-threshold 100000000)
+  )
 
 (map! (:map lsp-mode-map
         :desc "Diagnostic for Workspace"
@@ -85,7 +92,14 @@
 ;; (use-package! posframe
 ;;   :after dap-ui-mode)
 
+;; dir tree diff
 (use-package! ztree)
+
+(use-package! fira-code-mode
+  :after prog-mode
+  ;; :config (global-fira-code-mode)
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
+  )
 
 ;; display more columns in forge list topic
 (after! forge (setq forge-topic-list-columns
@@ -97,9 +111,30 @@
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(after! (lsp-mode php-mode) (setq lsp-inteliphense-files-associations '["*.php" "*.phtml" "*.inc"]) )
+(after! (lsp-mode php-mode)
+  (setq lsp-inteliphense-files-associations '["*.php" "*.phtml" "*.inc"])
+  (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
+  (setq lsp-intelephense-licence-key (get-string-from-file "intelephense.txt"))
+  )
 (after! lsp-mode (setq lsp-auto-guess-root nil))
 
+(defun get-string-from-file (filePath)
+  "Return filePath's file content."
+  (with-temp-buffer
+    (insert-file-contents filePath)
+    (buffer-string)))
+
+; (if (string-equal (system-name) "stefan-t3600")
+    ; (setq lower-perf t))
+;
+; (if (eq lower-perf t)
+    ; (after! lsp-mode
+      ; (setq lsp-ui-sideline-enable nil
+            ; lsp-ui-doc-enable nil)
+      ; )
+;
+  ; )
 
 ;; (dap-php-setup)
 ;; (dap-register-debug-template
@@ -170,3 +205,16 @@ T - tag prefix
         :n "?" 'hydra-dired/body))
   ;; (define-key dired-mode-map "?" 'hydra-dired/body)
   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(fira-code-mode-disabled-ligatures (quote ("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")))
+ '(gc-cons-threshold 100000000))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
