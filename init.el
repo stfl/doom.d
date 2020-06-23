@@ -71,8 +71,8 @@
 
        :emacs
        (dired             ; making dired pretty [functional]
-        +icons
-        +ranger)
+        +icons)
+        ;; +ranger)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
@@ -112,7 +112,7 @@
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
        ;;terraform         ; infrastructure as code
-       tmux              ; an API for interacting with tmux
+       ;; tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
@@ -163,7 +163,9 @@
        ;; php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python +lsp)            ; beautiful is better than ugly
+       (python             ; beautiful is better than ugly
+        +lsp
+        +conda)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;rest              ; Emacs as a REST client
