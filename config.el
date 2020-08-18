@@ -82,15 +82,13 @@
 (after! lsp-mode
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq gc-cons-threshold 100000000)
+  ;; (setq lsp-log-io t)
   )
 
 (map! (:map lsp-mode-map
         :desc "Diagnostic for Workspace"
         :leader
         :n "c X" #'lsp-treemacs-errors-list))
-
-;; (use-package! posframe
-;;   :after dap-ui-mode)
 
 ;; dir tree diff
 (use-package! ztree)
@@ -111,13 +109,6 @@
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(after! (lsp-mode php-mode)
-  (setq lsp-inteliphense-files-associations '["*.php" "*.phtml" "*.inc"])
-  (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-  (setq lsp-intelephense-licence-key (get-string-from-file "intelephense.txt"))
-  )
-(after! lsp-mode (setq lsp-auto-guess-root nil))
 
 (defun get-string-from-file (filePath)
   "Return filePath's file content."
@@ -125,16 +116,27 @@
     (insert-file-contents filePath)
     (buffer-string)))
 
-; (if (string-equal (system-name) "stefan-t3600")
-    ; (setq lower-perf t))
-;
-; (if (eq lower-perf t)
-    ; (after! lsp-mode
-      ; (setq lsp-ui-sideline-enable nil
-            ; lsp-ui-doc-enable nil)
-      ; )
-;
-  ; )
+(after! (lsp-mode php-mode)
+  (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
+  (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
+  (setq lsp-intelephense-licence-key
+        "00VUH296RB9W4S0") ;;(get-string-from-file "~/.doom.d/intelephense.txt"))
+  (setq lsp-intelephense-trace-server "verbose")
+  (setq lsp-intelephense-multi-root nil)
+  ;; (setq lsp-intelephense-clear-cache t)
+  (setq lsp-auto-guess-root nil)
+  (setq lsp-idle-delay 0.5)
+  )
+
+;; (after! php-mode
+;;   (setq flymake-no-changes-timeout nil)
+;;   )
+
+;; todo before php
+;; (after! lsp-mode (setq lsp-auto-guess-root nil))
+
+;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
 
 ;; (dap-php-setup)
 ;; (dap-register-debug-template
@@ -205,13 +207,17 @@ T - tag prefix
         :n "?" 'hydra-dired/body))
   ;; (define-key dired-mode-map "?" 'hydra-dired/body)
   )
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(fira-code-mode-disabled-ligatures (quote ("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")))
- '(gc-cons-threshold 100000000))
+
+
+ )
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
