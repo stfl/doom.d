@@ -156,7 +156,9 @@
         ;;+hugo            ; use Emacs for hugo blogging
         +jupyter        ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
-        ;;+pomodoro        ; be fruitful with the tomato technique
+        +pomodoro        ; be fruitful with the tomato technique
+        +roam
+        +gnuplot
         +present)        ; using org-mode for presentations
        ;;perl              ; write code no one else can comprehend
        (php +lsp)               ; perl's insecure younger brother

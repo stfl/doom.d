@@ -53,3 +53,4 @@
 (package! lsp-treemacs)
 ;; (package! posframe)
 (package! ztree)
+(package! yaml-mode)
