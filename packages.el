@@ -54,3 +54,4 @@
 ;; (package! posframe)
 (package! ztree)
 (package! fira-code-mode)
+(package! yaml-mode)

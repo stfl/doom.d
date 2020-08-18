@@ -21,7 +21,8 @@
        :completion
        (company          ; the ultimate code completion backend
         +auto)            ; as-you-type code completion
-        ;; +childframe)     ; a nicer company UI (Emacs 26+ only)       ;; helm              ; the *other* search engine for love and life
+        ;; +childframe)     ; a nicer company UI (Emacs 26+ only)
+        ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy              ; a search engine for love and life
         ;; +fuzzy
@@ -73,8 +74,8 @@
 
        :emacs
        (dired             ; making dired pretty [functional]
-        +icons
-        +ranger)
+        +icons)
+        ;; +ranger)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
@@ -114,7 +115,7 @@
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
        ;;terraform         ; infrastructure as code
-       tmux              ; an API for interacting with tmux
+       ;; tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
@@ -158,18 +159,20 @@
         ;;+hugo            ; use Emacs for hugo blogging
         +jupyter        ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
-        ;;+pomodoro        ; be fruitful with the tomato technique
+        +pomodoro        ; be fruitful with the tomato technique
+        +roam
+        +gnuplot
         +present)        ; using org-mode for presentations
        ;;perl              ; write code no one else can comprehend
        (php +lsp)               ; perl's insecure younger brother
        ;; php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python
+       (python             ; beautiful is better than ugly
         +pyenv
-        +poetr
-y
-        +lsp)            ; beautiful is better than ugly
+        +poetry
+        +lsp
+        +conda)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;rest              ; Emacs as a REST client

@@ -151,6 +151,18 @@
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
+;; (after! conda
+;;   (setq conda-anaconda-home "/opt/anaconda"
+;;         conda-env-home-directory "/opt/anaconda"
+;;    )
+;;   )
+
+(after! undo-fu-mode
+  (setq undo-limit         1000000
+        undo-strong-limit  8000000
+        undo-outer-limit   8000000)
+  )
+
 (after! dired
   (defhydra hydra-dired (:hint nil :color pink)
     "
