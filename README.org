@@ -44,3 +44,10 @@ git clone --branch emacs-27 --depth 1 https://github.com/emacs-mirror/emacs.git
             --with-cairo --with-xwidgets --without-pop --prefix=$HOME/.local --with-mailutils
 #+end_src
 ** build
+
+#+begin_src bash
+make
+make install
+#+end_src
+
+
