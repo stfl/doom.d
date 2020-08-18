@@ -10,6 +10,10 @@ git clone https://github.com/stfl/doom.d  ~/.doom.d
 ~/.emacs.d/bin/doom install
 #+END_SRC
 
+#+BEGIN_SRC sh
+sudo apt install fonts-firacode
+#+END_SRC
+
 ** Initial Config
 
 Install fonts.
