@@ -2,7 +2,7 @@
 
 [[https://github.com/hlissner/doom-emacs][doom-emacs]]
 
-** Installation
+* Installation
 
 #+BEGIN_SRC sh
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
@@ -18,6 +18,22 @@ sudo apt install fonts-firacode
 
 Install fonts.
 ~M-x all-the-icons-install-fonts~
+
+* Modules
+
+** Python
+[[file:~/.emacs.d/modules/tools/direnv/README.org][tools/direnv]]
+
+*** LSP
+
+pyright requires node 12 and ubuntu 20.04 only has version 10 in the repo
+https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-de
+
+#+begin_src bash
+sudo npm install -g pyright
+#+end_src
+
+
 
 * Build Emacs from Source
 
