@@ -55,3 +55,9 @@
 (package! ztree)
 (package! fira-code-mode)
 (package! yaml-mode)
+
+
+;; (unpin! lsp-treemacs)
+(unpin! treemacs)
+(unpin! lsp-mode)
+(unpin! dap-mode)
