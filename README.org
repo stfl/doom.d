@@ -1,4 +1,4 @@
-* my doom-emacs config
+* My doom-emacs config
 
 [[https://github.com/hlissner/doom-emacs][doom-emacs]]
 
@@ -10,22 +10,26 @@ git clone git@github.com:stfl/doom.d.git ~/.doom.d
 ~/.emacs.d/bin/doom install
 #+END_SRC
 
+** Global Dependencies
+
+Ubuntu
 #+BEGIN_SRC sh
 sudo apt install fonts-firacode
 #+END_SRC
 
-** Initial Config
-
-Install fonts.
-~M-x all-the-icons-install-fonts~
+Arch | Manjaro
+#+BEGIN_SRC sh
+sudo pacman -S ttf-fira-code
+#+END_SRC
 
 * Modules
 
 ** Python
 [[file:~/.emacs.d/modules/tools/direnv/README.org][tools/direnv]]
 
-*** LSP
+*** Pyright
 
+**** Ubuntu
 pyright requires node 12 and ubuntu 20.04 only has version 10 in the repo
 https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-de
 
@@ -38,11 +42,17 @@ sudo apt-get install -y nodejs
 sudo npm install -g pyright
 #+end_src
 
+**** Arch
 
+#+BEGIN_SRC bash
+yay -S pyright
+#+END_SRC
 
 * Build Emacs from Source
 
-building emacs 27 from source with custom flags
+Ubuntu 20.04 has Emacs 26.3 in the repository and the package is built without
+dynamic module support. Therefore it is recommended to build Emacs 27 from
+source with custom flags.
 
 ** Dependencies
 #+begin_src bash
