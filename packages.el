@@ -55,7 +55,7 @@
 (package! ztree)
 (package! fira-code-mode)
 (package! yaml-mode)
-
+(package! org-roam-server)
 
 ;; (unpin! lsp-treemacs)
 (unpin! treemacs)

@@ -30,6 +30,11 @@ pyright requires node 12 and ubuntu 20.04 only has version 10 in the repo
 https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-de
 
 #+begin_src bash
+curl -sL https://deb.nodesource.com/setup_14.x | sudo bash
+sudo apt-get install -y nodejs
+#+end_src
+
+#+begin_src bash
 sudo npm install -g pyright
 #+end_src
 

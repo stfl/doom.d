@@ -30,20 +30,39 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
+;;;;;;;;; Org Mode
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+(setq org-roam-directory "~/Dropbox/backtestd-doc")
+(use-package deft
+      :after org
+      :custom
+      (deft-recursive t)
+      (deft-use-filter-string-for-filename t)
+      (deft-default-extension "org")
+      (deft-directory "~/Dropbox/backtestd-doc"))
+
+(after! org
+  (setq! org-startup-with-inline-images t))
+
+;; (map! (:map dired-mode-map
+;;     :desc "org-hug export all"
+;;     :n "C-8" (lambda()
+;;                 (interactive)
+;;                 (diredp-do-apply-function 'org-hugo-export-wim-to-md '(4)))))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 (setq which-key-idle-delay 0.3)
 
-;; (after! projectile
-;;   ;; (setq projectile-project-search-path
-;;   ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
-;;   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
-;;   )
+(after! projectile
+  ;; (setq projectile-project-search-path
+  ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
+  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
+  )
 
 (setq rustic-lsp-server 'rust-analyzer)
 ;; (map! (:when (featurep! :tools lsp)
