@@ -83,7 +83,7 @@
        (undo +tree)
 
        :term
-       ;; eshell            ; a consistent, cross-platform shell (WIP)
+       eshell            ; a consistent, cross-platform shell (WIP)
        ;;shell             ; a terminal REPL for Emacs
        ;;term              ; terminals in Emacs
        vterm             ; another terminals in Emacs
@@ -152,7 +152,7 @@
        ;;lua               ; one-based indices? one-based indices
        (markdown +grip)          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
-       ;;nix               ; I hereby declare "nix geht mehr!"
+       nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers
@@ -174,7 +174,7 @@
         +poetry
         +lsp
         +pyright
-        +conda
+        ;; +conda
         )
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
