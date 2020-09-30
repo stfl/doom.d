@@ -35,17 +35,37 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
-(setq org-roam-directory "~/Dropbox/org/roam")
+(setq org-roam-directory "~/Dropbox/org/roam/")
 (use-package deft
       :after org
       :custom
       (deft-recursive t)
       (deft-use-filter-string-for-filename t)
       (deft-default-extension "org")
-      (deft-directory "~/Dropbox/org/roam"))
+      (deft-directory "~/Dropbox/org/roam/"))
 
 (after! org
-  (setq! org-startup-with-inline-images t))
+  (setq! org-startup-with-inline-images t)
+  )
+
+;; required when
+(defun transform-square-brackets-to-round-ones(string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat
+  (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+  )
+
+;; (setq! org-capture-templates `(
+(after! org
+  (add-to-list 'org-capture-templates `("P" "Protocol" entry (file+headline +org-capture-notes-file "Inbox")
+                                        ;; "* %?\nSource: [[%:link][%:description]]\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE"))
+                                        "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
+               )
+  (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
+                                        "* %? [[%:link][%:description]]\nCaptured On: %U")
+               )
+  )
+
 
 ;; (map! (:map dired-mode-map
 ;;     :desc "org-hug export all"
