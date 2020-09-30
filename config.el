@@ -58,12 +58,9 @@
 ;; (setq! org-capture-templates `(
 (after! org
   (add-to-list 'org-capture-templates `("P" "Protocol" entry (file+headline +org-capture-notes-file "Inbox")
-                                        ;; "* %?\nSource: [[%:link][%:description]]\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE"))
-                                        "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
-               )
+                                        "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"))
   (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
-                                        "* %? [[%:link][%:description]]\nCaptured On: %U")
-               )
+                                        "* %? [[%:link][%:description]]\nCaptured On: %U"))
   )
 
 
