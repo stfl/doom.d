@@ -55,13 +55,44 @@
   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
   )
 
+;; https://gist.github.com/jethrokuan/78936a44f249e2c1a61b5184669a32d7
+(setq jethro/org-agenda-todo-view
+      `("A" "Agenda"
+        ((agenda ""
+                 ((org-agenda-span 'day)
+                  (org-deadline-warning-days 365)))
+         (todo "TODO"
+               ((org-agenda-overriding-header "To Refile")
+                (org-agenda-files '(,+org-capture-notes-file))))
+         (todo "TODO"
+               ((org-agenda-overriding-header "Emails")
+                (org-agenda-files '(,+org-capture-notes-file))))
+         (todo "NEXT"
+               ((org-agenda-overriding-header "In Progress")
+                (org-agenda-files '(,+org-capture-notes-file))
+                ))
+         (todo "TODO"
+               ((org-agenda-overriding-header "Projects")
+                (org-agenda-files '(,+org-capture-notes-file))
+                ))
+         ;; (todo "TODO"
+         ;;       ((org-agenda-overriding-header "One-off Tasks")
+         ;;        (org-agenda-files '(,(concat jethro/org-agenda-directory "next.org")))
+         ;;        (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+         nil)))
+
 ;; (setq! org-capture-templates `(
 (after! org
   (add-to-list 'org-capture-templates `("P" "Protocol" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"))
   (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %? [[%:link][%:description]]\nCaptured On: %U"))
+
+  (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
   )
+
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
+
 
 
 ;; (map! (:map dired-mode-map
@@ -157,6 +188,8 @@
   (setq lsp-auto-guess-root nil)
   (setq lsp-idle-delay 0.5)
   )
+
+(setq! todoist-token "27df443b7f9e4e3692ccd5003711375b485663ac")
 
 ;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
 ;; (dap-php-setup)
