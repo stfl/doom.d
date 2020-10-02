@@ -88,7 +88,7 @@
   (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %? [[%:link][%:description]]\nCaptured On: %U"))
 
-  (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
+  ;; (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
   )
 
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
