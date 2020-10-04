@@ -35,14 +35,14 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
-(setq org-roam-directory "~/Dropbox/org/roam/")
+(setq org-roam-directory "~/Dropbox/org/")
 (use-package deft
       :after org
       :custom
       (deft-recursive t)
       (deft-use-filter-string-for-filename t)
       (deft-default-extension "org")
-      (deft-directory "~/Dropbox/org/roam/"))
+      (deft-directory "~/Dropbox/org/"))
 
 (after! org
   (setq! org-startup-with-inline-images t)
@@ -89,6 +89,116 @@
                                         "* %? [[%:link][%:description]]\nCaptured On: %U"))
 
   ;; (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
+
+  (defcustom org-gtd-folder org-directory
+    "Root folder where all GTD files will reside."
+    :type 'directory)
+  (defcustom org-gtd-someday-file (concat org-gtd-folder "someday.org")
+    "The name of your INCUBATE file."
+    :type 'file)
+  (defcustom org-gtd-inbox-file (concat org-gtd-folder "inbox.org")
+    "The name of your INBOX file."
+    :type 'file)
+  (defcustom org-gtd-tickler-file (concat org-gtd-folder "tickler.org")
+    "The name of your TICKLER file."
+    :type 'file)
+  (defcustom org-gtd-projects-file (concat org-gtd-folder "projects.org")
+    "The name of your PROJECTS file."
+    :type 'file)
+  ;; (defcustom org-projects-folder "~/.org/gtd/proejcts"
+  ;;   "Folder that holds all special projects managed by GTD."
+  ;;   :type 'directory)
+
+  (setq org-agenda-files '(org-gtd-inbox-file
+                           org-gtd-tickler-file
+                           org-gtd-projects-file))
+
+  (setq org-refile-targets '((org-gtd-projects-file :maxlevel . 3)
+                             (org-gtd-someday-file :level . 1)
+                             (org-gtd-tickler-file :maxlevel . 2)))
+
+  (setq org-agenda-custom-commands
+        '(("w" "Master Agenda"
+           ((agenda ""
+                    ((org-agenda-overriding-header "Master Agenda")
+                     (org-agenda-files org-next-task-files)
+                     (org-agenda-time-grid nil)
+                     (org-agenda-start-day (org-today))
+                     (org-agenda-span '5)))
+            (tags-todo "@home"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@computer"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@place"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@brainstorm"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@read"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@order"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@labor"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "@bills"
+                      ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))
+            (tags-todo "-@place-@brainstorm-@bills-@labor-@order-@work-@computer-@home"
+                       ((org-agenda-overriding-header "Everything else")
+                        (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+                        (org-agenda-files org-next-task-files)))))
+          ("h" . "Tasks")
+          ("hh" tags-todo "@home"
+           ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("hh" tags-todo "@pulswerk"
+           ((org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ;; ("hp" tags-todo "@place"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ;; ("hb" tags-todo "@brainstorm"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ;; ("hr" tags-todo "@read"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ;; ("ho" tags-todo "@order"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ;; ("hl" tags-todo "@labor"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ;; ("hc" tags-todo "@computer"
+          ;;  ((org-agenda-files org-next-task-files)
+          ;;   (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)
+          ;;   (org-super-agenda-groups '((:auto-parent t)))))
+          ))
+
+  (defun my-org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+        (setq should-skip-entry t))
+      (save-excursion
+        (while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (when should-skip-entry
+        (or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))   ;; TODO set for "TODO"|"STRT"
   )
 
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
