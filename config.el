@@ -95,6 +95,11 @@
 
 
 
+(map! (:map org-mode-map
+       :desc "Match sparse tree"
+       :leader
+       :n "m s M" #'org-match-sparse-tree))
+
 ;; (map! (:map dired-mode-map
 ;;     :desc "org-hug export all"
 ;;     :n "C-8" (lambda()
