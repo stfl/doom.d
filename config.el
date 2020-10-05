@@ -100,6 +100,14 @@
        :leader
        :n "m s M" #'org-match-sparse-tree))
 
+(after! ispell
+    (setq ispell-program-name "hunspell")
+    ;; ispell-set-spellchecker-params has to be called
+    ;; before ispell-hunspell-add-multi-dic will work
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "en_US,de_AT")
+    (setq ispell-dictionary "en_US,de_AT"))
+
 ;; (map! (:map dired-mode-map
 ;;     :desc "org-hug export all"
 ;;     :n "C-8" (lambda()
