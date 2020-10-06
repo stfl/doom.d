@@ -35,14 +35,14 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
-(setq org-roam-directory "~/Dropbox/org/roam/")
+(setq org-roam-directory "~/Dropbox/org/")
 (use-package deft
       :after org
       :custom
       (deft-recursive t)
       (deft-use-filter-string-for-filename t)
       (deft-default-extension "org")
-      (deft-directory "~/Dropbox/org/roam/"))
+      (deft-directory "~/Dropbox/org/"))
 
 (after! org
   (setq! org-startup-with-inline-images t)
@@ -87,6 +87,38 @@
                                         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"))
   (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %? [[%:link][%:description]]\nCaptured On: %U"))
+
+  (setq org-refile-targets '(("~/Dropbox/org/projects.org" :maxlevel . 3)
+                             ("~/Dropbox/org/someday.org" :level . 1)
+                             ("~/Dropbox/org/tickler.org" :maxlevel . 2)))
+
+  (setq org-agenda-files '("~/Dropbox/org/inbox.org"
+                           "~/Dropbox/org/projects.org"
+                           "~/Dropbox/org/tickler.org"))
+
+  (defun my-org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+        (setq should-skip-entry t))
+      (save-excursion
+        (while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (when should-skip-entry
+        (or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
+
+  (setq! org-deadline-warning-days 7)
+  (setq! org-agenda-span 'day)
+
+  ;; (add-to-list 'org-agenda-custom-commands
+  ;;              '("o" "At the office" tags-todo "@office"
+  ;;                 ((org-agenda-overriding-header "Office")
+  ;;                  (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))))
 
   ;; (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
   )
@@ -160,7 +192,6 @@
 
 (use-package! fira-code-mode
   :after prog-mode
-  ;; :config (global-fira-code-mode)
   :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
   )
 
@@ -278,20 +309,3 @@
 ;;         :n "?" 'hydra-dired/body))
 ;;   ;; (define-key dired-mode-map "?" 'hydra-dired/body)
 ;;   )
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(fira-code-mode-disabled-ligatures (quote ("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")))
-
-
- )
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
