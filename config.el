@@ -5,17 +5,12 @@
       ;; doom-variable-pitch-font (font-spec :family "Fira Code")
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
-;; (add-hook 'window-setup-hook #'toggle-frame-fullscreen) ;; start full-screen
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
-;;;;;;;;; Org Mode
+(setq! display-line-numbers-type t)
+(setq! which-key-idle-delay 0.3)
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
 (setq org-roam-directory "~/Dropbox/org/")
 (use-package deft
@@ -37,43 +32,20 @@
   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
   )
 
-;; https://gist.github.com/jethrokuan/78936a44f249e2c1a61b5184669a32d7
-(setq jethro/org-agenda-todo-view
-      `("A" "Agenda"
-        ((agenda ""
-                 ((org-agenda-span 'day)
-                  (org-deadline-warning-days 365)))
-         (todo "TODO"
-               ((org-agenda-overriding-header "To Refile")
-                (org-agenda-files '(,+org-capture-notes-file))))
-         (todo "TODO"
-               ((org-agenda-overriding-header "Emails")
-                (org-agenda-files '(,+org-capture-notes-file))))
-         (todo "NEXT"
-               ((org-agenda-overriding-header "In Progress")
-                (org-agenda-files '(,+org-capture-notes-file))
-                ))
-         (todo "TODO"
-               ((org-agenda-overriding-header "Projects")
-                (org-agenda-files '(,+org-capture-notes-file))
-                ))
-         ;; (todo "TODO"
-         ;;       ((org-agenda-overriding-header "One-off Tasks")
-         ;;        (org-agenda-files '(,(concat jethro/org-agenda-directory "next.org")))
-         ;;        (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-         nil)))
-
-;; (setq! org-capture-templates `(
 (after! org
   (add-to-list 'org-capture-templates `("P" "Protocol" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"))
   (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
                                         "* %? [[%:link][%:description]]\nCaptured On: %U"))
+  )
 
+(after! org
   (setq org-refile-targets '(("~/Dropbox/org/projects.org" :maxlevel . 3)
                              ("~/Dropbox/org/someday.org" :level . 1)
                              ("~/Dropbox/org/tickler.org" :maxlevel . 2)))
+  )
 
+(after! org
   (setq org-agenda-files '("~/Dropbox/org/inbox.org"
                            "~/Dropbox/org/projects.org"
                            "~/Dropbox/org/tickler.org"))
@@ -105,48 +77,21 @@
   ;; (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
   )
 
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
 
 
-
-(map! (:map org-mode-map
+(map! (:after org
+       :map org-mode-map
        :desc "Match sparse tree"
        :leader
        :n "m s M" #'org-match-sparse-tree))
 
-;; (map! (:map dired-mode-map
-;;     :desc "org-hug export all"
-;;     :n "C-8" (lambda()
-;;                 (interactive)
-;;                 (diredp-do-apply-function 'org-hugo-export-wim-to-md '(4)))))
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
-(setq which-key-idle-delay 0.3)
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
 
 (after! projectile
   ;; (setq projectile-project-search-path
   ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
   )
-
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
-;; they are implemented.
 
 (after! evil-snipe
   (setq evil-snipe-scope 'buffer)
