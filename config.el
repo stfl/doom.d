@@ -236,3 +236,14 @@
 ;;         :n "?" 'hydra-dired/body))
 ;;   ;; (define-key dired-mode-map "?" 'hydra-dired/body)
 ;;   )
+
+(defun zyro/rifle-roam ()
+  "Rifle through your ROAM directory"
+  (interactive)
+  (helm-org-rifle-directories org-roam-directory))
+
+(map! :after org
+      :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)

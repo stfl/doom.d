@@ -79,6 +79,20 @@ font string. You generally only need these two:
                              ("~/Dropbox/org/tickler.org" :maxlevel . 2)))
   )
 #+END_SRC
+
+Adding additional search functions
+#+BEGIN_SRC emacs-lisp
+(defun zyro/rifle-roam ()
+  "Rifle through your ROAM directory"
+  (interactive)
+  (helm-org-rifle-directories org-roam-directory))
+
+(map! :after org
+      :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+#+END_SRC
 ** org agenda
 #+BEGIN_SRC elisp
 (after! org
