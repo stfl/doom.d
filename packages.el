@@ -58,7 +58,30 @@
 (package! org-roam-server)
 (package! todoist)
 
-;; (unpin! lsp-treemacs)
-(unpin! treemacs)
-(unpin! lsp-mode)
-(unpin! dap-mode)
+;; (unpin! treemacs)
+;; (unpin! lsp-mode)
+;; (unpin! dap-mode)
+
+;; Roam Packages
+(package! org-roam-server)
+(package! company-org-roam)
+(package! org-roam)
+;; Alphapapa packages
+(package! helm-org-rifle)
+(package! org-super-agenda)
+(package! org-ql)
+(package! org-web-tools)
+;; Orgmode Packages
+(package! org-analyzer)
+(package! org-edna)
+(package! org-habit)
+(package! literate-calc-mode)
+;; Misc Packages
+(package! define-word)
+(package! ox-reveal)
+(package! ox-pandoc)
+(package! ox-twbs)
+(package! gnuplot)
+(package! gnuplot-mode)
+(package! deadgrep)
+(package! graphviz-dot-mode)

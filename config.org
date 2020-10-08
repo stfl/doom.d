@@ -1,6 +1,6 @@
 #+TITLE: doom-emacs config
 
-* user config
+* User Information
 Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 
@@ -10,7 +10,17 @@ clients, file templates and snippets.
       user-mail-address "ste.lendl@gmail.com")
 #+END_SRC
 
+* Terminal Mode
+Set a few settings if we detect terminal mode
+#+BEGIN_SRC elisp
+(when (equal (window-system) nil)
+  (and
+   (bind-key "C-<down>" #'+org/insert-item-below)
+   (setq doom-theme 'doom-solarized-dark)
+   (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
+#+END_SRC
 * UI
+** Font
 Doom exposes five (optional) variables for controlling fonts in Doom. Here
 are the three important ones:
 
@@ -24,64 +34,100 @@ font string. You generally only need these two:
 
 #+BEGIN_SRC elisp
 (setq doom-font (font-spec :family "Fira Code" :size 13)
-      ;; doom-variable-pitch-font (font-spec :family "Fira Code")
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
 
 (setq doom-theme 'doom-one)
+#+END_SRC
 
+#+BEGIN_SRC elisp
+(use-package! fira-code-mode
+  :after prog-mode
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
+  )
+#+END_SRC
+
+#+BEGIN_SRC elisp
 (setq! display-line-numbers-type t)
 (setq! which-key-idle-delay 0.3)
 #+END_SRC
 
-* Org Mode
-
- If you use `org' and don't want your org files in the default location below,
- change `org-directory'. It must be set before org loads!
+** popup rules
 #+BEGIN_SRC elisp
-(setq org-directory "~/Dropbox/org/")
-(setq org-roam-directory "~/Dropbox/org/")
-(use-package deft
-      :after org
-      :custom
-      (deft-recursive t)
-      (deft-use-filter-string-for-filename t)
-      (deft-default-extension "org")
-      (deft-directory "~/Dropbox/org/"))
-
-(after! org
-  (setq! org-startup-with-inline-images t)
-  )
-
-;; required when
-(defun transform-square-brackets-to-round-ones(string-to-transform)
-  "Transforms [ into ( and ] into ), other chars left unchanged."
-  (concat
-  (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
-  )
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
 #+END_SRC
 
-** capture templates
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+
+* Motion
+limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
-(after! org
-  (add-to-list 'org-capture-templates `("P" "Protocol" entry (file+headline +org-capture-notes-file "Inbox")
-                                        "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"))
-  (add-to-list 'org-capture-templates `("L" "Protocol Link" entry (file+headline +org-capture-notes-file "Inbox")
-                                        "* %? [[%:link][%:description]]\nCaptured On: %U"))
+(after! evil-snipe
+  (setq evil-snipe-scope 'buffer)
   )
 #+END_SRC
-
-** refile targets
+* Buffer Settings
 #+BEGIN_SRC elisp
-(after! org
-  (setq org-refile-targets '(("~/Dropbox/org/projects.org" :maxlevel . 3)
-                             ("~/Dropbox/org/someday.org" :level . 1)
-                             ("~/Dropbox/org/tickler.org" :maxlevel . 2)))
-  )
+;; (global-auto-revert-mode 1)
+(setq undo-limit 80000000
+      evil-want-fine-undo t
+;      auto-save-default t
+      inhibit-compacting-font-caches t)
+(whitespace-mode -1)
+#+END_SRC
+* Org mode settings
+** Key Bindings
+From here we load some extra key bindings that I use often
+#+BEGIN_SRC elisp
+(bind-key "<f6>" #'link-hint-copy-link)
+(map! :after org
+      :map org-mode-map
+      :leader
+      :desc "Move up window" "<up>" #'evil-window-up
+      :desc "Move down window" "<down>" #'evil-window-down
+      :desc "Move left window" "<left>" #'evil-window-left
+      :desc "Move right window" "<right>" #'evil-window-right
+      :prefix ("s" . "+search")
+      :desc "Outline" "o" #'counsel-outline
+      :desc "Counsel ripgrep" "d" #'counsel-rg
+      :desc "Swiper All" "@" #'swiper-all
+      :desc "Rifle Buffer" "b" #'helm-org-rifle-current-buffer
+      :desc "Rifle Agenda Files" "a" #'helm-org-rifle-agenda-files
+      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
+      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
+      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+      :prefix ("l" . "+links")
+      "o" #'org-open-at-point
+      "g" #'eos/org-add-ids-to-headlines-in-file)
+
+(map! :after org-agenda
+      :map org-agenda-mode-map
+      :localleader
+      :desc "Filter" "f" #'org-agenda-filter)
+
+#+END_SRC
+** General
+First I like to add some extra fancy stuff to make orgmode more appealing when i'm using =+pretty= flag.
+#+BEGIN_SRC elisp
+(after! org (setq org-hide-emphasis-markers t
+                  org-hide-leading-stars t
+                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))))
+;                  org-ellipsis "▼"))
+#+END_SRC
+
+- Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
+- Extra options for headline-bullets-list: "◉" "●" "○" "∴"
+
+Add a when condition that only adjust settings when certain features are enabled... This depends on where i'm running Emacs from (eg: Terminla, X11 or native).
+#+BEGIN_SRC elisp
+(when (require 'org-superstar nil 'noerror)
+  (setq org-superstar-headline-bullets-list '("◉" "●" "○")
+        org-superstar-item-bullet-alist nil))
 #+END_SRC
 
 Adding additional search functions
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC elisp
 (defun zyro/rifle-roam ()
   "Rifle through your ROAM directory"
   (interactive)
@@ -93,63 +139,531 @@ Adding additional search functions
       :prefix ("n" . "notes")
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 #+END_SRC
-** org agenda
+
+** Agenda
+Setting up my initial agenda settings
+#+BEGIN_SRC elisp
+(after! org (setq org-agenda-diary-file "~/.org/diary.org"
+                  org-agenda-dim-blocked-tasks t
+                  org-agenda-use-time-grid t
+                  org-agenda-hide-tags-regexp "\\w+"
+                  org-agenda-compact-blocks nil
+                  org-agenda-block-separator ""
+                  org-agenda-skip-scheduled-if-done t
+                  org-agenda-skip-deadline-if-done t
+                  org-agenda-window-setup 'current-window
+                  org-enforce-todo-checkbox-dependencies nil
+                  org-enforce-todo-dependencies t
+                  org-habit-show-habits t))
+
+(after! org (setq org-agenda-files (append (file-expand-wildcards "~/.org/gtd/*.org") (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+;; (after! org (setq org-agenda-files '("~/.org/gtd/")))
+
+;; (after! org
+;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
+;;                            "~/.org/gtd/projects.org"
+;;                            "~/.org/gtd/tickler.org"))
+#+END_SRC
+
+Adjusting clock settings
+#+BEGIN_SRC elisp
+(after! org (setq org-clock-continuously t))
+#+END_SRC
+
+;; ;; (org-super-agenda-mode t)
+
+;; (setq org-agenda-custom-commands
+;;       (quote (("N" "Notes" tags "NOTE"
+;;                ((org-agenda-overriding-header "Notes")
+;;                 (org-tags-match-list-sublevels t)))
+;;               ("h" "Habits" tags-todo "STYLE=\"habit\""
+;;                ((org-agenda-overriding-header "Habits")
+;;                 (org-agenda-sorting-strategy
+;;                  '(todo-state-down effort-up category-keep))))
+;;               ("i" "Inbox" todo ""
+;;                         ((org-agenda-files "~/.org/gtd/inbox.org")
+;;                          (org-agenda-overriding-header "Inbox")))
+;;               ("I" "Inbox" tags "REFILE"
+;;                         ((org-agenda-overriding-header "Tasks to Refile")
+;;                          (org-tags-match-list-sublevels nil)))
+;;               ("w" "Master Agenda"
+;;                ((agenda ""
+;;                         ((org-agenda-span '1)
+;;                          (org-agenda-files (append (file-expand-wildcards "~/.org/gtd/*.org")))
+;;                          (org-agenda-start-day (org-today))))
+;;                 (tags-todo "-CANCELLED/!"
+;;                            ((org-agenda-overriding-header "Stuck Projects")
+;;                             (org-agenda-skip-function 'bh/skip-non-stuck-projects)
+;;                             (org-agenda-sorting-strategy
+;;                              '(category-keep))))
+;;                 (tags-todo "-HOLD-CANCELLED/!"
+;;                            ((org-agenda-overriding-header "Projects")
+;;                             (org-agenda-skip-function 'bh/skip-non-projects)
+;;                             (org-tags-match-list-sublevels 'indented)
+;;                             (org-agenda-sorting-strategy
+;;                              '(category-keep))))
+;;                 (tags-todo "-CANCELLED/!NEXT"
+;;                            ((org-agenda-overriding-header (concat "Project Next Tasks"
+;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
+;;                                                                       ""
+;;                                                                     " (including WAITING and SCHEDULED tasks)")))
+;;                             (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+;;                             (org-tags-match-list-sublevels t)
+;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-sorting-strategy
+;;                              '(todo-state-down effort-up category-keep))))
+;;                 (tags-todo "-SOMEDAY-REFILE-CANCELLED-WAITING-HOLD/!"
+;;                            ((org-agenda-overriding-header (concat "Project Subtasks"
+;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
+;;                                                                       ""
+;;                                                                     " (including WAITING and SCHEDULED tasks)")))
+;;                             (org-agenda-skip-function 'bh/skip-non-project-tasks)
+;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-sorting-strategy
+;;                              '(category-keep))))
+;;                 (tags-todo "-SOMEDAY-REFILE-CANCELLED-#waiting-#hold-#monitor/!"
+;;                            ((org-agenda-overriding-header (concat "Standalone Tasks"
+;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
+;;                                                                       ""
+;;                                                                     " (including WAITING and SCHEDULED tasks)")))
+;;                             (org-agenda-skip-function 'bh/skip-project-tasks)
+;;                             (org-agenda-todo-ignore-scheduled t)
+;;                             (org-agenda-todo-ignore-deadlines t)
+;;                             (org-agenda-todo-ignore-with-date t)
+;;                             (org-agenda-sorting-strategy
+;;                              '(category-keep))))
+;;                 (tags-todo "-CANCELLED+#waiting|#hold|#monitor/"
+;;                            ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
+;;                                                                       ""
+;;                                                                     " (including WAITING and SCHEDULED tasks)")))
+;;                             (org-agenda-skip-function 'bh/skip-non-tasks)
+;;                             (org-tags-match-list-sublevels nil)
+;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+;;                 (tags "-REFILE/"
+;;                       ((org-agenda-overriding-header "Tasks to Archive")
+;;                        (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+;;                        (org-tags-match-list-sublevels nil))))
+;;                nil))))
+#+BEGIN_SRC elisp
+#+END_SRC
+
+** Capture Templates
+Here we setup the capture templates we want for ~org-capture~. I use a file template that's pre-filled with my monthly scheduled transactions. (TODO: Add default file-template for new projects.)
+#+BEGIN_SRC elisp
+(after! org (setq org-capture-templates
+      '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
+         "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
+        ("p" "New Project" plain (file nm/org-capture-file-picker)
+         (file "~/.doom.d/templates/template-projects.org"))
+        ("n" "Note on headline" plain (function nm/org-end-of-headline)
+         "%?" :empty-lines-before 1 :empty-lines-after 1)
+        ("q" "quick note to file" entry (function nm/org-capture-weeklies)
+         "* %?" :empty-lines-before 1 :empty-lines-after 1)
+        ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
+         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
+         :empty-lines-after 1)
+        ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
+        "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
+         :empty-lines-after 1 )
+        )
+  ))
+#+END_SRC
+
+update brackets when copying a link from org-protocol
+#+BEGIN_SRC elisp
+(defun transform-square-brackets-to-round-ones(string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat
+  (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+  )
+#+END_SRC
+
+** Directory settings
+#+BEGIN_SRC elisp
+(after! org (setq ;;org-image-actual-width nil
+                  org-archive-location "~/.org/gtd/archives.org::datetree"
+                  ))
+#+END_SRC
+
+** Misc Org Mode settings
+#+BEGIN_SRC elisp
+(require 'org-id)
+(setq org-link-file-path-type 'relative)
+#+END_SRC
+** org-habit
+
+load org-habit because many of the functions in ~org-helpers.el~ require it...
+#+BEGIN_SRC elisp
+(use-package! org-habit
+  :after org)
+#+END_SRC
+** Keywords
+After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
+| Keyword | Description                                                  |
+|---------+--------------------------------------------------------------|
+| TODO    |                                                              |
+| PROJ    | Task has actionable items defined and ready to be worked.    |
+| HOLD    | Has actionable items, but is on hold due to various reasons. |
+| NEXT    | Is ready to be worked and should be worked on soon.          |
+| DONE    | Task is completed and closed.                                |
+| KILL    | Abandoned or terminated.                                     |
+
+#+BEGIN_SRC elisp
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"  ; A task that needs doing & is ready to do
+           "PROJ(p)"  ; Project with multiple task items.
+           "NEXT(n)"  ; Task is next to be worked on.
+           "WAIT(w)"  ; Something external is holding up this task
+           "|"
+           "DONE(d)"  ; Task successfully completed
+           "KILL(k)")) ; Task was cancelled, aborted or is no longer applicable
+        org-todo-keyword-faces
+        '(("WAIT" . +org-todo-onhold)
+          ("PROJ" . +org-todo-project)
+          ("TODO" . +org-todo-active)
+          ("NEXT" . +org-todo-next)))
+#+END_SRC
+
+** Logging and Drawers
+For the logging drawers, we like to keep our notes and clock history *seperate* from our properties drawer...
+#+BEGIN_SRC elisp
+(after! org (setq org-log-state-notes-insert-after-drawers nil))
+#+END_SRC
+
+Next, we like to keep a history of our activity of a task so we *track* when changes occur, and we also keep our notes logged in *their own drawer*. Optionally you can also add the following in-buffer settings to override the =org-log-into-drawer= function. ~#+STARTUP: logdrawer~ or ~#+STARTUP: nologdrawer~
+#+BEGIN_SRC elisp
+(after! org (setq org-log-into-drawer t
+                  org-log-done 'time
+                  org-log-repeat 'time
+                  org-log-redeadline 'note
+                  org-log-reschedule 'note))
+#+END_SRC
+
+** Properties
+#+BEGIN_SRC elisp
+(setq org-use-property-inheritance t ; We like to inhert properties from their parents
+      org-catch-invisible-edits 'error) ; Catch invisible edits
+#+END_SRC
+
+** Refiling Defaults
+TODO tweak refiling settings to match new GTD setup
+#+BEGIN_SRC elisp
+(after! org (setq org-refile-targets '((nil :maxlevel . 9)
+                                       (org-agenda-files :maxlevel . 4))
+                  org-refile-use-outline-path 'buffer-name
+                  org-outline-path-complete-in-steps nil
+                  org-refile-allow-creating-parent-nodes 'confirm))
+#+END_SRC
+
+** Orgmode Startup
+#+BEGIN_SRC elisp
+(after! org (setq org-startup-indented 'indent
+                  org-startup-folded 'content
+                  org-src-tab-acts-natively t
+                  ;; org-startup-with-inline-images t
+                  ))
+(add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'turn-off-auto-fill)
+#+END_SRC
+
+** Default Tags
+REVIEW should we define any additional tags?
+#+BEGIN_SRC elisp
+(setq org-tags-column 0)
+(setq org-tag-alist '((:startgrouptag)
+                      ("Context")
+                      (:grouptags)
+                      ("@home" . ?h)
+                      ("@office")
+                      ("@pc")
+                      ("@laptop")
+                      ("@phone")
+                      ("@sarah")
+                      (:endgrouptag)
+                      (:startgrouptag)
+                      ("Categories")
+                      (:grouptags)
+                      ("bike")
+                      ("health")
+                      ("house")
+                      ("hobby")
+                      ("friends")
+                      ("coding")
+                      ("goal")
+                      ("gtd")
+                      (:endgrouptag)
+                      ;; (:startgrouptag)
+                      ;; ("Section")
+                      ;; (:grouptags)
+                      ;; ("#coding")
+                      ;; ("#research")
+                      ))
+#+END_SRC
+* Module Settings
+** company mode
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-agenda-files '("~/Dropbox/org/inbox.org"
-                           "~/Dropbox/org/projects.org"
-                           "~/Dropbox/org/tickler.org"))
-
-  (defun my-org-agenda-skip-all-siblings-but-first ()
-    "Skip all but the first non-done entry."
-    (let (should-skip-entry)
-      (unless (org-current-is-todo)
-        (setq should-skip-entry t))
-      (save-excursion
-        (while (and (not should-skip-entry) (org-goto-sibling t))
-          (when (org-current-is-todo)
-            (setq should-skip-entry t))))
-      (when should-skip-entry
-        (or (outline-next-heading)
-            (goto-char (point-max))))))
-
-  (defun org-current-is-todo ()
-    (string= "TODO" (org-get-todo-state)))
-
-  (setq! org-deadline-warning-days 7)
-  (setq! org-agenda-span 'day)
-
-  ;; (add-to-list 'org-agenda-custom-commands
-  ;;              '("o" "At the office" tags-todo "@office"
-  ;;                 ((org-agenda-overriding-header "Office")
-  ;;                  (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))))
-
-  ;; (add-to-list 'org-agenda-custom-commands `,jethro/org-agenda-todo-view)
-  )
-
-
-
-(map! (:after org
-       :map org-mode-map
-       :desc "Match sparse tree"
-       :leader
-       :n "m s M" #'org-match-sparse-tree))
-
-
-
+  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
+  (setq company-idle-delay 0.25))
 #+END_SRC
-
-* popup rules
+** Define Word
 #+BEGIN_SRC elisp
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
+(use-package! define-word
+  :after org
+  :config
+  (map! :after org
+        :map org-mode-map
+        :leader
+        :desc "Define word at point" "@" #'define-word-at-point))
+#+END_SRC
+** DEFT
+When this variable is set to ~t~ your deft directory will be updated to your projectile-project root's folder when switching projects, and the deft buffer's contents will be refreshed.
+#+BEGIN_SRC elisp
+(setq deft-use-projectile-projects t)
+(defun zyro/deft-update-directory ()
+  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
+  (interactive)
+  (if (projectile-project-p)
+      (setq deft-directory (expand-file-name (doom-project-root)))))
+(when deft-use-projectile-projects
+  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
+  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
 #+END_SRC
 
+Configuring DEFT default settings
+#+BEGIN_SRC elisp
+(load! "my-deft-title.el")
+(use-package deft
+  :bind (("<f8>" . deft))
+  :commands (deft deft-open-file deft-new-file-named)
+  :config
+  (setq deft-directory "~/.org/"
+        deft-auto-save-interval 0
+        deft-recursive t
+        deft-current-sort-method 'title
+        deft-extensions '("md" "txt" "org")
+        deft-use-filter-string-for-filename t
+        deft-use-filename-as-title nil
+        deft-markdown-mode-title-level 1
+        deft-file-naming-rules '((nospace . "-"))))
+(require 'my-deft-title)
+(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
+#+END_SRC
+** Org-Rifle
+#+BEGIN_SRC elisp
+(use-package helm-org-rifle
+  :after (helm org)
+  :preface
+  (autoload 'helm-org-rifle-wiki "helm-org-rifle")
+  :config
+  (add-to-list 'helm-org-rifle-actions '("Insert link" . helm-org-rifle--insert-link) t)
+  (add-to-list 'helm-org-rifle-actions '("Store link" . helm-org-rifle--store-link) t)
+  (defun helm-org-rifle--store-link (candidate &optional use-custom-id)
+    "Store a link to CANDIDATE."
+    (-let (((buffer . pos) candidate))
+      (with-current-buffer buffer
+        (org-with-wide-buffer
+         (goto-char pos)
+         (when (and use-custom-id
+                    (not (org-entry-get nil "CUSTOM_ID")))
+           (org-set-property "CUSTOM_ID"
+                             (read-string (format "Set CUSTOM_ID for %s: "
+                                                  (substring-no-properties
+                                                   (org-format-outline-path
+                                                    (org-get-outline-path t nil))))
+                                          (helm-org-rifle--make-default-custom-id
+                                           (nth 4 (org-heading-components))))))
+         (call-interactively 'org-store-link)))))
 
+  ;; (defun helm-org-rifle--narrow (candidate)
+  ;;   "Go-to and then Narrow Selection"
+  ;;   (helm-org-rifle-show-entry candidate)
+  ;;   (org-narrow-to-subtree))
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
+  (defun helm-org-rifle--store-link-with-custom-id (candidate)
+    "Store a link to CANDIDATE with a custom ID.."
+    (helm-org-rifle--store-link candidate 'use-custom-id))
 
-* projectile
+  (defun helm-org-rifle--insert-link (candidate &optional use-custom-id)
+    "Insert a link to CANDIDATE."
+    (unless (derived-mode-p 'org-mode)
+      (user-error "Cannot insert a link into a non-org-mode"))
+    (let ((orig-marker (point-marker)))
+      (helm-org-rifle--store-link candidate use-custom-id)
+      (-let (((dest label) (pop org-stored-links)))
+        (org-goto-marker-or-bmk orig-marker)
+        (org-insert-link nil dest label)
+        (message "Inserted a link to %s" dest))))
+
+  (defun helm-org-rifle--make-default-custom-id (title)
+    (downcase (replace-regexp-in-string "[[:space:]]" "-" title)))
+
+  (defun helm-org-rifle--insert-link-with-custom-id (candidate)
+    "Insert a link to CANDIDATE with a custom ID."
+    (helm-org-rifle--insert-link candidate t))
+
+  (helm-org-rifle-define-command
+   "wiki" ()
+   "Search in \"~/lib/notes/writing\" and `plain-org-wiki-directory' or create a new wiki entry"
+   :sources `(,(helm-build-sync-source "Exact wiki entry"
+                 :candidates (plain-org-wiki-files)
+                 :action #'plain-org-wiki-find-file)
+              ,@(--map (helm-org-rifle-get-source-for-file it) files)
+              ,(helm-build-dummy-source "Wiki entry"
+                 :action #'plain-org-wiki-find-file))
+   :let ((files (let ((directories (list "~/lib/notes/writing"
+                                         plain-org-wiki-directory
+                                         "~/lib/notes")))
+                  (-flatten (--map (f-files it
+                                            (lambda (file)
+                                              (s-matches? helm-org-rifle-directories-filename-regexp
+                                                          (f-filename file))))
+                                   directories))))
+         (helm-candidate-separator " ")
+         (helm-cleanup-hook (lambda ()
+                              ;; Close new buffers if enabled
+                              (when helm-org-rifle-close-unopened-file-buffers
+                                (if (= 0 helm-exit-status)
+                                    ;; Candidate selected; close other new buffers
+                                    (let ((candidate-source (helm-attr 'name (helm-get-current-source))))
+                                      (dolist (source helm-sources)
+                                        (unless (or (equal (helm-attr 'name source)
+                                                           candidate-source)
+                                                    (not (helm-attr 'new-buffer source)))
+                                          (kill-buffer (helm-attr 'buffer source)))))
+                                  ;; No candidates; close all new buffers
+                                  (dolist (source helm-sources)
+                                    (when (helm-attr 'new-buffer source)
+                                      (kill-buffer (helm-attr 'buffer source))))))))))
+  :general
+  (:keymaps 'org-mode-map
+   "M-s r" #'helm-org-rifle-current-buffer)
+  :custom
+  (helm-org-rifle-directories-recursive t)
+  (helm-org-rifle-show-path t)
+  (helm-org-rifle-test-against-path t))
+
+(provide 'setup-helm-org-rifle)
+#+END_SRC
+** Pandoc
+#+BEGIN_SRC elisp
+(setq org-pandoc-options '((standalone . t) (self-contained . t)))
+#+END_SRC
+** ROAM
+These are my default ROAM settings
+#+BEGIN_SRC elisp
+(setq org-roam-tag-sources '(prop last-directory))
+(setq org-roam-db-location "~/.org/roam.db")
+(setq org-roam-directory "~/.org/")
+(add-to-list 'safe-local-variable-values
+'(org-roam-directory . "."))
+
+(setq org-roam-dailies-capture-templates
+   '(("d" "daily" plain (function org-roam-capture--get-point) ""
+      :immediate-finish t
+      :file-name "journal/%<%Y-%m-%d-%a>"
+      :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
+
+(setq org-roam-capture-templates
+        '(("b" "book" plain (function org-roam-capture--get-point)
+           :file-name "book/${slug}%<%Y%m%d%H%M>"
+           :head "#+TITLE: ${slug}\n#+roam_tags: %^{tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
+           "%?"
+           :unnarrowed t)
+          ("c" "curiousity" plain (function org-roam-capture--get-point)
+           :file-name "curious/${slug}"
+           :head "#+TITLE: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
+           "%?"
+           :unnarrowed t)
+          ("d" "digest" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "digest/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
+           :unnarrowed t)
+          ("f" "fleeting" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "fleeting/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
+           :unnarrowed t)
+          ("p" "private" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "private/${slug}"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)
+          ("x" "programming" plain (function org-roam-capture--get-point)
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n- source :: [[%^{link}][%^{description}]] \\\n- metadata :: %?\n\n* Notes\n\n* Follow-up Actions"
+           :unnarrowed t)
+          ("r" "research" entry (function org-roam--capture-get-point)
+           (file "~/.doom.d/templates/org-roam-research.org")
+           :file-name "research/${slug}"
+           "%?"
+           :unnarrowed t)
+          ("t" "technical" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "technical/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
+           :unnarrowed t)))
+#+END_SRC
+** ROAM Server
+#+BEGIN_SRC elisp
+(use-package org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8070
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-network-poll nil
+        org-roam-server-network-arrows 'from
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+#+END_SRC
+** ROAM Export Backlinks + Content
+#+BEGIN_SRC elisp
+(defun my/org-roam--backlinks-list-with-content (file)
+  (with-temp-buffer
+    (if-let* ((backlinks (org-roam--get-backlinks file))
+              (grouped-backlinks (--group-by (nth 0 it) backlinks)))
+        (progn
+          (insert (format "\n\n* %d Backlinks\n"
+                          (length backlinks)))
+          (dolist (group grouped-backlinks)
+            (let ((file-from (car group))
+                  (bls (cdr group)))
+              (insert (format "** [[file:%s][%s]]\n"
+                              file-from
+                              (org-roam--get-title-or-slug file-from)))
+              (dolist (backlink bls)
+                (pcase-let ((`(,file-from _ ,props) backlink))
+                  (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
+                  (insert "\n\n")))))))
+    (buffer-string)))
+
+(defun my/org-export-preprocessor (backend)
+  (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
+    (unless (string= links "")
+      (save-excursion
+        (goto-char (point-max))
+        (insert (concat "\n* Backlinks\n") links)))))
+
+(add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
+#+END_SRC
+** projectile
 #+BEGIN_SRC elisp
 (after! projectile
   ;; (setq projectile-project-search-path
@@ -158,31 +672,35 @@ Adding additional search functions
   )
 #+END_SRC
 
-
-* TODO rest
-
-Here are some additional functions/macros that could help you configure Doom:
-
-- `load!' for loading external *.el files relative to this one
-- `use-package' for configuring packages
-- `after!' for running code after a package has loaded
-- `add-load-path!' for adding directories to the `load-path', relative to
-  this file. Emacs searches the `load-path' when you load packages with
-  `require' or `use-package'.
-- `map!' for binding new keys
-
-To get information about any of these functions/macros, move the cursor over
-the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
-This will open documentation for it, including demos of how they are used.
-
-You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
-they are implemented.
+* Custom Functions
+#+BEGIN_SRC elisp
+(load! "org-customs.el")
+(load! "org-helpers.el")
+(load! "org-helpers-nm.el")
+#+END_SRC
 
 #+BEGIN_SRC elisp
-(after! evil-snipe
-  (setq evil-snipe-scope 'buffer)
-  )
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix ("j" . "nicks functions")
+      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp)
 
+;; (setq org-tasks-properties-metadata (list "SOURCE"))
+;; (map! :after org
+;;       :map org-mode-map
+;;       :localleader
+;;       :prefix ("j" . "nicks functions")
+;;       :desc "Clarify properties" "c" #'nm/org-clarify-metadata)
+
+;; (bind-key "<f7>" #'nm/org-capture-to-file)
+
+(add-hook 'before-save-hook #'nm/org-assign-tasks-proj)
+#+END_SRC
+
+* Coding
+** LSP
+#+BEGIN_SRC elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1)
@@ -199,32 +717,10 @@ they are implemented.
        :desc "Diagnostic for Workspace"
        :leader
        :n "c X" #'lsp-treemacs-errors-list))
+#+END_SRC
 
-;; dir tree diff
-(use-package! ztree)
-
-(use-package! fira-code-mode
-  :after prog-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
-  )
-
-;; display more columns in forge list topic
-(after! forge (setq forge-topic-list-columns
-                    '(("#" 5 t (:right-align t) number nil)
-                      ("Title" 60 t nil title  nil)
-                      ("State" 6 t nil state nil)
-                      ("Marks" 8 t nil marks nil)
-                      ("Labels" 8 t nil labels nil)
-                      ("Assignees" 10 t nil assignees nil)
-                      ("Updated" 10 t nill updated nil))))
-
-
-(defun get-string-from-file (filePath)
-  "Return filePath's file content."
-  (with-temp-buffer
-    (insert-file-contents filePath)
-    (buffer-string)))
-
+** PHP
+#+BEGIN_SRC elisp
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
@@ -238,7 +734,6 @@ they are implemented.
   (setq lsp-idle-delay 0.5)
   )
 
-(setq! todoist-token "27df443b7f9e4e3692ccd5003711375b485663ac")
 
 ;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
 ;; (dap-php-setup)
@@ -251,75 +746,33 @@ they are implemented.
 ;;         :args '("--server=4711")
 ;;         :pathMappings (ht ("/var/www/html" (projectile-project-root (buffer-file-name))))
 ;;         :sourceMaps t))
+  #+END_SRC
 
+** MQL
+#+BEGIN_SRC elisp
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
+#+END_SRC
 
-;; (after! conda
-;;   (setq conda-anaconda-home "/opt/anaconda"
-;;         conda-env-home-directory "/opt/anaconda"
-;;    )
-;;   )
+* Collaboration
+** dir tree diff
+#+BEGIN_SRC elisp
+(use-package! ztree)
+#+END_SRC
 
-(after! undo-fu-mode
-  (setq undo-limit         1000000
-        undo-strong-limit  8000000
-        undo-outer-limit   8000000)
-  )
+** Forge
+display more columns in forge list topic
+#+BEGIN_SRC elisp
+(after! forge (setq forge-topic-list-columns
+                    '(("#" 5 t (:right-align t) number nil)
+                      ("Title" 60 t nil title  nil)
+                      ("State" 6 t nil state nil)
+                      ("Marks" 8 t nil marks nil)
+                      ("Labels" 8 t nil labels nil)
+                      ("Assignees" 10 t nil assignees nil)
+                      ("Updated" 10 t nill updated nil))))
+#+END_SRC
 
-;; (after! dired
-;;   (defhydra hydra-dired (:hint nil :color pink)
-;;     "
-;; _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
-;; _C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
-;; _D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
-;; _R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
-;; _Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
-;; _S_ymlink          ^ ^              _F_ind marked      _?_ toggle hydra   \\ flyspell
-;; _r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
-;; _z_ compress-file  _A_ find regexp
-;; _Z_ compress       _Q_ repl regexp
-
-;; T - tag prefix
-;; "
-;;     ("\\" dired-do-ispell)
-;;     ("(" dired-hide-details-mode)
-;;     (")" dired-omit-mode)
-;;     ("+" dired-create-directory)
-;;     ("=" diredp-ediff)         ;; smart diff
-;;     ("?" dired-summary)
-;;     ("$" diredp-hide-subdir-nomove)
-;;     ("A" dired-do-find-regexp)
-;;     ("C" dired-do-copy)        ;; Copy all marked files
-;;     ("D" dired-do-delete)
-;;     ("E" dired-mark-extension)
-;;     ("e" dired-ediff-files)
-;;     ("F" dired-do-find-marked-files)
-;;     ("G" dired-do-chgrp)
-;;     ("g" revert-buffer)        ;; read all directories again (refresh)
-;;     ("i" dired-maybe-insert-subdir)
-;;     ("l" dired-do-redisplay)   ;; relist the marked or singel directory
-;;     ("M" dired-do-chmod)
-;;     ("m" dired-mark)
-;;     ("O" dired-display-file)
-;;     ("o" dired-find-file-other-window)
-;;     ("Q" dired-do-find-regexp-and-replace)
-;;     ("R" dired-do-rename)
-;;     ("r" dired-do-rsynch)
-;;     ("S" dired-do-symlink)
-;;     ("s" dired-sort-toggle-or-edit)
-;;     ("t" dired-toggle-marks)
-;;     ("U" dired-unmark-all-marks)
-;;     ("u" dired-unmark)
-;;     ("v" dired-view-file)      ;; q to exit, s to search, = gets line #
-;;     ("w" dired-kill-subdir)
-;;     ("Y" dired-do-relsymlink)
-;;     ("z" diredp-compress-this-file)
-;;     ("Z" dired-do-compress)
-;;     ("q" nil)
-;;     ("?" nil :color blue))
-;;   (map! (:map dired-mode-map
-;;         :desc "Dired Hydra"
-;;         :n "?" 'hydra-dired/body))
-;;   ;; (define-key dired-mode-map "?" 'hydra-dired/body)
-;;   )
+** Todoist integration
+#+BEGIN_SRC elisp
+(setq! todoist-token "27df443b7f9e4e3692ccd5003711375b485663ac")
 #+END_SRC
