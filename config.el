@@ -42,6 +42,7 @@
       :desc "Move down window" "<down>" #'evil-window-down
       :desc "Move left window" "<left>" #'evil-window-left
       :desc "Move right window" "<right>" #'evil-window-right
+
       :prefix ("s" . "+search")
       :desc "Outline" "o" #'counsel-outline
       :desc "Counsel ripgrep" "d" #'counsel-rg
@@ -50,10 +51,18 @@
       :desc "Rifle Agenda Files" "a" #'helm-org-rifle-agenda-files
       :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
       :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
-      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+
       :prefix ("l" . "+links")
       "o" #'org-open-at-point
-      "g" #'eos/org-add-ids-to-headlines-in-file)
+      "g" #'eos/org-add-ids-to-headlines-in-file
+
+      :localleader
+      :prefix ("s" . "+search")
+      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+
+      :prefix ("r" . "+refile")
+      :desc "Refile to reference" "R" #'stfl/refile-to-reference
+      )
 
 (map! :after org-agenda
       :map org-agenda-mode-map
@@ -93,9 +102,10 @@
                   org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
-(after! org (setq org-agenda-files
-                  (append (file-expand-wildcards "~/.org/gtd/*.org")
-                          (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(after! org (setq org-agenda-files '("~/.org/gtd/"
+                                     "~/.org/gtd/projects/")))
+                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -187,10 +197,25 @@
       org-catch-invisible-edits 'error) ; Catch invisible edits
 
 (after! org (setq org-refile-targets '((nil :maxlevel . 9)
-                                       (org-agenda-files :maxlevel . 4))
-                  org-refile-use-outline-path 'buffer-name
-                  org-outline-path-complete-in-steps nil
-                  org-refile-allow-creating-parent-nodes 'confirm))
+                                       (org-agenda-files :maxlevel . 4)
+
+                                       ))
+             (setq! org-refile-use-outline-path 'buffer-name
+                    org-outline-path-complete-in-steps nil
+                    org-refile-allow-creating-parent-nodes 'confirm))
+
+(defun stfl/refile-to-reference ()
+  (interactive)
+  (let ((org-agenda-files '("~/.org/coding/")))
+     (call-interactively 'org-refile)))
+
+  ;;(let ((org-refile-targets (append (file-expand-wildcards "~/.org/coding/*.org")
+
+;;(defun stfl/refile ()
+  ;;Refile current headline to NEXT tasks."
+  ;;"(interactive)
+  ;;"(let ((org-refile-targets '((org-next-task-files :maxlevel . 3))))
+    ;;"(org-refile)))
 
 (after! org (setq org-startup-indented 'indent
                   org-startup-folded 'content
