@@ -93,8 +93,9 @@
                   org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
-(after! org (setq org-agenda-files (append (file-expand-wildcards "~/.org/gtd/*.org") (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
-;; (after! org (setq org-agenda-files '("~/.org/gtd/")))
+(after! org (setq org-agenda-files
+                  (append (file-expand-wildcards "~/.org/gtd/*.org")
+                          (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -103,7 +104,25 @@
 
 (after! org (setq org-clock-continuously t))
 
+(defun skip-all-siblings-but-first-next-action ()
+  "Skip all but the first non-done entry."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (while (and (not should-skip-entry) (org-goto-sibling t))
+        (when (org-current-is-next-action)
+          (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
 
+
+(defun org-current-is-next-action ()
+  (string= "NEXT" (org-get-todo-state)))
+
+(defun org-current-is-todo ()
+  (string= "TODO" (org-get-todo-state)))
 
 (after! org (setq org-capture-templates
       '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
@@ -129,15 +148,11 @@
   (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
   )
 
-(after! org (setq ;;org-image-actual-width nil
-                  org-archive-location "~/.org/gtd/archives.org::datetree"
+(after! org (setq org-image-actual-width nil
+                  org-archive-location "%s_archive::datetree"
                   ))
 
-(require 'org-id)
-(setq org-link-file-path-type 'relative)
-
-(use-package! org-habit
-  :after org)
+(after! org-agenda (require 'org-habit))
 
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
@@ -168,7 +183,7 @@
                   org-log-redeadline 'note
                   org-log-reschedule 'note))
 
-(setq org-use-property-inheritance t ; We like to inhert properties from their parents
+(setq org-use-property-inheritance t ; We like to inherit properties from their parents
       org-catch-invisible-edits 'error) ; Catch invisible edits
 
 (after! org (setq org-refile-targets '((nil :maxlevel . 9)
@@ -207,6 +222,13 @@
                       ("coding")
                       ("goal")
                       ("gtd")
+                      (:endgrouptag)
+                      (:grouptags)
+                      ("SOMEDAY" . ?S)
+                      ("CANCELLED" . ?C)
+                      ("HOLD" . ?H)
+                      ("REFILE" . ?R)
+                      ("WAITING" . ?W)
                       (:endgrouptag)
                       ;; (:startgrouptag)
                       ;; ("Section")

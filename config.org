@@ -156,8 +156,9 @@ Setting up my initial agenda settings
                   org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
-(after! org (setq org-agenda-files (append (file-expand-wildcards "~/.org/gtd/*.org") (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
-;; (after! org (setq org-agenda-files '("~/.org/gtd/")))
+(after! org (setq org-agenda-files
+                  (append (file-expand-wildcards "~/.org/gtd/*.org")
+                          (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -251,6 +252,25 @@ Adjusting clock settings
 ;;                        (org-tags-match-list-sublevels nil))))
 ;;                nil))))
 #+BEGIN_SRC elisp
+(defun skip-all-siblings-but-first-next-action ()
+  "Skip all but the first non-done entry."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (while (and (not should-skip-entry) (org-goto-sibling t))
+        (when (org-current-is-next-action)
+          (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+
+
+(defun org-current-is-next-action ()
+  (string= "NEXT" (org-get-todo-state)))
+
+(defun org-current-is-todo ()
+  (string= "TODO" (org-get-todo-state)))
 #+END_SRC
 
 ** Capture Templates
@@ -286,23 +306,18 @@ update brackets when copying a link from org-protocol
 
 ** Directory settings
 #+BEGIN_SRC elisp
-(after! org (setq ;;org-image-actual-width nil
-                  org-archive-location "~/.org/gtd/archives.org::datetree"
+(after! org (setq org-image-actual-width nil
+                  org-archive-location "%s_archive::datetree"
                   ))
 #+END_SRC
 
-** Misc Org Mode settings
-#+BEGIN_SRC elisp
-(require 'org-id)
-(setq org-link-file-path-type 'relative)
-#+END_SRC
 ** org-habit
 
 load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+BEGIN_SRC elisp
-(use-package! org-habit
-  :after org)
+(after! org-agenda (require 'org-habit))
 #+END_SRC
+
 ** Keywords
 After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
 | Keyword | Description                                                  |
@@ -354,7 +369,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 
 ** Properties
 #+BEGIN_SRC elisp
-(setq org-use-property-inheritance t ; We like to inhert properties from their parents
+(setq org-use-property-inheritance t ; We like to inherit properties from their parents
       org-catch-invisible-edits 'error) ; Catch invisible edits
 #+END_SRC
 
@@ -404,6 +419,13 @@ REVIEW should we define any additional tags?
                       ("coding")
                       ("goal")
                       ("gtd")
+                      (:endgrouptag)
+                      (:grouptags)
+                      ("SOMEDAY" . ?S)
+                      ("CANCELLED" . ?C)
+                      ("HOLD" . ?H)
+                      ("REFILE" . ?R)
+                      ("WAITING" . ?W)
                       (:endgrouptag)
                       ;; (:startgrouptag)
                       ;; ("Section")

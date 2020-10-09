@@ -74,7 +74,6 @@
 ;; Orgmode Packages
 (package! org-analyzer)
 (package! org-edna)
-(package! org-habit)
 (package! literate-calc-mode)
 ;; Misc Packages
 (package! define-word)

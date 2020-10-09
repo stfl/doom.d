@@ -4,6 +4,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":"))
  '(org-agenda-custom-commands
    '(("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
@@ -25,18 +26,18 @@
                   (file-expand-wildcards "~/.org/gtd/**/*.org")))
                 (org-agenda-start-day
                  (org-today))))
-       (tags-todo "-CANCELLED/!"
+       (tags-todo "-CANCELLED-SOMEDAY/!"
                   ((org-agenda-overriding-header "Stuck Projects")
                    (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
-       (tags-todo "-HOLD-CANCELLED/!"
+       (tags-todo "-HOLD-CANCELLED-SOMEDAY/!"
                   ((org-agenda-overriding-header "Projects")
                    (org-agenda-skip-function 'bh/skip-non-projects)
                    (org-tags-match-list-sublevels 'indented)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
-       (tags-todo "-CANCELLED/!TODO"
+       (tags-todo "-CANCELLED/!NEXT"
                   ((org-agenda-overriding-header
                     (concat "Project Next Tasks"
                             (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
@@ -79,7 +80,8 @@
              ((org-agenda-overriding-header "Tasks to Archive")
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
-      nil))))
+      nil)))
+ '(package-selected-packages '(org-roam-server)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
