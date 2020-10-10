@@ -61,7 +61,7 @@
       :desc "Match sparse tree" "M" #'org-match-sparse-tree
 
       :prefix ("r" . "+refile")
-      :desc "Refile to reference" "R" #'stfl/refile-to-reference
+      :desc "Refile to reference" "R" #'stfl/refile-to-roam
       )
 
 (map! :after org-agenda
@@ -204,13 +204,12 @@
                     org-outline-path-complete-in-steps nil
                     org-refile-allow-creating-parent-nodes 'confirm))
 
-(defun stfl/refile-to-reference ()
-  (interactive)
-  (let ((org-agenda-files '("~/.org/coding/")))
-     (call-interactively 'org-refile)))
 
-;; add all directories but ~/.org/gtd
-    ;; (append (file-expand-wildcards "~/.org/*/")
+(defun stfl/refile-to-roam ()
+  (interactive)
+  (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
+  (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
+     (call-interactively 'org-refile)))
 
 (after! org (setq org-startup-indented 'indent
                   org-startup-folded 'content
