@@ -1,4 +1,5 @@
 #+TITLE: doom-emacs config
+#+STARTUP: content
 
 * User Information
 Some functionality uses this to identify you, e.g. GPG configuration, email
@@ -77,62 +78,30 @@ limit evil-snipe to the bufffer
 (whitespace-mode -1)
 #+END_SRC
 * Org mode settings
-** Key Bindings
-From here we load some extra key bindings that I use often
-#+BEGIN_SRC elisp
-(bind-key "<f6>" #'link-hint-copy-link)
-(map! :after org
-      :map org-mode-map
-      :leader
-      :desc "Move up window" "<up>" #'evil-window-up
-      :desc "Move down window" "<down>" #'evil-window-down
-      :desc "Move left window" "<left>" #'evil-window-left
-      :desc "Move right window" "<right>" #'evil-window-right
-
-      :prefix ("s" . "+search")
-      :desc "Outline" "o" #'counsel-outline
-      :desc "Counsel ripgrep" "d" #'counsel-rg
-      :desc "Swiper All" "@" #'swiper-all
-      :desc "Rifle Buffer" "b" #'helm-org-rifle-current-buffer
-      :desc "Rifle Agenda Files" "a" #'helm-org-rifle-agenda-files
-      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
-      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
-
-      :prefix ("l" . "+links")
-      "o" #'org-open-at-point
-      "g" #'eos/org-add-ids-to-headlines-in-file
-
-      :localleader
-      :prefix ("s" . "+search")
-      :desc "Match sparse tree" "M" #'org-match-sparse-tree
-
-      :prefix ("r" . "+refile")
-      :desc "Refile to reference" "R" #'stfl/refile-to-roam
-      )
-
-(map! :after org-agenda
-      :map org-agenda-mode-map
-      :localleader
-      :desc "Filter" "f" #'org-agenda-filter)
-#+END_SRC
 ** General
+Org directory
+#+BEGIN_SRC elisp
+(after! org (setq org-directory "~/.org/"))
+#+END_SRC
+
 First I like to add some extra fancy stuff to make orgmode more appealing when i'm using =+pretty= flag.
 #+BEGIN_SRC elisp
 (after! org (setq org-hide-emphasis-markers t
                   org-hide-leading-stars t
-                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))))
-;                  org-ellipsis "▼"))
+                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+                  org-ellipsis " ▼"
+                  ))
 #+END_SRC
 
 - Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
 - Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
-Add a when condition that only adjust settings when certain features are enabled... This depends on where i'm running Emacs from (eg: Terminla, X11 or native).
-#+BEGIN_SRC elisp
-(when (require 'org-superstar nil 'noerror)
-  (setq org-superstar-headline-bullets-list '("◉" "●" "○")
-        org-superstar-item-bullet-alist nil))
-#+END_SRC
+# Add a when condition that only adjust settings when certain features are enabled... This depends on where i'm running Emacs from (eg: Terminla, X11 or native).
+# #+BEGIN_SRC elisp
+# (when (require 'org-superstar nil 'noerror)
+#   (setq org-superstar-headline-bullets-list '("◉" "●" "○")
+#         org-superstar-item-bullet-alist nil))
+# #+END_SRC
 
 Adding additional search functions
 #+BEGIN_SRC elisp
@@ -148,6 +117,49 @@ Adding additional search functions
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 #+END_SRC
 
+** Orgmode Startup
+#+BEGIN_SRC elisp
+(after! org (setq org-startup-indented 'indent
+                  org-startup-folded 'content
+                  org-startup-with-inline-images t
+                  ))
+(add-hook 'org-mode-hook 'org-indent-mode)
+;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
+#+END_SRC
+
+** Key Bindings
+From here we load some extra key bindings that I use often
+#+BEGIN_SRC elisp
+(bind-key "<f6>" #'link-hint-copy-link)
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix ("s" . "search")
+      :desc "Outline" "o" #'counsel-outline
+      :desc "Counsel ripgrep" "d" #'counsel-rg
+      :desc "Swiper All" "@" #'swiper-all
+      :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
+      :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
+      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
+      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
+      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+
+      :prefix ("l" . "links")
+      "o" #'org-open-at-point
+      "g" #'eos/org-add-ids-to-headlines-in-file
+
+      :prefix ("r" . "refile")
+      :desc "Refile to reference" "R" #'stfl/refile-to-roam
+
+      :prefix ("j" . "nicks functions")
+      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp
+      )
+
+(map! :after org-agenda
+      :map org-agenda-mode-map
+      :localleader
+      :desc "Filter" "f" #'org-agenda-filter)
+#+END_SRC
 ** Agenda
 Setting up my initial agenda settings
 #+BEGIN_SRC elisp
@@ -399,17 +411,29 @@ TODO tweak refiling settings to match new GTD setup
   (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
      (call-interactively 'org-refile)))
-#+END_SRC
 
-** Orgmode Startup
-#+BEGIN_SRC elisp
-(after! org (setq org-startup-indented 'indent
-                  org-startup-folded 'content
-                  org-src-tab-acts-natively t
-                  ;; org-startup-with-inline-images t
-                  ))
-(add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'turn-off-auto-fill)
+;; ;; initial prompt should be the text of the tree
+;; (defun stfl/refile-to-roam2 (&optional initial-prompt)
+;;   (interactive)
+;;   ;; (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
+;;   (let* ((completions (org-roam--get-title-path-completions))
+;;          (title-with-tags (org-roam-completion--completing-read "File: " completions :initial-input initial-prompt))
+;;          (res (cdr (assoc title-with-tags completions)))
+;;          (file-path (plist-get res :path)))
+;;     ;; if we have a file-path -> call org-refile
+;;     (if file-path
+;;         (type-of file-path)
+;;       (let ((org-refile-targets (quote ((file-path :maxlevel . 4))))
+;;         (call-interactively 'org-refile))
+;;       ;; if we can't find a file call a org-roam-capture
+;;       ;; TODO this does not actually refile the subtree
+;;       (let ((org-roam-capture--info `((title . ,title-with-tags)
+;;                                       (slug  . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+;;             (org-roam-capture--context 'title))
+;;         (setq org-roam-capture-additional-template-props (list :finalize 'find-file))
+;;         (org-roam-capture--capture))
+;;       )))
+
 #+END_SRC
 
 ** Default Tags
@@ -452,56 +476,6 @@ REVIEW should we define any additional tags?
                       ;; ("#coding")
                       ;; ("#research")
                       ))
-#+END_SRC
-* Module Settings
-** Company mode
-#+BEGIN_SRC elisp
-(after! org
-  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-  (setq company-idle-delay 0.25))
-#+END_SRC
-** Define Word
-#+BEGIN_SRC elisp
-(use-package! define-word
-  :after org
-  :config
-  (map! :after org
-        :map org-mode-map
-        :leader
-        :desc "Define word at point" "@" #'define-word-at-point))
-#+END_SRC
-** Deft
-When this variable is set to ~t~ your deft directory will be updated to your projectile-project root's folder when switching projects, and the deft buffer's contents will be refreshed.
-#+BEGIN_SRC elisp
-(setq deft-use-projectile-projects t)
-(defun zyro/deft-update-directory ()
-  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
-  (interactive)
-  (if (projectile-project-p)
-      (setq deft-directory (expand-file-name (doom-project-root)))))
-(when deft-use-projectile-projects
-  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
-  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
-#+END_SRC
-
-Configuring DEFT default settings
-#+BEGIN_SRC elisp
-(load! "my-deft-title.el")
-(use-package deft
-  :bind (("<f8>" . deft))
-  :commands (deft deft-open-file deft-new-file-named)
-  :config
-  (setq deft-directory "~/.org/"
-        deft-auto-save-interval 0
-        deft-recursive t
-        deft-current-sort-method 'title
-        deft-extensions '("md" "txt" "org")
-        deft-use-filter-string-for-filename t
-        deft-use-filename-as-title nil
-        deft-markdown-mode-title-level 1
-        deft-file-naming-rules '((nospace . "-"))))
-(require 'my-deft-title)
-(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
 #+END_SRC
 ** Org-Rifle
 #+BEGIN_SRC elisp
@@ -599,10 +573,6 @@ Configuring DEFT default settings
 
 (provide 'setup-helm-org-rifle)
 #+END_SRC
-** Pandoc
-#+BEGIN_SRC elisp
-(setq org-pandoc-options '((standalone . t) (self-contained . t)))
-#+END_SRC
 ** Roam
 These are my default ROAM settings
 #+BEGIN_SRC elisp
@@ -614,49 +584,26 @@ These are my default ROAM settings
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
-      :file-name "journal/%<%Y-%m-%d-%a>"
+      :file-name "roam/journal/%<%Y-%m-%d-%a>"
       :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
 
 (setq org-roam-capture-templates
-        '(("b" "book" plain (function org-roam-capture--get-point)
-           :file-name "book/${slug}%<%Y%m%d%H%M>"
-           :head "#+TITLE: ${slug}\n#+roam_tags: %^{tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
+        '(("f" "fleeting" plain (function org-roam-capture--get-point)
            "%?"
-           :unnarrowed t)
-          ("c" "curiousity" plain (function org-roam-capture--get-point)
-           :file-name "curious/${slug}"
-           :head "#+TITLE: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
-           "%?"
-           :unnarrowed t)
-          ("d" "digest" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "digest/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
-           :unnarrowed t)
-          ("f" "fleeting" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "fleeting/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
+           :file-name "roam/fleeting/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
            :unnarrowed t)
           ("p" "private" plain (function org-roam-capture--get-point)
            "%?"
-           :file-name "private/${slug}"
+           :file-name "roam/private/${slug}"
            :head "#+title: ${title}\n"
            :unnarrowed t)
-          ("x" "programming" plain (function org-roam-capture--get-point)
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n- source :: [[%^{link}][%^{description}]] \\\n- metadata :: %?\n\n* Notes\n\n* Follow-up Actions"
-           :unnarrowed t)
-          ("r" "research" entry (function org-roam--capture-get-point)
-           (file "~/.doom.d/templates/org-roam-research.org")
-           :file-name "research/${slug}"
+          ("c" "coding" plain (function org-roam-capture--get-point)
            "%?"
+           :file-name "roam/coding/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
            :unnarrowed t)
-          ("t" "technical" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "technical/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
-           :unnarrowed t)))
+           ))
 #+END_SRC
 ** Roam Server
 #+BEGIN_SRC elisp
@@ -703,6 +650,60 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
+* Module Settings
+** Company mode
+#+BEGIN_SRC elisp
+(after! org
+  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
+  (setq company-idle-delay 0.25))
+#+END_SRC
+** Define Word
+#+BEGIN_SRC elisp
+(use-package! define-word
+  :after org
+  :config
+  (map! :after org
+        :map org-mode-map
+        :leader
+        :desc "Define word at point" "@" #'define-word-at-point))
+#+END_SRC
+** Deft
+When this variable is set to ~t~ your deft directory will be updated to your projectile-project root's folder when switching projects, and the deft buffer's contents will be refreshed.
+#+BEGIN_SRC elisp
+(setq deft-use-projectile-projects t)
+(defun zyro/deft-update-directory ()
+  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
+  (interactive)
+  (if (projectile-project-p)
+      (setq deft-directory (expand-file-name (doom-project-root)))))
+(when deft-use-projectile-projects
+  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
+  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
+#+END_SRC
+
+Configuring DEFT default settings
+#+BEGIN_SRC elisp
+(load! "my-deft-title.el")
+(use-package deft
+  :bind (("<f8>" . deft))
+  :commands (deft deft-open-file deft-new-file-named)
+  :config
+  (setq deft-directory "~/.org/"
+        deft-auto-save-interval 0
+        deft-recursive t
+        deft-current-sort-method 'title
+        deft-extensions '("md" "txt" "org")
+        deft-use-filter-string-for-filename t
+        deft-use-filename-as-title nil
+        deft-markdown-mode-title-level 1
+        deft-file-naming-rules '((nospace . "-"))))
+(require 'my-deft-title)
+(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
+#+END_SRC
+** Pandoc
+#+BEGIN_SRC elisp
+(setq org-pandoc-options '((standalone . t) (self-contained . t)))
+#+END_SRC
 ** Projectile
 #+BEGIN_SRC elisp
 (after! projectile
@@ -720,12 +721,6 @@ These are my default ROAM settings
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :prefix ("j" . "nicks functions")
-      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp)
-
 ;; (setq org-tasks-properties-metadata (list "SOURCE"))
 ;; (map! :after org
 ;;       :map org-mode-map
@@ -734,7 +729,10 @@ These are my default ROAM settings
 ;;       :desc "Clarify properties" "c" #'nm/org-clarify-metadata)
 
 ;; (bind-key "<f7>" #'nm/org-capture-to-file)
+#+END_SRC
 
+set todo value to *PROJ* for all TODOs with sub-todos
+#+BEGIN_SRC elisp
 (add-hook 'before-save-hook #'nm/org-assign-tasks-proj)
 #+END_SRC
 
@@ -753,10 +751,11 @@ These are my default ROAM settings
   ;; (setq lsp-log-io t)
   )
 
-(map! (:map lsp-mode-map
-       :desc "Diagnostic for Workspace"
+(map! (:after lsp
+       :map lsp-mode-map
        :leader
-       :n "c X" #'lsp-treemacs-errors-list))
+       :prefix ("c" . "+code")
+       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 #+END_SRC
 
 ** PHP
@@ -794,7 +793,7 @@ These are my default ROAM settings
 #+END_SRC
 
 * Collaboration
-** Dir tree diff
+** Directory tree diff
 #+BEGIN_SRC elisp
 (use-package! ztree)
 #+END_SRC

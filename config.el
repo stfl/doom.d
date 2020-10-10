@@ -34,49 +34,13 @@
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 
-(bind-key "<f6>" #'link-hint-copy-link)
-(map! :after org
-      :map org-mode-map
-      :leader
-      :desc "Move up window" "<up>" #'evil-window-up
-      :desc "Move down window" "<down>" #'evil-window-down
-      :desc "Move left window" "<left>" #'evil-window-left
-      :desc "Move right window" "<right>" #'evil-window-right
-
-      :prefix ("s" . "+search")
-      :desc "Outline" "o" #'counsel-outline
-      :desc "Counsel ripgrep" "d" #'counsel-rg
-      :desc "Swiper All" "@" #'swiper-all
-      :desc "Rifle Buffer" "b" #'helm-org-rifle-current-buffer
-      :desc "Rifle Agenda Files" "a" #'helm-org-rifle-agenda-files
-      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
-      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
-
-      :prefix ("l" . "+links")
-      "o" #'org-open-at-point
-      "g" #'eos/org-add-ids-to-headlines-in-file
-
-      :localleader
-      :prefix ("s" . "+search")
-      :desc "Match sparse tree" "M" #'org-match-sparse-tree
-
-      :prefix ("r" . "+refile")
-      :desc "Refile to reference" "R" #'stfl/refile-to-roam
-      )
-
-(map! :after org-agenda
-      :map org-agenda-mode-map
-      :localleader
-      :desc "Filter" "f" #'org-agenda-filter)
+(after! org (setq org-directory "~/.org/"))
 
 (after! org (setq org-hide-emphasis-markers t
                   org-hide-leading-stars t
-                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))))
-;                  org-ellipsis "▼"))
-
-(when (require 'org-superstar nil 'noerror)
-  (setq org-superstar-headline-bullets-list '("◉" "●" "○")
-        org-superstar-item-bullet-alist nil))
+                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+                  org-ellipsis " ▼"
+                  ))
 
 (defun zyro/rifle-roam ()
   "Rifle through your ROAM directory"
@@ -88,6 +52,43 @@
       :leader
       :prefix ("n" . "notes")
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+
+(after! org (setq org-startup-indented 'indent
+                  org-startup-folded 'content
+                  org-startup-with-inline-images t
+                  ))
+(add-hook 'org-mode-hook 'org-indent-mode)
+;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
+
+(bind-key "<f6>" #'link-hint-copy-link)
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix ("s" . "search")
+      :desc "Outline" "o" #'counsel-outline
+      :desc "Counsel ripgrep" "d" #'counsel-rg
+      :desc "Swiper All" "@" #'swiper-all
+      :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
+      :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
+      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
+      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
+      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+
+      :prefix ("l" . "links")
+      "o" #'org-open-at-point
+      "g" #'eos/org-add-ids-to-headlines-in-file
+
+      :prefix ("r" . "refile")
+      :desc "Refile to reference" "R" #'stfl/refile-to-roam
+
+      :prefix ("j" . "nicks functions")
+      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp
+      )
+
+(map! :after org-agenda
+      :map org-agenda-mode-map
+      :localleader
+      :desc "Filter" "f" #'org-agenda-filter)
 
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
@@ -211,13 +212,27 @@
   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
      (call-interactively 'org-refile)))
 
-(after! org (setq org-startup-indented 'indent
-                  org-startup-folded 'content
-                  org-src-tab-acts-natively t
-                  ;; org-startup-with-inline-images t
-                  ))
-(add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'turn-off-auto-fill)
+;; ;; initial prompt should be the text of the tree
+;; (defun stfl/refile-to-roam2 (&optional initial-prompt)
+;;   (interactive)
+;;   ;; (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
+;;   (let* ((completions (org-roam--get-title-path-completions))
+;;          (title-with-tags (org-roam-completion--completing-read "File: " completions :initial-input initial-prompt))
+;;          (res (cdr (assoc title-with-tags completions)))
+;;          (file-path (plist-get res :path)))
+;;     ;; if we have a file-path -> call org-refile
+;;     (if file-path
+;;         (type-of file-path)
+;;       (let ((org-refile-targets (quote ((file-path :maxlevel . 4))))
+;;         (call-interactively 'org-refile))
+;;       ;; if we can't find a file call a org-roam-capture
+;;       ;; TODO this does not actually refile the subtree
+;;       (let ((org-roam-capture--info `((title . ,title-with-tags)
+;;                                       (slug  . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+;;             (org-roam-capture--context 'title))
+;;         (setq org-roam-capture-additional-template-props (list :finalize 'find-file))
+;;         (org-roam-capture--capture))
+;;       )))
 
 (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
@@ -256,45 +271,6 @@
                       ;; ("#coding")
                       ;; ("#research")
                       ))
-
-(after! org
-  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-  (setq company-idle-delay 0.25))
-
-(use-package! define-word
-  :after org
-  :config
-  (map! :after org
-        :map org-mode-map
-        :leader
-        :desc "Define word at point" "@" #'define-word-at-point))
-
-(setq deft-use-projectile-projects t)
-(defun zyro/deft-update-directory ()
-  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
-  (interactive)
-  (if (projectile-project-p)
-      (setq deft-directory (expand-file-name (doom-project-root)))))
-(when deft-use-projectile-projects
-  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
-  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
-
-(load! "my-deft-title.el")
-(use-package deft
-  :bind (("<f8>" . deft))
-  :commands (deft deft-open-file deft-new-file-named)
-  :config
-  (setq deft-directory "~/.org/"
-        deft-auto-save-interval 0
-        deft-recursive t
-        deft-current-sort-method 'title
-        deft-extensions '("md" "txt" "org")
-        deft-use-filter-string-for-filename t
-        deft-use-filename-as-title nil
-        deft-markdown-mode-title-level 1
-        deft-file-naming-rules '((nospace . "-"))))
-(require 'my-deft-title)
-(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
 
 (use-package helm-org-rifle
   :after (helm org)
@@ -390,8 +366,6 @@
 
 (provide 'setup-helm-org-rifle)
 
-(setq org-pandoc-options '((standalone . t) (self-contained . t)))
-
 (setq org-roam-tag-sources '(prop last-directory))
 (setq org-roam-db-location "~/.emacs.d/roam.db")
 (setq org-roam-directory "~/.org/")
@@ -400,49 +374,26 @@
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
-      :file-name "journal/%<%Y-%m-%d-%a>"
+      :file-name "roam/journal/%<%Y-%m-%d-%a>"
       :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
 
 (setq org-roam-capture-templates
-        '(("b" "book" plain (function org-roam-capture--get-point)
-           :file-name "book/${slug}%<%Y%m%d%H%M>"
-           :head "#+TITLE: ${slug}\n#+roam_tags: %^{tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
+        '(("f" "fleeting" plain (function org-roam-capture--get-point)
            "%?"
-           :unnarrowed t)
-          ("c" "curiousity" plain (function org-roam-capture--get-point)
-           :file-name "curious/${slug}"
-           :head "#+TITLE: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
-           "%?"
-           :unnarrowed t)
-          ("d" "digest" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "digest/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\nsource :: [[%^{link}][%^{link_desc}]]\n\n"
-           :unnarrowed t)
-          ("f" "fleeting" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "fleeting/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
+           :file-name "roam/fleeting/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
            :unnarrowed t)
           ("p" "private" plain (function org-roam-capture--get-point)
            "%?"
-           :file-name "private/${slug}"
+           :file-name "roam/private/${slug}"
            :head "#+title: ${title}\n"
            :unnarrowed t)
-          ("x" "programming" plain (function org-roam-capture--get-point)
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n- source :: [[%^{link}][%^{description}]] \\\n- metadata :: %?\n\n* Notes\n\n* Follow-up Actions"
-           :unnarrowed t)
-          ("r" "research" entry (function org-roam--capture-get-point)
-           (file "~/.doom.d/templates/org-roam-research.org")
-           :file-name "research/${slug}"
+          ("c" "coding" plain (function org-roam-capture--get-point)
            "%?"
+           :file-name "roam/coding/${slug}"
+           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
            :unnarrowed t)
-          ("t" "technical" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "technical/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
-           :unnarrowed t)))
+           ))
 
 (use-package org-roam-server
   :ensure t
@@ -485,6 +436,47 @@
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 
+(after! org
+  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
+  (setq company-idle-delay 0.25))
+
+(use-package! define-word
+  :after org
+  :config
+  (map! :after org
+        :map org-mode-map
+        :leader
+        :desc "Define word at point" "@" #'define-word-at-point))
+
+(setq deft-use-projectile-projects t)
+(defun zyro/deft-update-directory ()
+  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
+  (interactive)
+  (if (projectile-project-p)
+      (setq deft-directory (expand-file-name (doom-project-root)))))
+(when deft-use-projectile-projects
+  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
+  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
+
+(load! "my-deft-title.el")
+(use-package deft
+  :bind (("<f8>" . deft))
+  :commands (deft deft-open-file deft-new-file-named)
+  :config
+  (setq deft-directory "~/.org/"
+        deft-auto-save-interval 0
+        deft-recursive t
+        deft-current-sort-method 'title
+        deft-extensions '("md" "txt" "org")
+        deft-use-filter-string-for-filename t
+        deft-use-filename-as-title nil
+        deft-markdown-mode-title-level 1
+        deft-file-naming-rules '((nospace . "-"))))
+(require 'my-deft-title)
+(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
+
+(setq org-pandoc-options '((standalone . t) (self-contained . t)))
+
 (after! projectile
   ;; (setq projectile-project-search-path
   ;;       (cddr (directory-files "/work" t))) ;;add all dirs inside ~/work -> https://github.com/bbatsov/projectile/issues/1500
@@ -494,12 +486,6 @@
 (load! "org-customs.el")
 (load! "org-helpers.el")
 (load! "org-helpers-nm.el")
-
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :prefix ("j" . "nicks functions")
-      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp)
 
 ;; (setq org-tasks-properties-metadata (list "SOURCE"))
 ;; (map! :after org
@@ -524,10 +510,11 @@
   ;; (setq lsp-log-io t)
   )
 
-(map! (:map lsp-mode-map
-       :desc "Diagnostic for Workspace"
+(map! (:after lsp
+       :map lsp-mode-map
        :leader
-       :n "c X" #'lsp-treemacs-errors-list))
+       :prefix ("c" . "+code")
+       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
