@@ -398,16 +398,10 @@ TODO tweak refiling settings to match new GTD setup
   (let ((org-agenda-files '("~/.org/coding/")))
      (call-interactively 'org-refile)))
 
-  ;;(let ((org-refile-targets (append (file-expand-wildcards "~/.org/coding/*.org")
-
-;;(defun stfl/refile ()
-  ;;Refile current headline to NEXT tasks."
-  ;;"(interactive)
-  ;;"(let ((org-refile-targets '((org-next-task-files :maxlevel . 3))))
-    ;;"(org-refile)))
-
-
+;; add all directories but ~/.org/gtd
+    ;; (append (file-expand-wildcards "~/.org/*/")
 #+END_SRC
+
 ** Orgmode Startup
 #+BEGIN_SRC elisp
 (after! org (setq org-startup-indented 'indent
@@ -427,11 +421,11 @@ REVIEW should we define any additional tags?
                       ("Context")
                       (:grouptags)
                       ("@home" . ?h)
-                      ("@office")
-                      ("@pc")
-                      ("@laptop")
-                      ("@phone")
-                      ("@sarah")
+                      ("@office". ?o)
+                      ("@pc" . ?p)
+                      ("@laptop" . ?p)
+                      ("@phone" . ?t)
+                      ("@sarah" . ?s)
                       (:endgrouptag)
                       (:startgrouptag)
                       ("Categories")
@@ -442,6 +436,7 @@ REVIEW should we define any additional tags?
                       ("hobby")
                       ("friends")
                       ("coding")
+                      ("emacs")
                       ("goal")
                       ("gtd")
                       (:endgrouptag)
@@ -460,7 +455,7 @@ REVIEW should we define any additional tags?
                       ))
 #+END_SRC
 * Module Settings
-** company mode
+** Company mode
 #+BEGIN_SRC elisp
 (after! org
   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
@@ -476,7 +471,7 @@ REVIEW should we define any additional tags?
         :leader
         :desc "Define word at point" "@" #'define-word-at-point))
 #+END_SRC
-** DEFT
+** Deft
 When this variable is set to ~t~ your deft directory will be updated to your projectile-project root's folder when switching projects, and the deft buffer's contents will be refreshed.
 #+BEGIN_SRC elisp
 (setq deft-use-projectile-projects t)
@@ -609,14 +604,13 @@ Configuring DEFT default settings
 #+BEGIN_SRC elisp
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 #+END_SRC
-** ROAM
+** Roam
 These are my default ROAM settings
 #+BEGIN_SRC elisp
 (setq org-roam-tag-sources '(prop last-directory))
-(setq org-roam-db-location "~/.org/roam.db")
+(setq org-roam-db-location "~/.emacs.d/roam.db")
 (setq org-roam-directory "~/.org/")
-(add-to-list 'safe-local-variable-values
-'(org-roam-directory . "."))
+(add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
@@ -665,7 +659,7 @@ These are my default ROAM settings
            :head "#+title: ${title}\n#+roam_tags: %^{roam_tags}\n\n"
            :unnarrowed t)))
 #+END_SRC
-** ROAM Server
+** Roam Server
 #+BEGIN_SRC elisp
 (use-package org-roam-server
   :ensure t
@@ -680,7 +674,7 @@ These are my default ROAM settings
         org-roam-server-network-label-truncate-length 60
         org-roam-server-network-label-wrap-length 20))
 #+END_SRC
-** ROAM Export Backlinks + Content
+** Roam Export Backlinks + Content
 #+BEGIN_SRC elisp
 (defun my/org-roam--backlinks-list-with-content (file)
   (with-temp-buffer
@@ -710,7 +704,7 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
-** projectile
+** Projectile
 #+BEGIN_SRC elisp
 (after! projectile
   ;; (setq projectile-project-search-path
@@ -801,7 +795,7 @@ These are my default ROAM settings
 #+END_SRC
 
 * Collaboration
-** dir tree diff
+** Dir tree diff
 #+BEGIN_SRC elisp
 (use-package! ztree)
 #+END_SRC
@@ -821,5 +815,5 @@ display more columns in forge list topic
 
 ** Todoist integration
 #+BEGIN_SRC elisp
-(setq! todoist-token "27df443b7f9e4e3692ccd5003711375b485663ac")
+(setq! todoist-token "")
 #+END_SRC

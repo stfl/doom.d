@@ -209,13 +209,8 @@
   (let ((org-agenda-files '("~/.org/coding/")))
      (call-interactively 'org-refile)))
 
-  ;;(let ((org-refile-targets (append (file-expand-wildcards "~/.org/coding/*.org")
-
-;;(defun stfl/refile ()
-  ;;Refile current headline to NEXT tasks."
-  ;;"(interactive)
-  ;;"(let ((org-refile-targets '((org-next-task-files :maxlevel . 3))))
-    ;;"(org-refile)))
+;; add all directories but ~/.org/gtd
+    ;; (append (file-expand-wildcards "~/.org/*/")
 
 (after! org (setq org-startup-indented 'indent
                   org-startup-folded 'content
@@ -230,11 +225,11 @@
                       ("Context")
                       (:grouptags)
                       ("@home" . ?h)
-                      ("@office")
-                      ("@pc")
-                      ("@laptop")
-                      ("@phone")
-                      ("@sarah")
+                      ("@office". ?o)
+                      ("@pc" . ?p)
+                      ("@laptop" . ?p)
+                      ("@phone" . ?t)
+                      ("@sarah" . ?s)
                       (:endgrouptag)
                       (:startgrouptag)
                       ("Categories")
@@ -245,6 +240,7 @@
                       ("hobby")
                       ("friends")
                       ("coding")
+                      ("emacs")
                       ("goal")
                       ("gtd")
                       (:endgrouptag)
@@ -398,10 +394,9 @@
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 
 (setq org-roam-tag-sources '(prop last-directory))
-(setq org-roam-db-location "~/.org/roam.db")
+(setq org-roam-db-location "~/.emacs.d/roam.db")
 (setq org-roam-directory "~/.org/")
-(add-to-list 'safe-local-variable-values
-'(org-roam-directory . "."))
+(add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
@@ -574,4 +569,4 @@
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(setq! todoist-token "27df443b7f9e4e3692ccd5003711375b485663ac")
+(setq! todoist-token "")
