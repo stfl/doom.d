@@ -54,7 +54,7 @@
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 
 (after! org (setq org-startup-indented 'indent
-                  org-startup-folded 'content
+                  org-startup-folded 'fold
                   org-startup-with-inline-images t
                   ))
 (add-hook 'org-mode-hook 'org-indent-mode)
@@ -101,6 +101,7 @@
                   org-agenda-window-setup 'current-window
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies t
+                  org-track-ordered-property-with-tag t
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/"
@@ -240,10 +241,13 @@
                       (:grouptags)
                       ("@home" . ?h)
                       ("@office". ?o)
-                      ("@pc" . ?p)
-                      ("@laptop" . ?p)
-                      ("@phone" . ?t)
                       ("@sarah" . ?s)
+                      (:endgrouptag)
+                      (:startgrouptag)
+                      ("@PC" . ?p)
+                      (:grouptags)
+                      ("@desktop")
+                      ("@laptop")
                       (:endgrouptag)
                       (:startgrouptag)
                       ("Categories")
@@ -258,6 +262,8 @@
                       ("goal")
                       ("gtd")
                       (:endgrouptag)
+                      (:startgrouptag)
+                      ("Process")
                       (:grouptags)
                       ("SOMEDAY" . ?S)
                       ("CANCELLED" . ?C)
@@ -496,7 +502,7 @@
 
 ;; (bind-key "<f7>" #'nm/org-capture-to-file)
 
-(add-hook 'before-save-hook #'nm/org-assign-tasks-proj)
+;; (add-hook 'before-save-hook #'nm/org-assign-tasks-proj)
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
