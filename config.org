@@ -21,6 +21,12 @@ Set a few settings if we detect terminal mode
    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
 #+END_SRC
 * UI
+start maximized
+
+#+BEGIN_SRC elisp
+(toggle-frame-maximized)
+#+END_SRC
+
 ** Font
 Doom exposes five (optional) variables for controlling fonts in Doom. Here
 are the three important ones:
@@ -81,16 +87,17 @@ limit evil-snipe to the bufffer
 ** General
 Org directory
 #+BEGIN_SRC elisp
-(after! org (setq org-directory "~/.org/"))
+(setq org-directory "~/.org/")
 #+END_SRC
 
 First I like to add some extra fancy stuff to make orgmode more appealing when i'm using =+pretty= flag.
 #+BEGIN_SRC elisp
-(after! org (setq org-hide-emphasis-markers t
-                  org-hide-leading-stars t
-                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-                  org-ellipsis " ▼"
-                  ))
+(after! org
+  (setq org-hide-emphasis-markers t
+        org-hide-leading-stars t
+        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+        org-ellipsis " ▼"
+        ))
 #+END_SRC
 
 - Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
@@ -103,31 +110,27 @@ First I like to add some extra fancy stuff to make orgmode more appealing when i
 #         org-superstar-item-bullet-alist nil))
 # #+END_SRC
 
-Adding additional search functions
-#+BEGIN_SRC elisp
-(defun zyro/rifle-roam ()
-  "Rifle through your ROAM directory"
-  (interactive)
-  (helm-org-rifle-directories org-roam-directory))
+always generate an id for a link
 
-(map! :after org
-      :map org-mode-map
-      :leader
-      :prefix ("n" . "notes")
-      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+#+BEGIN_SRC elisp
+(after! org (setq org-id-link-to-org-use-id t))
 #+END_SRC
 
 ** Orgmode Startup
 #+BEGIN_SRC elisp
-(after! org (setq org-startup-indented 'indent
-                  org-startup-folded 'fold
-                  org-startup-with-inline-images t
-                  ))
-(add-hook 'org-mode-hook 'org-indent-mode)
+(after! org
+  (setq org-startup-indented 'indent
+        org-startup-folded 'fold
+        org-startup-with-inline-images t
+        ))
+;; (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 #+END_SRC
 
 ** Key Bindings
+:PROPERTIES:
+:ID:       f98aed8d-22e1-401a-940a-09193f2ba5ef
+:END:
 From here we load some extra key bindings that I use often
 #+BEGIN_SRC elisp
 (bind-key "<f6>" #'link-hint-copy-link)
@@ -160,6 +163,20 @@ From here we load some extra key bindings that I use often
       :localleader
       :desc "Filter" "f" #'org-agenda-filter)
 #+END_SRC
+
+Adding additional search functions
+#+BEGIN_SRC elisp
+(defun zyro/rifle-roam ()
+  "Rifle through your ROAM directory"
+  (interactive)
+  (helm-org-rifle-directories org-roam-directory))
+
+(map! :after org
+      :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+#+END_SRC
 ** Agenda
 Setting up my initial agenda settings
 #+BEGIN_SRC elisp
@@ -174,13 +191,15 @@ Setting up my initial agenda settings
                   org-agenda-window-setup 'current-window
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies t
-                  org-track-ordered-property-with-tag t
                   org-habit-show-habits t))
 
-(after! org (setq org-agenda-files '("~/.org/gtd/"
-                                     "~/.org/gtd/projects/")))
-                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(after! org
+  (setq! org-agenda-files '("~/.org/gtd/projects.org"
+                            "~/.org/gtd/tickler.org"
+                            "~/.org/gtd/projects/"
+                            )))
+;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -190,89 +209,11 @@ Setting up my initial agenda settings
 
 Adjusting clock settings
 #+BEGIN_SRC elisp
-(after! org (setq org-clock-continuously t))
+(after! org
+  (setq! org-clock-continuously t))
 #+END_SRC
 
-;; ;; (org-super-agenda-mode t)
 
-;; (setq org-agenda-custom-commands
-;;       (quote (("N" "Notes" tags "NOTE"
-;;                ((org-agenda-overriding-header "Notes")
-;;                 (org-tags-match-list-sublevels t)))
-;;               ("h" "Habits" tags-todo "STYLE=\"habit\""
-;;                ((org-agenda-overriding-header "Habits")
-;;                 (org-agenda-sorting-strategy
-;;                  '(todo-state-down effort-up category-keep))))
-;;               ("i" "Inbox" todo ""
-;;                         ((org-agenda-files "~/.org/gtd/inbox.org")
-;;                          (org-agenda-overriding-header "Inbox")))
-;;               ("I" "Inbox" tags "REFILE"
-;;                         ((org-agenda-overriding-header "Tasks to Refile")
-;;                          (org-tags-match-list-sublevels nil)))
-;;               ("w" "Master Agenda"
-;;                ((agenda ""
-;;                         ((org-agenda-span '1)
-;;                          (org-agenda-files (append (file-expand-wildcards "~/.org/gtd/*.org")))
-;;                          (org-agenda-start-day (org-today))))
-;;                 (tags-todo "-CANCELLED/!"
-;;                            ((org-agenda-overriding-header "Stuck Projects")
-;;                             (org-agenda-skip-function 'bh/skip-non-stuck-projects)
-;;                             (org-agenda-sorting-strategy
-;;                              '(category-keep))))
-;;                 (tags-todo "-HOLD-CANCELLED/!"
-;;                            ((org-agenda-overriding-header "Projects")
-;;                             (org-agenda-skip-function 'bh/skip-non-projects)
-;;                             (org-tags-match-list-sublevels 'indented)
-;;                             (org-agenda-sorting-strategy
-;;                              '(category-keep))))
-;;                 (tags-todo "-CANCELLED/!NEXT"
-;;                            ((org-agenda-overriding-header (concat "Project Next Tasks"
-;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
-;;                                                                       ""
-;;                                                                     " (including WAITING and SCHEDULED tasks)")))
-;;                             (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
-;;                             (org-tags-match-list-sublevels t)
-;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-sorting-strategy
-;;                              '(todo-state-down effort-up category-keep))))
-;;                 (tags-todo "-SOMEDAY-REFILE-CANCELLED-WAITING-HOLD/!"
-;;                            ((org-agenda-overriding-header (concat "Project Subtasks"
-;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
-;;                                                                       ""
-;;                                                                     " (including WAITING and SCHEDULED tasks)")))
-;;                             (org-agenda-skip-function 'bh/skip-non-project-tasks)
-;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-sorting-strategy
-;;                              '(category-keep))))
-;;                 (tags-todo "-SOMEDAY-REFILE-CANCELLED-#waiting-#hold-#monitor/!"
-;;                            ((org-agenda-overriding-header (concat "Standalone Tasks"
-;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
-;;                                                                       ""
-;;                                                                     " (including WAITING and SCHEDULED tasks)")))
-;;                             (org-agenda-skip-function 'bh/skip-project-tasks)
-;;                             (org-agenda-todo-ignore-scheduled t)
-;;                             (org-agenda-todo-ignore-deadlines t)
-;;                             (org-agenda-todo-ignore-with-date t)
-;;                             (org-agenda-sorting-strategy
-;;                              '(category-keep))))
-;;                 (tags-todo "-CANCELLED+#waiting|#hold|#monitor/"
-;;                            ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
-;;                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
-;;                                                                       ""
-;;                                                                     " (including WAITING and SCHEDULED tasks)")))
-;;                             (org-agenda-skip-function 'bh/skip-non-tasks)
-;;                             (org-tags-match-list-sublevels nil)
-;;                             (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-;;                             (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
-;;                 (tags "-REFILE/"
-;;                       ((org-agenda-overriding-header "Tasks to Archive")
-;;                        (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-;;                        (org-tags-match-list-sublevels nil))))
-;;                nil))))
 #+BEGIN_SRC elisp
 (defun skip-all-siblings-but-first-next-action ()
   "Skip all but the first non-done entry."
@@ -295,26 +236,33 @@ Adjusting clock settings
   (string= "TODO" (org-get-todo-state)))
 #+END_SRC
 
+org super agenda
+#+BEGIN_SRC elisp
+(add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
+
+;; ;; (org-super-agenda-mode t)
+#+END_SRC
+
 ** Capture Templates
 Here we setup the capture templates we want for ~org-capture~. I use a file template that's pre-filled with my monthly scheduled transactions. (TODO: Add default file-template for new projects.)
 #+BEGIN_SRC elisp
 (after! org (setq org-capture-templates
-      '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
-         "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
-        ("p" "New Project" plain (file nm/org-capture-file-picker)
-         (file "~/.doom.d/templates/template-projects.org"))
-        ("n" "Note on headline" plain (function nm/org-end-of-headline)
-         "%?" :empty-lines-before 1 :empty-lines-after 1)
-        ("q" "quick note to file" entry (function nm/org-capture-weeklies)
-         "* %?" :empty-lines-before 1 :empty-lines-after 1)
-        ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
-         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
-         :empty-lines-after 1)
-        ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
-        "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-         :empty-lines-after 1 )
-        )
-  ))
+                  '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
+                     "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
+                    ("p" "New Project" plain (file nm/org-capture-file-picker)
+                     (file "~/.doom.d/templates/template-projects.org"))
+                    ("n" "Note on headline" plain (function nm/org-end-of-headline)
+                     "%?" :empty-lines-before 1 :empty-lines-after 1)
+                    ("q" "quick note to file" entry (function nm/org-capture-weeklies)
+                     "* %?" :empty-lines-before 1 :empty-lines-after 1)
+                    ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
+                     "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
+                     :empty-lines-after 1)
+                    ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
+                     "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
+                     :empty-lines-after 1 )
+                    )
+                  ))
 #+END_SRC
 
 update brackets when copying a link from org-protocol
@@ -328,9 +276,10 @@ update brackets when copying a link from org-protocol
 
 ** Directory settings
 #+BEGIN_SRC elisp
-(after! org (setq org-image-actual-width nil
-                  org-archive-location "%s_archive::datetree"
-                  ))
+(after! org
+  (setq org-image-actual-width nil
+        org-archive-location "%s_archive::datetree"
+        ))
 #+END_SRC
 
 ** org-habit
@@ -358,6 +307,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
+(after! org
   (setq org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
@@ -371,7 +321,7 @@ After much feedback and discussing with other users, I decided to simplify the k
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next)))
+          ("NEXT" . +org-todo-next))))
 #+END_SRC
 
 ** Logging and Drawers
@@ -385,8 +335,9 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time
                   org-log-repeat 'time
-                  org-log-redeadline 'note
-                  org-log-reschedule 'note))
+                  ;; org-log-redeadline 'note
+                  ;; org-log-reschedule 'note
+                  ))
 #+END_SRC
 
 ** Properties
@@ -395,14 +346,13 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
       org-catch-invisible-edits 'error) ; Catch invisible edits
 #+END_SRC
 
-** Refiling Defaults
-TODO tweak refiling settings to match new GTD setup
+** Refiling
 #+BEGIN_SRC elisp
 (after! org (setq org-refile-targets '((nil :maxlevel . 9)
                                        (org-agenda-files :maxlevel . 4)
 
                                        ))
-             (setq! org-refile-use-outline-path 'buffer-name
+             (setq org-refile-use-outline-path 'buffer-name
                     org-outline-path-complete-in-steps nil
                     org-refile-allow-creating-parent-nodes 'confirm))
 
@@ -440,7 +390,7 @@ TODO tweak refiling settings to match new GTD setup
 ** Default Tags
 REVIEW should we define any additional tags?
 #+BEGIN_SRC elisp
-(setq org-tags-column 0)
+;; (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
                       ("Context")
                       (:grouptags)
@@ -656,6 +606,42 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
+** Task Dependencies
+
+load org-edna
+
+#+BEGIN_SRC elisp
+(use-package! org-edna
+  :after org
+)
+(add-hook 'org-mode-hook 'org-edna-mode)
+#+END_SRC
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq org-track-ordered-property-with-tag t
+        org-hierarchical-todo-statistics t
+        ))
+#+END_SRC
+
+[[https://plaindrops.de/blog/2020/GTDorgmode/][A simple GTD approach using Org mode and Org Edna]]
+
+#+BEGIN_SRC elisp
+(defun gtd/planning-trigger ()
+  "Automatically insert chain-find-next trigger when entry becomes NEXT"
+  (when (equal org-state "NEXT")
+    (message "das war next")
+    (setq planned (car (org-map-entries (lambda () (
+      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
+    (if planned (
+      (message "Geplant ist %s" planned)
+      (org-entry-put nil "SCHEDULED" planned)
+      (org-entry-delete nil "PLANNED")
+  ) nil) ))
+
+(add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
+#+END_SRC
+
 * Module Settings
 ** Company mode
 #+BEGIN_SRC elisp

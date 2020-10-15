@@ -7,6 +7,8 @@
    (setq doom-theme 'doom-solarized-dark)
    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
 
+(toggle-frame-maximized)
+
 (setq doom-font (font-spec :family "Fira Code" :size 13)
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
@@ -34,30 +36,23 @@
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 
-(after! org (setq org-directory "~/.org/"))
+(setq org-directory "~/.org/")
 
-(after! org (setq org-hide-emphasis-markers t
-                  org-hide-leading-stars t
-                  org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-                  org-ellipsis " ▼"
-                  ))
+(after! org
+  (setq org-hide-emphasis-markers t
+        org-hide-leading-stars t
+        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+        org-ellipsis " ▼"
+        ))
 
-(defun zyro/rifle-roam ()
-  "Rifle through your ROAM directory"
-  (interactive)
-  (helm-org-rifle-directories org-roam-directory))
+(after! org (setq org-id-link-to-org-use-id t))
 
-(map! :after org
-      :map org-mode-map
-      :leader
-      :prefix ("n" . "notes")
-      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
-
-(after! org (setq org-startup-indented 'indent
-                  org-startup-folded 'fold
-                  org-startup-with-inline-images t
-                  ))
-(add-hook 'org-mode-hook 'org-indent-mode)
+(after! org
+  (setq org-startup-indented 'indent
+        org-startup-folded 'fold
+        org-startup-with-inline-images t
+        ))
+;; (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 
 (bind-key "<f6>" #'link-hint-copy-link)
@@ -90,6 +85,17 @@
       :localleader
       :desc "Filter" "f" #'org-agenda-filter)
 
+(defun zyro/rifle-roam ()
+  "Rifle through your ROAM directory"
+  (interactive)
+  (helm-org-rifle-directories org-roam-directory))
+
+(map! :after org
+      :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
                   org-agenda-use-time-grid t
@@ -101,20 +107,23 @@
                   org-agenda-window-setup 'current-window
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies t
-                  org-track-ordered-property-with-tag t
                   org-habit-show-habits t))
 
-(after! org (setq org-agenda-files '("~/.org/gtd/"
-                                     "~/.org/gtd/projects/")))
-                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(after! org
+  (setq! org-agenda-files '("~/.org/gtd/projects.org"
+                            "~/.org/gtd/tickler.org"
+                            "~/.org/gtd/projects/"
+                            )))
+;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
 ;;                            "~/.org/gtd/projects.org"
 ;;                            "~/.org/gtd/tickler.org"))
 
-(after! org (setq org-clock-continuously t))
+(after! org
+  (setq! org-clock-continuously t))
 
 (defun skip-all-siblings-but-first-next-action ()
   "Skip all but the first non-done entry."
@@ -136,23 +145,27 @@
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
+(add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
+
+;; ;; (org-super-agenda-mode t)
+
 (after! org (setq org-capture-templates
-      '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
-         "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
-        ("p" "New Project" plain (file nm/org-capture-file-picker)
-         (file "~/.doom.d/templates/template-projects.org"))
-        ("n" "Note on headline" plain (function nm/org-end-of-headline)
-         "%?" :empty-lines-before 1 :empty-lines-after 1)
-        ("q" "quick note to file" entry (function nm/org-capture-weeklies)
-         "* %?" :empty-lines-before 1 :empty-lines-after 1)
-        ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
-         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
-         :empty-lines-after 1)
-        ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
-        "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-         :empty-lines-after 1 )
-        )
-  ))
+                  '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
+                     "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
+                    ("p" "New Project" plain (file nm/org-capture-file-picker)
+                     (file "~/.doom.d/templates/template-projects.org"))
+                    ("n" "Note on headline" plain (function nm/org-end-of-headline)
+                     "%?" :empty-lines-before 1 :empty-lines-after 1)
+                    ("q" "quick note to file" entry (function nm/org-capture-weeklies)
+                     "* %?" :empty-lines-before 1 :empty-lines-after 1)
+                    ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
+                     "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
+                     :empty-lines-after 1)
+                    ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
+                     "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
+                     :empty-lines-after 1 )
+                    )
+                  ))
 
 (defun transform-square-brackets-to-round-ones(string-to-transform)
   "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -160,9 +173,10 @@
   (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
   )
 
-(after! org (setq org-image-actual-width nil
-                  org-archive-location "%s_archive::datetree"
-                  ))
+(after! org
+  (setq org-image-actual-width nil
+        org-archive-location "%s_archive::datetree"
+        ))
 
 (after! org-agenda (require 'org-habit))
 
@@ -172,6 +186,7 @@
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
+(after! org
   (setq org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
@@ -185,15 +200,16 @@
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next)))
+          ("NEXT" . +org-todo-next))))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time
                   org-log-repeat 'time
-                  org-log-redeadline 'note
-                  org-log-reschedule 'note))
+                  ;; org-log-redeadline 'note
+                  ;; org-log-reschedule 'note
+                  ))
 
 (setq org-use-property-inheritance t ; We like to inherit properties from their parents
       org-catch-invisible-edits 'error) ; Catch invisible edits
@@ -202,7 +218,7 @@
                                        (org-agenda-files :maxlevel . 4)
 
                                        ))
-             (setq! org-refile-use-outline-path 'buffer-name
+             (setq org-refile-use-outline-path 'buffer-name
                     org-outline-path-complete-in-steps nil
                     org-refile-allow-creating-parent-nodes 'confirm))
 
@@ -235,7 +251,7 @@
 ;;         (org-roam-capture--capture))
 ;;       )))
 
-(setq org-tags-column 0)
+;; (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
                       ("Context")
                       (:grouptags)
@@ -441,6 +457,30 @@
         (insert (concat "\n* Backlinks\n") links)))))
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
+
+(use-package! org-edna
+  :after org
+)
+(add-hook 'org-mode-hook 'org-edna-mode)
+
+(after! org
+  (setq org-track-ordered-property-with-tag t
+        org-hierarchical-todo-statistics t
+        ))
+
+(defun gtd/planning-trigger ()
+  "Automatically insert chain-find-next trigger when entry becomes NEXT"
+  (when (equal org-state "NEXT")
+    (message "das war next")
+    (setq planned (car (org-map-entries (lambda () (
+      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
+    (if planned (
+      (message "Geplant ist %s" planned)
+      (org-entry-put nil "SCHEDULED" planned)
+      (org-entry-delete nil "PLANNED")
+  ) nil) ))
+
+(add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
 
 (after! org
   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))

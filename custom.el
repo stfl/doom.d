@@ -47,7 +47,7 @@
                    (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
                    (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
                    (org-agenda-sorting-strategy
-                    '(todo-state-down effort-up category-keep))))
+                    '(todo-state-down category-keep priority-up))))
        (tags-todo "-SOMEDAY-REFILE-CANCELLED-WAITING-HOLD/!"
                   ((org-agenda-overriding-header
                     (concat "Project Subtasks"
