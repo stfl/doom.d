@@ -193,13 +193,12 @@ Setting up my initial agenda settings
                   org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
-(after! org
-  (setq! org-agenda-files '("~/.org/gtd/projects.org"
-                            "~/.org/gtd/tickler.org"
-                            "~/.org/gtd/projects/"
-                            )))
-;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
+                                     "~/.org/gtd/tickler.org"
+                                     "~/.org/gtd/projects.org"
+                                     "~/.org/gtd/projects/")))
+                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -289,6 +288,15 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 (after! org-agenda (require 'org-habit))
 #+END_SRC
 
+** org-edna
+
+Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
+#+BEGIN_SRC elisp
+(use-package! org-edna
+  :after org
+  ;; :config (org-edna-mode)
+  )
+#+END_SRC
 ** Keywords
 After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
 | Keyword | Description                                                  |

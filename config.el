@@ -109,13 +109,12 @@
                   org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
-(after! org
-  (setq! org-agenda-files '("~/.org/gtd/projects.org"
-                            "~/.org/gtd/tickler.org"
-                            "~/.org/gtd/projects/"
-                            )))
-;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
+                                     "~/.org/gtd/tickler.org"
+                                     "~/.org/gtd/projects.org"
+                                     "~/.org/gtd/projects/")))
+                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -179,6 +178,11 @@
         ))
 
 (after! org-agenda (require 'org-habit))
+
+(use-package! org-edna
+  :after org
+  ;; :config (org-edna-mode)
+  )
 
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
