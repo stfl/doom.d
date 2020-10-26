@@ -78,18 +78,8 @@
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
       nil)))
- '(org-agenda-diary-file "~/.org/diary.org")
- '(org-agenda-files
-   '("~/.org/gtd/inbox.org" "~/.org/gtd/tickler.org" "~/.org/gtd/projects.org" "~/.org/gtd/projects/"))
- '(org-agenda-hide-tags-regexp "\\w+")
- '(org-agenda-inhibit-startup t)
- '(org-agenda-loop-over-headlines-in-active-region nil)
- '(org-agenda-skip-deadline-if-done t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-skip-unavailable-files t)
  '(org-agenda-span 10)
  '(org-agenda-start-on-weekday nil)
- '(org-agenda-window-setup 'current-window)
  '(package-selected-packages '(org-roam-server)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

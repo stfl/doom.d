@@ -103,6 +103,7 @@
                   org-agenda-compact-blocks nil
                   org-agenda-block-separator ""
                   org-agenda-skip-scheduled-if-done t
+                  org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
                   org-enforce-todo-checkbox-dependencies nil
@@ -110,6 +111,7 @@
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
+                                     "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
@@ -211,12 +213,15 @@
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time
                   org-log-repeat 'time
-                  ;; org-log-redeadline 'note
-                  ;; org-log-reschedule 'note
+                  org-log-redeadline 'time
+                  org-log-reschedule 'time
                   ))
 
-(setq org-use-property-inheritance t ; We like to inherit properties from their parents
-      org-catch-invisible-edits 'error) ; Catch invisible edits
+(after! org (setq org-use-property-inheritance t ; We like to inherit properties from their parents
+                  org-catch-invisible-edits 'error ; Catch invisible edits
+                  org-track-ordered-property-with-tag t
+                  org-hierarchical-todo-statistics nil
+                  ))
 
 (after! org (setq org-refile-targets '((nil :maxlevel . 9)
                                        (org-agenda-files :maxlevel . 4)
@@ -297,6 +302,25 @@
                       ;; ("#coding")
                       ;; ("#research")
                       ))
+
+(use-package! org-edna
+  :after org
+)
+(add-hook 'org-mode-hook 'org-edna-mode)
+
+(defun gtd/planning-trigger ()
+  "Automatically schedule an entry when it becomes NEXT according to PLANNED property"
+  (when (equal org-state "NEXT")
+    (message "das war next")
+    (setq planned (car (org-map-entries (lambda () (
+      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
+    (if planned (
+      (message "Geplant ist %s" planned)
+      (org-entry-put nil "SCHEDULED" planned)
+      (org-entry-delete nil "PLANNED")
+  ) nil) ))
+
+;; (add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
 
 (use-package helm-org-rifle
   :after (helm org)
@@ -461,30 +485,6 @@
         (insert (concat "\n* Backlinks\n") links)))))
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
-
-(use-package! org-edna
-  :after org
-)
-(add-hook 'org-mode-hook 'org-edna-mode)
-
-(after! org
-  (setq org-track-ordered-property-with-tag t
-        org-hierarchical-todo-statistics t
-        ))
-
-(defun gtd/planning-trigger ()
-  "Automatically insert chain-find-next trigger when entry becomes NEXT"
-  (when (equal org-state "NEXT")
-    (message "das war next")
-    (setq planned (car (org-map-entries (lambda () (
-      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
-    (if planned (
-      (message "Geplant ist %s" planned)
-      (org-entry-put nil "SCHEDULED" planned)
-      (org-entry-delete nil "PLANNED")
-  ) nil) ))
-
-(add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
 
 (after! org
   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))

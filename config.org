@@ -178,6 +178,8 @@ Adding additional search functions
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 #+END_SRC
 ** Agenda
+TODO some of this is set in custom.el
+
 Setting up my initial agenda settings
 #+BEGIN_SRC elisp
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
@@ -187,6 +189,7 @@ Setting up my initial agenda settings
                   org-agenda-compact-blocks nil
                   org-agenda-block-separator ""
                   org-agenda-skip-scheduled-if-done t
+                  org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
                   org-enforce-todo-checkbox-dependencies nil
@@ -194,6 +197,7 @@ Setting up my initial agenda settings
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
+                                     "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
@@ -343,15 +347,18 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time
                   org-log-repeat 'time
-                  ;; org-log-redeadline 'note
-                  ;; org-log-reschedule 'note
+                  org-log-redeadline 'time
+                  org-log-reschedule 'time
                   ))
 #+END_SRC
 
 ** Properties
 #+BEGIN_SRC elisp
-(setq org-use-property-inheritance t ; We like to inherit properties from their parents
-      org-catch-invisible-edits 'error) ; Catch invisible edits
+(after! org (setq org-use-property-inheritance t ; We like to inherit properties from their parents
+                  org-catch-invisible-edits 'error ; Catch invisible edits
+                  org-track-ordered-property-with-tag t
+                  org-hierarchical-todo-statistics nil
+                  ))
 #+END_SRC
 
 ** Refiling
@@ -441,6 +448,35 @@ REVIEW should we define any additional tags?
                       ;; ("#research")
                       ))
 #+END_SRC
+** Task Dependencies
+
+load org-edna
+
+#+BEGIN_SRC elisp
+(use-package! org-edna
+  :after org
+)
+(add-hook 'org-mode-hook 'org-edna-mode)
+#+END_SRC
+
+[[https://plaindrops.de/blog/2020/GTDorgmode/][A simple GTD approach using Org mode and Org Edna]]
+
+#+BEGIN_SRC elisp
+(defun gtd/planning-trigger ()
+  "Automatically schedule an entry when it becomes NEXT according to PLANNED property"
+  (when (equal org-state "NEXT")
+    (message "das war next")
+    (setq planned (car (org-map-entries (lambda () (
+      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
+    (if planned (
+      (message "Geplant ist %s" planned)
+      (org-entry-put nil "SCHEDULED" planned)
+      (org-entry-delete nil "PLANNED")
+  ) nil) ))
+
+;; (add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
+#+END_SRC
+
 ** Org-Rifle
 #+BEGIN_SRC elisp
 (use-package helm-org-rifle
@@ -614,42 +650,6 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
-** Task Dependencies
-
-load org-edna
-
-#+BEGIN_SRC elisp
-(use-package! org-edna
-  :after org
-)
-(add-hook 'org-mode-hook 'org-edna-mode)
-#+END_SRC
-
-#+BEGIN_SRC elisp
-(after! org
-  (setq org-track-ordered-property-with-tag t
-        org-hierarchical-todo-statistics t
-        ))
-#+END_SRC
-
-[[https://plaindrops.de/blog/2020/GTDorgmode/][A simple GTD approach using Org mode and Org Edna]]
-
-#+BEGIN_SRC elisp
-(defun gtd/planning-trigger ()
-  "Automatically insert chain-find-next trigger when entry becomes NEXT"
-  (when (equal org-state "NEXT")
-    (message "das war next")
-    (setq planned (car (org-map-entries (lambda () (
-      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
-    (if planned (
-      (message "Geplant ist %s" planned)
-      (org-entry-put nil "SCHEDULED" planned)
-      (org-entry-delete nil "PLANNED")
-  ) nil) ))
-
-(add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
-#+END_SRC
-
 * Module Settings
 ** Company mode
 #+BEGIN_SRC elisp
