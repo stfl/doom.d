@@ -11,6 +11,27 @@ clients, file templates and snippets.
       user-mail-address "ste.lendl@gmail.com")
 #+END_SRC
 
+#+BEGIN_SRC elisp
+(setq auth-sources '("~/.authinfo.gpg")
+      auth-source-cache-expiry nil) ; default is 7200 (2h)
+#+END_SRC
+
+function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
+#+BEGIN_SRC elisp
+(defun get-auth-info (host user &optional port)
+  (let ((info (nth 0 (auth-source-search
+                      :host host
+                      :user user
+                      :port port
+                      :require '(:user :secret)))))
+    (if info
+        (let ((secret (plist-get info :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      nil)))
+#+END_SRC
+
 * Terminal Mode
 Set a few settings if we detect terminal mode
 #+BEGIN_SRC elisp
@@ -812,6 +833,11 @@ display more columns in forge list topic
 #+END_SRC
 
 ** Todoist integration
+:PROPERTIES:
+:ID:       d50f767a-e398-4ee8-ba42-e4d8bae3dd5f
+:END:
 #+BEGIN_SRC elisp
-(setq! todoist-token "")
+(after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
 #+END_SRC
+
+#+RESULTS:

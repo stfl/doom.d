@@ -1,6 +1,22 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
+(setq auth-sources '("~/.authinfo.gpg")
+      auth-source-cache-expiry nil) ; default is 7200 (2h)
+
+(defun get-auth-info (host user &optional port)
+  (let ((info (nth 0 (auth-source-search
+                      :host host
+                      :user user
+                      :port port
+                      :require '(:user :secret)))))
+    (if info
+        (let ((secret (plist-get info :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      nil)))
+
 (when (equal (window-system) nil)
   (and
    (bind-key "C-<down>" #'+org/insert-item-below)
@@ -605,4 +621,4 @@
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(setq! todoist-token "")
+(after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
