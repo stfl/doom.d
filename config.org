@@ -785,8 +785,7 @@ set todo value to *PROJ* for all TODOs with sub-todos
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-  (setq lsp-intelephense-licence-key
-        "00VUH296RB9W4S0") ;;(get-string-from-file "~/.doom.d/intelephense.txt"))
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "sutter"))
   (setq lsp-intelephense-trace-server "verbose")
   (setq lsp-intelephense-multi-root nil)
   ;; (setq lsp-intelephense-clear-cache t)
