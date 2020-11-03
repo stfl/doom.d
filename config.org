@@ -182,7 +182,9 @@ From here we load some extra key bindings that I use often
 (map! :after org-agenda
       :map org-agenda-mode-map
       :localleader
-      :desc "Filter" "f" #'org-agenda-filter)
+      :desc "Filter" "f" #'org-agenda-filter
+      :desc "Follow" "F" #'org-agenda-follow-mode
+      )
 #+END_SRC
 
 Adding additional search functions

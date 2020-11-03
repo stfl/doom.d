@@ -99,7 +99,9 @@
 (map! :after org-agenda
       :map org-agenda-mode-map
       :localleader
-      :desc "Filter" "f" #'org-agenda-filter)
+      :desc "Filter" "f" #'org-agenda-filter
+      :desc "Follow" "F" #'org-agenda-follow-mode
+      )
 
 (defun zyro/rifle-roam ()
   "Rifle through your ROAM directory"
