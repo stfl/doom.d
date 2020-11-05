@@ -100,7 +100,7 @@ limit evil-snipe to the bufffer
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-;      auto-save-default t
+      auto-save-default t
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 #+END_SRC
@@ -304,7 +304,7 @@ update brackets when copying a link from org-protocol
 #+BEGIN_SRC elisp
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "%s_archive::datetree"
+        org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 #+END_SRC
 
@@ -316,7 +316,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** org-edna
-
 Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 #+BEGIN_SRC elisp
 (use-package! org-edna
@@ -324,6 +323,32 @@ Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
   ;; :config (org-edna-mode)
   )
 #+END_SRC
+
+Some functions to quickly add TRIGGER and BLOCKER properties
+#+BEGIN_SRC elisp
+(defun stfl/trigger-next-sibling-NEXT ()
+  (interactive)
+  (org-entry-put nil "TRIGGER" "next-sibling todo!(NEXT)"))
+
+(defun stfl/blocker-previous-sibling ()
+  (interactive)
+  (org-entry-put nil "BLOCKER" "previous-sibling"))
+
+(defun stfl/trigger-next-and-blocker-previous ()
+  (interactive)
+  (stfl/trigger-next-sibling-NEXT)
+  (stfl/blocker-previous-sibling))
+
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix ("d" . "date/dateline/dependencies")
+      :desc "next-sibling NEXT" "n" 'stfl/trigger-next-sibling-NEXT
+      :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
+      )
+#+END_SRC
+
 ** Keywords
 After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
 | Keyword | Description                                                  |
@@ -347,11 +372,11 @@ After much feedback and discussing with other users, I decided to simplify the k
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
-           "NEXT(n)"  ; Task is next to be worked on.
-           "WAIT(w)"  ; Something external is holding up this task
+           "NEXT(n!)"  ; Task is next to be worked on.
+           "WAIT(w!/!)"  ; Something external is holding up this task
            "|"
-           "DONE(d)"  ; Task successfully completed
-           "KILL(k)")) ; Task was cancelled, aborted or is no longer applicable
+           "DONE(d@)"  ; Task successfully completed
+           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
@@ -368,8 +393,8 @@ For the logging drawers, we like to keep our notes and clock history *seperate* 
 Next, we like to keep a history of our activity of a task so we *track* when changes occur, and we also keep our notes logged in *their own drawer*. Optionally you can also add the following in-buffer settings to override the =org-log-into-drawer= function. ~#+STARTUP: logdrawer~ or ~#+STARTUP: nologdrawer~
 #+BEGIN_SRC elisp
 (after! org (setq org-log-into-drawer t
-                  org-log-done 'time
-                  org-log-repeat 'time
+                  org-log-done 'time+note
+                  org-log-repeat nil
                   org-log-redeadline 'time
                   org-log-reschedule 'time
                   ))
@@ -430,7 +455,7 @@ REVIEW should we define any additional tags?
 #+BEGIN_SRC elisp
 ;; (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
-                      ("Context")
+                      ("Context" . nil)
                       (:grouptags)
                       ("@home" . ?h)
                       ("@office". ?o)
@@ -443,20 +468,19 @@ REVIEW should we define any additional tags?
                       ("@laptop")
                       (:endgrouptag)
                       (:startgrouptag)
-                      ("Categories")
+                      ("Categories" . nil)
                       (:grouptags)
-                      ("bike")
+                      ("wohnung")
                       ("health")
-                      ("house")
-                      ("hobby")
+                      ("bike")
                       ("friends")
-                      ("coding")
                       ("emacs")
-                      ("goal")
                       ("gtd")
+                      ("shopping")
+                      ("learning")
                       (:endgrouptag)
                       (:startgrouptag)
-                      ("Process")
+                      ("Process" . nil)
                       (:grouptags)
                       ("SOMEDAY" . ?S)
                       ("CANCELLED" . ?C)
@@ -464,11 +488,11 @@ REVIEW should we define any additional tags?
                       ("REFILE" . ?R)
                       ("WAITING" . ?W)
                       (:endgrouptag)
-                      ;; (:startgrouptag)
-                      ;; ("Section")
-                      ;; (:grouptags)
-                      ;; ("#coding")
-                      ;; ("#research")
+                      (:startgrouptag)
+                      ("Areas" . nil)
+                      (:grouptags)
+                      ("#pulswerk" . ?$)
+                      ("#personal" . ?_)
                       ))
 #+END_SRC
 ** Task Dependencies
@@ -673,6 +697,49 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
+** org-jira
+#+BEGIN_SRC elisp
+(use-package! org-jira
+  :after org
+  :config
+  (setq org-jira-working-dir "~/.org/jira/"
+        jiralib-url "https://pulswerk.atlassian.net"))
+#+END_SRC
+** Morphdock
+#+BEGIN_SRC elisp
+;; (use-package! ejira
+;;   :after org
+;;   :init
+;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
+;;         jiralib2-auth             'token
+;;         jiralib2-user-login-name  "lendl@pulswerk.at"
+;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+
+;;         ejira-org-directory       "~/.org/ejira"
+;;         ejira-projects            '("MD")
+
+;;         ejira-priorities-alist    '(("Highest" . ?A)
+;;                                     ("High"    . ?B)
+;;                                     ("Medium"  . ?C)
+;;                                     ("Low"     . ?D)
+;;                                     ("Lowest"  . ?E))
+;;         ejira-todo-states-alist   '(("To Do"       . 1)
+;;                                     ("In Progress" . 2)
+;;                                     ("Testing" . 3)
+;;                                     ("Done"        . 4)))
+;;   :config
+;;   ;; Tries to auto-set custom fields by looking into /editmeta
+;;   ;; of an issue and an epic.
+;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+
+;;   ;; They can also be set manually if autoconfigure is not used.
+;;   ;; (setq ejira-sprint-field       'customfield_10001
+;;   ;;       ejira-epic-field         'customfield_10002
+;;   ;;       ejira-epic-summary-field 'customfield_10004)
+
+;;   (require 'ejira-agenda))
+#+END_SRC
+
 * Module Settings
 ** Company mode
 #+BEGIN_SRC elisp

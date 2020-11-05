@@ -57,6 +57,11 @@
 ;; (package! yaml-mode)
 (package! org-roam-server)
 (package! todoist)
+(package! org-jira)
+(package! ejira
+  :recipe (:host github
+           :repo "nyyManni/ejira"
+           :files ("*.el")))
 
 ;; (unpin! treemacs)
 ;; (unpin! lsp-mode)

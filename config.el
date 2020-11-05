@@ -48,7 +48,7 @@
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-;      auto-save-default t
+      auto-save-default t
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 
@@ -194,7 +194,7 @@
 
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "%s_archive::datetree"
+        org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 
 (after! org-agenda (require 'org-habit))
@@ -203,6 +203,28 @@
   :after org
   ;; :config (org-edna-mode)
   )
+
+(defun stfl/trigger-next-sibling-NEXT ()
+  (interactive)
+  (org-entry-put nil "TRIGGER" "next-sibling todo!(NEXT)"))
+
+(defun stfl/blocker-previous-sibling ()
+  (interactive)
+  (org-entry-put nil "BLOCKER" "previous-sibling"))
+
+(defun stfl/trigger-next-and-blocker-previous ()
+  (interactive)
+  (stfl/trigger-next-sibling-NEXT)
+  (stfl/blocker-previous-sibling))
+
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix ("d" . "date/dateline/dependencies")
+      :desc "next-sibling NEXT" "n" 'stfl/trigger-next-sibling-NEXT
+      :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
+      )
 
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
@@ -215,11 +237,11 @@
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
-           "NEXT(n)"  ; Task is next to be worked on.
-           "WAIT(w)"  ; Something external is holding up this task
+           "NEXT(n!)"  ; Task is next to be worked on.
+           "WAIT(w!/!)"  ; Something external is holding up this task
            "|"
-           "DONE(d)"  ; Task successfully completed
-           "KILL(k)")) ; Task was cancelled, aborted or is no longer applicable
+           "DONE(d@)"  ; Task successfully completed
+           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
@@ -229,8 +251,8 @@
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
 (after! org (setq org-log-into-drawer t
-                  org-log-done 'time
-                  org-log-repeat 'time
+                  org-log-done 'time+note
+                  org-log-repeat nil
                   org-log-redeadline 'time
                   org-log-reschedule 'time
                   ))
@@ -280,7 +302,7 @@
 
 ;; (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
-                      ("Context")
+                      ("Context" . nil)
                       (:grouptags)
                       ("@home" . ?h)
                       ("@office". ?o)
@@ -293,20 +315,19 @@
                       ("@laptop")
                       (:endgrouptag)
                       (:startgrouptag)
-                      ("Categories")
+                      ("Categories" . nil)
                       (:grouptags)
-                      ("bike")
+                      ("wohnung")
                       ("health")
-                      ("house")
-                      ("hobby")
+                      ("bike")
                       ("friends")
-                      ("coding")
                       ("emacs")
-                      ("goal")
                       ("gtd")
+                      ("shopping")
+                      ("learning")
                       (:endgrouptag)
                       (:startgrouptag)
-                      ("Process")
+                      ("Process" . nil)
                       (:grouptags)
                       ("SOMEDAY" . ?S)
                       ("CANCELLED" . ?C)
@@ -314,11 +335,11 @@
                       ("REFILE" . ?R)
                       ("WAITING" . ?W)
                       (:endgrouptag)
-                      ;; (:startgrouptag)
-                      ;; ("Section")
-                      ;; (:grouptags)
-                      ;; ("#coding")
-                      ;; ("#research")
+                      (:startgrouptag)
+                      ("Areas" . nil)
+                      (:grouptags)
+                      ("#pulswerk" . ?$)
+                      ("#personal" . ?_)
                       ))
 
 (use-package! org-edna
@@ -503,6 +524,44 @@
         (insert (concat "\n* Backlinks\n") links)))))
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
+
+(use-package! org-jira
+  :after org
+  :config
+  (setq org-jira-working-dir "~/.org/jira/"
+        jiralib-url "https://pulswerk.atlassian.net"))
+
+;; (use-package! ejira
+;;   :after org
+;;   :init
+;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
+;;         jiralib2-auth             'token
+;;         jiralib2-user-login-name  "lendl@pulswerk.at"
+;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+
+;;         ejira-org-directory       "~/.org/ejira"
+;;         ejira-projects            '("MD")
+
+;;         ejira-priorities-alist    '(("Highest" . ?A)
+;;                                     ("High"    . ?B)
+;;                                     ("Medium"  . ?C)
+;;                                     ("Low"     . ?D)
+;;                                     ("Lowest"  . ?E))
+;;         ejira-todo-states-alist   '(("To Do"       . 1)
+;;                                     ("In Progress" . 2)
+;;                                     ("Testing" . 3)
+;;                                     ("Done"        . 4)))
+;;   :config
+;;   ;; Tries to auto-set custom fields by looking into /editmeta
+;;   ;; of an issue and an epic.
+;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+
+;;   ;; They can also be set manually if autoconfigure is not used.
+;;   ;; (setq ejira-sprint-field       'customfield_10001
+;;   ;;       ejira-epic-field         'customfield_10002
+;;   ;;       ejira-epic-summary-field 'customfield_10004)
+
+;;   (require 'ejira-agenda))
 
 (after! org
   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
