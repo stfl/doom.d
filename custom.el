@@ -13,7 +13,8 @@
       ((alltodo ""
                 ((org-agenda-overriding-header "Inbox Tasks")
                  (org-agenda-files
-                  '("~/.org/gtd/inbox.org"))))
+                  '("~/.org/gtd/inbox.org"
+                    "~/.org/gtd/inbox-orgzly.org"))))
        (tags "REFILE"
              ((org-agenda-overriding-header "Refile")
               (org-tags-match-list-sublevel nil))))
@@ -40,9 +41,9 @@
                             (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
                    (org-tags-match-list-sublevels t)
-                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-scheduled t)
+                   (org-agenda-todo-ignore-deadlines t)
+                   (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(todo-state-down category-keep priority-up))))
        (tags-todo "-SOMEDAY-REFILE-CANCELLED-WAITING-HOLD/!"
@@ -50,9 +51,9 @@
                     (concat "Project Subtasks"
                             (if bh/hide-scheduled-and-waiting-next-tasks "" "(including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-non-project-tasks)
-                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-scheduled t)
+                   (org-agenda-todo-ignore-deadlines t)
+                   (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
        (tags-todo "-SOMEDAY-REFILE-CANCELLED-#waiting-#hold-#monitor/!"
@@ -65,20 +66,21 @@
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
-       (tags-todo "-CANCELLED+#waiting|#hold|#monitor/"
+       (tags-todo "+WAITING|WAIT"
                   ((org-agenda-overriding-header
                     (concat "Waiting and Postponed Tasks"
                             (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-non-tasks)
                    (org-tags-match-list-sublevels nil)
-                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+                   (org-agenda-todo-ignore-scheduled t)
+                   (org-agenda-todo-ignore-deadlines t)
+                   (org-agenda-sorting-strategy
+                    '(todo-state-down category-keep priority-up))))
        (tags "-REFILE/"
              ((org-agenda-overriding-header "Tasks to Archive")
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
       nil)))
- '(org-agenda-span 10)
  '(org-agenda-start-on-weekday nil)
  '(package-selected-packages '(org-roam-server)))
 (custom-set-faces

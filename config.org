@@ -100,11 +100,14 @@ limit evil-snipe to the bufffer
 (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-      auto-save-default t
+      ;; auto-save-default t
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 #+END_SRC
 * Org mode settings
+:PROPERTIES:
+:ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
+:END:
 ** General
 Org directory
 #+BEGIN_SRC elisp
@@ -208,19 +211,21 @@ Setting up my initial agenda settings
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
                   org-agenda-use-time-grid t
-                  org-agenda-hide-tags-regexp "\\w+"
+                  ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil
                   org-agenda-block-separator ""
                   org-agenda-skip-scheduled-if-done t
                   org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
+                  org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
-                  org-enforce-todo-dependencies t
+                  ;; org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
-                                     "~/.org/gtd/someday.org"
+                                     "~/.org/gtd/inbox-orgzly.org"
+                                     ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
@@ -304,7 +309,7 @@ update brackets when copying a link from org-protocol
 #+BEGIN_SRC elisp
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "~/.org/gtd/archive/%s::datetree"
+        org-archive-location "~/.org/gtd/archive/%s_archive::datetree"
         ))
 #+END_SRC
 
@@ -315,7 +320,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 (after! org-agenda (require 'org-habit))
 #+END_SRC
 
-** org-edna
+** task dependencies > org-edna
 Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 #+BEGIN_SRC elisp
 (use-package! org-edna
@@ -339,7 +344,6 @@ Some functions to quickly add TRIGGER and BLOCKER properties
   (stfl/trigger-next-sibling-NEXT)
   (stfl/blocker-previous-sibling))
 
-
 (map! :after org
       :map org-mode-map
       :localleader
@@ -356,6 +360,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 | TODO    |                                                              |
 | PROJ    | Task has actionable items defined and ready to be worked.    |
 | HOLD    | Has actionable items, but is on hold due to various reasons. |
+| WAIT    | Waiting for something                                        |
 | NEXT    | Is ready to be worked and should be worked on soon.          |
 | DONE    | Task is completed and closed.                                |
 | KILL    | Abandoned or terminated.                                     |
@@ -501,8 +506,7 @@ load org-edna
 
 #+BEGIN_SRC elisp
 (use-package! org-edna
-  :after org
-)
+  :after org)
 (add-hook 'org-mode-hook 'org-edna-mode)
 #+END_SRC
 
@@ -524,6 +528,23 @@ load org-edna
 ;; (add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
 #+END_SRC
 
+** Prompt for headline when creating ID links
+#+BEGIN_SRC emacs-lisp
+(defun nm/org-id-prompt-id ()
+  "Prompt for the id during completion of id: link."
+  (let ((dest (org-refile-get-location))
+        (name nil)
+        (id nil))
+    (save-excursion
+      (find-file (cadr dest))
+      (goto-char (nth 3 dest))
+      (setq id (org-id-get (point) t)
+            name (org-get-heading t t t t)))
+    (org-insert-link nil (concat "id:" id) name)))
+
+(after! org
+  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
+#+END_SRC
 ** Org-Rifle
 #+BEGIN_SRC elisp
 (use-package helm-org-rifle
@@ -626,7 +647,7 @@ These are my default ROAM settings
 (setq org-roam-tag-sources '(prop last-directory))
 (setq org-roam-db-location "~/.emacs.d/roam.db")
 (setq org-roam-directory "~/.org/")
-(add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
+;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
@@ -705,7 +726,7 @@ These are my default ROAM settings
   (setq org-jira-working-dir "~/.org/jira/"
         jiralib-url "https://pulswerk.atlassian.net"))
 #+END_SRC
-** Morphdock
+** ejira
 #+BEGIN_SRC elisp
 ;; (use-package! ejira
 ;;   :after org

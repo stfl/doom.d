@@ -48,7 +48,7 @@
 (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-      auto-save-default t
+      ;; auto-save-default t
       inhibit-compacting-font-caches t)
 (whitespace-mode -1)
 
@@ -117,19 +117,21 @@
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
                   org-agenda-use-time-grid t
-                  org-agenda-hide-tags-regexp "\\w+"
+                  ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil
                   org-agenda-block-separator ""
                   org-agenda-skip-scheduled-if-done t
                   org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
+                  org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
-                  org-enforce-todo-dependencies t
+                  ;; org-enforce-todo-dependencies t
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
-                                     "~/.org/gtd/someday.org"
+                                     "~/.org/gtd/inbox-orgzly.org"
+                                     ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
@@ -194,7 +196,7 @@
 
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "~/.org/gtd/archive/%s::datetree"
+        org-archive-location "~/.org/gtd/archive/%s_archive::datetree"
         ))
 
 (after! org-agenda (require 'org-habit))
@@ -216,7 +218,6 @@
   (interactive)
   (stfl/trigger-next-sibling-NEXT)
   (stfl/blocker-previous-sibling))
-
 
 (map! :after org
       :map org-mode-map
@@ -343,8 +344,7 @@
                       ))
 
 (use-package! org-edna
-  :after org
-)
+  :after org)
 (add-hook 'org-mode-hook 'org-edna-mode)
 
 (defun gtd/planning-trigger ()
@@ -458,7 +458,7 @@
 (setq org-roam-tag-sources '(prop last-directory))
 (setq org-roam-db-location "~/.emacs.d/roam.db")
 (setq org-roam-directory "~/.org/")
-(add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
+;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
@@ -682,3 +682,18 @@
                       ("Updated" 10 t nill updated nil))))
 
 (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
+
+(defun nm/org-id-prompt-id ()
+  "Prompt for the id during completion of id: link."
+  (let ((dest (org-refile-get-location))
+        (name nil)
+        (id nil))
+    (save-excursion
+      (find-file (cadr dest))
+      (goto-char (nth 3 dest))
+      (setq id (org-id-get (point) t)
+            name (org-get-heading t t t t)))
+    (org-insert-link nil (concat "id:" id) name)))
+
+(after! org
+  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
