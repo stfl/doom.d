@@ -45,7 +45,7 @@
   (setq evil-snipe-scope 'buffer)
   )
 
-;; (global-auto-revert-mode 1)
+(global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
       auto-save-default t
