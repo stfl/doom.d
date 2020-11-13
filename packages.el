@@ -70,14 +70,20 @@
 (package! org-roam-server)
 (package! company-org-roam)
 (package! org-roam)
+
 ;; Alphapapa packages
 (package! helm-org-rifle)
 (package! org-super-agenda)
 (package! org-ql)
 (package! org-web-tools)
+
 ;; Orgmode Packages
 (package! org-analyzer)
 (package! org-edna)
+
+;; (package! org-linker-edna :recipe (:host github :repo "toshism/org-linker-edna"))
+;; (package! org-linker :recipe (:host github :repo "toshism/org-linker"))
+
 (package! literate-calc-mode)
 ;; Misc Packages
 (package! define-word)
