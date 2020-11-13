@@ -26,10 +26,16 @@
 (toggle-frame-maximized)
 
 (setq doom-font (font-spec :family "Fira Code" :size 13)
+      doom-variable-pitch-font (font-spec :family "Fira Code")
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
 
 (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-molokai)
+;; (setq doom-theme 'doom-solarized-dark)
+
+;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
 (use-package! fira-code-mode
   :after prog-mode

@@ -55,7 +55,6 @@
 (package! ztree)
 (package! fira-code-mode)
 ;; (package! yaml-mode)
-(package! org-roam-server)
 (package! todoist)
 (package! org-jira)
 (package! ejira
