@@ -13,8 +13,7 @@
       ((alltodo ""
                 ((org-agenda-overriding-header "Inbox Tasks")
                  (org-agenda-files
-                  '("~/.org/gtd/inbox.org"
-                    "~/.org/gtd/inbox-orgzly.org"))))
+                  '("~/.org/gtd/inbox.org" "~/.org/gtd/inbox-orgzly.org"))))
        (tags "REFILE"
              ((org-agenda-overriding-header "Refile")
               (org-tags-match-list-sublevel nil))))
@@ -24,17 +23,6 @@
                ((org-agenda-span '1)
                 (org-agenda-start-day
                  (org-today))))
-       (tags-todo "-CANCELLED-SOMEDAY/!"
-                  ((org-agenda-overriding-header "Stuck Projects")
-                   (org-agenda-skip-function 'bh/skip-non-stuck-projects)
-                   (org-agenda-sorting-strategy
-                    '(category-keep))))
-       (tags-todo "-HOLD-CANCELLED-SOMEDAY/!"
-                  ((org-agenda-overriding-header "Projects")
-                   (org-agenda-skip-function 'bh/skip-non-projects)
-                   (org-tags-match-list-sublevels 'indented)
-                   (org-agenda-sorting-strategy
-                    '(category-keep))))
        (tags-todo "-CANCELLED/!NEXT"
                   ((org-agenda-overriding-header
                     (concat "Project Next Tasks"
@@ -46,6 +34,17 @@
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(todo-state-down category-keep priority-up))))
+       (tags-todo "-CANCELLED-SOMEDAY/!"
+                  ((org-agenda-overriding-header "Stuck Projects")
+                   (org-agenda-skip-function 'bh/skip-non-stuck-projects)
+                   (org-agenda-sorting-strategy
+                    '(category-keep))))
+       (tags-todo "-HOLD-CANCELLED-SOMEDAY/!"
+                  ((org-agenda-overriding-header "Projects")
+                   (org-agenda-skip-function 'bh/skip-non-projects)
+                   (org-tags-match-list-sublevels 'indented)
+                   (org-agenda-sorting-strategy
+                    '(category-keep))))
        (tags-todo "-SOMEDAY-REFILE-CANCELLED-WAITING-HOLD/!"
                   ((org-agenda-overriding-header
                     (concat "Project Subtasks"
@@ -81,7 +80,6 @@
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
       nil)))
- '(org-agenda-start-on-weekday nil)
  '(package-selected-packages '(org-roam-server)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

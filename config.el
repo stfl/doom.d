@@ -51,12 +51,12 @@
   (setq evil-snipe-scope 'buffer)
   )
 
-(global-auto-revert-mode 1)
+;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-      ;; auto-save-default t
+      auto-save-default t
       inhibit-compacting-font-caches t)
-(whitespace-mode -1)
+;; (whitespace-mode -1)
 
 (setq org-directory "~/.org/")
 
@@ -70,6 +70,9 @@
 (after! org (setq org-id-link-to-org-use-id t))
 
 (after! org
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers))
+
+(after! org
   (setq org-startup-indented 'indent
         org-startup-folded 'fold
         org-startup-with-inline-images t
@@ -80,7 +83,13 @@
 (bind-key "<f6>" #'link-hint-copy-link)
 (map! :after org
       :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+
       :localleader
+      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+
       :prefix ("s" . "search")
       :desc "Outline" "o" #'counsel-outline
       :desc "Counsel ripgrep" "d" #'counsel-rg
@@ -122,6 +131,7 @@
 
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
+                  ;; org-agenda-dim-blocked-tasks 'invisible
                   org-agenda-use-time-grid t
                   ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil
@@ -130,9 +140,10 @@
                   org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
+                  org-agenda-start-on-weekday nil
                   org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
-                  ;; org-enforce-todo-dependencies t
+                  org-enforce-todo-dependencies nil
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -172,8 +183,7 @@
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
-(add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
-
+;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
 ;; ;; (org-super-agenda-mode t)
 
 (after! org (setq org-capture-templates
@@ -270,20 +280,21 @@
                   org-hierarchical-todo-statistics nil
                   ))
 
-(after! org (setq org-refile-targets '((nil :maxlevel . 9)
-                                       (org-agenda-files :maxlevel . 4)
-
-                                       ))
-             (setq org-refile-use-outline-path 'buffer-name
-                    org-outline-path-complete-in-steps nil
-                    org-refile-allow-creating-parent-nodes 'confirm))
+(after! org
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 4)
+                             ("~/.org/gtd/someday.org" :maxlevel . 4)
+                             )
+        org-refile-use-outline-path 'buffer-name
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm))
 
 
 (defun stfl/refile-to-roam ()
   (interactive)
   (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
-     (call-interactively 'org-refile)))
+    (call-interactively 'org-refile)))
 
 ;; ;; initial prompt should be the text of the tree
 ;; (defun stfl/refile-to-roam2 (&optional initial-prompt)

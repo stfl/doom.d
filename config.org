@@ -105,12 +105,12 @@ limit evil-snipe to the bufffer
 #+END_SRC
 * Buffer Settings
 #+BEGIN_SRC elisp
-(global-auto-revert-mode 1)
+;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-      ;; auto-save-default t
+      auto-save-default t
       inhibit-compacting-font-caches t)
-(whitespace-mode -1)
+;; (whitespace-mode -1)
 #+END_SRC
 * Org mode settings
 :PROPERTIES:
@@ -147,6 +147,14 @@ always generate an id for a link
 #+BEGIN_SRC elisp
 (after! org (setq org-id-link-to-org-use-id t))
 #+END_SRC
+** Auto-saving org-mode files
+
+Automatically saving all org-buffers
+
+#+BEGIN_SRC elisp
+(after! org
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers))
+#+END_SRC
 
 ** Orgmode Startup
 #+BEGIN_SRC elisp
@@ -168,7 +176,13 @@ From here we load some extra key bindings that I use often
 (bind-key "<f6>" #'link-hint-copy-link)
 (map! :after org
       :map org-mode-map
+      :leader
+      :prefix ("n" . "notes")
+      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+
       :localleader
+      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+
       :prefix ("s" . "search")
       :desc "Outline" "o" #'counsel-outline
       :desc "Counsel ripgrep" "d" #'counsel-rg
@@ -218,6 +232,7 @@ Setting up my initial agenda settings
 #+BEGIN_SRC elisp
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   org-agenda-dim-blocked-tasks t
+                  ;; org-agenda-dim-blocked-tasks 'invisible
                   org-agenda-use-time-grid t
                   ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil
@@ -226,9 +241,10 @@ Setting up my initial agenda settings
                   org-agenda-skip-unavailable-files t
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
+                  org-agenda-start-on-weekday nil
                   org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
-                  ;; org-enforce-todo-dependencies t
+                  org-enforce-todo-dependencies nil
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -277,8 +293,7 @@ Adjusting clock settings
 
 org super agenda
 #+BEGIN_SRC elisp
-(add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
-
+;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
 ;; ;; (org-super-agenda-mode t)
 #+END_SRC
 
@@ -424,20 +439,21 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 
 ** Refiling
 #+BEGIN_SRC elisp
-(after! org (setq org-refile-targets '((nil :maxlevel . 9)
-                                       (org-agenda-files :maxlevel . 4)
-
-                                       ))
-             (setq org-refile-use-outline-path 'buffer-name
-                    org-outline-path-complete-in-steps nil
-                    org-refile-allow-creating-parent-nodes 'confirm))
+(after! org
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 4)
+                             ("~/.org/gtd/someday.org" :maxlevel . 4)
+                             )
+        org-refile-use-outline-path 'buffer-name
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm))
 
 
 (defun stfl/refile-to-roam ()
   (interactive)
   (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
-     (call-interactively 'org-refile)))
+    (call-interactively 'org-refile)))
 
 ;; ;; initial prompt should be the text of the tree
 ;; (defun stfl/refile-to-roam2 (&optional initial-prompt)
