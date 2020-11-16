@@ -86,7 +86,10 @@
       :leader
       :prefix ("n" . "notes")
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+      )
 
+(map! :after org
+      :map org-mode-map
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
 
