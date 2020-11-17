@@ -94,3 +94,6 @@
 (package! gnuplot-mode)
 (package! deadgrep)
 (package! graphviz-dot-mode)
+
+(package! gitlab-ci-mode)
+(package! gitlab-ci-mode-flycheck)

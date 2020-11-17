@@ -928,6 +928,18 @@ set todo value to *PROJ* for all TODOs with sub-todos
 #+BEGIN_SRC elisp
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 #+END_SRC
+** Gitlab-CI
+
+#+BEGIN_SRC elisp
+(use-package! gitlab-ci-mode
+  :mode ".gitlab-ci.yml"
+  )
+
+(use-package! gitlab-ci-mode-flycheck
+  :after flycheck gitlab-ci-mode
+  :init
+  (gitlab-ci-mode-flycheck-enable))
+#+END_SRC
 
 * Collaboration
 ** Directory tree diff

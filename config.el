@@ -690,6 +690,15 @@
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
+(use-package! gitlab-ci-mode
+  :mode ".gitlab-ci.yml"
+  )
+
+(use-package! gitlab-ci-mode-flycheck
+  :after flycheck gitlab-ci-mode
+  :init
+  (gitlab-ci-mode-flycheck-enable))
+
 (use-package! ztree)
 
 (after! forge (setq forge-topic-list-columns
