@@ -48,7 +48,9 @@
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-       ligatures         ; replace bits of code with pretty symbols
+       (ligatures         ; replace bits of code with pretty symbols
+        +extra
+        +fira)
        ;; tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
