@@ -432,6 +432,7 @@ Remove TODO keywrods from org-mode (it will still work in agenda)
 ;;              ("KILL " . "")))
 #+END_SRC
 
+[[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][ Doom emacs org-mode ricing ]]
 Org-superstar config
 #+BEGIN_SRC elisp
 (after! org-superstar
