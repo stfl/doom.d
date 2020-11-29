@@ -118,6 +118,7 @@ limit evil-snipe to the bufffer
 :END:
 ** General
 Org directory
+
 #+BEGIN_SRC elisp
 (setq org-directory "~/.org/")
 #+END_SRC
@@ -202,6 +203,7 @@ From here we load some extra key bindings that I use often
 
       :prefix ("r" . "refile")
       :desc "Refile to reference" "R" #'stfl/refile-to-roam
+      :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
 
       :prefix ("j" . "nicks functions")
       :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp
@@ -335,7 +337,7 @@ update brackets when copying a link from org-protocol
 #+BEGIN_SRC elisp
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "~/.org/gtd/archive/%s_archive::datetree"
+        org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 #+END_SRC
 
@@ -437,7 +439,7 @@ Org-superstar config
 #+BEGIN_SRC elisp
 (after! org-superstar
   ;; Every non-TODO headline now have no bullet
-  (setq org-superstar-headline-bullets-list '("　"))
+  ;; (setq org-superstar-headline-bullets-list '("　"))
   (setq org-superstar-leading-bullet ?　)
   ;; Enable custom bullets for TODO items
   (setq org-superstar-special-todo-items t)
@@ -517,6 +519,32 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 ;;       )))
 
 #+END_SRC
+
+[[https://org-roam.discourse.group/t/creating-an-org-roam-note-from-an-existing-headline/978][Creating an org-roam note from an existing headline]]
+#+begin_src elisp
+(defun org-roam-create-note-from-headline ()
+  "Create an Org-roam note from the current headline and jump to it.
+
+Normally, insert the headline’s title using the ’#title:’ file-level property
+and delete the Org-mode headline. However, if the current headline has a
+Org-mode properties drawer already, keep the headline and don’t insert
+‘#+title:'. Org-roam can extract the title from both kinds of notes, but using
+‘#+title:’ is a bit cleaner for a short note, which Org-roam encourages."
+  (interactive)
+  (let ((title (nth 4 (org-heading-components)))
+        (has-properties (org-get-property-block)))
+    (org-cut-subtree)
+    (org-roam-find-file title nil nil 'no-confirm)
+    (org-paste-subtree)
+    (unless has-properties
+      (kill-line)
+      (while (outline-next-heading)
+        (org-promote)))
+    (goto-char (point-min))
+    (when has-properties
+      (kill-line)
+      (kill-line))))
+#+end_src
 
 ** Default Tags
 REVIEW should we define any additional tags?
@@ -859,7 +887,6 @@ Configuring DEFT default settings
 #+BEGIN_SRC elisp
 (load! "my-deft-title.el")
 (use-package deft
-  :bind (("<f8>" . deft))
   :commands (deft deft-open-file deft-new-file-named)
   :config
   (setq deft-directory "~/.org/"
@@ -870,10 +897,14 @@ Configuring DEFT default settings
         deft-use-filter-string-for-filename t
         deft-use-filename-as-title nil
         deft-markdown-mode-title-level 1
+        deft-recursive-ignore-dir-regexp "\\(?:\\.\\|\\.\\.\\)$\\|\\.stversions"
         deft-file-naming-rules '((nospace . "-"))))
 (require 'my-deft-title)
 (advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
 #+END_SRC
+
+#+RESULTS:
+
 ** Pandoc
 #+BEGIN_SRC elisp
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))

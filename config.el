@@ -109,6 +109,7 @@
 
       :prefix ("r" . "refile")
       :desc "Refile to reference" "R" #'stfl/refile-to-roam
+      :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
 
       :prefix ("j" . "nicks functions")
       :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp
@@ -215,7 +216,7 @@
 
 (after! org
   (setq org-image-actual-width nil
-        org-archive-location "~/.org/gtd/archive/%s_archive::datetree"
+        org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 
 (after! org-agenda (require 'org-habit))
@@ -280,7 +281,7 @@
 
 (after! org-superstar
   ;; Every non-TODO headline now have no bullet
-  (setq org-superstar-headline-bullets-list '("　"))
+  ;; (setq org-superstar-headline-bullets-list '("　"))
   (setq org-superstar-leading-bullet ?　)
   ;; Enable custom bullets for TODO items
   (setq org-superstar-special-todo-items t)
@@ -345,6 +346,29 @@
 ;;         (setq org-roam-capture-additional-template-props (list :finalize 'find-file))
 ;;         (org-roam-capture--capture))
 ;;       )))
+
+(defun org-roam-create-note-from-headline ()
+  "Create an Org-roam note from the current headline and jump to it.
+
+Normally, insert the headline’s title using the ’#title:’ file-level property
+and delete the Org-mode headline. However, if the current headline has a
+Org-mode properties drawer already, keep the headline and don’t insert
+‘#+title:'. Org-roam can extract the title from both kinds of notes, but using
+‘#+title:’ is a bit cleaner for a short note, which Org-roam encourages."
+  (interactive)
+  (let ((title (nth 4 (org-heading-components)))
+        (has-properties (org-get-property-block)))
+    (org-cut-subtree)
+    (org-roam-find-file title nil nil 'no-confirm)
+    (org-paste-subtree)
+    (unless has-properties
+      (kill-line)
+      (while (outline-next-heading)
+        (org-promote)))
+    (goto-char (point-min))
+    (when has-properties
+      (kill-line)
+      (kill-line))))
 
 ;; (setq org-tags-column 0)
 (setq org-tag-alist '((:startgrouptag)
@@ -632,7 +656,6 @@
 
 (load! "my-deft-title.el")
 (use-package deft
-  :bind (("<f8>" . deft))
   :commands (deft deft-open-file deft-new-file-named)
   :config
   (setq deft-directory "~/.org/"
@@ -643,6 +666,7 @@
         deft-use-filter-string-for-filename t
         deft-use-filename-as-title nil
         deft-markdown-mode-title-level 1
+        deft-recursive-ignore-dir-regexp "\\(?:\\.\\|\\.\\.\\)$\\|\\.stversions"
         deft-file-naming-rules '((nospace . "-"))))
 (require 'my-deft-title)
 (advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
