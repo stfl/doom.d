@@ -154,6 +154,7 @@
                                      "~/.org/gtd/inbox-orgzly.org"
                                      ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
+                                     "~/.org/calendar.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
                   ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
@@ -631,6 +632,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;;   ;;       ejira-epic-summary-field 'customfield_10004)
 
 ;;   (require 'ejira-agenda))
+
+(use-package! org-gcal
+  :after org
+  :config
+  (setq org-gcal-client-id "231756508067-6g5fcmpm5v29f902segl462cup7m5hcr.apps.googleusercontent.com"
+        org-gcal-client-secret (get-auth-info "org-gcal" "ste.lendl@gmail.com")
+        org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 
 (after! org
   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))

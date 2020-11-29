@@ -80,6 +80,7 @@
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
       nil)))
+ '(org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
  '(package-selected-packages '(org-roam-server)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

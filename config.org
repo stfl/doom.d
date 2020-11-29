@@ -256,6 +256,7 @@ Setting up my initial agenda settings
                                      "~/.org/gtd/inbox-orgzly.org"
                                      ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
+                                     "~/.org/calendar.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
                   ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
@@ -850,6 +851,15 @@ These are my default ROAM settings
 ;;   ;;       ejira-epic-summary-field 'customfield_10004)
 
 ;;   (require 'ejira-agenda))
+#+END_SRC
+** org-gcal
+#+BEGIN_SRC elisp
+(use-package! org-gcal
+  :after org
+  :config
+  (setq org-gcal-client-id "231756508067-6g5fcmpm5v29f902segl462cup7m5hcr.apps.googleusercontent.com"
+        org-gcal-client-secret (get-auth-info "org-gcal" "ste.lendl@gmail.com")
+        org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 #+END_SRC
 
 * Module Settings

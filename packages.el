@@ -76,6 +76,7 @@
 (package! org-super-agenda)
 (package! org-ql)
 (package! org-web-tools)
+(package! org-gcal)
 
 ;; Orgmode Packages
 (package! org-analyzer)
