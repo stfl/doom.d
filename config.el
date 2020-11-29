@@ -280,6 +280,13 @@
 ;;              ("DONE " . "")
 ;;              ("KILL " . "")))
 
+(set-ligatures! 'org-mode
+    :alist '((":PROPERTIES:" . "⏍")
+             (":properties:" . "⏍")
+             (":LOGBOOK:" . "㏒")
+             (":logbook:" . "㏒")
+             ))
+
 (after! org-superstar
   ;; Every non-TODO headline now have no bullet
   ;; (setq org-superstar-headline-bullets-list '("　"))
@@ -287,12 +294,12 @@
   ;; Enable custom bullets for TODO items
   (setq org-superstar-special-todo-items t)
   (setq org-superstar-todo-bullet-alist
-        '(("TODO" "☐　")
-          ("NEXT" "✒　")
-          ("PROJ" "✰　")
-          ("WAIT" "☕　")
-          ("KILL" "✘　")
-          ("DONE" "✔　")))
+        '(("TODO" "☐")
+          ("NEXT" "➡")
+          ("PROJ" "⎚")
+          ("WAIT" "⏳")
+          ("KILL" "✘")
+          ("DONE" "✔")))
   (org-superstar-restart))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))

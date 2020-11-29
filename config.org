@@ -435,6 +435,15 @@ Remove TODO keywrods from org-mode (it will still work in agenda)
 ;;              ("KILL " . "")))
 #+END_SRC
 
+#+begin_src elisp
+(set-ligatures! 'org-mode
+    :alist '((":PROPERTIES:" . "⏍")
+             (":properties:" . "⏍")
+             (":LOGBOOK:" . "㏒")
+             (":logbook:" . "㏒")
+             ))
+#+end_src
+
 [[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][ Doom emacs org-mode ricing ]]
 Org-superstar config
 #+BEGIN_SRC elisp
@@ -445,16 +454,17 @@ Org-superstar config
   ;; Enable custom bullets for TODO items
   (setq org-superstar-special-todo-items t)
   (setq org-superstar-todo-bullet-alist
-        '(("TODO" "☐　")
-          ("NEXT" "✒　")
-          ("PROJ" "✰　")
-          ("WAIT" "☕　")
-          ("KILL" "✘　")
-          ("DONE" "✔　")))
+        '(("TODO" "☐")
+          ("NEXT" "➡")
+          ("PROJ" "⎚")
+          ("WAIT" "⏳")
+          ("KILL" "✘")
+          ("DONE" "✔")))
   (org-superstar-restart))
 #+END_SRC
 
 ** Logging and Drawers
+
 For the logging drawers, we like to keep our notes and clock history *seperate* from our properties drawer...
 #+BEGIN_SRC elisp
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
