@@ -341,21 +341,30 @@
                   org-hierarchical-todo-statistics nil
                   ))
 
+(defun stlf/build-my-someday-files ()
+  (file-expand-wildcards "~/.org/gtd/someday/*.org"))
+
 (after! org
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 4)
                              ("~/.org/gtd/someday.org" :maxlevel . 4)
-                             )
+                             (stfl/build-my-someday-files :maxlevel . 4))
         org-refile-use-outline-path 'buffer-name
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm))
 
+(defun stfl/build-my-roam-files () (file-expand-wildcards "~/.org/roam/**/*.org"))
 
 (defun stfl/refile-to-roam ()
   (interactive)
-  (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
-  (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
+  (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
     (call-interactively 'org-refile)))
+
+;; (defun stfl/refile-to-roam ()
+;;   (interactive)
+;;   (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
+;;   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
+;;     (call-interactively 'org-refile)))
 
 ;; ;; initial prompt should be the text of the tree
 ;; (defun stfl/refile-to-roam2 (&optional initial-prompt)

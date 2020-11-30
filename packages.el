@@ -57,10 +57,10 @@
 ;; (package! yaml-mode)
 (package! todoist)
 (package! org-jira)
-(package! ejira
-  :recipe (:host github
-           :repo "nyyManni/ejira"
-           :files ("*.el")))
+;; (package! ejira  ;; TODO something is broken with the branches on doom upgrade
+;;   :recipe (:host github
+;;            :repo "nyyManni/ejira"
+;;            :files ("*.el")))
 
 ;; (unpin! treemacs)
 ;; (unpin! lsp-mode)
