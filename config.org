@@ -547,7 +547,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 
 refile target -> build list of someday files dynamically
 #+BEGIN_SRC elisp
-(defun stlf/build-my-someday-files ()
+(defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
 
 (after! org

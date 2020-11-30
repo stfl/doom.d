@@ -341,7 +341,7 @@
                   org-hierarchical-todo-statistics nil
                   ))
 
-(defun stlf/build-my-someday-files ()
+(defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
 
 (after! org
