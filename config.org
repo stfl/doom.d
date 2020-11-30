@@ -12,8 +12,8 @@ clients, file templates and snippets.
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(setq auth-sources '("~/.authinfo.gpg")
-      auth-source-cache-expiry nil) ; default is 7200 (2h)
+(setq auth-sources '("~/.config/authinfo/authinfo.gpg"))
+      ;; auth-source-cache-expiry nil) ; default is 7200 (2h)
 #+END_SRC
 
 function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
@@ -297,11 +297,65 @@ Adjusting clock settings
   (string= "TODO" (org-get-todo-state)))
 #+END_SRC
 
-org super agenda
+** org super agenda
+
+#+begin_src elisp
+(setq org-agenda-span 'day)
+#+end_src
+
 #+BEGIN_SRC elisp
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :config
+  ;; (setq org-super-agenda-groups
+  ;;       '(
+  ;;         (:name "Grid"
+  ;;          :time-grid t ;;)
+  ;;         ;; (:name "sched"
+  ;;          :scheduled today)
+  ;;          ;; :scheduled past
+  ;;          ;; :deadline today
+  ;;          ;; :deadline past
+  ;;         (:name "Habits"
+  ;;          :habit t)
+  ;;         ;; (:name "Next Actions"
+  ;;         ;;  :todo ("NEXT")
+  ;;         ;;  :order 100)
+  ;;         ;; (:name "Waiting"
+  ;;         ;;  :todo ("WAIT")
+  ;;         ;;  :order 98)
+  ;;       ))
+;; )
 ;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
 ;; ;; (org-super-agenda-mode t)
 #+END_SRC
+
+# (setq org-super-agenda-groups
+#       '((:discard (:todo ("DONE" "KILL")))
+#         (:name "Today"
+#          :time-grid t
+#          :date today
+#          :scheduled today
+#          :scheduled past
+#          :deadline today
+#          :deadline past
+#          )
+#         (:discard (:todo nil))
+#         (:name "Next Actions"
+#          :todo "NEXT")
+#         (:name "Standalone Tasks"
+#          :and (:not (:todo ("DONE" "WAIT"))
+#                :not (:children todo)))
+#         (:name "Stuck Projects"
+#          :and (:todo "PROJ"
+#                :not (:children ("NEXT" "WAIT"))))
+#         (:name "Projects"
+#          :and (:todo "PROJ"
+#                :children ("NEXT" "WAIT")))
+#         (:name "Waiting for"
+#          :todo "WAIT")
+#         ;; (:discard (:anything t))
+#         ))
 
 ** Capture Templates
 Here we setup the capture templates we want for ~org-capture~. I use a file template that's pre-filled with my monthly scheduled transactions. (TODO: Add default file-template for new projects.)
@@ -867,8 +921,8 @@ These are my default ROAM settings
 (use-package! org-gcal
   :after org
   :config
-  (setq org-gcal-client-id "231756508067-6g5fcmpm5v29f902segl462cup7m5hcr.apps.googleusercontent.com"
-        org-gcal-client-secret (get-auth-info "org-gcal" "ste.lendl@gmail.com")
+  (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
+        org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 #+END_SRC
 

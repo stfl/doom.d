@@ -1,8 +1,8 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(setq auth-sources '("~/.authinfo.gpg")
-      auth-source-cache-expiry nil) ; default is 7200 (2h)
+(setq auth-sources '("~/.config/authinfo/authinfo.gpg"))
+      ;; auth-source-cache-expiry nil) ; default is 7200 (2h)
 
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
@@ -188,6 +188,30 @@
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
+(setq org-agenda-span 'day)
+
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :config
+  ;; (setq org-super-agenda-groups
+  ;;       '(
+  ;;         (:name "Grid"
+  ;;          :time-grid t ;;)
+  ;;         ;; (:name "sched"
+  ;;          :scheduled today)
+  ;;          ;; :scheduled past
+  ;;          ;; :deadline today
+  ;;          ;; :deadline past
+  ;;         (:name "Habits"
+  ;;          :habit t)
+  ;;         ;; (:name "Next Actions"
+  ;;         ;;  :todo ("NEXT")
+  ;;         ;;  :order 100)
+  ;;         ;; (:name "Waiting"
+  ;;         ;;  :todo ("WAIT")
+  ;;         ;;  :order 98)
+  ;;       ))
+;; )
 ;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
 ;; ;; (org-super-agenda-mode t)
 
@@ -643,8 +667,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (use-package! org-gcal
   :after org
   :config
-  (setq org-gcal-client-id "231756508067-6g5fcmpm5v29f902segl462cup7m5hcr.apps.googleusercontent.com"
-        org-gcal-client-secret (get-auth-info "org-gcal" "ste.lendl@gmail.com")
+  (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
+        org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 
 (after! org

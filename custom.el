@@ -6,7 +6,37 @@
  ;; If there is more than one, they won't work right.
  '(fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":"))
  '(org-agenda-custom-commands
-   '(("N" "Notes" tags "NOTE"
+   '(("z" "Super zaen view"
+      ((agenda ""
+               ((org-agenda-span '1)
+                (org-agenda-start-day
+                 (org-today))))
+       (tags-todo "-SOMEDAY"
+                  ((org-agenda-overriding-header "")
+                   ;; (org-agenda-skip-function 'bh/is-project-subtree-p)
+                   (org-super-agenda-groups
+                    '((:discard (:scheduled t
+                                 :deadline t))
+                      (:name "Next Actions"
+                       :todo "NEXT"
+                       :order 1)
+                      (:name "Waiting for"
+                       :todo "WAIT"
+                       :order 20)
+                      (:name "Projects"
+                       :and (:todo "PROJ"
+                             :children ("NEXT" "WAIT"))
+                       :order 50)
+                      (:name "Stuck Projects"  ;; consume the rest of PROJ -> move up with order
+                       :todo "PROJ"
+                       :order 40)
+                      (:discard (:anything t))
+                      ))
+                   (org-tags-match-list-sublevels t)
+                   (org-agenda-todo-ignore-with-date t)
+                   (org-agenda-dim-blocked-tasks 'invisible)
+                   ))))
+     ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
      ("i" "Inbox"
@@ -29,8 +59,6 @@
                             (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
                    (org-tags-match-list-sublevels t)
-                   (org-agenda-todo-ignore-scheduled t)
-                   (org-agenda-todo-ignore-deadlines t)
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(todo-state-down category-keep priority-up))))
@@ -50,8 +78,6 @@
                     (concat "Project Subtasks"
                             (if bh/hide-scheduled-and-waiting-next-tasks "" "(including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-non-project-tasks)
-                   (org-agenda-todo-ignore-scheduled t)
-                   (org-agenda-todo-ignore-deadlines t)
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
@@ -60,8 +86,6 @@
                     (concat "Standalone Tasks"
                             (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
                    (org-agenda-skip-function 'bh/skip-project-tasks)
-                   (org-agenda-todo-ignore-scheduled t)
-                   (org-agenda-todo-ignore-deadlines t)
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-sorting-strategy
                     '(category-keep))))
