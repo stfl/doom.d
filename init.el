@@ -35,12 +35,14 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       ;;fill-column       ; a `fill-column' indicator
+       ;;(emoji +unicode)  ; 🙂
+       fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ; (:cond ((unless (string= system-name "stefan-t3600")
                 ;; indent-guides     ; highlighted indent columns
                 ; )))
+       ;; minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -78,11 +80,12 @@
        (dired             ; making dired pretty [functional]
         +icons)
         ;; +ranger)
-       electric          ; smarter, keyword-based electric-indent
+       ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
        vc                ; version-control and Emacs, sitting in a tree
-       (undo +tree)
+       undo
+       ;; (undo +tree)
 
        :term
        eshell            ; a consistent, cross-platform shell (WIP)
@@ -119,14 +122,15 @@
        ;;pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
-       ;; tmux              ; an API for interacting with tmux
+       ;;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
        :lang
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
-       cc                 ; C/C++/Obj-C madness
+       ;; cc                 ; C/C++/Obj-C madness
        ;; (cc +lsp)                ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
@@ -193,6 +197,7 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        (web +lsp)               ; the tubes
+       yaml                ; JSON, but readable
 
        :email
        ;;(mu4e +gmail)

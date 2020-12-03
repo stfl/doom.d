@@ -51,16 +51,14 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! lsp-treemacs)
-;; (package! posframe)
 (package! ztree)
-(package! fira-code-mode)
-;; (package! yaml-mode)
+;; (package! fira-code-mode)
 (package! todoist)
 (package! org-jira)
-;; (package! ejira  ;; TODO something is broken with the branches on doom upgrade
-;;   :recipe (:host github
-;;            :repo "nyyManni/ejira"
-;;            :files ("*.el")))
+(package! ejira  ;; TODO something is broken with the branches on doom upgrade
+  :recipe (:host github
+           :repo "nyyManni/ejira"
+           :files ("*.el")))
 
 ;; (unpin! treemacs)
 ;; (unpin! lsp-mode)
@@ -76,7 +74,9 @@
 (package! org-super-agenda)
 (package! org-ql)
 (package! org-web-tools)
+
 (package! org-gcal)
+(package! ivy-omni-org)
 
 ;; Orgmode Packages
 (package! org-analyzer)
@@ -87,14 +87,14 @@
 
 (package! literate-calc-mode)
 ;; Misc Packages
-(package! define-word)
-(package! ox-reveal)
-(package! ox-pandoc)
-(package! ox-twbs)
-(package! gnuplot)
-(package! gnuplot-mode)
-(package! deadgrep)
-(package! graphviz-dot-mode)
+;; (package! define-word)
+;; (package! ox-reveal)
+;; (package! ox-pandoc)
+;; (package! ox-twbs)
+;; (package! gnuplot)
+;; (package! gnuplot-mode)
+;; (package! deadgrep)
+;; (package! graphviz-dot-mode)
 
 (package! gitlab-ci-mode)
 (package! gitlab-ci-mode-flycheck)

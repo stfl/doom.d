@@ -77,10 +77,10 @@ font string. You generally only need these two:
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(use-package! fira-code-mode
-  :after prog-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
-  )
+;; (use-package! fira-code-mode
+;;   :after prog-mode
+;;   :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
+;;   )
 #+END_SRC
 
 #+BEGIN_SRC elisp
@@ -90,7 +90,12 @@ font string. You generally only need these two:
 
 ** popup rules
 #+BEGIN_SRC elisp
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+
+(after! org-ql
+  (set-popup-rule!
+    "^\\*Org QL View" :side 'left :size 0.50 :select t :quit nil
+    ))
 #+END_SRC
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -247,6 +252,8 @@ Setting up my initial agenda settings
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
                   org-agenda-start-on-weekday nil
+                  org-agenda-span 'day
+                  org-agenda-start-day "-0d"
                   org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies nil
@@ -259,8 +266,8 @@ Setting up my initial agenda settings
                                      "~/.org/calendar.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
-                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -289,7 +296,6 @@ Adjusting clock settings
       (or (outline-next-heading)
           (goto-char (point-max))))))
 
-
 (defun org-current-is-next-action ()
   (string= "NEXT" (org-get-todo-state)))
 
@@ -299,63 +305,36 @@ Adjusting clock settings
 
 ** org super agenda
 
-#+begin_src elisp
-(setq org-agenda-span 'day)
-#+end_src
-
 #+BEGIN_SRC elisp
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :config
-  ;; (setq org-super-agenda-groups
-  ;;       '(
-  ;;         (:name "Grid"
-  ;;          :time-grid t ;;)
-  ;;         ;; (:name "sched"
-  ;;          :scheduled today)
-  ;;          ;; :scheduled past
-  ;;          ;; :deadline today
-  ;;          ;; :deadline past
-  ;;         (:name "Habits"
-  ;;          :habit t)
-  ;;         ;; (:name "Next Actions"
-  ;;         ;;  :todo ("NEXT")
-  ;;         ;;  :order 100)
-  ;;         ;; (:name "Waiting"
-  ;;         ;;  :todo ("WAIT")
-  ;;         ;;  :order 98)
-  ;;       ))
-;; )
-;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
-;; ;; (org-super-agenda-mode t)
+(use-package! org-super-agenda
+  :after org-agenda
+  ;; :init
+  :config
+    (setq org-super-agenda-header-map (make-sparse-keymap)) ;; don't break evil on org-super-agenda headings, see https://github.com/alphapapa/org-super-agenda/issues/50
+    (setq org-super-agenda-groups
+        '((:discard (:todo nil))
+          (:name "Today"
+           :scheduled past
+           :deadline past
+           )
+          (:discard (:scheduled future :deadline future))
+          (:name "Next Actions"
+           :todo "NEXT")
+          (:name "Waiting for"
+           :todo "WAIT")
+          (:name "Projects"
+           :and (:todo "PROJ"
+                 :children ("NEXT" "WAIT")))
+          (:name "Stuck Projects"
+           :and (:todo "PROJ"))
+          ;; (:discard (:anything t))
+          )))
 #+END_SRC
+** org-ql
 
-# (setq org-super-agenda-groups
-#       '((:discard (:todo ("DONE" "KILL")))
-#         (:name "Today"
-#          :time-grid t
-#          :date today
-#          :scheduled today
-#          :scheduled past
-#          :deadline today
-#          :deadline past
-#          )
-#         (:discard (:todo nil))
-#         (:name "Next Actions"
-#          :todo "NEXT")
-#         (:name "Standalone Tasks"
-#          :and (:not (:todo ("DONE" "WAIT"))
-#                :not (:children todo)))
-#         (:name "Stuck Projects"
-#          :and (:todo "PROJ"
-#                :not (:children ("NEXT" "WAIT"))))
-#         (:name "Projects"
-#          :and (:todo "PROJ"
-#                :children ("NEXT" "WAIT")))
-#         (:name "Waiting for"
-#          :todo "WAIT")
-#         ;; (:discard (:anything t))
-#         ))
+#+begin_src elisp
+(after! org-ql)
+#+end_src
 
 ** Capture Templates
 Here we setup the capture templates we want for ~org-capture~. I use a file template that's pre-filled with my monthly scheduled transactions. (TODO: Add default file-template for new projects.)
@@ -892,61 +871,80 @@ These are my default ROAM settings
 #+BEGIN_SRC elisp
 (use-package! org-jira
   :after org
-  :config
-  (setq org-jira-working-dir "~/.org/jira/"
+  :init
+  (setq
+   org-jira-working-dir "~/.org/jira/"
         jiralib-url "https://pulswerk.atlassian.net"))
 #+END_SRC
-** ejira
+** Morphdock
 #+BEGIN_SRC elisp
-;; (use-package! ejira
-;;   :after org
-;;   :init
-;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
-;;         jiralib2-auth             'token
-;;         jiralib2-user-login-name  "lendl@pulswerk.at"
-;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+(use-package! ejira
+  ;; :after org
+  :init
+  (setq jiralib2-url              "https://pulswerk.atlassian.net"
+        jiralib2-auth             'token
+        jiralib2-user-login-name  "lendl@pulswerk.at"
+        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
 
-;;         ejira-org-directory       "~/.org/ejira"
-;;         ejira-projects            '("MD")
+        ejira-org-directory       "~/.org/ejira"
+        ejira-projects            '("MD")
 
-;;         ejira-priorities-alist    '(("Highest" . ?A)
-;;                                     ("High"    . ?B)
-;;                                     ("Medium"  . ?C)
-;;                                     ("Low"     . ?D)
-;;                                     ("Lowest"  . ?E))
-;;         ejira-todo-states-alist   '(("To Do"       . 1)
-;;                                     ("In Progress" . 2)
-;;                                     ("Testing" . 3)
-;;                                     ("Done"        . 4)))
-;;   :config
-;;   ;; Tries to auto-set custom fields by looking into /editmeta
-;;   ;; of an issue and an epic.
-;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+        ejira-priorities-alist    '(("Highest" . ?A)
+                                    ("High"    . ?B)
+                                    ("Medium"  . ?C)
+                                    ("Low"     . ?D)
+                                    ("Lowest"  . ?E))
+        ejira-todo-states-alist   '(("To Do"       . 1)
+                                    ("In Progress" . 2)
+                                    ("Testing" . 3)
+                                    ("Done"        . 4)))
+  :config
+  ;; Tries to auto-set custom fields by looking into /editmeta
+  ;; of an issue and an epic.
+  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
 
-;;   ;; They can also be set manually if autoconfigure is not used.
-;;   ;; (setq ejira-sprint-field       'customfield_10001
-;;   ;;       ejira-epic-field         'customfield_10002
-;;   ;;       ejira-epic-summary-field 'customfield_10004)
+  ;; They can also be set manually if autoconfigure is not used.
+  ;; (setq ejira-sprint-field       'customfield_10001
+  ;;       ejira-epic-field         'customfield_10002
+  ;;       ejira-epic-summary-field 'customfield_10004)
 
-;;   (require 'ejira-agenda))
+  (require 'ejira-agenda))
 #+END_SRC
 ** org-gcal
 #+BEGIN_SRC elisp
 (use-package! org-gcal
-  :after org
+  :commands (org-gcal-sync
+             org-gcal-fetch
+             org-gcal-post-at-point
+             org-gcal-delete-at-point)
+  ;; :init
+  ;; (defvar org-gcal-dir (concat doom-cache-dir "org-gcal/"))
+  ;; (defvar org-gcal-token-file (concat org-gcal-dir "token.gpg"))
   :config
+  ;; hack to avoid the deferred.el error
+  (defun org-gcal--notify (title mes)
+    (message "org-gcal::%s - %s" title mes))
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 #+END_SRC
 
+** ivy-omni-org
+#+begin_src elisp
+(use-package! ivy-omni-org
+  ;; :after org
+  :commands (ivy-omni-org ivy-omni-org-bookmarks)
+  )
+#+end_src
+
 * Module Settings
 ** Company mode
 #+BEGIN_SRC elisp
-(after! org
-  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-  (setq company-idle-delay 0.25))
+;; (after! org
+;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
+;;   (setq company-idle-delay 0.25))
 #+END_SRC
+
 ** Define Word
 #+BEGIN_SRC elisp
 (use-package! define-word
