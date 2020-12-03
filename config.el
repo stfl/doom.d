@@ -37,15 +37,20 @@
 ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-(use-package! fira-code-mode
-  :after prog-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
-  )
+;; (use-package! fira-code-mode
+;;   :after prog-mode
+;;   :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
+;;   )
 
 (setq! display-line-numbers-type t)
 (setq! which-key-idle-delay 0.3)
 
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.90 :select t :ttl nil)
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+
+(after! org-ql
+  (set-popup-rule!
+    "^\\*Org QL View" :side 'left :size 0.50 :select t :quit nil
+    ))
 
 (after! evil-snipe
   (setq evil-snipe-scope 'buffer)
@@ -145,6 +150,8 @@
                   org-agenda-skip-deadline-if-done t
                   org-agenda-window-setup 'current-window
                   org-agenda-start-on-weekday nil
+                  org-agenda-span 'day
+                  org-agenda-start-day "-0d"
                   org-deadline-warning-days 7
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies nil
@@ -157,8 +164,8 @@
                                      "~/.org/calendar.org"
                                      "~/.org/gtd/projects.org"
                                      "~/.org/gtd/projects/")))
-                  ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-                  ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+;; (append (file-expand-wildcards "~/.org/gtd/*.org")
+;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
 
 ;; (after! org
 ;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
@@ -181,39 +188,37 @@
       (or (outline-next-heading)
           (goto-char (point-max))))))
 
-
 (defun org-current-is-next-action ()
   (string= "NEXT" (org-get-todo-state)))
 
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
-(setq org-agenda-span 'day)
+(use-package! org-super-agenda
+  :after org-agenda
+  ;; :init
+  :config
+    (setq org-super-agenda-header-map (make-sparse-keymap)) ;; don't break evil on org-super-agenda headings, see https://github.com/alphapapa/org-super-agenda/issues/50
+    (setq org-super-agenda-groups
+        '((:discard (:todo nil))
+          (:name "Today"
+           :scheduled past
+           :deadline past
+           )
+          (:discard (:scheduled future :deadline future))
+          (:name "Next Actions"
+           :todo "NEXT")
+          (:name "Waiting for"
+           :todo "WAIT")
+          (:name "Projects"
+           :and (:todo "PROJ"
+                 :children ("NEXT" "WAIT")))
+          (:name "Stuck Projects"
+           :and (:todo "PROJ"))
+          ;; (:discard (:anything t))
+          )))
 
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :config
-  ;; (setq org-super-agenda-groups
-  ;;       '(
-  ;;         (:name "Grid"
-  ;;          :time-grid t ;;)
-  ;;         ;; (:name "sched"
-  ;;          :scheduled today)
-  ;;          ;; :scheduled past
-  ;;          ;; :deadline today
-  ;;          ;; :deadline past
-  ;;         (:name "Habits"
-  ;;          :habit t)
-  ;;         ;; (:name "Next Actions"
-  ;;         ;;  :todo ("NEXT")
-  ;;         ;;  :order 100)
-  ;;         ;; (:name "Waiting"
-  ;;         ;;  :todo ("WAIT")
-  ;;         ;;  :order 98)
-  ;;       ))
-;; )
-;; (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
-;; ;; (org-super-agenda-mode t)
+(after! org-ql)
 
 (after! org (setq org-capture-templates
                   '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
@@ -637,52 +642,67 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package! org-jira
   :after org
-  :config
-  (setq org-jira-working-dir "~/.org/jira/"
+  :init
+  (setq
+   org-jira-working-dir "~/.org/jira/"
         jiralib-url "https://pulswerk.atlassian.net"))
 
-;; (use-package! ejira
-;;   :after org
-;;   :init
-;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
-;;         jiralib2-auth             'token
-;;         jiralib2-user-login-name  "lendl@pulswerk.at"
-;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+(use-package! ejira
+  ;; :after org
+  :init
+  (setq jiralib2-url              "https://pulswerk.atlassian.net"
+        jiralib2-auth             'token
+        jiralib2-user-login-name  "lendl@pulswerk.at"
+        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
 
-;;         ejira-org-directory       "~/.org/ejira"
-;;         ejira-projects            '("MD")
+        ejira-org-directory       "~/.org/ejira"
+        ejira-projects            '("MD")
 
-;;         ejira-priorities-alist    '(("Highest" . ?A)
-;;                                     ("High"    . ?B)
-;;                                     ("Medium"  . ?C)
-;;                                     ("Low"     . ?D)
-;;                                     ("Lowest"  . ?E))
-;;         ejira-todo-states-alist   '(("To Do"       . 1)
-;;                                     ("In Progress" . 2)
-;;                                     ("Testing" . 3)
-;;                                     ("Done"        . 4)))
-;;   :config
-;;   ;; Tries to auto-set custom fields by looking into /editmeta
-;;   ;; of an issue and an epic.
-;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+        ejira-priorities-alist    '(("Highest" . ?A)
+                                    ("High"    . ?B)
+                                    ("Medium"  . ?C)
+                                    ("Low"     . ?D)
+                                    ("Lowest"  . ?E))
+        ejira-todo-states-alist   '(("To Do"       . 1)
+                                    ("In Progress" . 2)
+                                    ("Testing" . 3)
+                                    ("Done"        . 4)))
+  :config
+  ;; Tries to auto-set custom fields by looking into /editmeta
+  ;; of an issue and an epic.
+  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
 
-;;   ;; They can also be set manually if autoconfigure is not used.
-;;   ;; (setq ejira-sprint-field       'customfield_10001
-;;   ;;       ejira-epic-field         'customfield_10002
-;;   ;;       ejira-epic-summary-field 'customfield_10004)
+  ;; They can also be set manually if autoconfigure is not used.
+  ;; (setq ejira-sprint-field       'customfield_10001
+  ;;       ejira-epic-field         'customfield_10002
+  ;;       ejira-epic-summary-field 'customfield_10004)
 
-;;   (require 'ejira-agenda))
+  (require 'ejira-agenda))
 
 (use-package! org-gcal
-  :after org
+  :commands (org-gcal-sync
+             org-gcal-fetch
+             org-gcal-post-at-point
+             org-gcal-delete-at-point)
+  ;; :init
+  ;; (defvar org-gcal-dir (concat doom-cache-dir "org-gcal/"))
+  ;; (defvar org-gcal-token-file (concat org-gcal-dir "token.gpg"))
   :config
+  ;; hack to avoid the deferred.el error
+  (defun org-gcal--notify (title mes)
+    (message "org-gcal::%s - %s" title mes))
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 
-(after! org
-  (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-  (setq company-idle-delay 0.25))
+(use-package! ivy-omni-org
+  ;; :after org
+  :commands (ivy-omni-org ivy-omni-org-bookmarks)
+  )
+
+;; (after! org
+;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
+;;   (setq company-idle-delay 0.25))
 
 (use-package! define-word
   :after org
