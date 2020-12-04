@@ -117,6 +117,7 @@ limit evil-snipe to the bufffer
       inhibit-compacting-font-caches t)
 ;; (whitespace-mode -1)
 #+END_SRC
+
 * Org mode settings
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
@@ -151,7 +152,10 @@ First I like to add some extra fancy stuff to make orgmode more appealing when i
 always generate an id for a link
 
 #+BEGIN_SRC elisp
-(after! org (setq org-id-link-to-org-use-id t))
+(after! org
+  (setq org-id-link-to-org-use-id t
+        org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
+        org-id-track-globally t))
 #+END_SRC
 ** Auto-saving org-mode files
 
@@ -867,49 +871,6 @@ These are my default ROAM settings
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
-** org-jira
-#+BEGIN_SRC elisp
-(use-package! org-jira
-  :after org
-  :init
-  (setq
-   org-jira-working-dir "~/.org/jira/"
-        jiralib-url "https://pulswerk.atlassian.net"))
-#+END_SRC
-** Morphdock
-#+BEGIN_SRC elisp
-(use-package! ejira
-  ;; :after org
-  :init
-  (setq jiralib2-url              "https://pulswerk.atlassian.net"
-        jiralib2-auth             'token
-        jiralib2-user-login-name  "lendl@pulswerk.at"
-        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
-
-        ejira-org-directory       "~/.org/ejira"
-        ejira-projects            '("MD")
-
-        ejira-priorities-alist    '(("Highest" . ?A)
-                                    ("High"    . ?B)
-                                    ("Medium"  . ?C)
-                                    ("Low"     . ?D)
-                                    ("Lowest"  . ?E))
-        ejira-todo-states-alist   '(("To Do"       . 1)
-                                    ("In Progress" . 2)
-                                    ("Testing" . 3)
-                                    ("Done"        . 4)))
-  :config
-  ;; Tries to auto-set custom fields by looking into /editmeta
-  ;; of an issue and an epic.
-  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
-
-  ;; They can also be set manually if autoconfigure is not used.
-  ;; (setq ejira-sprint-field       'customfield_10001
-  ;;       ejira-epic-field         'customfield_10002
-  ;;       ejira-epic-summary-field 'customfield_10004)
-
-  (require 'ejira-agenda))
-#+END_SRC
 ** org-gcal
 #+BEGIN_SRC elisp
 (use-package! org-gcal
@@ -1122,3 +1083,51 @@ display more columns in forge list topic
 #+END_SRC
 
 #+RESULTS:
+
+** ejira
+#+BEGIN_SRC elisp
+(use-package! ejira
+  ;; :after org
+  :init
+  (setq jiralib2-url              "https://pulswerk.atlassian.net"
+        jiralib2-auth             'token
+        jiralib2-user-login-name  "lendl@pulswerk.at"
+        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+
+        ejira-org-directory       "~/.org/ejira"
+        ejira-projects            '("MD")
+
+        ejira-priorities-alist    '(("Highest" . ?A)
+                                    ("High"    . ?B)
+                                    ("Medium"  . ?C)
+                                    ("Low"     . ?D)
+                                    ("Lowest"  . ?E))
+        ejira-todo-states-alist   '(("To Do"       . 1)
+                                    ("In Progress" . 2)
+                                    ("Testing" . 3)
+                                    ("Done"        . 4)))
+  :config
+  ;; Tries to auto-set custom fields by looking into /editmeta
+  ;; of an issue and an epic.
+  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+
+  ;; They can also be set manually if autoconfigure is not used.
+  ;; (setq ejira-sprint-field       'customfield_10001
+  ;;       ejira-epic-field         'customfield_10002
+  ;;       ejira-epic-summary-field 'customfield_10004)
+
+  (require 'ejira-agenda))
+#+END_SRC
+** org-jira
+#+BEGIN_SRC elisp
+(use-package! org-jira
+  :after org
+  :init
+  (setq
+   org-jira-working-dir "~/.org/jira/"
+        jiralib-url "https://pulswerk.atlassian.net"))
+#+END_SRC
+* Don't auto-recompile literate-config
+#+BEGIN_SRC elisp
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+#+END_SRC

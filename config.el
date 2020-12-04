@@ -72,7 +72,10 @@
         org-ellipsis " ▼"
         ))
 
-(after! org (setq org-id-link-to-org-use-id t))
+(after! org
+  (setq org-id-link-to-org-use-id t
+        org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
+        org-id-track-globally t))
 
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers))
@@ -640,45 +643,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 
-(use-package! org-jira
-  :after org
-  :init
-  (setq
-   org-jira-working-dir "~/.org/jira/"
-        jiralib-url "https://pulswerk.atlassian.net"))
-
-(use-package! ejira
-  ;; :after org
-  :init
-  (setq jiralib2-url              "https://pulswerk.atlassian.net"
-        jiralib2-auth             'token
-        jiralib2-user-login-name  "lendl@pulswerk.at"
-        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
-
-        ejira-org-directory       "~/.org/ejira"
-        ejira-projects            '("MD")
-
-        ejira-priorities-alist    '(("Highest" . ?A)
-                                    ("High"    . ?B)
-                                    ("Medium"  . ?C)
-                                    ("Low"     . ?D)
-                                    ("Lowest"  . ?E))
-        ejira-todo-states-alist   '(("To Do"       . 1)
-                                    ("In Progress" . 2)
-                                    ("Testing" . 3)
-                                    ("Done"        . 4)))
-  :config
-  ;; Tries to auto-set custom fields by looking into /editmeta
-  ;; of an issue and an epic.
-  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
-
-  ;; They can also be set manually if autoconfigure is not used.
-  ;; (setq ejira-sprint-field       'customfield_10001
-  ;;       ejira-epic-field         'customfield_10002
-  ;;       ejira-epic-summary-field 'customfield_10004)
-
-  (require 'ejira-agenda))
-
 (use-package! org-gcal
   :commands (org-gcal-sync
              org-gcal-fetch
@@ -828,6 +792,47 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ("Updated" 10 t nill updated nil))))
 
 (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
+
+(use-package! ejira
+  ;; :after org
+  :init
+  (setq jiralib2-url              "https://pulswerk.atlassian.net"
+        jiralib2-auth             'token
+        jiralib2-user-login-name  "lendl@pulswerk.at"
+        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+
+        ejira-org-directory       "~/.org/ejira"
+        ejira-projects            '("MD")
+
+        ejira-priorities-alist    '(("Highest" . ?A)
+                                    ("High"    . ?B)
+                                    ("Medium"  . ?C)
+                                    ("Low"     . ?D)
+                                    ("Lowest"  . ?E))
+        ejira-todo-states-alist   '(("To Do"       . 1)
+                                    ("In Progress" . 2)
+                                    ("Testing" . 3)
+                                    ("Done"        . 4)))
+  :config
+  ;; Tries to auto-set custom fields by looking into /editmeta
+  ;; of an issue and an epic.
+  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+
+  ;; They can also be set manually if autoconfigure is not used.
+  ;; (setq ejira-sprint-field       'customfield_10001
+  ;;       ejira-epic-field         'customfield_10002
+  ;;       ejira-epic-summary-field 'customfield_10004)
+
+  (require 'ejira-agenda))
+
+(use-package! org-jira
+  :after org
+  :init
+  (setq
+   org-jira-working-dir "~/.org/jira/"
+        jiralib-url "https://pulswerk.atlassian.net"))
+
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
 (defun nm/org-id-prompt-id ()
   "Prompt for the id during completion of id: link."
