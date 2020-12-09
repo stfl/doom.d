@@ -25,10 +25,14 @@
 
 (toggle-frame-maximized)
 
-(setq doom-font (font-spec :family "Fira Code" :size 13)
-      doom-variable-pitch-font (font-spec :family "Fira Code")
+;; (setq doom-font (font-spec :family "Fira Code" :size 13)
+;;       doom-variable-pitch-font (font-spec :family "Fira Code")
+;;       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 13)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono")
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
-      doom-big-font (font-spec :family "Fira Code Medium" :size 20))
+      doom-big-font (font-spec :family "JetBrains Mono" :size 20))
 
 (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-molokai)
@@ -457,7 +461,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       (:startgrouptag)
                       ("Areas" . nil)
                       (:grouptags)
-                      ("#pulswerk" . ?$)
+                      ("pulswerk" . ?$)
                       ("#personal" . ?_)
                       ))
 
@@ -573,9 +577,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (provide 'setup-helm-org-rifle)
 
-(setq org-roam-tag-sources '(prop last-directory))
-(setq org-roam-db-location "~/.emacs.d/roam.db")
-(setq org-roam-directory "~/.org/")
+(setq org-roam-tag-sources '(prop last-directory)
+      org-roam-db-location "~/.emacs.d/roam.db"
+      org-roam-directory "~/.org/"
+      org-roam-file-exclude-regexp "*/\\.stversions/*")
 ;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
