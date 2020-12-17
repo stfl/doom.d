@@ -98,3 +98,5 @@
 
 (package! gitlab-ci-mode)
 (package! gitlab-ci-mode-flycheck)
+
+(package! edbi)

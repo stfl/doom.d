@@ -716,6 +716,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
   )
 
+;; (use-package! edbi
+  ;; :command "edbi:open-db-viewer"
+  ;; )
+
+(after! ediff
+  (setq ediff-diff-options "--text"
+        ediff-diff3-options "--text"))
+
 (load! "org-customs.el")
 (load! "org-helpers.el")
 (load! "org-helpers-nm.el")

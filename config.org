@@ -49,6 +49,9 @@ start maximized
 #+end_src
 
 ** Font
+:PROPERTIES:
+:ID:       edf590c3-3d81-45b2-a180-fb46609bc099
+:END:
 Doom exposes five (optional) variables for controlling fonts in Doom. Here
 are the three important ones:
 
@@ -969,6 +972,21 @@ Configuring DEFT default settings
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
   )
 #+END_SRC
+** Database Interface (edbi)
+
+#+begin_src elisp
+;; (use-package! edbi
+  ;; :command "edbi:open-db-viewer"
+  ;; )
+#+end_src
+** ediff
+forcing text comparison even if diff thinks files are binary
+#+begin_src elisp
+(after! ediff
+  (setq ediff-diff-options "--text"
+        ediff-diff3-options "--text"))
+
+#+end_src
 
 * Custom Functions
 #+BEGIN_SRC elisp
