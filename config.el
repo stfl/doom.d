@@ -146,8 +146,8 @@
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
-                  org-agenda-dim-blocked-tasks t
-                  ;; org-agenda-dim-blocked-tasks 'invisible
+                  ;; org-agenda-dim-blocked-tasks t
+                  org-agenda-dim-blocked-tasks 'invisible
                   org-agenda-use-time-grid t
                   ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil

@@ -4,6 +4,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(haskell-interactive-popup-errors nil)
  '(org-agenda-custom-commands
    '(("z" "Super zaen view"
       ((agenda ""
@@ -94,9 +95,20 @@
              ((org-agenda-overriding-header "Tasks to Archive")
               (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
               (org-tags-match-list-sublevels nil))))
-      nil)))
+      nil)
+     ("l" "Agenda Weekly with Log"
+      ((agenda ""
+               ((org-agenda-span 'week)
+                (org-agenda-start-on-weekday 1)
+                (org-agenda-show-log t)))))
+     ("A" "Agenda Weekly"
+      ((agenda ""
+               ((org-agenda-span 'week)
+                (org-agenda-start-on-weekday 1)
+                ))))))
  '(org-ql-views
-   '(("@home | wohnung" :buffers-files org-agenda-files
+   '(("@home | wohnung"
+      :buffers-files org-agenda-files
       :query
       (and
        (todo)
@@ -108,7 +120,9 @@
          (todo "TODO")
          (parent
           (todo "PROJ")))))
-      :title "@home | wohnung" :sort nil :super-groups
+      :title "@home | wohnung"
+      :sort priority
+      :super-groups
       ((:name "Today" :deadline past :deadline today :scheduled today :scheduled past)
        (:discard
         (:scheduled future :deadline future))
@@ -130,13 +144,10 @@
          (todo "TODO")
          (parent
           (todo "PROJ")))))
-      :title "All TODO" :sort nil :super-groups
-      ((:name "Today"
-        :deadline past
-        :deadline today
-        :scheduled today
-        :scheduled past
-        )
+      :title "All TODO"
+      :sort priority
+      :super-groups
+      ((:name "Today" :deadline past :deadline today :scheduled today :scheduled past)
        (:discard
         (:scheduled future :deadline future))
        (:name "Next Actions" :todo "NEXT")

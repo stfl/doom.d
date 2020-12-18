@@ -247,13 +247,16 @@ Adding additional search functions
       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 #+END_SRC
 ** Agenda
+:PROPERTIES:
+:ID:       bf8accd0-55e0-4192-8a77-20013cecb037
+:END:
 TODO some of this is set in custom.el
 
 Setting up my initial agenda settings
 #+BEGIN_SRC elisp
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
-                  org-agenda-dim-blocked-tasks t
-                  ;; org-agenda-dim-blocked-tasks 'invisible
+                  ;; org-agenda-dim-blocked-tasks t
+                  org-agenda-dim-blocked-tasks 'invisible
                   org-agenda-use-time-grid t
                   ;; org-agenda-hide-tags-regexp "\\w+"
                   org-agenda-compact-blocks nil
