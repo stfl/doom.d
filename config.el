@@ -81,6 +81,10 @@
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
         org-id-track-globally t))
 
+;; (async-start
+ (org-id-update-id-locations)
+ ;; 'ignore)
+
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers))
 
@@ -98,7 +102,13 @@
       :leader
       :prefix ("n" . "notes")
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
       )
+
+;; Die sind eigentlich nicht org spezifisch
+      ;; :desc "Outline" "o" #'counsel-outline
+      ;; :desc "Counsel ripgrep" "d" #'counsel-rg
+      ;; :desc "Swiper All" "@" #'swiper-all
 
 (map! :after org
       :map org-mode-map
@@ -106,9 +116,7 @@
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
 
       :prefix ("s" . "search")
-      :desc "Outline" "o" #'counsel-outline
-      :desc "Counsel ripgrep" "d" #'counsel-rg
-      :desc "Swiper All" "@" #'swiper-all
+      :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
       :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
       :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
       :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
@@ -122,9 +130,6 @@
       :prefix ("r" . "refile")
       :desc "Refile to reference" "R" #'stfl/refile-to-roam
       :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
-
-      :prefix ("j" . "nicks functions")
-      :desc "Insert timestamp at POS" "i" #'nm/org-insert-timestamp
       )
 
 (map! :after org-agenda
@@ -134,16 +139,16 @@
       :desc "Follow" "F" #'org-agenda-follow-mode
       )
 
-(defun zyro/rifle-roam ()
-  "Rifle through your ROAM directory"
-  (interactive)
-  (helm-org-rifle-directories org-roam-directory))
+;; (defun zyro/rifle-roam ()
+;;   "Rifle through your ROAM directory"
+;;   (interactive)
+;;   (helm-org-rifle-directories org-roam-directory))
 
-(map! :after org
-      :map org-mode-map
-      :leader
-      :prefix ("n" . "notes")
-      :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+;; (map! :after org
+;;       :map org-mode-map
+;;       :leader
+;;       :prefix ("n" . "notes")
+;;       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 
 (after! org (setq org-agenda-diary-file "~/.org/diary.org"
                   ;; org-agenda-dim-blocked-tasks t
@@ -165,7 +170,6 @@
                   org-habit-show-habits t))
 
 (after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
-                                     "~/.org/gtd/inbox-orgzly.org"
                                      ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/calendar.org"
@@ -577,10 +581,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (provide 'setup-helm-org-rifle)
 
-(setq org-roam-tag-sources '(prop last-directory)
-      org-roam-db-location "~/.emacs.d/roam.db"
-      org-roam-directory "~/.org/"
-      org-roam-file-exclude-regexp "*/\\.stversions/*")
+(setq! org-roam-tag-sources '(prop last-directory)
+       org-roam-db-location "~/.emacs.d/roam.db"
+       org-roam-directory "~/.org/")
+
+(setq! org-roam-file-exclude-regexp "*/.stversions/*")
 ;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
 (setq org-roam-dailies-capture-templates
@@ -606,6 +611,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
            :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
            :unnarrowed t)
            ))
+
+(after! org-roam (org-roam-db-build-cache))
 
 (use-package org-roam-server
   :ensure t
