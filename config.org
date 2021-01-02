@@ -899,6 +899,50 @@ rebuild org-roam cache at start
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
+** org-jira
+#+BEGIN_SRC elisp
+(use-package! org-jira
+  :after org
+  :init
+  (setq
+   org-jira-working-dir "~/.org/jira/"
+        jiralib-url "https://pulswerk.atlassian.net"))
+#+END_SRC
+** Morphdock
+#+BEGIN_SRC elisp
+(use-package! ejira
+  :after org
+  :init
+  (setq jiralib2-url              "https://pulswerk.atlassian.net"
+        jiralib2-auth             'token
+        jiralib2-user-login-name  "lendl@pulswerk.at"
+        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+
+        ejira-org-directory       "~/.org/ejira"
+        ejira-projects            '("MD")
+
+        ejira-priorities-alist    '(("Highest" . ?A)
+                                    ("High"    . ?A)
+                                    ("Medium"  . ?B)
+                                    ("Low"     . ?C)
+                                    ("Lowest"  . ?C))
+        ejira-todo-states-alist   '(("To Do"       . 1)
+                                    ("In Progress" . 2)
+                                    ("Testing" . 3)
+                                    ("Done"        . 4)))
+  :config
+  ;; Tries to auto-set custom fields by looking into /editmeta
+  ;; of an issue and an epic.
+  ;; (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+
+  ;; They can also be set manually if autoconfigure is not used.
+  ;; (setq ejira-sprint-field       'customfield_10001
+  ;;       ejira-epic-field         'customfield_10002
+  ;;       ejira-epic-summary-field 'customfield_10004)
+
+  (require 'ejira-agenda))
+#+END_SRC
+
 ** org-gcal
 #+BEGIN_SRC elisp
 (use-package! org-gcal
