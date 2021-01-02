@@ -1148,7 +1148,9 @@ set todo value to *PROJ* for all TODOs with sub-todos
 (use-package! ztree)
 #+END_SRC
 
-** Forge
+** Magit
+
+*** Forge
 display more columns in forge list topic
 #+BEGIN_SRC elisp
 (after! forge (setq forge-topic-list-columns
@@ -1160,6 +1162,26 @@ display more columns in forge list topic
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 #+END_SRC
+
+*** with-editor
+
+#+BEGIN_SRC elisp
+(use-package! with-editor
+  :after magit
+  :config
+  (define-key (current-global-map)
+    [remap async-shell-command] 'with-editor-async-shell-command)
+  (define-key (current-global-map)
+    [remap shell-command] 'with-editor-shell-command)
+
+  (add-hook 'shell-mode-hook  'with-editor-export-editor)
+  (add-hook 'term-exec-hook   'with-editor-export-editor)
+  (add-hook 'eshell-mode-hook 'with-editor-export-editor)
+
+  (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
+)
+#+END_SRC
+
 
 ** Todoist integration
 :PROPERTIES:

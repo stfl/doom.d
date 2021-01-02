@@ -100,3 +100,5 @@
 (package! gitlab-ci-mode-flycheck)
 
 (package! edbi)
+
+(package! with-editor)

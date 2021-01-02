@@ -850,6 +850,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
+(use-package! with-editor
+  :after magit
+  :config
+  (define-key (current-global-map)
+    [remap async-shell-command] 'with-editor-async-shell-command)
+  (define-key (current-global-map)
+    [remap shell-command] 'with-editor-shell-command)
+
+  (add-hook 'shell-mode-hook  'with-editor-export-editor)
+  (add-hook 'term-exec-hook   'with-editor-export-editor)
+  (add-hook 'eshell-mode-hook 'with-editor-export-editor)
+
+  (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
+)
+
 (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
 
 (use-package! ejira
