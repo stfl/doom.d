@@ -81,12 +81,16 @@
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
         org-id-track-globally t))
 
-;; (async-start
- (org-id-update-id-locations)
- ;; 'ignore)
+(after! org
+  ;; (async-start
+   (org-id-update-id-locations)
+   ;; 'ignore)
+   )
 
 (after! org
-  (add-hook 'auto-save-hook 'org-save-all-org-buffers))
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
+  (add-hook 'auto-save-hook 'org-id-update-id-locations 20)
+  )
 
 (after! org
   (setq org-startup-indented 'indent
@@ -96,7 +100,7 @@
 ;; (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 
-(bind-key "<f6>" #'link-hint-copy-link)
+;; (bind-key "<f6>" #'link-hint-copy-link)
 (map! :after org
       :map org-mode-map
       :leader
@@ -115,7 +119,7 @@
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
 
-      :prefix ("s" . "search")
+      :prefix ("s" . "Tree/Subtree")
       :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
       :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
       :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
@@ -137,6 +141,21 @@
       :localleader
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
+      ;; :desc "Priority" "p" #'org-agenda-priority
+      ;; :prefix ("s" . "search and set")
+      :prefix ("p" . "priorities")
+      :desc "Prioity" "p" #'org-agenda-priority
+      :desc "Prioity up" "u" #'org-agenda-priority-up
+      :desc "Prioity down" "d" #'org-agenda-priority-down
+      :desc "Prioity tree" "P" #'org-agenda-priority-tree
+      :desc "Prioity tree up" "U" #'org-agenda-priority-tree-up
+      :desc "Prioity tree down" "D" #'org-agenda-priority-tree-down
+      )
+
+(map! ;;:after org-agenda
+      :map org-agenda-mode-map
+      :desc "Prioity tree up" "C-S-k" #'org-agenda-priority-tree-up
+      :desc "Prioity tree down" "C-S-j" #'org-agenda-priority-tree-down
       )
 
 ;; (defun zyro/rifle-roam ()
@@ -209,25 +228,28 @@
   :after org-agenda
   ;; :init
   :config
-    (setq org-super-agenda-header-map (make-sparse-keymap)) ;; don't break evil on org-super-agenda headings, see https://github.com/alphapapa/org-super-agenda/issues/50
-    (setq org-super-agenda-groups
-        '((:discard (:todo nil))
-          (:name "Today"
-           :scheduled past
+  (setq org-super-agenda-header-map (make-sparse-keymap)) ;; don't break evil on org-super-agenda headings, see https://github.com/alphapapa/org-super-agenda/issues/50
+
+  (setq org-super-agenda-groups
+        '((:name "Today"
            :deadline past
-           )
-          (:discard (:scheduled future :deadline future))
-          (:name "Next Actions"
-           :todo "NEXT")
-          (:name "Waiting for"
-           :todo "WAIT")
+           :deadline today
+           :scheduled today
+           :scheduled past)
+          (:name "Next Actions" :todo "NEXT")
+          (:name "Waiting for" :todo "WAIT")
           (:name "Projects"
            :and (:todo "PROJ"
-                 :children ("NEXT" "WAIT")))
-          (:name "Stuck Projects"
-           :and (:todo "PROJ"))
-          ;; (:discard (:anything t))
-          )))
+                 :children ("NEXT"))
+           :order 5)
+          (:name "Waiting Projects"
+           :and (:todo "PROJ"
+                 :children ("WAIT"))
+           :order 6)
+          (:name "Stuck Projects"   ;; the rest but show before Projects
+           :todo "PROJ"
+           :order 4)))
+  )
 
 (after! org-ql)
 
@@ -356,6 +378,139 @@
                   org-track-ordered-property-with-tag t
                   org-hierarchical-todo-statistics nil
                   ))
+
+;; (after! org
+;;   (defun my/org-inherited-priority (s)
+;;     (cond
+
+;;      ;; Priority cookie in this heading
+;;      ((string-match org-priority-regexp s)
+;;       (* 1000 (- org-priority-lowest
+;;                  (org-priority-to-value (match-string 2 s)))))
+
+;;      ;; No priority cookie, but already at highest level
+;;      ((not (org-up-heading-safe))
+;;       (* 1000 (- org-priority-lowest org-priority-default)))
+
+;;      ;; Look for the parent's priority
+;;      (t
+;;       (my/org-inherited-priority (org-get-heading)))))
+
+;;   (setq org-priority-get-priority-function #'my/org-inherited-priority)
+;;   )
+
+(after! org
+  (defun my/org-priority-up ()
+    (org-priority 'up))
+
+  (defun my/org-priority-down ()
+    (org-priority 'down))
+
+  (defun my/org-priority-up-region ()
+    (interactive)
+    (org-map-entries #'my/org-priority-up nil 'region)
+    (setq deactivate-mark nil))
+
+  (defun my/org-priority-down-region ()
+    (interactive)
+    (org-map-entries #'my/org-priority-down nil 'region)
+    (setq deactivate-mark nil))
+  )
+
+(after! org-agenda
+
+  (defun org-agenda-priority-tree-up (&optional force-direction)
+    "Increase the priority of line at point, also in Org file."
+    (interactive "P")
+    (if (equal force-direction '(4))
+        (org-priority-show)
+      (unless org-priority-enable-commands
+        (user-error "Priority commands are disabled"))
+      (org-agenda-check-no-diary)
+      (let* ((col (current-column))
+         (marker (or (org-get-at-bol 'org-marker)
+                 (org-agenda-error)))
+         (hdmarker (org-get-at-bol 'org-hd-marker))
+         (buffer (marker-buffer hdmarker))
+         (pos (marker-position hdmarker))
+         (inhibit-read-only t)
+         newhead)
+        (org-with-remote-undo buffer
+      (with-current-buffer buffer
+        (widen)
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-map-entries '(org-priority 'up) nil 'tree)
+        (end-of-line 1)
+        (setq newhead (org-get-heading)))
+      (org-agenda-change-all-lines newhead hdmarker)
+	  (org-move-to-column col)))))
+
+  (defun org-agenda-priority-tree-down (&optional force-direction)
+    "Decrease the priority of line at point, also in Org file."
+    (interactive "P")
+    (if (equal force-direction '(4))
+        (org-priority-show)
+      (unless org-priority-enable-commands
+        (user-error "Priority commands are disabled"))
+      (org-agenda-check-no-diary)
+      (let* ((col (current-column))
+         (marker (or (org-get-at-bol 'org-marker)
+                 (org-agenda-error)))
+         (hdmarker (org-get-at-bol 'org-hd-marker))
+         (buffer (marker-buffer hdmarker))
+         (pos (marker-position hdmarker))
+         (inhibit-read-only t)
+         newhead)
+        (org-with-remote-undo buffer
+      (with-current-buffer buffer
+        (widen)
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-map-entries '(org-priority 'down) nil 'tree)
+        (end-of-line 1)
+        (setq newhead (org-get-heading)))
+      (org-agenda-change-all-lines newhead hdmarker)
+	  (org-move-to-column col)))))
+
+  (defun org-agenda-priority-tree (&optional force-direction)
+    "Set the priority of line at point, also in Org file.
+This changes the line at point, all other lines in the agenda referring to
+the same tree node, and the headline of the tree node in the Org file.
+Called with a universal prefix arg, show the priority instead of setting it."
+    (interactive "P")
+    (if (equal force-direction '(4))
+        (org-priority-show)
+      (unless org-priority-enable-commands
+        (user-error "Priority commands are disabled"))
+      (org-agenda-check-no-diary)
+      (let* ((col (current-column))
+         (marker (or (org-get-at-bol 'org-marker)
+                 (org-agenda-error)))
+         (hdmarker (org-get-at-bol 'org-hd-marker))
+         (buffer (marker-buffer hdmarker))
+         (pos (marker-position hdmarker))
+         (inhibit-read-only t)
+         newhead)
+        (org-with-remote-undo buffer
+      (with-current-buffer buffer
+        (widen)
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-map-entries '(org-priority 'set) nil 'tree)
+        (end-of-line 1)
+        (setq newhead (org-get-heading)))
+      (org-agenda-change-all-lines newhead hdmarker)
+	  (org-move-to-column col)))))
+  )
+
+(map! :after org-agenda
+      :map org-agenda-mode-map
+      :localleader
+      :prefix("s")
+      :desc "Prioity up region" "K" #'my/org-priority-up-region
+      :desc "Prioity down region" "J" #'my/org-priority-donw-region
+      )
 
 (defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
@@ -769,6 +924,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! ediff
   (setq ediff-diff-options "--text"
         ediff-diff3-options "--text"))
+
+(use-package! origami)
+
+(map! :after '(org-agenda origami)
+      :map org-agenda-mode-map
+      :desc "" "TAB" #'origami-toggle-node
+      ;; :desc "" "" #'org-agenda-priority-tree-down
+      )
 
 (load! "org-customs.el")
 (load! "org-helpers.el")

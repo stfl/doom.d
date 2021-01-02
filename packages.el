@@ -102,3 +102,6 @@
 (package! edbi)
 
 (package! with-editor)
+
+;; folding
+(package! origami)

@@ -6,6 +6,7 @@
  ;; If there is more than one, they won't work right.
  '(haskell-interactive-popup-errors nil)
  '(org-agenda-custom-commands
+
    '(("z" "Super zaen view"
       ((agenda ""
                ((org-agenda-span '1)
@@ -14,20 +15,46 @@
        (tags-todo "-SOMEDAY"
                   ((org-agenda-overriding-header "")
                    (org-super-agenda-groups
-                    '((:discard
-                       (:scheduled t :deadline t))
-                      (:name "Next Actions" :todo "NEXT" :order 1)
-                      (:name "Waiting for" :todo "WAIT" :order 20)
+                    '((:discard (:scheduled t :deadline t))
+                      ;; (:name "Today" :deadline past :deadline today :scheduled today :scheduled past)
+                      ;; (:discard
+                      ;;  (:scheduled future :deadline future))
+                      (:name "Next Actions" :todo "NEXT")
+                      (:name "Waiting for" :todo "WAIT")
                       (:name "Projects" :and
                        (:todo "PROJ" :children
-                        ("NEXT" "WAIT"))
-                       :order 50)
-                      (:name "Stuck Projects" :todo "PROJ" :order 40)
-                      (:discard
-                       (:anything t))))
+                        ("NEXT" "WAIT")))
+                      (:name "Stuck Projects" :and
+                       (:todo "PROJ"))))
                    (org-tags-match-list-sublevels t)
                    (org-agenda-todo-ignore-with-date t)
                    (org-agenda-dim-blocked-tasks 'invisible)))))
+     ("!" "Master View"
+      ((agenda ""
+               ((org-agenda-span '1)
+                (org-agenda-start-day
+                 (org-today))))
+       (org-ql-block '(and
+                       (todo)
+                       (not (tags "SOMEDAY"))
+                       (not (and (todo "TODO")
+                                 (parent (todo "PROJ")))))
+                     ;; (org-super-agenda-groups
+                     ;;  '((:discard
+                     ;;     (:scheduled t :deadline t))
+                     ;;    (:name "Next Actions" :todo "NEXT" :order 1)
+                     ;;    (:name "Waiting for" :todo "WAIT" :order 20)
+                     ;;    (:name "Projects" :and
+                     ;;     (:todo "PROJ" :children
+                     ;;      ("NEXT" "WAIT"))
+                     ;;     :order 50)
+                     ;;    (:name "Stuck Projects" :todo "PROJ" :order 40)
+                     ;;    (:discard
+                     ;;     (:anything t))))
+                     (org-tags-match-list-sublevels t)
+                     (org-agenda-todo-ignore-with-date t)
+                     (org-agenda-dim-blocked-tasks 'invisible)
+                     )))
      ("N" "Notes" tags "NOTE"
       ((org-agenda-overriding-header "Notes")
        (org-tags-match-list-sublevels t)))
@@ -99,7 +126,7 @@
      ("l" "Agenda Weekly with Log"
       ((agenda ""
                ((org-agenda-span 'week)
-                (org-agenda-start-on-weekday 1)
+                ;; (org-agenda-start-on-weekday 1)
                 (org-agenda-show-log t)))))
      ("A" "Agenda Weekly"
       ((agenda ""
@@ -107,71 +134,119 @@
                 (org-agenda-start-on-weekday 1)
                 ))))))
  '(org-ql-views
-   '(("@home | wohnung"
+   '(("All current TODO"
+      :title "All not scheduled TODOs"
       :buffers-files org-agenda-files
       :query
-      (and
-       (todo)
-       (tags "@home" "wohnung")
-       (not
-        (tags "SOMEDAY"))
-       (not
-        (and
-         (todo "TODO")
-         (parent
-          (todo "PROJ")))))
-      :title "@home | wohnung"
+      (and (todo)
+           (not (tags "SOMEDAY"))
+           (not (and (todo "TODO")
+                     (ancestors (todo "PROJ"))))
+           (not (scheduled :from +1))
+           (not (deadline :from +7))
+           ;; (property "BLOCKED" "")
+           )
+      ;; :sort (priority date)
       :sort priority
-      :super-groups
-      ((:name "Today" :deadline past :deadline today :scheduled today :scheduled past)
-       (:discard
-        (:scheduled future :deadline future))
-       (:name "Next Actions" :todo "NEXT")
-       (:name "Waiting for" :todo "WAIT")
-       (:name "Projects" :and
-        (:todo "PROJ" :children
-         ("NEXT" "WAIT")))
-       (:name "Stuck Projects" :and
-        (:todo "PROJ")))
+      :super-groups org-super-agenda-groups
       :narrow nil)
-     ("All TODO" :buffers-files org-agenda-files :query
-      (and
-       (todo)
-       (not
-        (tags "SOMEDAY"))
-       (not
-        (and
-         (todo "TODO")
-         (parent
-          (todo "PROJ")))))
-      :title "All TODO"
+     ("Current Prio B+"
+      :title "Prio [B+]"
+      :buffers-files org-agenda-files
+      :query
+      (and (todo)
+           (or (priority >= "B")
+               (ancestors (priority >= "B")))
+           (not (tags "SOMEDAY"))
+           (not (and (todo "TODO")
+                     (ancestors (todo "PROJ"))))
+           (not (scheduled :from +1))
+           (not (deadline :from +7))
+           )
+      :sort (priority date)
+      :super-groups org-super-agenda-groups
+      :narrow nil)
+     ("High Prio [A]"
+      :title "Prio [A]"
+      :buffers-files org-agenda-files
+      ;; org-agenda-files ; this does not include files from gtd/projects/ -> dir is not expanded
+      :query
+      (and (todo)
+           (or (priority >= "A")
+               (ancestors (priority >= "A")))
+           (not (tags "SOMEDAY"))
+           (not (and (todo "TODO")
+                     (ancestors (todo "PROJ"))))
+           (not (scheduled :from +1))
+           (not (deadline :from +7))
+           )
+      :sort (priority date)
+      :super-groups org-super-agenda-groups
+      :narrow nil)
+     ("All indlucing future TODO)"
+      :title "All TODO including future"
+      :buffers-files org-agenda-files
+      :query (and (todo)
+                  (not (tags "SOMEDAY"))
+                  (not (and (todo "TODO")
+                            (ancestors (todo "PROJ")))))
       :sort priority
-      :super-groups
-      ((:name "Today" :deadline past :deadline today :scheduled today :scheduled past)
-       (:discard
-        (:scheduled future :deadline future))
-       (:name "Next Actions" :todo "NEXT")
-       (:name "Waiting for" :todo "WAIT")
-       (:name "Projects" :and
-        (:todo "PROJ" :children
-         ("NEXT" "WAIT")))
-       (:name "Stuck Projects" :and
-        (:todo "PROJ")))
+      :super-groups org-super-agenda-groups
+      :narrow nil)
+     ("All TODO including SOMEDAY"
+      :title "All all all"
+      :buffers-files org-agenda-files
+      :query (and (todo))
+      :sort priority
+      :super-groups org-super-agenda-groups
+      :narrow nil)
+     ("@home | wohnung"
+      :title "@home | wohnung"
+      :buffers-files org-agenda-files
+      ;; org-agenda-files ; this does not include files from gtd/projects/ -> dir is not expanded
+      :query
+      (and (todo)
+           (tags "@home" "wohnung")
+           (not (tags "SOMEDAY"))
+           (not (and (todo "TODO")
+                     (ancestors (todo "PROJ"))))
+           (not (scheduled :from today))
+           (not (deadline :from +7)))
+      :sort priority
+      :super-groups org-super-agenda-groups
+      :narrow nil)
+     ("@office | pulswerk"
+      :title "@office | pulswerk"
+      :buffers-files org-agenda-files
+      ;; org-agenda-files ; this does not include files from gtd/projects/ -> dir is not expanded
+      :query
+      (and (todo)
+           (tags "@office" "pulswerk")
+           (not (tags "SOMEDAY"))
+           (not (and (todo "TODO")
+                     (ancestors (todo "PROJ"))))
+           (not (scheduled :from today))
+           (not (deadline :from +7)))
+      :sort priority
+      :super-groups org-super-agenda-groups
       :narrow nil)
      ("Projects" :buffers-files org-agenda-files :query
       (and
        (todo "PROJ")
        (not
         (tags "SOMEDAY")))
-      :title "Projects" :sort nil :super-groups nil :narrow nil)
+      :title "Projects"
+      :sort priority
+      :super-groups org-super-agenda-groups
+      :narrow nil)
      ("Overview: Agenda-like" :buffers-files org-agenda-files :query
       (and
        (not
         (done))
        (or
         (habit)
-        (deadline auto)
-        (scheduled :to today)
+        ;; (deadline auto)
+        (scheduled :to 0)
         (ts-active :on today)))
       :title "Agenda-like" :sort
       (date priority todo)
