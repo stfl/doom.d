@@ -34,7 +34,9 @@
       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
       doom-big-font (font-spec :family "JetBrains Mono" :size 20))
 
+;; (setq doom-theme 'zaiste)
 (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-one-light)
 ;; (setq doom-theme 'doom-molokai)
 ;; (setq doom-theme 'doom-solarized-dark)
 
@@ -89,16 +91,25 @@
 
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
-  (add-hook 'auto-save-hook 'org-id-update-id-locations 20)
-  )
+  (add-hook 'auto-save-hook 'org-id-update-id-locations 20))
 
-(after! org
+(after! org-roam
+  (add-hook 'auto-save-hook 'org-roam-build-cache 40))
+
+;; (after! org
   (setq org-startup-indented 'indent
         org-startup-folded 'fold
         org-startup-with-inline-images t
-        ))
-;; (add-hook 'org-mode-hook 'org-indent-mode)
+        )
+;)
+(add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
+
+(defadvice! no-errors/+org-inline-image-data-fn (_protocol link _description)
+  :override #'+org-inline-image-data-fn
+  "Interpret LINK as base64-encoded image data. Ignore all errors."
+  (ignore-errors
+    (base64-decode-string link)))
 
 ;; (bind-key "<f6>" #'link-hint-copy-link)
 (map! :after org
@@ -316,8 +327,8 @@
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
-(after! org
-  (setq org-todo-keywords
+;; (after! org
+  (setq! org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
@@ -330,7 +341,8 @@
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next))))
+          ("NEXT" . +org-todo-next)))
+;; )
 
 (after! org (setq org-indent-indentation-per-level 4))
 
