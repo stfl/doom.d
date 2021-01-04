@@ -4,8 +4,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" "f1938227a38cfe55a12076dac514f03a1d9aa1a47957870b690cc80db5e7a1b3" default))
  '(haskell-interactive-popup-errors nil)
  '(org-agenda-custom-commands
    '(("z" "Super zaen view"
@@ -122,6 +120,7 @@
       ((agenda ""
                ((org-agenda-span 'week)
                 (org-agenda-start-on-weekday 1)))))))
+ '(org-level-color-stars-only nil)
  '(org-ql-views
    '(("All current TODO" :title "All not scheduled TODOs" :buffers-files org-agenda-files :query
       (and
@@ -291,4 +290,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
+ '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
+ '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
+ '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
+ '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
+ '(org-level-5 ((t (:inherit outline-5 :extend t))))
+ '(org-level-6 ((t (:inherit outline-6 :extend t))))
+ '(org-level-7 ((t (:inherit outline-7 :extend t))))
+ '(org-level-8 ((t (:inherit outline-8 :extend t))))
+ '(org-property-value ((t (:height 0.85))) t)
+ '(org-special-keyword ((t (:foreground "#83898d" :height 0.8)))))

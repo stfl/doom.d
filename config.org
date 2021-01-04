@@ -33,6 +33,7 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
 #+END_SRC
 
 * Terminal Mode
+
 Set a few settings if we detect terminal mode
 #+BEGIN_SRC elisp
 (when (equal (window-system) nil)
@@ -41,6 +42,7 @@ Set a few settings if we detect terminal mode
    (setq doom-theme 'doom-solarized-dark)
    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
 #+END_SRC
+
 * UI
 start maximized
 
@@ -117,6 +119,7 @@ limit evil-snipe to the bufffer
   (setq evil-snipe-scope 'buffer)
   )
 #+END_SRC
+
 * Buffer Settings
 #+BEGIN_SRC elisp
 ;; (global-auto-revert-mode 1)
@@ -289,6 +292,7 @@ Adding additional search functions
 ;;       :prefix ("n" . "notes")
 ;;       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 #+END_SRC
+
 ** Agenda
 :PROPERTIES:
 :ID:       bf8accd0-55e0-4192-8a77-20013cecb037
@@ -389,6 +393,7 @@ Adjusting clock settings
            :order 4)))
   )
 #+END_SRC
+
 ** org-ql
 
 #+begin_src elisp
@@ -493,8 +498,8 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
-;; (after! org
-  (setq! org-todo-keywords
+(after! org
+  (setq org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
@@ -508,7 +513,7 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
           ("NEXT" . +org-todo-next)))
-;; )
+)
 #+END_SRC
 
 
@@ -537,7 +542,7 @@ Remove TODO keywrods from org-mode (it will still work in agenda)
              ))
 #+end_src
 
-[[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][ Doom emacs org-mode ricing ]]
+[[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][Doom emacs org-mode ricing]]
 Org-superstar config
 #+BEGIN_SRC elisp
 (after! org-superstar
@@ -567,7 +572,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 #+BEGIN_SRC elisp
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time+note
-                  org-log-repeat nil
+                  org-log-repeat 'time
                   org-log-redeadline 'time
                   org-log-reschedule 'time
                   ))
@@ -853,6 +858,7 @@ REVIEW should we define any additional tags?
                       ("#personal" . ?_)
                       ))
 #+END_SRC
+
 ** Task Dependencies
 
 load org-edna
@@ -898,6 +904,7 @@ load org-edna
 (after! org
   (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
 #+END_SRC
+
 ** Org-Rifle
 #+BEGIN_SRC elisp
 (use-package helm-org-rifle
@@ -994,6 +1001,7 @@ load org-edna
 
 (provide 'setup-helm-org-rifle)
 #+END_SRC
+
 ** Org-Roam
 These are my default ROAM settings
 #+BEGIN_SRC elisp
@@ -1050,6 +1058,7 @@ rebuild org-roam cache at start
         org-roam-server-network-label-truncate-length 60
         org-roam-server-network-label-wrap-length 20))
 #+END_SRC
+
 ** Roam Export Backlinks + Content
 #+BEGIN_SRC elisp
 (defun my/org-roam--backlinks-list-with-content (file)
@@ -1080,6 +1089,7 @@ rebuild org-roam cache at start
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 #+END_SRC
+
 ** org-jira
 #+BEGIN_SRC elisp
 (use-package! org-jira
@@ -1089,6 +1099,7 @@ rebuild org-roam cache at start
    org-jira-working-dir "~/.org/jira/"
         jiralib-url "https://pulswerk.atlassian.net"))
 #+END_SRC
+
 ** Morphdock
 #+BEGIN_SRC elisp
 (use-package! ejira
@@ -1169,6 +1180,7 @@ rebuild org-roam cache at start
         :leader
         :desc "Define word at point" "@" #'define-word-at-point))
 #+END_SRC
+
 ** Deft
 When this variable is set to ~t~ your deft directory will be updated to your projectile-project root's folder when switching projects, and the deft buffer's contents will be refreshed.
 #+BEGIN_SRC elisp
@@ -1209,6 +1221,7 @@ Configuring DEFT default settings
 #+BEGIN_SRC elisp
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 #+END_SRC
+
 ** Projectile
 #+BEGIN_SRC elisp
 (after! projectile
@@ -1217,6 +1230,7 @@ Configuring DEFT default settings
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
   )
 #+END_SRC
+
 ** Database Interface (edbi)
 
 #+begin_src elisp
@@ -1224,6 +1238,7 @@ Configuring DEFT default settings
   ;; :command "edbi:open-db-viewer"
   ;; )
 #+end_src
+
 ** ediff
 forcing text comparison even if diff thinks files are binary
 #+begin_src elisp
@@ -1243,6 +1258,7 @@ forcing text comparison even if diff thinks files are binary
       ;; :desc "" "" #'org-agenda-priority-tree-down
       )
 #+end_src
+
 * Custom Functions
 #+BEGIN_SRC elisp
 (load! "org-customs.el")
@@ -1320,6 +1336,7 @@ set todo value to *PROJ* for all TODOs with sub-todos
 #+BEGIN_SRC elisp
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 #+END_SRC
+
 ** Gitlab-CI
 
 #+BEGIN_SRC elisp
@@ -1418,6 +1435,7 @@ display more columns in forge list topic
 
   (require 'ejira-agenda))
 #+END_SRC
+
 ** org-jira
 #+BEGIN_SRC elisp
 (use-package! org-jira
@@ -1427,6 +1445,7 @@ display more columns in forge list topic
    org-jira-working-dir "~/.org/jira/"
         jiralib-url "https://pulswerk.atlassian.net"))
 #+END_SRC
+
 * Don't auto-recompile literate-config
 #+BEGIN_SRC elisp
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)

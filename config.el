@@ -327,8 +327,8 @@
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
-;; (after! org
-  (setq! org-todo-keywords
+(after! org
+  (setq org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
@@ -342,7 +342,7 @@
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
           ("NEXT" . +org-todo-next)))
-;; )
+)
 
 (after! org (setq org-indent-indentation-per-level 4))
 
@@ -380,7 +380,7 @@
 
 (after! org (setq org-log-into-drawer t
                   org-log-done 'time+note
-                  org-log-repeat nil
+                  org-log-repeat 'time
                   org-log-redeadline 'time
                   org-log-reschedule 'time
                   ))
