@@ -55,7 +55,7 @@
 
 (after! org-ql
   (set-popup-rule!
-    "^\\*Org QL View" :side 'left :size 0.50 :select t :quit nil
+    "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
     ))
 
 (after! evil-snipe
@@ -289,7 +289,7 @@
   )
 
 (after! org
-  (setq org-image-actual-width nil
+  (setq org-image-actual-width 400
         org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 
