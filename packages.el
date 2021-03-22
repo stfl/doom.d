@@ -101,7 +101,12 @@
 
 (package! edbi)
 
-(package! with-editor)
+;; (package! with-editor)
 
 ;; folding
 (package! origami)
+
+;; kubernetes
+(package! kubernetes)
+(package! kubernetes-evil)
+;; (package! k8s-mode)

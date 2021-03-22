@@ -136,7 +136,8 @@
         (scheduled :from 1))
        (not
         (deadline :from 7)))
-      :sort priority :super-groups org-super-agenda-groups :narrow nil)
+      :sort org-ql--priority<
+      :super-groups org-super-agenda-groups :narrow nil)
      ("Current Prio B+" :title "Prio [B+]" :buffers-files org-agenda-files :query
       (and
        (todo)

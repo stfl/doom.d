@@ -1,8 +1,11 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(setq auth-sources '("~/.config/authinfo/authinfo.gpg"))
-      ;; auth-source-cache-expiry nil) ; default is 7200 (2h)
+(setq auth-sources '("~/.config/authinfo/authinfo.gpg")
+            ;; auth-source-cache-expiry nil) ; default is 7200 (2h)
+      )
+(require 'auth-source)
+(auth-source-forget-all-cached)  ;; forget all cached entries to force loading entries at start
 
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
@@ -91,16 +94,17 @@
 
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
-  (add-hook 'auto-save-hook 'org-id-update-id-locations 20))
+  ;; (add-hook 'auto-save-hook 'org-id-update-id-locations 20)
+  )
 
-(after! org-roam
-  (add-hook 'auto-save-hook 'org-roam-build-cache 40))
+;; (after! org-roam
+;;   (add-hook 'auto-save-hook 'org-roam-build-cache 40))
 
 ;; (after! org
-  (setq org-startup-indented 'indent
-        org-startup-folded 'fold
-        org-startup-with-inline-images t
-        )
+  (setq! org-startup-indented 'indent
+         org-startup-folded 'fold
+         org-startup-with-inline-images t
+         )
 ;)
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
@@ -165,8 +169,8 @@
 
 (map! ;;:after org-agenda
       :map org-agenda-mode-map
-      :desc "Prioity tree up" "C-S-k" #'org-agenda-priority-tree-up
-      :desc "Prioity tree down" "C-S-j" #'org-agenda-priority-tree-down
+      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
+      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
       )
 
 ;; (defun zyro/rifle-roam ()
@@ -203,7 +207,8 @@
                                      ;; "~/.org/gtd/someday.org"
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/calendar.org"
-                                     "~/.org/gtd/projects.org"
+                                     "~/.org/gtd/todo.org"
+                                     "~/.org/jira/active.org"
                                      "~/.org/gtd/projects/")))
 ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
 ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
@@ -262,7 +267,35 @@
            :order 4)))
   )
 
-(after! org-ql)
+(after! org-ql
+  (defun stfl/org-ql-min-ancestor-priority< (a b)
+    "Return non-nil if A's minimum ancestor priority is higher than B's.
+A and B are Org headline elements.
+org-default-priority is treated as lower than the same set value"
+    (cl-macrolet ((priority (item)
+                            `(org-with-point-at (org-element-property :org-marker ,item)
+                               (stfl/org-min-ancestor-priority))))
+      ;; NOTE: Priorities are numbers in Org elements.  This might differ from the priority selector logic.
+      (let ((a-priority (priority a))
+            (b-priority (priority b)))
+        (cond ((and a-priority b-priority)
+               (< a-priority b-priority))
+              (a-priority t)
+              (b-priority nil)))))
+
+
+  (defun stfl/org-min-ancestor-priority ()
+    (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
+             while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
+                        (org-up-heading-safe))))
+
+
+  (defun stfl/org-priority-or-default ()
+    (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
+           (prio (cond (prio-raw prio-raw)
+                       (t (+ 0.5 org-priority-default)))))  ;; display empty prio below default
+      prio))
+  )
 
 (after! org (setq org-capture-templates
                   '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
@@ -822,45 +855,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 
-(use-package! org-jira
-  :after org
-  :init
-  (setq
-   org-jira-working-dir "~/.org/jira/"
-        jiralib-url "https://pulswerk.atlassian.net"))
-
-(use-package! ejira
-  :after org
-  :init
-  (setq jiralib2-url              "https://pulswerk.atlassian.net"
-        jiralib2-auth             'token
-        jiralib2-user-login-name  "lendl@pulswerk.at"
-        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
-
-        ejira-org-directory       "~/.org/ejira"
-        ejira-projects            '("MD")
-
-        ejira-priorities-alist    '(("Highest" . ?A)
-                                    ("High"    . ?A)
-                                    ("Medium"  . ?B)
-                                    ("Low"     . ?C)
-                                    ("Lowest"  . ?C))
-        ejira-todo-states-alist   '(("To Do"       . 1)
-                                    ("In Progress" . 2)
-                                    ("Testing" . 3)
-                                    ("Done"        . 4)))
-  :config
-  ;; Tries to auto-set custom fields by looking into /editmeta
-  ;; of an issue and an epic.
-  ;; (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
-
-  ;; They can also be set manually if autoconfigure is not used.
-  ;; (setq ejira-sprint-field       'customfield_10001
-  ;;       ejira-epic-field         'customfield_10002
-  ;;       ejira-epic-summary-field 'customfield_10004)
-
-  (require 'ejira-agenda))
-
 (use-package! org-gcal
   :commands (org-gcal-sync
              org-gcal-fetch
@@ -978,13 +972,16 @@ Org-mode properties drawer already, keep the headline and don’t insert
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
+;; (setq lsp-intelephense-licence-key "~/.config/authinfo/intelephense-licence.txt")
+
 (after! (lsp-mode php-mode)
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "sutter"))
-  (setq lsp-intelephense-trace-server "verbose")
-  (setq lsp-intelephense-multi-root nil)
+        ;; (get-auth-info "intelephense" "sutter"))
+  ;; (setq lsp-intelephense-trace-server "verbose")
+  (setq lsp-intelephense-multi-root t)
   ;; (setq lsp-intelephense-clear-cache t)
   (setq lsp-auto-guess-root nil)
   (setq lsp-idle-delay 0.5)
@@ -1014,6 +1011,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
   :init
   (gitlab-ci-mode-flycheck-enable))
 
+(use-package kubernetes
+  :ensure t
+  :commands (kubernetes-overview))
+
+(use-package! kubernetes-evil
+  :ensure t
+  :after kubernetes)
+
 (use-package! ztree)
 
 (after! forge (setq forge-topic-list-columns
@@ -1024,21 +1029,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ("Labels" 8 t nil labels nil)
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
-
-(use-package! with-editor
-  :after magit
-  :config
-  (define-key (current-global-map)
-    [remap async-shell-command] 'with-editor-async-shell-command)
-  (define-key (current-global-map)
-    [remap shell-command] 'with-editor-shell-command)
-
-  (add-hook 'shell-mode-hook  'with-editor-export-editor)
-  (add-hook 'term-exec-hook   'with-editor-export-editor)
-  (add-hook 'eshell-mode-hook 'with-editor-export-editor)
-
-  (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
-)
 
 (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
 
@@ -1076,10 +1066,27 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package! org-jira
   :after org
-  :init
-  (setq
-   org-jira-working-dir "~/.org/jira/"
-        jiralib-url "https://pulswerk.atlassian.net"))
+  :init (setq org-jira-working-dir "~/.org/jira/"
+              jiralib-url "https://pulswerk.atlassian.net")
+        ;; (defconst org-jira-progress-issue-flow
+        ;;     '(("To Do" . "In Progress"
+        ;;     ("In Progress" . "Done"))))
+  :config (setq ;; org-jira-use-status-as-todo t
+                org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
+                                                            ("In Progress" . "NEXT")
+                                                            ("Testing" . "TEST")
+                                                            ("Done" . "DONE"))
+
+          org-jira-custom-jqls
+                '(
+                  (:jql "
+assignee='Stefan Lendl'
+AND status != Done
+AND Sprint in openSprints()
+ORDER BY priority, created DESC "
+                   :limit 20
+                   :filename "active")))
+  )
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
