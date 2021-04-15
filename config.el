@@ -297,7 +297,7 @@
   (string= "TODO" (org-get-todo-state)))
 
 (use-package! org-super-agenda
-  ;; :after org-agenda
+  :after org-agenda
   :config
   (org-super-agenda-mode)
 
@@ -322,9 +322,8 @@
            :order 4)))
 
   ;; Update ‘org-super-agenda-header-map’
-  (use-package org-super-agenda
-    :config
-    (setq org-super-agenda-header-map org-agenda-mode-map)))
+
+(setq org-super-agenda-header-map evil-org-agenda-mode-map))
 
 (after! org-ql
   (defun stfl/org-ql-min-ancestor-priority< (a b)
@@ -491,119 +490,6 @@ org-default-priority is treated as lower than the same set value"
                   org-track-ordered-property-with-tag t
                   org-hierarchical-todo-statistics nil
                   ))
-
-(after! org
-  (defun my/org-priority-up ()
-    (org-priority 'up))
-
-  (defun my/org-priority-down ()
-    (org-priority 'down))
-
-  (defun my/org-priority-up-region ()
-    (interactive)
-    (org-map-entries #'my/org-priority-up nil 'region)
-    (setq deactivate-mark nil))
-
-  (defun my/org-priority-down-region ()
-    (interactive)
-    (org-map-entries #'my/org-priority-down nil 'region)
-    (setq deactivate-mark nil))
-  )
-
-(after! org-agenda
-
-  (defun org-agenda-priority-tree-up (&optional force-direction)
-    "Increase the priority of line at point, also in Org file."
-    (interactive "P")
-    (if (equal force-direction '(4))
-        (org-priority-show)
-      (unless org-priority-enable-commands
-        (user-error "Priority commands are disabled"))
-      (org-agenda-check-no-diary)
-      (let* ((col (current-column))
-         (marker (or (org-get-at-bol 'org-marker)
-                 (org-agenda-error)))
-         (hdmarker (org-get-at-bol 'org-hd-marker))
-         (buffer (marker-buffer hdmarker))
-         (pos (marker-position hdmarker))
-         (inhibit-read-only t)
-         newhead)
-        (org-with-remote-undo buffer
-      (with-current-buffer buffer
-        (widen)
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-map-entries '(org-priority 'up) nil 'tree)
-        (end-of-line 1)
-        (setq newhead (org-get-heading)))
-      (org-agenda-change-all-lines newhead hdmarker)
-	  (org-move-to-column col)))))
-
-  (defun org-agenda-priority-tree-down (&optional force-direction)
-    "Decrease the priority of line at point, also in Org file."
-    (interactive "P")
-    (if (equal force-direction '(4))
-        (org-priority-show)
-      (unless org-priority-enable-commands
-        (user-error "Priority commands are disabled"))
-      (org-agenda-check-no-diary)
-      (let* ((col (current-column))
-         (marker (or (org-get-at-bol 'org-marker)
-                 (org-agenda-error)))
-         (hdmarker (org-get-at-bol 'org-hd-marker))
-         (buffer (marker-buffer hdmarker))
-         (pos (marker-position hdmarker))
-         (inhibit-read-only t)
-         newhead)
-        (org-with-remote-undo buffer
-      (with-current-buffer buffer
-        (widen)
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-map-entries '(org-priority 'down) nil 'tree)
-        (end-of-line 1)
-        (setq newhead (org-get-heading)))
-      (org-agenda-change-all-lines newhead hdmarker)
-	  (org-move-to-column col)))))
-
-  (defun org-agenda-priority-tree (&optional force-direction)
-    "Set the priority of line at point, also in Org file.
-This changes the line at point, all other lines in the agenda referring to
-the same tree node, and the headline of the tree node in the Org file.
-Called with a universal prefix arg, show the priority instead of setting it."
-    (interactive "P")
-    (if (equal force-direction '(4))
-        (org-priority-show)
-      (unless org-priority-enable-commands
-        (user-error "Priority commands are disabled"))
-      (org-agenda-check-no-diary)
-      (let* ((col (current-column))
-         (marker (or (org-get-at-bol 'org-marker)
-                 (org-agenda-error)))
-         (hdmarker (org-get-at-bol 'org-hd-marker))
-         (buffer (marker-buffer hdmarker))
-         (pos (marker-position hdmarker))
-         (inhibit-read-only t)
-         newhead)
-        (org-with-remote-undo buffer
-      (with-current-buffer buffer
-        (widen)
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-map-entries '(org-priority 'set) nil 'tree)
-        (end-of-line 1)
-        (setq newhead (org-get-heading)))
-      (org-agenda-change-all-lines newhead hdmarker)
-	  (org-move-to-column col)))))
-  )
-
-(map! :after org-agenda
-      :map org-agenda-mode-map
-      :localleader
-      :prefix("s")
-      :desc "Prioity up region" "K" #'my/org-priority-up-region
-      :desc "Prioity down region" "J" #'my/org-priority-donw-region
-      )
 
 (defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
