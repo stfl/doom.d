@@ -53,16 +53,12 @@
 (package! lsp-treemacs)
 (package! ztree)
 ;; (package! fira-code-mode)
-(package! todoist)
+;; (package! todoist)
 (package! org-jira)
-(package! ejira  ;; TODO something is broken with the branches on doom upgrade
-  :recipe (:host github
-           :repo "nyyManni/ejira"
-           :files ("*.el")))
-
-;; (unpin! treemacs)
-;; (unpin! lsp-mode)
-;; (unpin! dap-mode)
+;; (package! ejira
+;;   :recipe (:host github
+;;            :repo "nyyManni/ejira"
+;;            :files ("*.el")))
 
 ;; Roam Packages
 (package! org-roam-server)
@@ -81,6 +77,12 @@
 ;; Orgmode Packages
 (package! org-analyzer)
 (package! org-edna)
+
+(package! zp-org-agenda
+  :recipe (:host github
+           :repo "zaeph/.emacs.d"
+           :files ("lisp/*.el")
+           ))
 
 ;; (package! org-linker-edna :recipe (:host github :repo "toshism/org-linker-edna"))
 ;; (package! org-linker :recipe (:host github :repo "toshism/org-linker"))
@@ -104,9 +106,9 @@
 ;; (package! with-editor)
 
 ;; folding
-(package! origami)
+;; (package! origami)
 
 ;; kubernetes
-(package! kubernetes)
-(package! kubernetes-evil)
+;; (package! kubernetes)
+;; (package! kubernetes-evil)
 ;; (package! k8s-mode)

@@ -52,7 +52,7 @@
         +defaults)       ; default popup rules
        (ligatures         ; replace bits of code with pretty symbols
         +extra)
-        ;;+fira)
+        ;; +fira)
        ;; tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
@@ -119,7 +119,7 @@
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
-       ;;pass              ; password manager for nerds
+       ;; (pass +auth)        ; password manager for nerds
        ;;pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
@@ -208,8 +208,10 @@
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar
+       ;;calendar                   ; A dated approach to timetabling
+       ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;irc               ; how neckbeards socialize
+       everywhere                   ; *leave* Emacs!? You must be joking.
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 

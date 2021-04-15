@@ -1,11 +1,11 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(setq auth-sources '("~/.config/authinfo/authinfo.gpg")
-            ;; auth-source-cache-expiry nil) ; default is 7200 (2h)
+(setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
+       auth-source-cache-expiry nil ; default is 7200 (2h)
       )
-(require 'auth-source)
-(auth-source-forget-all-cached)  ;; forget all cached entries to force loading entries at start
+;; (require 'auth-source)
+;; (auth-source-forget-all-cached)  ;; forget all cached entries to force loading entries at start
 
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
@@ -81,7 +81,9 @@
         org-ellipsis " ▼"
         ))
 
-(after! org
+(use-package org-id
+  :after org
+  :config
   (setq org-id-link-to-org-use-id t
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
         org-id-track-globally t))
@@ -184,21 +186,75 @@
 ;;       :prefix ("n" . "notes")
 ;;       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 
-(after! org (setq org-agenda-diary-file "~/.org/diary.org"
-                  ;; org-agenda-dim-blocked-tasks t
-                  org-agenda-dim-blocked-tasks 'invisible
-                  org-agenda-use-time-grid t
-                  ;; org-agenda-hide-tags-regexp "\\w+"
-                  org-agenda-compact-blocks nil
-                  org-agenda-block-separator ""
-                  org-agenda-skip-scheduled-if-done t
-                  org-agenda-skip-unavailable-files t
-                  org-agenda-skip-deadline-if-done t
-                  org-agenda-window-setup 'current-window
-                  org-agenda-start-on-weekday nil
-                  org-agenda-span 'day
-                  org-agenda-start-day "-0d"
-                  org-deadline-warning-days 7
+(setq org-agenda-custom-commands
+    '(("n" "Agenda and tasks"
+        ((agenda "Agenda"
+            ((org-agenda-use-time-grid t)
+            (org-deadline-warning-days 3)
+            (org-agenda-span '1)
+            (org-agenda-start-day (org-today))))
+        (org-ql-block '(and (todo)
+                    (not (tags "SOMEDAY"))
+                    (not (and (todo "TODO")
+                                (ancestors (todo "PROJ"))))
+                    (not (scheduled))
+                    (not (deadline)))
+                ((org-super-agenda-groups stfl/org-super-agenda-groups)
+                (org-ql-block-header "Tasks"))
+        )))
+   ("t" "Tasks"
+        ((org-ql-block '(and (todo)
+                    (not (tags "SOMEDAY"))
+                    (not (and (todo "TODO")
+                                (ancestors (todo "PROJ"))))
+                    (not (scheduled))
+                    (not (deadline)))
+                ((org-super-agenda-groups stfl/org-super-agenda-groups)
+                (org-ql-block-header "Tasks"))
+        )))
+    ("l" "Agenda Weekly with Log"
+        ((agenda ""
+            ((org-agenda-span 'week)
+            (org-agenda-start-on-weekday 1)
+            (org-agenda-show-log t)))))
+    ("a" "Agenda Weekly"
+        ((agenda ""
+            ((org-agenda-span 'week)
+            (org-agenda-start-on-weekday 1)))))
+    ("s" "Stuck Projects"
+        ((org-ql-block '(and (todo "PROJ")
+                            (not (done))
+                            (not (descendants (todo "NEXT")))
+                            (not (descendants (scheduled))))
+                    ((org-ql-block-header "Stuck Projects")))))))
+
+(setq org-agenda-diary-file "~/.org/diary.org"
+    ;; org-agenda-dim-blocked-tasks t
+    org-agenda-dim-blocked-tasks 'invisible
+    org-agenda-use-time-grid t
+    ;; org-agenda-hide-tags-regexp "\\w+"
+    org-agenda-compact-blocks nil
+    org-agenda-block-separator ""
+    org-agenda-skip-scheduled-if-done t
+    org-agenda-skip-unavailable-files t
+    org-agenda-skip-deadline-if-done t
+    org-agenda-skip-timestamp-if-done t
+    org-agenda-window-setup 'current-window
+    org-agenda-start-on-weekday nil
+    org-agenda-span 'day
+    org-agenda-start-day "-0d"
+    org-deadline-warning-days 7
+    org-agenda-show-future-repeats t
+    org-agenda-skip-deadline-prewarning-if-scheduled nil
+    org-agenda-tags-todo-honor-ignore-options 1
+    ;; org-agenda-todo-ignore-with-date nil
+    ;; org-agenda-todo-ignore-deadlines nil
+    ;; org-agenda-todo-ignore-timestamp nil
+    org-agenda-todo-list-sublevels t
+    org-agenda-include-deadlines 'all
+)
+
+(after! org (setq
                   org-enforce-todo-checkbox-dependencies nil
                   org-enforce-todo-dependencies nil
                   org-habit-show-habits t))
@@ -241,19 +297,18 @@
   (string= "TODO" (org-get-todo-state)))
 
 (use-package! org-super-agenda
-  :after org-agenda
-  ;; :init
+  ;; :after org-agenda
   :config
-  (setq org-super-agenda-header-map (make-sparse-keymap)) ;; don't break evil on org-super-agenda headings, see https://github.com/alphapapa/org-super-agenda/issues/50
+  (org-super-agenda-mode)
 
-  (setq org-super-agenda-groups
+  (setq stfl/org-super-agenda-groups
         '((:name "Today"
            :deadline past
            :deadline today
            :scheduled today
            :scheduled past)
           (:name "Next Actions" :todo "NEXT")
-          (:name "Waiting for" :todo "WAIT")
+          (:name "Waiting" :todo "WAIT")
           (:name "Projects"
            :and (:todo "PROJ"
                  :children ("NEXT"))
@@ -265,7 +320,11 @@
           (:name "Stuck Projects"   ;; the rest but show before Projects
            :todo "PROJ"
            :order 4)))
-  )
+
+  ;; Update ‘org-super-agenda-header-map’
+  (use-package org-super-agenda
+    :config
+    (setq org-super-agenda-header-map org-agenda-mode-map)))
 
 (after! org-ql
   (defun stfl/org-ql-min-ancestor-priority< (a b)
@@ -326,7 +385,16 @@ org-default-priority is treated as lower than the same set value"
         org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 
-(after! org-agenda (require 'org-habit))
+(use-package! org-habit
+  :after org-agenda
+  :config
+  (add-to-list 'org-modules 'org-habit)
+
+  (setq org-habit-preceding-days 6
+        org-habit-following-days 7)
+
+  ;; Length of the habit graph
+  (setq org-habit-graph-column 65))
 
 (use-package! org-edna
   :after org
@@ -423,26 +491,6 @@ org-default-priority is treated as lower than the same set value"
                   org-track-ordered-property-with-tag t
                   org-hierarchical-todo-statistics nil
                   ))
-
-;; (after! org
-;;   (defun my/org-inherited-priority (s)
-;;     (cond
-
-;;      ;; Priority cookie in this heading
-;;      ((string-match org-priority-regexp s)
-;;       (* 1000 (- org-priority-lowest
-;;                  (org-priority-to-value (match-string 2 s)))))
-
-;;      ;; No priority cookie, but already at highest level
-;;      ((not (org-up-heading-safe))
-;;       (* 1000 (- org-priority-lowest org-priority-default)))
-
-;;      ;; Look for the parent's priority
-;;      (t
-;;       (my/org-inherited-priority (org-get-heading)))))
-
-;;   (setq org-priority-get-priority-function #'my/org-inherited-priority)
-;;   )
 
 (after! org
   (defun my/org-priority-up ()
@@ -575,34 +623,6 @@ Called with a universal prefix arg, show the priority instead of setting it."
   (interactive)
   (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
     (call-interactively 'org-refile)))
-
-;; (defun stfl/refile-to-roam ()
-;;   (interactive)
-;;   (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
-;;   (let ((org-refile-targets '((stfl/org-roam-files :maxlevel . 4))))
-;;     (call-interactively 'org-refile)))
-
-;; ;; initial prompt should be the text of the tree
-;; (defun stfl/refile-to-roam2 (&optional initial-prompt)
-;;   (interactive)
-;;   ;; (setq stfl/org-roam-files (append (file-expand-wildcards "~/.org/roam/**/*.org")))
-;;   (let* ((completions (org-roam--get-title-path-completions))
-;;          (title-with-tags (org-roam-completion--completing-read "File: " completions :initial-input initial-prompt))
-;;          (res (cdr (assoc title-with-tags completions)))
-;;          (file-path (plist-get res :path)))
-;;     ;; if we have a file-path -> call org-refile
-;;     (if file-path
-;;         (type-of file-path)
-;;       (let ((org-refile-targets (quote ((file-path :maxlevel . 4))))
-;;         (call-interactively 'org-refile))
-;;       ;; if we can't find a file call a org-roam-capture
-;;       ;; TODO this does not actually refile the subtree
-;;       (let ((org-roam-capture--info `((title . ,title-with-tags)
-;;                                       (slug  . ,(funcall org-roam-title-to-slug-function title-with-tags))))
-;;             (org-roam-capture--context 'title))
-;;         (setq org-roam-capture-additional-template-props (list :finalize 'find-file))
-;;         (org-roam-capture--capture))
-;;       )))
 
 (defun org-roam-create-note-from-headline ()
   "Create an Org-roam note from the current headline and jump to it.
@@ -931,13 +951,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq ediff-diff-options "--text"
         ediff-diff3-options "--text"))
 
-(use-package! origami)
+;; (use-package! origami)
 
-(map! :after '(org-agenda origami)
-      :map org-agenda-mode-map
-      :desc "" "TAB" #'origami-toggle-node
-      ;; :desc "" "" #'org-agenda-priority-tree-down
-      )
+;; (map! :after '(org-agenda origami)
+;;       :map org-agenda-mode-map
+;;       :desc "" "TAB" #'origami-toggle-node
+;;       ;; :desc "" "" #'org-agenda-priority-tree-down
+;;       )
 
 (load! "org-customs.el")
 (load! "org-helpers.el")
@@ -972,10 +992,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-;; (setq lsp-intelephense-licence-key "~/.config/authinfo/intelephense-licence.txt")
+;; (setq-hook! php-mode
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
 
 (after! (lsp-mode php-mode)
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
@@ -986,7 +1006,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq lsp-auto-guess-root nil)
   (setq lsp-idle-delay 0.5)
   )
-
 
 ;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
 ;; (dap-php-setup)
@@ -1011,13 +1030,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
   :init
   (gitlab-ci-mode-flycheck-enable))
 
-(use-package kubernetes
-  :ensure t
-  :commands (kubernetes-overview))
+;; (use-package kubernetes
+;;   :ensure t
+;;   :commands (kubernetes-overview))
 
-(use-package! kubernetes-evil
-  :ensure t
-  :after kubernetes)
+;; (use-package! kubernetes-evil
+;;   :ensure t
+;;   :after kubernetes)
 
 (use-package! ztree)
 
@@ -1030,39 +1049,39 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
+;; (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
 
-(use-package! ejira
-  ;; :after org
-  :init
-  (setq jiralib2-url              "https://pulswerk.atlassian.net"
-        jiralib2-auth             'token
-        jiralib2-user-login-name  "lendl@pulswerk.at"
-        jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
+;; (use-package! ejira
+;;   ;; :after org
+;;   :init
+;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
+;;         jiralib2-auth             'token
+;;         jiralib2-user-login-name  "lendl@pulswerk.at"
+;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
 
-        ejira-org-directory       "~/.org/ejira"
-        ejira-projects            '("MD")
+;;         ejira-org-directory       "~/.org/ejira"
+;;         ejira-projects            '("MD")
 
-        ejira-priorities-alist    '(("Highest" . ?A)
-                                    ("High"    . ?B)
-                                    ("Medium"  . ?C)
-                                    ("Low"     . ?D)
-                                    ("Lowest"  . ?E))
-        ejira-todo-states-alist   '(("To Do"       . 1)
-                                    ("In Progress" . 2)
-                                    ("Testing" . 3)
-                                    ("Done"        . 4)))
-  :config
-  ;; Tries to auto-set custom fields by looking into /editmeta
-  ;; of an issue and an epic.
-  (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
+;;         ejira-priorities-alist    '(("Highest" . ?A)
+;;                                     ("High"    . ?B)
+;;                                     ("Medium"  . ?C)
+;;                                     ("Low"     . ?D)
+;;                                     ("Lowest"  . ?E))
+;;         ejira-todo-states-alist   '(("To Do"       . 1)
+;;                                     ("In Progress" . 2)
+;;                                     ("Testing" . 3)
+;;                                     ("Done"        . 4)))
+;;   :config
+;;   ;; Tries to auto-set custom fields by looking into /editmeta
+;;   ;; of an issue and an epic.
+;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
 
-  ;; They can also be set manually if autoconfigure is not used.
-  ;; (setq ejira-sprint-field       'customfield_10001
-  ;;       ejira-epic-field         'customfield_10002
-  ;;       ejira-epic-summary-field 'customfield_10004)
+;;   ;; They can also be set manually if autoconfigure is not used.
+;;   ;; (setq ejira-sprint-field       'customfield_10001
+;;   ;;       ejira-epic-field         'customfield_10002
+;;   ;;       ejira-epic-summary-field 'customfield_10004)
 
-  (require 'ejira-agenda))
+;;   (require 'ejira-agenda))
 
 (use-package! org-jira
   :after org
