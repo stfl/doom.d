@@ -50,11 +50,12 @@
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-       (ligatures         ; replace bits of code with pretty symbols
-        +extra)
+       ;; (ligatures         ; replace bits of code with pretty symbols
+       ;;  +extra)
         ;; +fira)
        ;; tabs              ; an tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       (treemacs          ; a project drawer, like neotree but cooler
+        +lsp)            ; lsp-treemacs
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;; vi-tilde-fringe   ; fringe tildes to mark beyond EOB

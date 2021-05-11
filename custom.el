@@ -5,6 +5,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(haskell-interactive-popup-errors nil)
+ '(org-agenda-files
+   '("~/.org/gtd/inbox.org" "~/.org/gtd/tickler.org" "~/.org/calendar.org" "~/.org/gtd/todo.org" "/home/stefan/.org/gtd/projects/geschenke.org" "/home/stefan/.org/gtd/projects/groceries.org" "/home/stefan/.org/gtd/projects/media.org" "/home/stefan/.org/gtd/projects/org-setup.org" "/home/stefan/.org/gtd/projects/pulswerk.org" "/home/stefan/.org/gtd/projects/sustaindock.org" "/home/stefan/.org/gtd/projects/versicherung.org"))
  '(org-level-color-stars-only nil)
  '(org-ql-views
    '(("All current TODO" :title "All not scheduled TODOs" :buffers-files org-agenda-files :query

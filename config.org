@@ -430,7 +430,7 @@ Adjusting clock settings
 
 #+begin_src elisp
 (use-package! org-super-agenda
-  :after org-agenda
+  :after (org-agenda evil-org-agenda)
   :config
   (org-super-agenda-mode)
 
@@ -1191,7 +1191,7 @@ set todo value to *PROJ* for all TODOs with sub-todos
 ** PHP
 #+BEGIN_SRC elisp
 ;; (setq-hook! php-mode
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
+(setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
 
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
@@ -1202,7 +1202,7 @@ set todo value to *PROJ* for all TODOs with sub-todos
   (setq lsp-intelephense-multi-root t)
   ;; (setq lsp-intelephense-clear-cache t)
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.5)
+  (setq lsp-idle-delay 0.8)
   )
 
 ;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
@@ -1356,7 +1356,8 @@ display more columns in forge list topic
 assignee='Stefan Lendl'
 AND status != Done
 AND Sprint in openSprints()
-ORDER BY priority, created DESC "
+ORDER BY priority, created DESC
+"
                    :limit 20
                    :filename "active")))
   )

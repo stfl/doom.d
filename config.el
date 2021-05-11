@@ -297,7 +297,7 @@
   (string= "TODO" (org-get-todo-state)))
 
 (use-package! org-super-agenda
-  :after org-agenda
+  :after (org-agenda evil-org-agenda)
   :config
   (org-super-agenda-mode)
 
@@ -879,7 +879,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
 ;; (setq-hook! php-mode
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
+(setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
 
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
@@ -890,7 +890,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq lsp-intelephense-multi-root t)
   ;; (setq lsp-intelephense-clear-cache t)
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.5)
+  (setq lsp-idle-delay 0.8)
   )
 
 ;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
