@@ -1,12 +1,13 @@
 (put 'narrow-to-region 'disabled nil)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(auth-source-gpg-encrypt-to nil)
+ '(auth-sources '("~/.config/authinfo/authinfo.gpg"))
  '(haskell-interactive-popup-errors nil)
- '(org-agenda-files
-   '("~/.org/gtd/inbox.org" "~/.org/gtd/tickler.org" "~/.org/calendar.org" "~/.org/gtd/todo.org" "/home/stefan/.org/gtd/projects/geschenke.org" "/home/stefan/.org/gtd/projects/groceries.org" "/home/stefan/.org/gtd/projects/media.org" "/home/stefan/.org/gtd/projects/org-setup.org" "/home/stefan/.org/gtd/projects/pulswerk.org" "/home/stefan/.org/gtd/projects/sustaindock.org" "/home/stefan/.org/gtd/projects/versicherung.org"))
  '(org-level-color-stars-only nil)
  '(org-ql-views
    '(("All current TODO" :title "All not scheduled TODOs" :buffers-files org-agenda-files :query
@@ -159,7 +160,7 @@
       (date priority todo)
       :super-groups
       ((:auto-parent t)))
-     ("Review: Stuck projects" :buffers-files org-agenda-files :query
+     ("Review: Stuck Projects" :buffers-files org-agenda-files :query
       (and
        (todo)
        (descendants
@@ -172,20 +173,7 @@
       :super-groups org-super-agenda-groups)))
  '(org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
  '(package-selected-packages '(org-roam-server))
+ '(safe-local-variable-values
+   '((lsp-file-watch-ignored-directories . t)
+     (lsp-file-watch-threshold . t)))
  '(warning-suppress-types '(((org-roam)) ((org-roam)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
- '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
- '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
- '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
- '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :extend t))))
- '(org-level-6 ((t (:inherit outline-6 :extend t))))
- '(org-level-7 ((t (:inherit outline-7 :extend t))))
- '(org-level-8 ((t (:inherit outline-8 :extend t))))
- '(org-property-value ((t (:height 0.85))) t)
- '(org-special-keyword ((t (:foreground "#83898d" :height 0.8)))))

@@ -1,8 +1,8 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
-       auth-source-cache-expiry nil ; default is 7200 (2h)
+(setq auth-sources '("~/.config/authinfo/authinfo.gpg")
+       ;; auth-source-cache-expiry nil ; default is 7200 (2h)
       )
 ;; (require 'auth-source)
 ;; (auth-source-forget-all-cached)  ;; forget all cached entries to force loading entries at start
@@ -61,8 +61,44 @@
     "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
     ))
 
+(custom-set-faces!
+ '(org-date :foreground "dark goldenrod" :height 0.85)
+ '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+ '(org-drawer :foreground "dark gray" :height 0.8)
+ '(outline-1 :height 1.5)
+ '(outline-2 :height 1.25)
+ '(outline-3 :height 1.15)
+ '(org-property-value :height 0.85)
+ '(org-special-keyword :foreground "#83898d" :height 0.8)
+ '(org-tag :foreground "#83898d" :weight light :height 0.7)
+ )
+
+;; (custom-set-faces!
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it byrhand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
+;;  '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
+;;  '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
+;;  '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
+;;  '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
+;;  '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
+;;  '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
+;;  '(org-level-5 ((t (:inherit outline-5 :extend t))))
+;;  '(org-level-6 ((t (:inherit outline-6 :extend t))))
+;;  '(org-level-7 ((t (:inherit outline-7 :extend t))))
+;;  '(org-level-8 ((t (:inherit outline-8 :extend t))))
+;;  '(org-property-value ((t (:height 0.85))) t)
+;;  '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
+;;  '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
+;;  )
+ ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
+ ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
+
 (after! evil-snipe
-  (setq evil-snipe-scope 'buffer)
+  (setq evil-snipe-scope 'whole-visible)
+  (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
   )
 
 ;; (global-auto-revert-mode 1)
@@ -70,7 +106,6 @@
       evil-want-fine-undo t
       auto-save-default t
       inhibit-compacting-font-caches t)
-;; (whitespace-mode -1)
 
 (setq org-directory "~/.org/")
 
@@ -102,12 +137,12 @@
 ;; (after! org-roam
 ;;   (add-hook 'auto-save-hook 'org-roam-build-cache 40))
 
-;; (after! org
-  (setq! org-startup-indented 'indent
+(after! org
+  (setq org-startup-indented 'indent
          org-startup-folded 'fold
          org-startup-with-inline-images t
          )
-;)
+)
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 
@@ -186,73 +221,257 @@
 ;;       :prefix ("n" . "notes")
 ;;       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
 
+(after! org
+  (setq org-priority-default ?D)
+  (setq org-priority-lowest ?E)
+  )
+
 (setq org-agenda-custom-commands
-    '(("n" "Agenda and tasks"
-        ((agenda "Agenda"
-            ((org-agenda-use-time-grid t)
-            (org-deadline-warning-days 3)
-            (org-agenda-span '1)
-            (org-agenda-start-day (org-today))))
-        (org-ql-block '(and (todo)
-                    (not (tags "SOMEDAY"))
-                    (not (and (todo "TODO")
-                                (ancestors (todo "PROJ"))))
-                    (not (scheduled))
-                    (not (deadline)))
-                ((org-super-agenda-groups stfl/org-super-agenda-groups)
-                (org-ql-block-header "Tasks"))
-        )))
-   ("t" "Tasks"
-        ((org-ql-block '(and (todo)
-                    (not (tags "SOMEDAY"))
-                    (not (and (todo "TODO")
-                                (ancestors (todo "PROJ"))))
-                    (not (scheduled))
-                    (not (deadline)))
-                ((org-super-agenda-groups stfl/org-super-agenda-groups)
-                (org-ql-block-header "Tasks"))
-        )))
-    ("l" "Agenda Weekly with Log"
-        ((agenda ""
-            ((org-agenda-span 'week)
-            (org-agenda-start-on-weekday 1)
-            (org-agenda-show-log t)))))
-    ("a" "Agenda Weekly"
-        ((agenda ""
-            ((org-agenda-span 'week)
-            (org-agenda-start-on-weekday 1)))))
-    ("s" "Stuck Projects"
-        ((org-ql-block '(and (todo "PROJ")
-                            (not (done))
-                            (not (descendants (todo "NEXT")))
-                            (not (descendants (scheduled))))
-                    ((org-ql-block-header "Stuck Projects")))))))
+      '(
+        ("b" "Agenda and tasks B+"
+         ((agenda "Agenda"
+                  ((org-agenda-use-time-grid t)
+                   (org-deadline-warning-days 3)
+                   (org-agenda-span '1)
+                   (org-agenda-start-day (org-today))))
+          (org-ql-block '(and (todo "NEXT")
+                              (or (priority >= "B")
+                                  (ancestors (priority >= "B")))
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "PROJ")
+                              (priority >= "B")
+                              (not (tags "SOMEDAY"))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (not (tags "SOMEDAY"))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "WAIT")
+                              (or (priority >= "B")
+                                  (ancestors (priority >= "B")))
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Waiting")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+                        ))
+        ("c" "Agenda and tasks C+"
+         ((agenda "Agenda"
+                  ((org-agenda-use-time-grid t)
+                   (org-deadline-warning-days 3)
+                   (org-agenda-span '1)
+                   (org-agenda-start-day (org-today))))
+          (org-ql-block '(and (todo "NEXT")
+                              (or (priority >= "C")
+                                  (ancestors (priority >= "C")))
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "PROJ")
+                              (priority >= "C")
+                              (not (tags "SOMEDAY"))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (not (tags "SOMEDAY"))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "WAIT")
+                              (or (priority >= "C")
+                                  (ancestors (priority >= "C")))
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Waiting")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+                        ))
+        ;; ("t" "Tasks"
+        ;;  ((org-ql-block '(and (todo)
+        ;;                       (not (tags "SOMEDAY"))
+        ;;                       (not (and (todo "TODO")
+        ;;                                 (ancestors (todo "PROJ"))))
+        ;;                       (not (scheduled))
+        ;;                       (not (deadline)))
+        ;;                 ((org-super-agenda-groups stfl/org-super-agenda-groups)
+        ;;                  (org-ql-block-header "Tasks"))
+        ;;                 )))
+        ("a" "Agenda Weekly"
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)))))
+        ("r" . "Weekly Review")
+        ("rc" "Close the last week and finish done tasks"
+         ((org-ql-block '(and (todo "NEXT")
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "WAIT")
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Waiting")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+          (org-ql-block '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (not (tags "SOMEDAY"))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+                        ))
+        ("rl" "Agenda Weekly with Log"
+         ;; TODO add archive!
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-archives-mode t)
+                   (org-agenda-start-with-log-mode '(closed))
+                   (org-agenda-show-log t)
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))
+                   ))))
+        ("rp" "Plan Projects"
+         ((org-ql-block '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              ;; (not (children "SOMEDAY")))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (tags "SOMEDAY"))))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups '((:auto-priority)))))))
+        ("rn" "Plan Next Actions"
+         ((org-ql-block '(and (todo "NEXT")
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline auto)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))
+                        ))
+        ("rs" "Stuck Projects"
+         ((org-ql-block '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (not (tags "SOMEDAY"))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:auto-priority)))))))
+        ("rS" "SOMEDAY"
+         ((org-ql-block '(and (todo "PROJ")
+                              (or (and (priority <= "D")
+                                       (not (ancestors (priority > "D")))
+                                       (not (children (priority > "D"))))
+                                  (tags "SOMEDAY")
+                                  (children (and (todo "NEXT" "WAIT")
+                                                 (tags "SOMEDAY")))
+                                  )
+                              (not (scheduled))
+                              (not (habit))
+                              (not (deadline)))
+                        ((org-ql-block-header "Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
+                                                    (:auto-priority)
+                                                    ))))
+         (org-ql-block '(and (todo "NEXT")
+                              (or (and (priority <= "D")
+                                  (not (ancestors (priority > "D"))))
+                                  (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (not (deadline)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
+                                                    (:auto-priority)
+                                                    ))))
+          ;; (org-ql-block '(and (todo "PROJ")
+          ;;                     (not (tags "SOMEDAY"))
+          ;;                     (not (children (and (todo "NEXT" "WAIT")
+          ;;                                         (not (tags "SOMEDAY"))))))
+          ;;               ((org-ql-block-header "Stuck Projects")
+          ;;                (org-super-agenda-header-separator "")
+          ;;                (org-super-agenda-groups '((:auto-priority)))))
+          ;; (org-ql-block '(and (todo "WAIT")
+          ;;                     (not (tags "SOMEDAY"))
+          ;;                     (not (scheduled))
+          ;;                     (not (deadline)))
+          ;;               ((org-ql-block-header "Waiting")
+          ;;                (org-super-agenda-header-separator "")
+          ;;                (org-super-agenda-groups '((:auto-priority)))))
+                        ))
+        ("ro" "Old Agenda and tasks"
+         ((agenda "Agenda"
+                  ((org-agenda-use-time-grid t)
+                   (org-deadline-warning-days 3)
+                   (org-agenda-span '1)
+                   (org-agenda-start-day (org-today))))
+          (org-ql-block '(and (todo)
+                              (not (tags "SOMEDAY"))
+                              (not (and (todo "TODO")
+                                        (ancestors (todo "PROJ"))))
+                              (not (scheduled))
+                              (not (deadline)))
+                        ((org-super-agenda-groups stfl/org-super-agenda-groups)
+                         ;; TODO super-agenda to separate priorities
+                         (org-ql-block-header "Tasks")
+                         ;; TODO sort not yet possible: https://github.com/alphapapa/org-ql/pull/44
+                         )
+                        )))
+        ))
 
 (setq org-agenda-diary-file "~/.org/diary.org"
-    ;; org-agenda-dim-blocked-tasks t
-    org-agenda-dim-blocked-tasks 'invisible
-    org-agenda-use-time-grid t
-    ;; org-agenda-hide-tags-regexp "\\w+"
-    org-agenda-compact-blocks nil
-    org-agenda-block-separator ""
-    org-agenda-skip-scheduled-if-done t
-    org-agenda-skip-unavailable-files t
-    org-agenda-skip-deadline-if-done t
-    org-agenda-skip-timestamp-if-done t
-    org-agenda-window-setup 'current-window
-    org-agenda-start-on-weekday nil
-    org-agenda-span 'day
-    org-agenda-start-day "-0d"
-    org-deadline-warning-days 7
-    org-agenda-show-future-repeats t
-    org-agenda-skip-deadline-prewarning-if-scheduled nil
-    org-agenda-tags-todo-honor-ignore-options 1
-    ;; org-agenda-todo-ignore-with-date nil
-    ;; org-agenda-todo-ignore-deadlines nil
-    ;; org-agenda-todo-ignore-timestamp nil
-    org-agenda-todo-list-sublevels t
-    org-agenda-include-deadlines 'all
-)
+      ;; org-agenda-dim-blocked-tasks t
+      org-agenda-dim-blocked-tasks 'invisible
+      org-agenda-use-time-grid t
+      ;; org-agenda-hide-tags-regexp "\\w+"
+      org-agenda-compact-blocks nil
+      org-agenda-block-separator ""
+      org-agenda-tags-column 0
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-unavailable-files t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-timestamp-if-done t
+      org-agenda-window-setup 'current-window
+      org-agenda-start-on-weekday nil
+      org-agenda-span 'day
+      org-agenda-start-day "-0d"
+      org-deadline-warning-days 7
+      org-agenda-show-future-repeats t
+      org-agenda-skip-deadline-prewarning-if-scheduled nil
+      org-agenda-tags-todo-honor-ignore-options 1
+      ;; org-agenda-todo-ignore-with-date nil
+      ;; org-agenda-todo-ignore-deadlines nil
+      ;; org-agenda-todo-ignore-timestamp nil
+      org-agenda-todo-list-sublevels t
+      org-agenda-include-deadlines t
+      )
 
 (after! org (setq
                   org-enforce-todo-checkbox-dependencies nil
@@ -300,6 +519,7 @@
   :after (org-agenda evil-org-agenda)
   :config
   (org-super-agenda-mode)
+  (setq org-super-agenda-header-separator "")
 
   (setq stfl/org-super-agenda-groups
         '((:name "Today"
@@ -325,35 +545,33 @@
 
 (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 
-(after! org-ql
-  (defun stfl/org-ql-min-ancestor-priority< (a b)
-    "Return non-nil if A's minimum ancestor priority is higher than B's.
+(defun stfl/org-ql-min-ancestor-priority< (a b)
+  "Return non-nil if A's minimum ancestor priority is higher than B's.
 A and B are Org headline elements.
 org-default-priority is treated as lower than the same set value"
-    (cl-macrolet ((priority (item)
-                            `(org-with-point-at (org-element-property :org-marker ,item)
-                               (stfl/org-min-ancestor-priority))))
-      ;; NOTE: Priorities are numbers in Org elements.  This might differ from the priority selector logic.
-      (let ((a-priority (priority a))
-            (b-priority (priority b)))
-        (cond ((and a-priority b-priority)
-               (< a-priority b-priority))
-              (a-priority t)
-              (b-priority nil)))))
+  (cl-macrolet ((priority (item)
+                          `(org-with-point-at (org-element-property :org-marker ,item)
+                             (stfl/org-min-ancestor-priority))))
+    ;; NOTE: Priorities are numbers in Org elements.  This might differ from the priority selector logic.
+    (let ((a-priority (priority a))
+          (b-priority (priority b)))
+      (cond ((and a-priority b-priority)
+             (< a-priority b-priority))
+            (a-priority t)
+            (b-priority nil)))))
 
 
-  (defun stfl/org-min-ancestor-priority ()
-    (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
-             while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                        (org-up-heading-safe))))
+(defun stfl/org-min-ancestor-priority ()
+  (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
+           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
+                      (org-up-heading-safe))))
 
 
-  (defun stfl/org-priority-or-default ()
-    (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
-           (prio (cond (prio-raw prio-raw)
-                       (t (+ 0.5 org-priority-default)))))  ;; display empty prio below default
-      prio))
-  )
+(defun stfl/org-priority-or-default ()
+  (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
+         (prio (cond (prio-raw prio-raw)
+                     (t (+ 0.5 org-priority-default))))) ;;
+    display empty prio below default prio))
 
 (after! org (setq org-capture-templates
                   '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
@@ -478,18 +696,20 @@ org-default-priority is treated as lower than the same set value"
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
-(after! org (setq org-log-into-drawer t
-                  org-log-done 'time+note
-                  org-log-repeat 'time
-                  org-log-redeadline 'time
-                  org-log-reschedule 'time
-                  ))
+(after! org
+  (setq org-log-into-drawer t
+        org-log-done 'time+note
+        org-log-repeat 'time
+        org-log-redeadline 'time
+        org-log-reschedule 'time
+        ))
 
-(after! org (setq org-use-property-inheritance t ; We like to inherit properties from their parents
-                  org-catch-invisible-edits 'error ; Catch invisible edits
-                  org-track-ordered-property-with-tag t
-                  org-hierarchical-todo-statistics nil
-                  ))
+(after! org
+  (setq org-use-property-inheritance t ; We like to inherit properties from their parents
+        org-catch-invisible-edits 'error ; Catch invisible edits
+        org-track-ordered-property-with-tag t
+        org-hierarchical-todo-statistics nil
+        ))
 
 (defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
@@ -533,63 +753,62 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-;; (setq org-tags-column 0)
-(setq org-tag-alist '((:startgrouptag)
-                      ("Context" . nil)
-                      (:grouptags)
-                      ("@home" . ?h)
-                      ("@office". ?o)
-                      ("@sarah" . ?s)
-                      (:endgrouptag)
-                      (:startgrouptag)
-                      ("@PC" . ?p)
-                      (:grouptags)
-                      ("@desktop")
-                      ("@laptop")
-                      (:endgrouptag)
-                      (:startgrouptag)
-                      ("Categories" . nil)
-                      (:grouptags)
-                      ("wohnung")
-                      ("health")
-                      ("bike")
-                      ("friends")
-                      ("emacs")
-                      ("gtd")
-                      ("shopping")
-                      ("learning")
-                      (:endgrouptag)
-                      (:startgrouptag)
-                      ("Process" . nil)
-                      (:grouptags)
-                      ("SOMEDAY" . ?S)
-                      ("CANCELLED" . ?C)
-                      ("HOLD" . ?H)
-                      ("REFILE" . ?R)
-                      ("WAITING" . ?W)
-                      (:endgrouptag)
-                      (:startgrouptag)
-                      ("Areas" . nil)
-                      (:grouptags)
-                      ("pulswerk" . ?$)
-                      ("#personal" . ?_)
-                      ))
+(after! org
+  (setq org-tag-alist '((:startgrouptag)
+                        ("Context" . nil)
+                        (:grouptags)
+                        ("@home" . ?h)
+                        ("@office". ?o)
+                        ("@sarah" . ?s)
+                        ("@robert" . ?r)
+                        ("@baudock_meeting" . ?b)
+                        ("@PC" . ?p)
+                        ("@phone" . ?f)
+                        (:endgrouptag)
+                        ;; (:startgrouptag)
+                        ;; ("Categories" . nil)
+                        ;; (:grouptags)
+                        ;; ("wohnung")
+                        ;; ("health")
+                        ;; ("bike")
+                        ;; ("friends")
+                        ;; ("emacs")
+                        ;; ("gtd")
+                        ;; ("shopping")
+                        ;; ("learning")
+                        ;; (:endgrouptag)
+                        (:startgrouptag)
+                        ("Process" . nil)
+                        (:grouptags)
+                        ("SOMEDAY" . ?S)
+                        ("REFILE" . ?R)
+                        ("TICKLER" . ?T)
+                        ("DELIGATED" . ?D)
+                        ("HABIT" . ?H)
+                        (:endgrouptag)
+                        (:startgrouptag)
+                        ("Areas" . nil)
+                        (:grouptags)
+                        ("pulswerk" . ?$)
+                        ("#personal" . ?_)
+                        )))
 
 (use-package! org-edna
   :after org)
+
 (add-hook 'org-mode-hook 'org-edna-mode)
 
-(defun gtd/planning-trigger ()
-  "Automatically schedule an entry when it becomes NEXT according to PLANNED property"
-  (when (equal org-state "NEXT")
-    (message "das war next")
-    (setq planned (car (org-map-entries (lambda () (
-      org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
-    (if planned (
-      (message "Geplant ist %s" planned)
-      (org-entry-put nil "SCHEDULED" planned)
-      (org-entry-delete nil "PLANNED")
-  ) nil) ))
+;; (defun gtd/planning-trigger ()
+;;   "Automatically schedule an entry when it becomes NEXT according to PLANNED property"
+;;   (when (equal org-state "NEXT")
+;;     (message "das war next")
+;;     (setq planned (car (org-map-entries (lambda () (
+;;       org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
+;;     (if planned (
+;;       (message "Geplant ist %s" planned)
+;;       (org-entry-put nil "SCHEDULED" planned)
+;;       (org-entry-delete nil "PLANNED")
+;;   ) nil) ))
 
 ;; (add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
 
@@ -794,33 +1013,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
         :leader
         :desc "Define word at point" "@" #'define-word-at-point))
 
-(setq deft-use-projectile-projects t)
-(defun zyro/deft-update-directory ()
-  "Updates deft directory to current projectile's project root folder and updates the deft buffer."
-  (interactive)
-  (if (projectile-project-p)
-      (setq deft-directory (expand-file-name (doom-project-root)))))
-(when deft-use-projectile-projects
-  (add-hook 'projectile-after-switch-project-hook 'zyro/deft-update-directory)
-  (add-hook 'projectile-after-switch-project-hook 'deft-refresh))
-
-(load! "my-deft-title.el")
-(use-package deft
-  :commands (deft deft-open-file deft-new-file-named)
-  :config
-  (setq deft-directory "~/.org/"
-        deft-auto-save-interval 0
-        deft-recursive t
-        deft-current-sort-method 'title
-        deft-extensions '("md" "txt" "org")
-        deft-use-filter-string-for-filename t
-        deft-use-filename-as-title nil
-        deft-markdown-mode-title-level 1
-        deft-recursive-ignore-dir-regexp "\\(?:\\.\\|\\.\\.\\)$\\|\\.stversions"
-        deft-file-naming-rules '((nospace . "-"))))
-(require 'my-deft-title)
-(advice-add 'deft-parse-title :around #'my-deft/parse-title-with-directory-prepended)
-
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 
 (after! projectile
@@ -878,32 +1070,18 @@ Org-mode properties drawer already, keep the headline and don’t insert
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-;; (setq-hook! php-mode
-(setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
-
 (after! (lsp-mode php-mode)
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
         ;; (get-auth-info "intelephense" "sutter"))
   ;; (setq lsp-intelephense-trace-server "verbose")
-  (setq lsp-intelephense-multi-root t)
+  ;; (setq lsp-intelephense-multi-root t)
   ;; (setq lsp-intelephense-clear-cache t)
   (setq lsp-auto-guess-root nil)
   (setq lsp-idle-delay 0.8)
   )
-
-;; thanks to “Pascal J Bourguignon” and “TheFlyingDutchman 〔zzbba…@aol.com〕”. 2010-09-02
-;; (dap-php-setup)
-;; (dap-register-debug-template
-;;   "Php Remote Debug"
-;;   (list :type "php"
-;;         :cwd nil
-;;         :request "launch"
-;;         :name "Php Remote Debug"
-;;         :args '("--server=4711")
-;;         :pathMappings (ht ("/var/www/html" (projectile-project-root (buffer-file-name))))
-;;         :sourceMaps t))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
@@ -923,6 +1101,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;; (use-package! kubernetes-evil
 ;;   :ensure t
 ;;   :after kubernetes)
+
+(use-package! sql-indent
+  :after sql-mode
+)
 
 (use-package! ztree)
 
@@ -978,8 +1160,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
         ;;     ("In Progress" . "Done"))))
   :config (setq ;; org-jira-use-status-as-todo t
                 org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
+                                                            ("Planned" . "NEXT")
                                                             ("In Progress" . "NEXT")
                                                             ("Testing" . "TEST")
+                                                            ("Staging" . "DONE")
                                                             ("Done" . "DONE"))
 
           org-jira-custom-jqls
@@ -988,7 +1172,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 assignee='Stefan Lendl'
 AND status != Done
 AND Sprint in openSprints()
-ORDER BY priority, created DESC "
+ORDER BY priority, created DESC
+"
                    :limit 20
                    :filename "active")))
   )

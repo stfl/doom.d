@@ -78,25 +78,14 @@
 (package! org-analyzer)
 (package! org-edna)
 
-(package! zp-org-agenda
-  :recipe (:host github
-           :repo "zaeph/.emacs.d"
-           :files ("lisp/*.el")
-           ))
+;; (package! zp-org-agenda
+;;   :recipe (:host github
+;;            :repo "zaeph/.emacs.d"
+;;            :files ("lisp/*.el")
+;;            ))
 
 ;; (package! org-linker-edna :recipe (:host github :repo "toshism/org-linker-edna"))
 ;; (package! org-linker :recipe (:host github :repo "toshism/org-linker"))
-
-(package! literate-calc-mode)
-;; Misc Packages
-;; (package! define-word)
-;; (package! ox-reveal)
-;; (package! ox-pandoc)
-;; (package! ox-twbs)
-;; (package! gnuplot)
-;; (package! gnuplot-mode)
-;; (package! deadgrep)
-;; (package! graphviz-dot-mode)
 
 (package! gitlab-ci-mode)
 (package! gitlab-ci-mode-flycheck)
@@ -112,3 +101,5 @@
 ;; (package! kubernetes)
 ;; (package! kubernetes-evil)
 ;; (package! k8s-mode)
+
+(package! sql-indent)
