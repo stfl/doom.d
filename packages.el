@@ -62,20 +62,20 @@
 
 ;; Roam Packages
 (package! org-roam-server)
-(package! company-org-roam)
-(package! org-roam)
+;; (package! company-org-roam)
+;; (package! org-roam)
 
-;; Alphapapa packages
 (package! helm-org-rifle)
+
 (package! org-super-agenda)
 (package! org-ql)
 (package! org-web-tools)
+(package! ob-mermaid)
 
 (package! org-gcal)
-(package! ivy-omni-org)
 
 ;; Orgmode Packages
-(package! org-analyzer)
+(package! org-analyzer) ;; needs java
 (package! org-edna)
 
 ;; (package! zp-org-agenda
@@ -90,7 +90,6 @@
 (package! gitlab-ci-mode)
 (package! gitlab-ci-mode-flycheck)
 
-(package! edbi)
 
 ;; (package! with-editor)
 
@@ -102,4 +101,8 @@
 ;; (package! kubernetes-evil)
 ;; (package! k8s-mode)
 
+(package! edbi)
+(package! edbi-minor-mode)
+;; has some dependencies
+;; https://github.com/kiwanami/emacs-edbi#installation
 (package! sql-indent)

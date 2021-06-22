@@ -209,7 +209,7 @@
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar                   ; A dated approach to timetabling
+       ;; calendar                   ; A dated approach to timetabling
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;irc               ; how neckbeards socialize
        everywhere                   ; *leave* Emacs!? You must be joking.

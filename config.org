@@ -2,6 +2,9 @@
 #+startup: content
 
 * User Information
+:PROPERTIES:
+:ID:       47537e03-28e5-4adf-ac0b-ab8249ce01bf
+:END:
 Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 
@@ -36,6 +39,9 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
 #+END_SRC
 
 * Terminal Mode
+:PROPERTIES:
+:ID:       2ecfb384-6c47-45c9-b7ea-2eb3c9b25311
+:END:
 
 Set a few settings if we detect terminal mode
 #+BEGIN_SRC elisp
@@ -47,6 +53,9 @@ Set a few settings if we detect terminal mode
 #+END_SRC
 
 * UI
+:PROPERTIES:
+:ID:       00776006-97ad-487f-a34e-510b7df5d5a3
+:END:
 start maximized
 
 #+begin_src elisp
@@ -119,6 +128,9 @@ font string. You generally only need these two:
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 
 ** Faces
+:PROPERTIES:
+:ID:       a0baba11-f7c0-484f-b9e3-e75957447031
+:END:
 
 #+begin_src elisp
 (custom-set-faces!
@@ -131,6 +143,7 @@ font string. You generally only need these two:
  '(org-property-value :height 0.85)
  '(org-special-keyword :foreground "#83898d" :height 0.8)
  '(org-tag :foreground "#83898d" :weight light :height 0.7)
+ '(org-ql-view-due-date :foreground "dark goldenrod")
  )
 #+end_src
 
@@ -159,6 +172,9 @@ font string. You generally only need these two:
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 #+end_src
 * Motions
+:PROPERTIES:
+:ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
+:END:
 limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
 (after! evil-snipe
@@ -167,8 +183,10 @@ limit evil-snipe to the bufffer
   )
 #+END_SRC
 
-
 * Buffer Settings
+:PROPERTIES:
+:ID:       508b2ffc-2dfd-49e1-b44e-af2994a59df0
+:END:
 #+BEGIN_SRC elisp
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
@@ -182,6 +200,9 @@ limit evil-snipe to the bufffer
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
 :END:
 ** General
+:PROPERTIES:
+:ID:       90a92aaa-d50a-4524-9a97-bad904b60939
+:END:
 Org directory
 
 #+BEGIN_SRC elisp
@@ -230,6 +251,9 @@ rebuild orgid file on start
 #+end_src
 
 ** Auto-saving org-mode files
+:PROPERTIES:
+:ID:       d206a353-12c6-4d53-9f6f-97e24840c79e
+:END:
 
 Automatically saving all org-buffers
 
@@ -244,6 +268,9 @@ Automatically saving all org-buffers
 #+END_SRC
 
 ** Orgmode Startup
+:PROPERTIES:
+:ID:       fadd0d57-a6dd-4d17-ab0c-784b5159b7ed
+:END:
 #+BEGIN_SRC elisp
 (after! org
   (setq org-startup-indented 'indent
@@ -344,6 +371,9 @@ Adding additional search functions
 #+END_SRC
 
 ** Priorities
+:PROPERTIES:
+:ID:       f5c0a2a6-070e-480e-8c72-888da9416f25
+:END:
 Set default Priority to C
 
 #+begin_src elisp
@@ -356,28 +386,29 @@ Set default Priority to C
 :PROPERTIES:
 :ID:       b426d554-e01c-4792-8dfa-e0db617c4384
 :END:
-TODO some of this is set in custom.el
-
 #+begin_src elisp
 (setq org-agenda-custom-commands
       '(
         ("b" "Agenda and tasks B+"
          ((agenda "Agenda"
                   ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 3)
+                   (org-deadline-warning-days 1)
                    (org-agenda-span '1)
                    (org-agenda-start-day (org-today))))
           (org-ql-block '(and (todo "NEXT")
                               (or (priority >= "B")
-                                  (ancestors (priority >= "B")))
+                                  (ancestors (priority >= "B"))
+                                  (tags "org_jira")
+                                  (deadline auto)
+                                  (ancestors (deadline auto)))
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
-                              (not (habit))
-                              (or (not (deadline))
-                                  (deadline auto)))
+                              (not (habit)))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 7)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "PROJ")
                               (priority >= "B")
                               (not (tags "SOMEDAY"))
@@ -385,35 +416,41 @@ TODO some of this is set in custom.el
                                                   (not (tags "SOMEDAY"))))))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "WAIT")
                               (or (priority >= "B")
-                                  (ancestors (priority >= "B")))
+                                  (ancestors (priority >= "B"))
+                                  (deadline auto)
+                                  (ancestors (deadline auto)))
                               (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (or (not (deadline))
-                                  (deadline auto)))
+                              (not (scheduled)))
                         ((org-ql-block-header "Waiting")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 7)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
                         ))
         ("c" "Agenda and tasks C+"
          ((agenda "Agenda"
                   ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 3)
+                   (org-deadline-warning-days 1)
                    (org-agenda-span '1)
                    (org-agenda-start-day (org-today))))
           (org-ql-block '(and (todo "NEXT")
                               (or (priority >= "C")
-                                  (ancestors (priority >= "C")))
+                                  (ancestors (priority >= "C"))
+                                  (tags "org_jira")
+                                  (deadline auto)
+                                  (ancestors (deadline auto)))
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
-                              (not (habit))
-                              (or (not (deadline))
-                                  (deadline auto)))
+                              (not (habit)))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "PROJ")
                               (priority >= "C")
                               (not (tags "SOMEDAY"))
@@ -421,17 +458,20 @@ TODO some of this is set in custom.el
                                                   (not (tags "SOMEDAY"))))))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "WAIT")
                               (or (priority >= "C")
-                                  (ancestors (priority >= "C")))
+                                  (ancestors (priority >= "C"))
+                                  (deadline auto)
+                                  (ancestors (deadline auto)))
                               (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (or (not (deadline))
-                                  (deadline auto)))
+                              (not (scheduled)))
                         ((org-ql-block-header "Waiting")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
                         ))
         ;; ("t" "Tasks"
         ;;  ((org-ql-block '(and (todo)
@@ -450,29 +490,39 @@ TODO some of this is set in custom.el
         ("r" . "Weekly Review")
         ("rc" "Close the last week and finish done tasks"
          ((org-ql-block '(and (todo "NEXT")
-                              (not (tags "SOMEDAY"))
+                              (not (tags "SOMEDAY" "HABIT"))
                               (not (scheduled))
+                              ;; (not (ts-active :from ;;"2021-08-01"))  ;; FIXME no idea how to make this work
+                              ;;                 (ts-format (ts-adjust 'day 30 (ts-now)))))
                               (not (habit))
                               (or (not (deadline))
-                                  (deadline auto)))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 30)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "WAIT")
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
                               (or (not (deadline))
-                                  (deadline auto)))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
                         ((org-ql-block-header "Waiting")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 30)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
           (org-ql-block '(and (todo "PROJ")
                               (not (tags "SOMEDAY"))
                               (not (children (and (todo "NEXT" "WAIT")
                                                   (not (tags "SOMEDAY"))))))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 30)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
                         ))
         ("rl" "Agenda Weekly with Log"
          ;; TODO add archive!
@@ -491,21 +541,27 @@ TODO some of this is set in custom.el
                               (not (children (and (todo "NEXT" "WAIT")
                                                   (tags "SOMEDAY"))))
                               (or (not (deadline))
-                                  (deadline auto)))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
                         ((org-ql-block-header "Projects")
                          (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups '((:auto-priority)))))))
+                         (org-deadline-warning-days 30)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+          ))
         ("rn" "Plan Next Actions"
          ((org-ql-block '(and (todo "NEXT")
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
                               (not (habit))
                               (or (not (deadline))
-                                  (deadline auto)))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
                         ))
         ("rs" "Stuck Projects"
          ((org-ql-block '(and (todo "PROJ")
@@ -514,7 +570,9 @@ TODO some of this is set in custom.el
                                                   (not (tags "SOMEDAY"))))))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:auto-priority)))))))
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+            ))
         ("rS" "SOMEDAY"
          ((org-ql-block '(and (todo "PROJ")
                               (or (and (priority <= "D")
@@ -578,6 +636,36 @@ TODO some of this is set in custom.el
                          )
                         )))
         ))
+#+end_src
+
+#+begin_src elisp
+(setq stfl/priority-groups
+     '((:tag "SOMEDAY" :order 90)
+       (:name "MUST Do this week"
+        :priority "A"
+        :and (:tag "org_jira"
+              :property ("status" "In Progress"))
+        )
+       (:name "SHOULD Do this week"
+        :priority "B"
+        :and (:tag "org_jira"
+              :property ("status" "Planned"))
+        )
+       (:name "Optional or consider for next week"
+        :priority "C"
+        )
+       (:name "I care a bit more"
+        :priority "D"
+        )
+       (:name "Consider for SOMEDAY"
+        :order 80
+        :priority "E"
+        )
+       (:name "Backlog"
+        :not
+        :priority
+        )
+          ))
 #+end_src
 
 #+begin_src elisp
@@ -661,6 +749,9 @@ Adjusting clock settings
 #+END_SRC
 
 ** org super agenda
+:PROPERTIES:
+:ID:       e2830ec6-a2f9-4778-9bb2-f6d130ef61d2
+:END:
 
 #+begin_src elisp
 (use-package! org-super-agenda
@@ -695,6 +786,9 @@ Adjusting clock settings
 #+end_src
 
 ** org-ql
+:PROPERTIES:
+:ID:       617698c9-8d19-4dd5-a13f-541fa6a8c343
+:END:
 
 #+begin_src elisp
 (defun stfl/org-ql-min-ancestor-priority< (a b)
@@ -727,6 +821,9 @@ org-default-priority is treated as lower than the same set value"
 #+end_src
 
 ** Capture Templates
+:PROPERTIES:
+:ID:       6a1cd4f6-e2a2-4838-b451-61589e3cdbef
+:END:
 Here we setup the capture templates we want for ~org-capture~. I use a file template that's pre-filled with my monthly scheduled transactions. (TODO: Add default file-template for new projects.)
 #+BEGIN_SRC elisp
 (after! org (setq org-capture-templates
@@ -758,14 +855,20 @@ update brackets when copying a link from org-protocol
 #+END_SRC
 
 ** Directory settings
+:PROPERTIES:
+:ID:       8d07f343-cde2-4a1c-9700-d0ae563823d3
+:END:
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-image-actual-width 400
+  (setq org-image-actual-width nil
         org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 #+END_SRC
 
 ** org-habit
+:PROPERTIES:
+:ID:       d7e8ca81-775d-4623-ae1e-665181143649
+:END:
 
 load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+BEGIN_SRC elisp
@@ -782,6 +885,9 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** task dependencies > org-edna
+:PROPERTIES:
+:ID:       39318530-055d-492b-8cde-5cd379602ea6
+:END:
 Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 #+BEGIN_SRC elisp
 (use-package! org-edna
@@ -815,6 +921,9 @@ Some functions to quickly add TRIGGER and BLOCKER properties
 #+END_SRC
 
 ** Keywords
+:PROPERTIES:
+:ID:       c7d94cf2-b4f1-4d87-8887-cf477260b432
+:END:
 After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
 | Keyword | Description                                                  |
 |---------+--------------------------------------------------------------|
@@ -897,6 +1006,9 @@ Org-superstar config
 #+END_SRC
 
 ** Logging and Drawers
+:PROPERTIES:
+:ID:       28e25bba-6724-4710-b3b9-570cc8da948c
+:END:
 
 For the logging drawers, we like to keep our notes and clock history *seperate* from our properties drawer...
 #+BEGIN_SRC elisp
@@ -915,6 +1027,9 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 #+END_SRC
 
 ** Properties
+:PROPERTIES:
+:ID:       6ed1956f-d162-4dd0-a755-8d684cebc681
+:END:
 #+BEGIN_SRC elisp
 (after! org
   (setq org-use-property-inheritance t ; We like to inherit properties from their parents
@@ -925,6 +1040,9 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 #+END_SRC
 
 ** Refiling
+:PROPERTIES:
+:ID:       b1208906-9e44-4a2e-a21c-e169a7e3486c
+:END:
 
 refile target -> build list of someday files dynamically
 #+BEGIN_SRC elisp
@@ -978,6 +1096,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+end_src
 
 ** Default Tags
+:PROPERTIES:
+:ID:       37ad2d09-7250-443e-9bbd-26c3b4305b72
+:END:
 REVIEW should we define any additional tags?
 #+BEGIN_SRC elisp
 (after! org
@@ -1022,6 +1143,9 @@ REVIEW should we define any additional tags?
 #+END_SRC
 
 ** Task Dependencies
+:PROPERTIES:
+:ID:       6432d150-5bf3-46fb-b530-d072e1663c1f
+:END:
 
 load org-edna
 
@@ -1051,6 +1175,9 @@ load org-edna
 #+END_SRC
 
 ** Prompt for headline when creating ID links
+:PROPERTIES:
+:ID:       e15a800b-991a-456d-bbf9-523789d6d259
+:END:
 #+BEGIN_SRC emacs-lisp
 (defun nm/org-id-prompt-id ()
   "Prompt for the id during completion of id: link."
@@ -1069,6 +1196,9 @@ load org-edna
 #+END_SRC
 
 ** Org-Rifle
+:PROPERTIES:
+:ID:       6912e31e-78b8-4f20-8655-20307b85757c
+:END:
 #+BEGIN_SRC elisp
 (use-package helm-org-rifle
   :after (helm org)
@@ -1166,6 +1296,9 @@ load org-edna
 #+END_SRC
 
 ** Org-Roam
+:PROPERTIES:
+:ID:       812f2cef-61c0-4299-907d-a601e577f59d
+:END:
 These are my default ROAM settings
 #+BEGIN_SRC elisp
 (setq! org-roam-tag-sources '(prop last-directory)
@@ -1207,22 +1340,32 @@ rebuild org-roam cache at start
 #+end_src
 
 ** Roam Server
+:PROPERTIES:
+:ID:       028dcbe8-0ac1-4ebc-a4c8-abf491516b29
+:END:
 #+BEGIN_SRC elisp
-(use-package org-roam-server
-  :ensure t
+(use-package! org-roam-server
+  ;; :ensure t
+  :after org-roam
   :config
   (setq org-roam-server-host "127.0.0.1"
-        org-roam-server-port 8070
+        org-roam-server-port 7070
         org-roam-server-export-inline-images t
         org-roam-server-authenticate nil
         org-roam-server-network-poll nil
         org-roam-server-network-arrows 'from
         org-roam-server-network-label-truncate t
         org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
+        org-roam-server-network-label-wrap-length 20)
+
+  ;; (org-roam-server-mode)
+  )
 #+END_SRC
 
 ** Roam Export Backlinks + Content
+:PROPERTIES:
+:ID:       e29a30f2-f6ae-43f3-a39d-26caa15dec61
+:END:
 #+BEGIN_SRC elisp
 (defun my/org-roam--backlinks-list-with-content (file)
   (with-temp-buffer
@@ -1254,6 +1397,9 @@ rebuild org-roam cache at start
 #+END_SRC
 
 ** org-gcal
+:PROPERTIES:
+:ID:       f1d8ded8-e6be-461e-a593-160f6b275574
+:END:
 #+BEGIN_SRC elisp
 (use-package! org-gcal
   :commands (org-gcal-sync
@@ -1272,16 +1418,37 @@ rebuild org-roam cache at start
         org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))))
 #+END_SRC
 
-** ivy-omni-org
 #+begin_src elisp
-(use-package! ivy-omni-org
-  ;; :after org
-  :commands (ivy-omni-org ivy-omni-org-bookmarks)
+(map!
+ :map org-mode-map
+ :leader
+ (:prefix ("n" . "notes")
+  (:prefix ("j" . "sync")
+   :desc "sync Google Calendar" "g" #'org-gcal-sync
+   )))
+#+end_src
+
+** Drawing Diagrams with Mermaid
+:PROPERTIES:
+:ID:       819cb74f-3d27-4a76-bb81-06b9d1b714b5
+:END:
+Org babel to generate mermaid diagrams from org src blocks
+
+#+begin_src elisp
+(use-package! ob-mermaid
+  :after org
+  :init
+        (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
+  :config
+        (add-to-list 'org-babel-load-languages '(mermaid . t))
   )
 #+end_src
 
 * Module Settings
 ** Company mode
+:PROPERTIES:
+:ID:       7181a2a3-911a-480f-b8c7-6bb96d11edf1
+:END:
 #+BEGIN_SRC elisp
 ;; (after! org
 ;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
@@ -1289,6 +1456,9 @@ rebuild org-roam cache at start
 #+END_SRC
 
 ** Define Word
+:PROPERTIES:
+:ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
+:END:
 #+BEGIN_SRC elisp
 (use-package! define-word
   :after org
@@ -1300,11 +1470,17 @@ rebuild org-roam cache at start
 #+END_SRC
 
 ** Pandoc
+:PROPERTIES:
+:ID:       535b2018-8890-4e62-a293-a92df0734c07
+:END:
 #+BEGIN_SRC elisp
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 #+END_SRC
 
 ** Projectile
+:PROPERTIES:
+:ID:       d4a31927-ff21-42a5-98e1-ed487a84a618
+:END:
 #+BEGIN_SRC elisp
 (after! projectile
   ;; (setq projectile-project-search-path
@@ -1313,15 +1489,10 @@ rebuild org-roam cache at start
   )
 #+END_SRC
 
-** Database Interface (edbi)
-
-#+begin_src elisp
-;; (use-package! edbi
-  ;; :command "edbi:open-db-viewer"
-  ;; )
-#+end_src
-
 ** ediff
+:PROPERTIES:
+:ID:       c186f137-d99f-45ab-930b-297091895183
+:END:
 forcing text comparison even if diff thinks files are binary
 #+begin_src elisp
 (after! ediff
@@ -1331,6 +1502,9 @@ forcing text comparison even if diff thinks files are binary
 #+end_src
 
 ** origami
+:PROPERTIES:
+:ID:       32d3c85e-c348-4265-bc29-324b3866131f
+:END:
 #+begin_src elisp
 ;; (use-package! origami)
 
@@ -1342,6 +1516,9 @@ forcing text comparison even if diff thinks files are binary
 #+end_src
 
 * Custom Functions
+:PROPERTIES:
+:ID:       c2e19f11-90cd-4bc9-ad99-36a5a680c084
+:END:
 #+BEGIN_SRC elisp
 (load! "org-customs.el")
 (load! "org-helpers.el")
@@ -1366,6 +1543,9 @@ set todo value to *PROJ* for all TODOs with sub-todos
 
 * Coding
 ** LSP
+:PROPERTIES:
+:ID:       57007770-c5ba-40e9-a9af-3d2d8c835781
+:END:
 #+BEGIN_SRC elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
@@ -1387,6 +1567,9 @@ set todo value to *PROJ* for all TODOs with sub-todos
 #+END_SRC
 
 ** PHP
+:PROPERTIES:
+:ID:       1a38710f-565e-4680-bc53-b39f3d955b71
+:END:
 #+BEGIN_SRC elisp
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
@@ -1403,11 +1586,17 @@ set todo value to *PROJ* for all TODOs with sub-todos
 #+END_SRC
 
 ** MQL
+:PROPERTIES:
+:ID:       c3da477e-b64b-4a50-af87-5fdec1fd62ab
+:END:
 #+BEGIN_SRC elisp
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 #+END_SRC
 
 ** Gitlab-CI
+:PROPERTIES:
+:ID:       2e1016eb-5a16-464e-a8bb-2a458f26db3d
+:END:
 
 #+BEGIN_SRC elisp
 (use-package! gitlab-ci-mode
@@ -1420,6 +1609,9 @@ set todo value to *PROJ* for all TODOs with sub-todos
   (gitlab-ci-mode-flycheck-enable))
 #+END_SRC
 ** Kubernetes
+:PROPERTIES:
+:ID:       fd4fae8c-3a70-449f-b3d5-52c25f76ec0a
+:END:
 
 #+begin_src elisp
 ;; (use-package kubernetes
@@ -1434,13 +1626,42 @@ set todo value to *PROJ* for all TODOs with sub-todos
 #+end_src
 
 ** SQL
+:PROPERTIES:
+:ID:       4efebc11-28ba-4f18-a758-a4af693d6f69
+:END:
 #+begin_src elisp
 (use-package! sql-indent
   :after sql-mode
 )
 #+end_src
+
+*** Database Interface (edbi)
+:PROPERTIES:
+:ID:       e54ac6a8-7cf4-47ea-abe6-500512022534
+:END:
+
+[[roam:edbi setup]]
+
+#+begin_src elisp
+(use-package! edbi
+  :commands 'edbi:open-db-viewer
+  )
+#+end_src
+
+#+begin_src elisp
+
+(use-package! edbi-minor-mode
+  :after sql-mode
+  :hook sql-mode-hook
+  )
+;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
+#+end_src
+
 * Collaboration
 ** Directory tree diff
+:PROPERTIES:
+:ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
+:END:
 #+BEGIN_SRC elisp
 (use-package! ztree)
 #+END_SRC
@@ -1448,6 +1669,9 @@ set todo value to *PROJ* for all TODOs with sub-todos
 ** Magit
 
 *** Forge
+:PROPERTIES:
+:ID:       0ed4b14f-b9cd-4b13-b17e-633213db7418
+:END:
 display more columns in forge list topic
 #+BEGIN_SRC elisp
 (after! forge (setq forge-topic-list-columns
@@ -1490,72 +1714,96 @@ display more columns in forge list topic
 
 #+RESULTS:
 
-** ejira
-#+BEGIN_SRC elisp
-;; (use-package! ejira
-;;   ;; :after org
-;;   :init
-;;   (setq jiralib2-url              "https://pulswerk.atlassian.net"
-;;         jiralib2-auth             'token
-;;         jiralib2-user-login-name  "lendl@pulswerk.at"
-;;         jiralib2-token            (get-auth-info "pulswerk.atlassian.net" "lendl@pulswerk.at")
-
-;;         ejira-org-directory       "~/.org/ejira"
-;;         ejira-projects            '("MD")
-
-;;         ejira-priorities-alist    '(("Highest" . ?A)
-;;                                     ("High"    . ?B)
-;;                                     ("Medium"  . ?C)
-;;                                     ("Low"     . ?D)
-;;                                     ("Lowest"  . ?E))
-;;         ejira-todo-states-alist   '(("To Do"       . 1)
-;;                                     ("In Progress" . 2)
-;;                                     ("Testing" . 3)
-;;                                     ("Done"        . 4)))
-;;   :config
-;;   ;; Tries to auto-set custom fields by looking into /editmeta
-;;   ;; of an issue and an epic.
-;;   (add-hook 'jiralib2-post-login-hook #'ejira-guess-epic-sprint-fields)
-
-;;   ;; They can also be set manually if autoconfigure is not used.
-;;   ;; (setq ejira-sprint-field       'customfield_10001
-;;   ;;       ejira-epic-field         'customfield_10002
-;;   ;;       ejira-epic-summary-field 'customfield_10004)
-
-;;   (require 'ejira-agenda))
-#+END_SRC
-
 ** org-jira
+:PROPERTIES:
+:ID:       9e6bc5aa-89b0-43f0-aad1-2c8212e0bae7
+:END:
 #+BEGIN_SRC elisp
 (use-package! org-jira
   :after org
   :init (setq org-jira-working-dir "~/.org/jira/"
               jiralib-url "https://pulswerk.atlassian.net")
-        ;; (defconst org-jira-progress-issue-flow
-        ;;     '(("To Do" . "In Progress"
-        ;;     ("In Progress" . "Done"))))
-  :config (setq ;; org-jira-use-status-as-todo t
-                org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
-                                                            ("Planned" . "NEXT")
-                                                            ("In Progress" . "NEXT")
-                                                            ("Testing" . "TEST")
-                                                            ("Staging" . "DONE")
-                                                            ("Done" . "DONE"))
+  ;; (defconst org-jira-progress-issue-flow
+  ;;     '(("To Do" . "In Progress"
+  ;;     ("In Progress" . "Done"))))
+  :config
+  (setq org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
+                                                    ("Planned" . "NEXT")
+                                                    ("In Progress" . "NEXT")
+                                                    ("Testing" . "TEST")
+                                                    ("Staging" . "DONE")
+                                                    ("Done" . "DONE"))
 
-          org-jira-custom-jqls
-                '(
-                  (:jql "
+        org-jira-custom-jqls
+        '((:jql "
 assignee='Stefan Lendl'
 AND status != Done
-AND Sprint in openSprints()
-ORDER BY priority, created DESC
-"
-                   :limit 20
-                   :filename "active")))
+AND ( Sprint in openSprints()
+      OR Project = MD)
+ORDER BY priority, created DESC"
+           :limit 200
+           :filename "active")))
+
+  (map!
+   :map org-mode-map
+   :localleader
+   :prefix ("j" . "Jira")
+   :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql
+   "n" #'org-jira-create-issue
+   "p" #'org-jira-progress-issue
+   "P" #'org-jira-progress-issue-next
+   "a" #'org-jira-assign-issue
+   "r" #'org-jira-refresh-issue
+   "R" #'org-jira-refresh-issues-in-buffer
+   "u" #'org-jira-update-issue
+   "s" #'org-jira-create-subtask
+   "S" #'org-jira-get-subtask
+   "t" #'org-jira-todo-to-jira
+   (:prefix ("c" . "Comments")
+    :desc "Add Comment" "c" #'org-jira-add-comment
+    :desc "Update Comment" "u" #'org-jira-update-comment
+   ))
+
+  (map!
+   :map org-jira-map
+   :leader
+   (:prefix ("n" . "notes")
+    (:prefix ("j" . "sync")
+     :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql
+     )))
+
+  ;; "pg" #'org-jira-get-projects
+  ;; "bg" #'org-jira-get-boards
+  ;; "iv" #'org-jira-get-issues-by-board
+  ;; "ib" #'org-jira-browse-issue
+  ;; "ig" #'org-jira-get-issues
+  ;; "ih" #'org-jira-get-issues-headonly
+  ;; "iu" #'org-jira-update-issue
+  ;; "iw" #'org-jira-progress-issue
+  ;; "in" #'org-jira-progress-issue-next
+  ;; "ia" #'org-jira-assign-issue
+  ;; "ir" #'org-jira-refresh-issue
+  ;; "iR" #'org-jira-refresh-issues-in-buffer
+  ;; "ic" #'org-jira-create-issue
+  ;; "ik" #'org-jira-copy-current-issue-key
+  ;; "sc" #'org-jira-create-subtask
+  ;; "sg" #'org-jira-get-subtasks
+  ;; "cc" #'org-jira-add-comment
+  ;; "cu" #'org-jira-update-comment
+  ;; "wu" #'org-jira-update-worklogs-from-org-clocks
+  ;; "tj" #'org-jira-todo-to-jira
+  ;; "if" #'org-jira-get-issues-by-fixversion
   )
+
+;; ("c if" #'org-jira-get-issues-from-filter-headonly
+;; ("c iF" #'org-jira-get-issues-from-filter
+;; (" isr" #'org-jira-set-issue-reporter
 #+END_SRC
 
 * Don't auto-recompile literate-config
+:PROPERTIES:
+:ID:       7f52c1ee-6fff-4e04-96fa-8c5a2bf3ad14
+:END:
 #+BEGIN_SRC elisp
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 #+END_SRC
