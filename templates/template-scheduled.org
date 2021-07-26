@@ -1,0 +1,8 @@
+* NEXT %^{Task}
+SCHEDULED: %^{Scheduled}t
+:PROPERTIES:
+:CREATED: %U
+:ID: %(org-id-new)
+:END:
+
+%?

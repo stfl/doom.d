@@ -61,11 +61,11 @@
 ;;            :files ("*.el")))
 
 ;; Roam Packages
-(package! org-roam-server)
+;; (package! org-roam-server)
 ;; (package! company-org-roam)
 ;; (package! org-roam)
 
-(package! helm-org-rifle)
+;; (package! helm-org-rifle)
 
 (package! org-super-agenda)
 (package! org-ql)

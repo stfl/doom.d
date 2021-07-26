@@ -24,11 +24,13 @@
         ;; +childframe)     ; a nicer company UI (Emacs 26+ only)
         ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy              ; a search engine for love and life
-        ;; +fuzzy
-        +icons
-        ;; +childframe
-        )
+       ;; (ivy              ; a search engine for love and life
+       ;;  ;; +fuzzy
+       ;;  +icons
+       ;;  ;; +childframe
+       ;;  )
+       (vertico
+        +icons)
 
        :ui
        ;; deft              ; notational velocity for Emacs
@@ -149,9 +151,9 @@
        ;;fsharp           ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;go                ; the hipster dialect
-       (haskell            ; a language that's lazier than I am
-        +dante
-        +ghcide)
+       ;; (haskell            ; a language that's lazier than I am
+       ;;  +dante
+       ;;  +ghcide)
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
@@ -171,15 +173,15 @@
         +dragndrop       ; drag & drop files/images into org buffers
         +hugo            ; use Emacs for hugo blogging
         +pretty
-        +jupyter        ; ipython/jupyter support for babel
+        ;; +jupyter        ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
         +pomodoro        ; be fruitful with the tomato technique
-        +roam
+        +roam2
         +gnuplot
         +present)        ; using org-mode for presentations
        ;;perl              ; write code no one else can comprehend
        (php +lsp)               ; perl's insecure younger brother
-       ;;plantuml          ; diagrams for confusing people more
+       plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
         ;; +pyenv
@@ -196,7 +198,7 @@
        (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
-       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh +lsp)           ; she sells {ba,z,fi}sh shells on the C xor
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.

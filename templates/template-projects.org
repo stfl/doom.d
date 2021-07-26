@@ -1,10 +1,14 @@
-#+TITLE: %^{Title}
+* PROJ %^{PRIORITY||[#A] |[#B] |[#C] |[#D] |[#E] }%^{Title}
+:PROPERTIES:
+:ID:     %(org-id-new)
+:CREATED: %U
+:END:
+Goal: %^{Goal}
 
-PROJECT STATUS: {INITIATE|PLAN|EXECUTE|MONITOR AND CONTROL|CLOSE}
+** NEXT %^{Next Action}
+:PROPERTIES:
+:ID:     %(org-id-new)
+:CREATED: %U
+:END:
 
-* Scope
-** Deliverables
-** Work
-
-* Completed Tasks
-* Next Actions
+%?

@@ -1,0 +1,8 @@
+* NEXT %^{Task}
+DEADLINE: %^{Deadline}t
+:PROPERTIES:
+:CREATED: %U
+:ID: %(org-id-new)
+:END:
+
+%?

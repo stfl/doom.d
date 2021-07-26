@@ -54,13 +54,6 @@
 (setq! display-line-numbers-type t)
 (setq! which-key-idle-delay 0.3)
 
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
-
-(after! org-ql
-  (set-popup-rule!
-    "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
-    ))
-
 (custom-set-faces!
  '(org-date :foreground "dark goldenrod" :height 0.85)
  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
@@ -96,6 +89,13 @@
 ;;  )
  ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
+
+(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+
+(after! org-ql
+  (set-popup-rule!
+    "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
+    ))
 
 (after! evil-snipe
   (setq evil-snipe-scope 'whole-visible)
@@ -173,11 +173,11 @@
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
 
       :prefix ("s" . "Tree/Subtree")
-      :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
-      :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
-      :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
-      :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
-      :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
+      ;; :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
+      ;; :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
+      ;; :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
+      ;; :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
+      ;; :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
       :desc "Match sparse tree" "M" #'org-match-sparse-tree
 
       :prefix ("l" . "links")
@@ -236,11 +236,13 @@
                    (org-agenda-span '1)
                    (org-agenda-start-day (org-today))))
           (org-ql-block '(and (todo "NEXT")
-                              (or (priority >= "B")
-                                  (ancestors (priority >= "B"))
-                                  (tags "org_jira")
-                                  (deadline auto)
-                                  (ancestors (deadline auto)))
+                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
+                                       (property "assignee" "Stefan Lendl"))
+                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
+                                       (or (priority >= "C")
+                                           (ancestors (priority >= "C"))
+                                           (deadline auto)
+                                           (ancestors (deadline auto)))))
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
                               (not (habit)))
@@ -278,11 +280,13 @@
                    (org-agenda-span '1)
                    (org-agenda-start-day (org-today))))
           (org-ql-block '(and (todo "NEXT")
-                              (or (priority >= "C")
-                                  (ancestors (priority >= "C"))
-                                  (tags "org_jira")
-                                  (deadline auto)
-                                  (ancestors (deadline auto)))
+                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
+                                       (property "assignee" "Stefan Lendl"))
+                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
+                                       (or (priority >= "C")
+                                           (ancestors (priority >= "C"))
+                                           (deadline auto)
+                                           (ancestors (deadline auto)))))
                               (not (tags "SOMEDAY"))
                               (not (scheduled))
                               (not (habit)))
@@ -313,6 +317,50 @@
                          (org-super-agenda-groups stfl/priority-groups)
                          ))
                         ))
+("d" "Agenda and tasks D+"
+         ((agenda "Agenda"
+                  ((org-agenda-use-time-grid t)
+                   (org-deadline-warning-days 1)
+                   (org-agenda-span '1)
+                   (org-agenda-start-day (org-today))))
+          (org-ql-block '(and (todo "NEXT")
+                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
+                                       (property "assignee" "Stefan Lendl"))
+                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
+                                       (or (priority >= "C")
+                                           (ancestors (priority >= "C"))
+                                           (deadline auto)
+                                           (ancestors (deadline auto)))))
+                               (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit)))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+          (org-ql-block '(and (todo "PROJ")
+                              (priority >= "D")
+                              (not (tags "SOMEDAY"))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (not (tags "SOMEDAY"))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+          (org-ql-block '(and (todo "WAIT")
+                              (or (priority >= "D")
+                                  (ancestors (priority >= "D"))
+                                  (deadline auto)
+                                  (ancestors (deadline auto)))
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled)))
+                        ((org-ql-block-header "Waiting")
+                         (org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+                        ))
         ;; ("t" "Tasks"
         ;;  ((org-ql-block '(and (todo)
         ;;                       (not (tags "SOMEDAY"))
@@ -331,6 +379,9 @@
         ("rc" "Close the last week and finish done tasks"
          ((org-ql-block '(and (todo "NEXT")
                               (not (tags "SOMEDAY" "HABIT"))
+
+                              (not (and (tags "org_jira")
+                                        (not (property "assignee" "Stefan Lendl"))))
                               (not (scheduled))
                               ;; (not (ts-active :from ;;"2021-08-01"))  ;; FIXME no idea how to make this work
                               ;;                 (ts-format (ts-adjust 'day 30 (ts-now)))))
@@ -385,7 +436,7 @@
                                   (ancestors (deadline auto))))
                         ((org-ql-block-header "Projects")
                          (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 30)
+                         (org-deadline-warning-days 45)
                          (org-super-agenda-groups stfl/priority-groups)
                          ))
           ))
@@ -491,7 +542,6 @@
         )
        (:name "Optional or consider for next week"
         :priority "C"
-        :deadline t
         )
        (:name "I care a bit more"
         :priority "D"
@@ -633,23 +683,38 @@ org-default-priority is treated as lower than the same set value"
                      (t (+ 0.5 org-priority-default))))) ;;
     display empty prio below default prio))
 
-(after! org (setq org-capture-templates
-                  '(("!" "Quick Capture" plain (file "~/.org/gtd/inbox.org")
-                     "* TODO %(read-string \"Task: \")\n:PROPERTIES:\n:CREATED: %U\n:END:")
-                    ("p" "New Project" plain (file nm/org-capture-file-picker)
-                     (file "~/.doom.d/templates/template-projects.org"))
-                    ("n" "Note on headline" plain (function nm/org-end-of-headline)
-                     "%?" :empty-lines-before 1 :empty-lines-after 1)
-                    ("q" "quick note to file" entry (function nm/org-capture-weeklies)
-                     "* %?" :empty-lines-before 1 :empty-lines-after 1)
-                    ("P" "Protocol" plain (file "~/.org/gtd/inbox.org")
-                     "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
-                     :empty-lines-after 1)
-                    ("L" "Protocol Link" plain (file "~/.org/gtd/inbox.org")
-                     "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-                     :empty-lines-after 1 )
-                    )
-                  ))
+(after! org
+  (setq org-capture-templates
+        '(
+          ("n" "capture to inbox"
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file "~/.doom.d/templates/template-inbox.org"))
+          ("p" "Project"
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file "~/.doom.d/templates/template-projects.org")
+           :empty-lines-after 1)
+          ("s" "scheduled"
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file "~/.doom.d/templates/template-scheduled.org"))
+          ("S" "deadline"
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file "~/.doom.d/templates/template-inbox.org"))
+          ("P" "Protocol"
+           plain
+           (file "~/.org/gtd/inbox.org")
+           "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
+           :empty-lines-after 1)
+          ("L" "Protocol Link"
+           plain
+           (file "~/.org/gtd/inbox.org")
+           "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
+           :empty-lines-after 1)
+          )
+        ))
 
 (defun transform-square-brackets-to-round-ones(string-to-transform)
   "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -658,7 +723,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (after! org
-  (setq org-image-actual-width nil
+  (setq org-image-actual-width 400
         org-archive-location "~/.org/gtd/archive/%s::datetree"
         ))
 
@@ -667,16 +732,19 @@ org-default-priority is treated as lower than the same set value"
   :config
   (add-to-list 'org-modules 'org-habit)
 
-  (setq org-habit-preceding-days 6
+  (setq org-habit-preceding-days 14
         org-habit-following-days 7)
 
   ;; Length of the habit graph
-  (setq org-habit-graph-column 65))
+  (setq org-habit-graph-column 31))
 
 (use-package! org-edna
   :after org
   ;; :config (org-edna-mode)
+  :hook org-mode-hook
   )
+
+;; (add-hook 'org-mode-hook 'org-edna-mode)
 
 (defun stfl/trigger-next-sibling-NEXT ()
   (interactive)
@@ -710,8 +778,8 @@ org-default-priority is treated as lower than the same set value"
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
-           "NEXT(n!)"  ; Task is next to be worked on.
-           "WAIT(w!/!)"  ; Something external is holding up this task
+           "NEXT(n)"  ; Task is next to be worked on.
+           "WAIT(w)"  ; Something external is holding up this task
            "|"
            "DONE(d@)"  ; Task successfully completed
            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
@@ -853,119 +921,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#personal" . ?_)
                         )))
 
-(use-package! org-edna
-  :after org)
-
-(add-hook 'org-mode-hook 'org-edna-mode)
-
-;; (defun gtd/planning-trigger ()
-;;   "Automatically schedule an entry when it becomes NEXT according to PLANNED property"
-;;   (when (equal org-state "NEXT")
-;;     (message "das war next")
-;;     (setq planned (car (org-map-entries (lambda () (
-;;       org-entry-get nil  "PLANNED")) "PLANNED<>\"\"" 'tree)))
-;;     (if planned (
-;;       (message "Geplant ist %s" planned)
-;;       (org-entry-put nil "SCHEDULED" planned)
-;;       (org-entry-delete nil "PLANNED")
-;;   ) nil) ))
-
-;; (add-hook 'org-after-todo-state-change-hook 'gtd/planning-trigger)
-
-(use-package helm-org-rifle
-  :after (helm org)
-  :preface
-  (autoload 'helm-org-rifle-wiki "helm-org-rifle")
-  :config
-  (add-to-list 'helm-org-rifle-actions '("Insert link" . helm-org-rifle--insert-link) t)
-  (add-to-list 'helm-org-rifle-actions '("Store link" . helm-org-rifle--store-link) t)
-  (defun helm-org-rifle--store-link (candidate &optional use-custom-id)
-    "Store a link to CANDIDATE."
-    (-let (((buffer . pos) candidate))
-      (with-current-buffer buffer
-        (org-with-wide-buffer
-         (goto-char pos)
-         (when (and use-custom-id
-                    (not (org-entry-get nil "CUSTOM_ID")))
-           (org-set-property "CUSTOM_ID"
-                             (read-string (format "Set CUSTOM_ID for %s: "
-                                                  (substring-no-properties
-                                                   (org-format-outline-path
-                                                    (org-get-outline-path t nil))))
-                                          (helm-org-rifle--make-default-custom-id
-                                           (nth 4 (org-heading-components))))))
-         (call-interactively 'org-store-link)))))
-
-  ;; (defun helm-org-rifle--narrow (candidate)
-  ;;   "Go-to and then Narrow Selection"
-  ;;   (helm-org-rifle-show-entry candidate)
-  ;;   (org-narrow-to-subtree))
-
-  (defun helm-org-rifle--store-link-with-custom-id (candidate)
-    "Store a link to CANDIDATE with a custom ID.."
-    (helm-org-rifle--store-link candidate 'use-custom-id))
-
-  (defun helm-org-rifle--insert-link (candidate &optional use-custom-id)
-    "Insert a link to CANDIDATE."
-    (unless (derived-mode-p 'org-mode)
-      (user-error "Cannot insert a link into a non-org-mode"))
-    (let ((orig-marker (point-marker)))
-      (helm-org-rifle--store-link candidate use-custom-id)
-      (-let (((dest label) (pop org-stored-links)))
-        (org-goto-marker-or-bmk orig-marker)
-        (org-insert-link nil dest label)
-        (message "Inserted a link to %s" dest))))
-
-  (defun helm-org-rifle--make-default-custom-id (title)
-    (downcase (replace-regexp-in-string "[[:space:]]" "-" title)))
-
-  (defun helm-org-rifle--insert-link-with-custom-id (candidate)
-    "Insert a link to CANDIDATE with a custom ID."
-    (helm-org-rifle--insert-link candidate t))
-
-  (helm-org-rifle-define-command
-   "wiki" ()
-   "Search in \"~/lib/notes/writing\" and `plain-org-wiki-directory' or create a new wiki entry"
-   :sources `(,(helm-build-sync-source "Exact wiki entry"
-                 :candidates (plain-org-wiki-files)
-                 :action #'plain-org-wiki-find-file)
-              ,@(--map (helm-org-rifle-get-source-for-file it) files)
-              ,(helm-build-dummy-source "Wiki entry"
-                 :action #'plain-org-wiki-find-file))
-   :let ((files (let ((directories (list "~/lib/notes/writing"
-                                         plain-org-wiki-directory
-                                         "~/lib/notes")))
-                  (-flatten (--map (f-files it
-                                            (lambda (file)
-                                              (s-matches? helm-org-rifle-directories-filename-regexp
-                                                          (f-filename file))))
-                                   directories))))
-         (helm-candidate-separator " ")
-         (helm-cleanup-hook (lambda ()
-                              ;; Close new buffers if enabled
-                              (when helm-org-rifle-close-unopened-file-buffers
-                                (if (= 0 helm-exit-status)
-                                    ;; Candidate selected; close other new buffers
-                                    (let ((candidate-source (helm-attr 'name (helm-get-current-source))))
-                                      (dolist (source helm-sources)
-                                        (unless (or (equal (helm-attr 'name source)
-                                                           candidate-source)
-                                                    (not (helm-attr 'new-buffer source)))
-                                          (kill-buffer (helm-attr 'buffer source)))))
-                                  ;; No candidates; close all new buffers
-                                  (dolist (source helm-sources)
-                                    (when (helm-attr 'new-buffer source)
-                                      (kill-buffer (helm-attr 'buffer source))))))))))
-  :general
-  (:keymaps 'org-mode-map
-   "M-s r" #'helm-org-rifle-current-buffer)
-  :custom
-  (helm-org-rifle-directories-recursive t)
-  (helm-org-rifle-show-path t)
-  (helm-org-rifle-test-against-path t))
-
-(provide 'setup-helm-org-rifle)
-
 (setq! org-roam-tag-sources '(prop last-directory)
        org-roam-db-location "~/.emacs.d/roam.db"
        org-roam-directory "~/.org/")
@@ -997,24 +952,24 @@ Org-mode properties drawer already, keep the headline and don’t insert
            :unnarrowed t)
            ))
 
-(after! org-roam (org-roam-db-build-cache))
+;; (after! org-roam (org-roam-db-build-cache))
 
-(use-package! org-roam-server
-  ;; :ensure t
-  :after org-roam
-  :config
-  (setq org-roam-server-host "127.0.0.1"
-        org-roam-server-port 7070
-        org-roam-server-export-inline-images t
-        org-roam-server-authenticate nil
-        org-roam-server-network-poll nil
-        org-roam-server-network-arrows 'from
-        org-roam-server-network-label-truncate t
-        org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20)
+;; (use-package! org-roam-server
+;;   ;; :ensure t
+;;   :after org-roam
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;;         org-roam-server-port 7070
+;;         org-roam-server-export-inline-images t
+;;         org-roam-server-authenticate nil
+;;         org-roam-server-network-poll nil
+;;         org-roam-server-network-arrows 'from
+;;         org-roam-server-network-label-truncate t
+;;         org-roam-server-network-label-truncate-length 60
+;;         org-roam-server-network-label-wrap-length 20)
 
-  ;; (org-roam-server-mode)
-  )
+;;   ;; (org-roam-server-mode)
+;;   )
 
 (defun my/org-roam--backlinks-list-with-content (file)
   (with-temp-buffer
@@ -1076,6 +1031,85 @@ Org-mode properties drawer already, keep the headline and don’t insert
         (add-to-list 'org-babel-load-languages '(mermaid . t))
   )
 
+(map! :after org
+      :map org-mode-map
+      :leader
+      (:prefix ("n" . "notes")
+       (:prefix ("j" . "sync")
+        :desc "resolve syncthing conflicts" "c" #'stfl/resolve-orgzly-syncthing
+        )))
+
+(defun stfl/resolve-orgzly-syncthing ()
+  (interactive)
+  (ibizaman/syncthing-resolve-conflicts "~/.org/"))
+
+(defun ibizaman/syncthing-resolve-conflicts (directory)
+  "Resolve all conflicts under given DIRECTORY."
+  (interactive "D")
+  (let* ((all (ibizaman/syncthing--get-sync-conflicts directory))
+         (chosen (ibizaman/syncthing--pick-a-conflict all)))
+    (ibizaman/syncthing-resolve-conflict chosen)))
+
+
+(defun ibizaman/syncthing-show-conflicts-dired (directory)
+  "Open dired buffer at DIRECTORY showing all syncthing conflicts."
+  (interactive "D")
+  (find-name-dired directory "*.sync-conflict-*"))
+
+(defun ibizaman/syncthing-resolve-conflict-dired (&optional arg)
+  "Resolve conflict of first marked file in dired or close to point with ARG."
+  (interactive "P")
+  (let ((chosen (car (dired-get-marked-files nil arg))))
+    (ibizaman/syncthing-resolve-conflict chosen)))
+
+(defun ibizaman/syncthing-resolve-conflict (conflict)
+  "Resolve CONFLICT file using ediff."
+  (let* ((normal (ibizaman/syncthing--get-normal-filename conflict)))
+    (ibizaman/ediff-files
+     (list conflict normal)
+     `(lambda ()
+        (when (y-or-n-p "Delete conflict file? ")
+          (kill-buffer (get-file-buffer ,conflict))
+          (delete-file ,conflict))))))
+
+(defun ibizaman/syncthing--get-sync-conflicts (directory)
+  "Return a list of all sync conflict files in a DIRECTORY."
+  (seq-filter (lambda (o) (not (string-match "\\.stversions" o))) (directory-files-recursively directory "\\.sync-conflict-")))
+
+(defvar ibizaman/syncthing--conflict-history nil
+  "Completion conflict history")
+
+(defun ibizaman/syncthing--pick-a-conflict (conflicts)
+  "Let user choose the next conflict from CONFLICTS to investigate."
+  (completing-read "Choose the conflict to investigate: " conflicts
+                   nil t nil ibizaman/syncthing--conflict-history))
+
+(defun ibizaman/syncthing--get-normal-filename (conflict)
+  "Get non-conflict filename matching the given CONFLICT."
+  (replace-regexp-in-string "\\.sync-conflict-.*\\(\\..*\\)$" "\\1" conflict))
+
+(defun ibizaman/ediff-files (&optional files quit-hook)
+  (interactive)
+  (lexical-let ((files (or files (dired-get-marked-files)))
+                (quit-hook quit-hook)
+                (wnd (current-window-configuration)))
+    (if (<= (length files) 2)
+        (let ((file1 (car files))
+              (file2 (if (cdr files)
+                         (cadr files)
+                       (read-file-name
+                        "file: "
+                        (dired-dwim-target-directory)))))
+          (if (file-newer-than-file-p file1 file2)
+              (ediff-files file2 file1)
+            (ediff-files file1 file2))
+          (add-hook 'ediff-after-quit-hook-internal
+                    (lambda ()
+                      (setq ediff-after-quit-hook-internal nil)
+                      (when quit-hook (funcall quit-hook))
+                      (set-window-configuration wnd))))
+      (error "no more than 2 files should be marked"))))
+
 ;; (after! org
 ;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
 ;;   (setq company-idle-delay 0.25))
@@ -1098,7 +1132,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! ediff
   (setq ediff-diff-options "--text"
-        ediff-diff3-options "--text"))
+        ediff-diff3-options "--text"
+        ediff-toggle-skip-similar t
+        ediff-diff-options "-w"
+        ;; ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally))
 
 ;; (use-package! origami)
 
@@ -1211,18 +1249,23 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
                                                     ("Planned" . "NEXT")
                                                     ("In Progress" . "NEXT")
-                                                    ("Testing" . "TEST")
                                                     ("Staging" . "DONE")
+                                                    ("Ready" . "DONE")
                                                     ("Done" . "DONE"))
+        org-jira-priority-to-org-priority-alist (list (cons "Highest" ?A)
+                                                      (cons "High" ?B)
+                                                      ;; (cons "Medium" ?D)  ;; no org priority for /default/
+                                                      (cons "Low" ?E)
+                                                      (cons "Lowest" ?E))
 
-        org-jira-custom-jqls
-        '((:jql "
+        org-jira-custom-jqls '((:jql "
 assignee='Stefan Lendl'
 AND status != Done
 AND ( Sprint in openSprints()
       OR Project = MD)
-ORDER BY priority, created DESC"
-           :limit 200
+ORDER BY priority, created DESC
+"
+           :limit 300
            :filename "active")))
 
   (map!
@@ -1243,7 +1286,7 @@ ORDER BY priority, created DESC"
    (:prefix ("c" . "Comments")
     :desc "Add Comment" "c" #'org-jira-add-comment
     :desc "Update Comment" "u" #'org-jira-update-comment
-   ))
+    ))
 
   (map!
    :map org-jira-map
@@ -1281,6 +1324,15 @@ ORDER BY priority, created DESC"
 ;; (" isr" #'org-jira-set-issue-reporter
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+
+(defun stfl/goto-private-config-file ()
+  "Open your private config.el file."
+  (interactive)
+  (find-file (expand-file-name "config.org" doom-private-dir)))
+
+(define-key! help-map
+  "dc"   #'stfl/goto-private-config-file
+  )
 
 (defun nm/org-id-prompt-id ()
   "Prompt for the id during completion of id: link."
