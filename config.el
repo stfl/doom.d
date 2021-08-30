@@ -30,12 +30,19 @@
 
 ;; (setq doom-font (font-spec :family "Fira Code" :size 13)
 ;;       doom-variable-pitch-font (font-spec :family "Fira Code")
-;;       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+;;       doom-unicode-font (font-spec :family "Fira Code")
 ;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 13)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-      doom-unicode-font (font-spec :family "DejaVu Sans Mono")
-      doom-big-font (font-spec :family "JetBrains Mono" :size 20))
+
+(if (string= system-name "lendl-fujitsu")
+    (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
+          doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+          doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+          doom-big-font (font-spec :family "JetBrains Mono" :size 40))
+                                        ; set a smaller font all non-hidpi workstations
+  (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
+        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+        doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+        doom-big-font (font-spec :family "JetBrains Mono" :size 20)))
 
 ;; (setq doom-theme 'zaiste)
 (setq doom-theme 'doom-one)
@@ -90,12 +97,28 @@
  ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 
+;; (after! org
+;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
+;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
+;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+;;   )
+
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
 
 (after! org-ql
   (set-popup-rule!
     "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
     ))
+
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(after! tree-sitter-langs
+  (pushnew! tree-sitter-major-mode-language-alist
+            '(scss-mode . css)))
 
 (after! evil-snipe
   (setq evil-snipe-scope 'whole-visible)
@@ -117,18 +140,12 @@
         org-ellipsis " ▼"
         ))
 
-(use-package org-id
-  :after org
-  :config
+(after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
-        org-id-track-globally t))
-
-(after! org
-  ;; (async-start
+        org-id-track-globally t)
    (org-id-update-id-locations)
-   ;; 'ignore)
-   )
+  )
 
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
@@ -142,6 +159,8 @@
   (setq org-startup-indented 'indent
          org-startup-folded 'fold
          org-startup-with-inline-images t
+         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
+         org-image-actual-width (* (default-font-width) 40)
          )
 )
 (add-hook 'org-mode-hook 'org-indent-mode)
@@ -171,6 +190,7 @@
       :map org-mode-map
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+      "N" #'org-add-note
 
       :prefix ("s" . "Tree/Subtree")
       ;; :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
@@ -191,6 +211,8 @@
 
 (map! :after org-agenda
       :map org-agenda-mode-map
+      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
+      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
       :localleader
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
@@ -205,11 +227,9 @@
       :desc "Prioity tree down" "D" #'org-agenda-priority-tree-down
       )
 
-(map! ;;:after org-agenda
-      :map org-agenda-mode-map
-      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
-      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
-      )
+;; (map! ;;:after org-agenda
+;;       :map org-agenda-mode-map
+;;       )
 
 ;; (defun zyro/rifle-roam ()
 ;;   "Rifle through your ROAM directory"
@@ -238,9 +258,10 @@
           (org-ql-block '(and (todo "NEXT")
                               (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
                                        (property "assignee" "Stefan Lendl"))
+
                                   (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "C")
-                                           (ancestors (priority >= "C"))
+                                       (or (priority >= "B")
+                                           (ancestors (priority >= "B"))
                                            (deadline auto)
                                            (ancestors (deadline auto)))))
                               (not (tags "SOMEDAY"))
@@ -317,7 +338,7 @@
                          (org-super-agenda-groups stfl/priority-groups)
                          ))
                         ))
-("d" "Agenda and tasks D+"
+        ("d" "Agenda and tasks D+"
          ((agenda "Agenda"
                   ((org-agenda-use-time-grid t)
                    (org-deadline-warning-days 1)
@@ -327,8 +348,8 @@
                               (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
                                        (property "assignee" "Stefan Lendl"))
                                   (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "C")
-                                           (ancestors (priority >= "C"))
+                                       (or (priority >= "D")
+                                           (ancestors (priority >= "D"))
                                            (deadline auto)
                                            (ancestors (deadline auto)))))
                                (not (tags "SOMEDAY"))
@@ -376,7 +397,7 @@
                   ((org-agenda-span 'week)
                    (org-agenda-start-on-weekday 1)))))
         ("r" . "Weekly Review")
-        ("rc" "Close the last week and finish done tasks"
+        ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT")
                               (not (tags "SOMEDAY" "HABIT"))
 
@@ -556,32 +577,33 @@
         )
           ))
 
-(setq org-agenda-diary-file "~/.org/diary.org"
-      ;; org-agenda-dim-blocked-tasks t
-      org-agenda-dim-blocked-tasks 'invisible
-      org-agenda-use-time-grid t
-      ;; org-agenda-hide-tags-regexp "\\w+"
-      org-agenda-compact-blocks nil
-      org-agenda-block-separator ""
-      org-agenda-tags-column 0
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-unavailable-files t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-timestamp-if-done t
-      org-agenda-window-setup 'current-window
-      org-agenda-start-on-weekday nil
-      org-agenda-span 'day
-      org-agenda-start-day "-0d"
-      org-deadline-warning-days 7
-      org-agenda-show-future-repeats t
-      org-agenda-skip-deadline-prewarning-if-scheduled nil
-      org-agenda-tags-todo-honor-ignore-options 1
-      ;; org-agenda-todo-ignore-with-date nil
-      ;; org-agenda-todo-ignore-deadlines nil
-      ;; org-agenda-todo-ignore-timestamp nil
-      org-agenda-todo-list-sublevels t
-      org-agenda-include-deadlines t
-      )
+(after! org
+  (setq org-agenda-diary-file "~/.org/diary.org"
+        ;; org-agenda-dim-blocked-tasks t
+        org-agenda-dim-blocked-tasks 'invisible
+        org-agenda-use-time-grid t
+        ;; org-agenda-hide-tags-regexp "\\w+"
+        org-agenda-compact-blocks nil
+        org-agenda-block-separator ""
+        org-agenda-tags-column 0
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-unavailable-files t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-skip-timestamp-if-done t
+        org-agenda-window-setup 'current-window
+        org-agenda-start-on-weekday nil
+        org-agenda-span 'day
+        org-agenda-start-day "-0d"
+        org-deadline-warning-days 7
+        org-agenda-show-future-repeats t
+        org-agenda-skip-deadline-prewarning-if-scheduled t
+        org-agenda-tags-todo-honor-ignore-options 1
+        ;; org-agenda-todo-ignore-with-date nil
+        ;; org-agenda-todo-ignore-deadlines nil
+        ;; org-agenda-todo-ignore-timestamp nil
+        org-agenda-todo-list-sublevels t
+        org-agenda-include-deadlines t
+        ))
 
 (after! org (setq
                   org-enforce-todo-checkbox-dependencies nil
@@ -593,7 +615,7 @@
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/calendar.org"
                                      "~/.org/gtd/todo.org"
-                                     "~/.org/jira/active.org"
+                                     "~/.org/jira/"
                                      "~/.org/gtd/projects/")))
 ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
 ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
@@ -704,13 +726,13 @@ org-default-priority is treated as lower than the same set value"
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
            (file "~/.doom.d/templates/template-inbox.org"))
           ("P" "Protocol"
-           plain
-           (file "~/.org/gtd/inbox.org")
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
-           plain
-           (file "~/.org/gtd/inbox.org")
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           )
@@ -723,9 +745,10 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (after! org
-  (setq org-image-actual-width 400
-        org-archive-location "~/.org/gtd/archive/%s::datetree"
-        ))
+  (setq
+   ;; org-image-actual-width 400
+   org-archive-location "~/.org/gtd/archive/%s::datetree"
+   ))
 
 (use-package! org-habit
   :after org-agenda
@@ -740,11 +763,11 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! org-edna
   :after org
-  ;; :config (org-edna-mode)
-  :hook org-mode-hook
+  ;; :hook org-mode-hook  ;; load package after hook
+  ;; :config (org-edna-mode)  ;; enable after load
   )
 
-;; (add-hook 'org-mode-hook 'org-edna-mode)
+(add-hook! 'org-mode-hook #'org-edna-mode)
 
 (defun stfl/trigger-next-sibling-NEXT ()
   (interactive)
@@ -893,18 +916,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("@PC" . ?p)
                         ("@phone" . ?f)
                         (:endgrouptag)
-                        ;; (:startgrouptag)
-                        ;; ("Categories" . nil)
-                        ;; (:grouptags)
-                        ;; ("wohnung")
-                        ;; ("health")
-                        ;; ("bike")
-                        ;; ("friends")
-                        ;; ("emacs")
-                        ;; ("gtd")
-                        ;; ("shopping")
-                        ;; ("learning")
-                        ;; (:endgrouptag)
                         (:startgrouptag)
                         ("Process" . nil)
                         (:grouptags)
@@ -917,42 +928,60 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         (:startgrouptag)
                         ("Areas" . nil)
                         (:grouptags)
-                        ("pulswerk" . ?$)
+                        ("#work" . ?$)
                         ("#personal" . ?_)
+                        ("#emacs" . ?-)
                         )))
 
-(setq! org-roam-tag-sources '(prop last-directory)
-       org-roam-db-location "~/.emacs.d/roam.db"
-       org-roam-directory "~/.org/")
+(after! org-roam
+  (setq org-roam-tag-sources '(prop last-directory)
+        org-roam-db-location "~/.emacs.d/roam.db"
+        org-roam-directory "~/.org/")
 
-(setq! org-roam-file-exclude-regexp "*/.stversions/*")
-;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
+  (setq org-roam-file-exclude-regexp "*/.stversions/*")
+  ;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
-(setq org-roam-dailies-capture-templates
-   '(("d" "daily" plain (function org-roam-capture--get-point) ""
-      :immediate-finish t
-      :file-name "roam/journal/%<%Y-%m-%d-%a>"
-      :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
+  ;; (setq org-roam-dailies-capture-templates
+  ;;       '(("d" "daily" plain (function org-roam-capture--get-point) ""
+  ;;          :immediate-finish t
+  ;;          :file-name "roam/journal/%<%Y-%m-%d-%a>"
+  ;;          :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
 
-(setq org-roam-capture-templates
-        '(("f" "fleeting" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/fleeting/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
-           :unnarrowed t)
-          ("p" "private" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/private/${slug}"
-           :head "#+title: ${title}\n"
-           :unnarrowed t)
-          ("c" "coding" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/coding/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
-           :unnarrowed t)
-           ))
+  ;; (setq org-roam-capture-templates
+  ;;       '(("f" "fleeting" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/fleeting/${slug}"
+  ;;          :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
+  ;;          :unnarrowed t)
+  ;;         ("p" "private" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/private/${slug}"
+  ;;          :head "#+title: ${title}\n"
+  ;;          :unnarrowed t)
+  ;;         ("c" "coding" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/coding/${slug}"
+  ;;          :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
+  ;;          :unnarrowed t)
+  ;;         ))
+  )
 
 ;; (after! org-roam (org-roam-db-build-cache))
+
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 ;; (use-package! org-roam-server
 ;;   ;; :ensure t
@@ -970,34 +999,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 ;;   ;; (org-roam-server-mode)
 ;;   )
-
-(defun my/org-roam--backlinks-list-with-content (file)
-  (with-temp-buffer
-    (if-let* ((backlinks (org-roam--get-backlinks file))
-              (grouped-backlinks (--group-by (nth 0 it) backlinks)))
-        (progn
-          (insert (format "\n\n* %d Backlinks\n"
-                          (length backlinks)))
-          (dolist (group grouped-backlinks)
-            (let ((file-from (car group))
-                  (bls (cdr group)))
-              (insert (format "** [[file:%s][%s]]\n"
-                              file-from
-                              (org-roam--get-title-or-slug file-from)))
-              (dolist (backlink bls)
-                (pcase-let ((`(,file-from _ ,props) backlink))
-                  (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
-                  (insert "\n\n")))))))
-    (buffer-string)))
-
-(defun my/org-export-preprocessor (backend)
-  (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
-    (unless (string= links "")
-      (save-excursion
-        (goto-char (point-max))
-        (insert (concat "\n* Backlinks\n") links)))))
-
-(add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 
 (use-package! org-gcal
   :commands (org-gcal-sync
@@ -1130,6 +1131,105 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
   )
 
+(set-email-account! "gmail"
+  '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+    (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+    (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+    (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+    (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+    ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+    ;; (mu4e-compose-signature . "---\nStefan Lendl")
+    )
+  t)
+
+(set-email-account! "pulswerk"
+  '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+    (mu4e-drafts-folder     . "/pulswerk/Drafts")
+    (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+    (mu4e-refile-folder     . "/pulswerk/Archive")
+    (smtpmail-smtp-user     . "lendl@pulswerk.at")
+    ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+    ;; (mu4e-compose-signature . "---\nStefan Lendl")
+    )
+  t)
+
+(after! mu4e
+  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
+  (setq mu4e-context-policy 'ask-if-none
+        mu4e-compose-context-policy 'always-ask)
+
+  (setq mu4e-maildir-shortcuts
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
+
+  (setq mu4e-bookmarks
+        '(
+          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
+          (:key ?u :name "Unread messages"
+           :query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
+          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
+          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
+          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
+          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
+          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
+          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
+          ))
+  )
+
+(after! mu4e-alert
+  (setq mu4e-alert-interesting-mail-query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+
+(after! mu4e
+  (setq sendmail-program "/usr/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+
+;; (use-package! mu4e-views
+;;   :after mu4e
+;;   )
+
+(setq +org-msg-accent-color "#1a5fb4"
+      org-msg-greeting-fmt "\nHi %s,\n\n"
+      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
+
+(map! :map org-msg-edit-mode-map
+      :after org-msg
+      :n "G" #'org-msg-goto-body)
+
 (after! ediff
   (setq ediff-diff-options "--text"
         ediff-diff3-options "--text"
@@ -1145,6 +1245,33 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;;       :desc "" "TAB" #'origami-toggle-node
 ;;       ;; :desc "" "" #'org-agenda-priority-tree-down
 ;;       )
+
+(after! text-mode
+  (add-hook! 'text-mode-hook
+             ;; Apply ANSI color codes
+             (with-silent-modifications
+               (ansi-color-apply-on-region (point-min) (point-max)))))
+
+(add-transient-hook! #'org-babel-execute-src-block
+  (require 'ob-async))
+
+(defvar org-babel-auto-async-languages '()
+  "Babel languages which should be executed asyncronously by default.")
+
+(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+  "Eagarly add an :async parameter to the src information, unless it seems problematic.
+This only acts o languages in `org-babel-auto-async-languages'.
+Not added when either:
++ session is not \"none\"
++ :sync is set"
+  :around #'org-babel-get-src-block-info
+  (let ((result (funcall orig-fn light datum)))
+    (when (and (string= "none" (cdr (assoc :session (caddr result))))
+               (member (car result) org-babel-auto-async-languages)
+               (not (assoc :async (caddr result))) ; don't duplicate
+               (not (assoc :sync (caddr result))))
+      (push '(:async) (caddr result)))
+    result))
 
 (load! "org-customs.el")
 (load! "org-helpers.el")
@@ -1194,14 +1321,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
-(use-package! gitlab-ci-mode
-  :mode ".gitlab-ci.yml"
-  )
+;; (use-package! gitlab-ci-mode
+;;   :mode ".gitlab-ci.yml"
+;;   )
 
-(use-package! gitlab-ci-mode-flycheck
-  :after flycheck gitlab-ci-mode
-  :init
-  (gitlab-ci-mode-flycheck-enable))
+;; (use-package! gitlab-ci-mode-flycheck
+;;   :after flycheck gitlab-ci-mode
+;;   :init
+;;   (gitlab-ci-mode-flycheck-enable))
 
 ;; (use-package kubernetes
 ;;   :ensure t
@@ -1278,11 +1405,16 @@ ORDER BY priority, created DESC
    "P" #'org-jira-progress-issue-next
    "a" #'org-jira-assign-issue
    "r" #'org-jira-refresh-issue
-   "R" #'org-jira-refresh-issues-in-buffer
+   "b" #'org-jira-refresh-issues-in-buffer
    "u" #'org-jira-update-issue
-   "s" #'org-jira-create-subtask
-   "S" #'org-jira-get-subtask
+   "S" #'org-jira-create-subtask
+   "s" #'org-jira-get-subtasks
    "t" #'org-jira-todo-to-jira
+   (:prefix ("w" . "Worklogs")
+    "c" #'org-jira-update-worklogs-from-org-clocks
+    "u" #'org-jira-update-worklogs
+    "i" #'org-jira-update-worklogs-for-issue
+    )
    (:prefix ("c" . "Comments")
     :desc "Add Comment" "c" #'org-jira-add-comment
     :desc "Update Comment" "u" #'org-jira-update-comment
@@ -1330,9 +1462,7 @@ ORDER BY priority, created DESC
   (interactive)
   (find-file (expand-file-name "config.org" doom-private-dir)))
 
-(define-key! help-map
-  "dc"   #'stfl/goto-private-config-file
-  )
+(define-key! help-map "dc" #'stfl/goto-private-config-file)
 
 (defun nm/org-id-prompt-id ()
   "Prompt for the id during completion of id: link."

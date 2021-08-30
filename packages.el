@@ -78,6 +78,9 @@
 (package! org-analyzer) ;; needs java
 (package! org-edna)
 
+(package! websocket)
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+
 ;; (package! zp-org-agenda
 ;;   :recipe (:host github
 ;;            :repo "zaeph/.emacs.d"
@@ -87,9 +90,12 @@
 ;; (package! org-linker-edna :recipe (:host github :repo "toshism/org-linker-edna"))
 ;; (package! org-linker :recipe (:host github :repo "toshism/org-linker"))
 
-(package! gitlab-ci-mode)
-(package! gitlab-ci-mode-flycheck)
+;; (package! gitlab-ci-mode)
+;; (package! gitlab-ci-mode-flycheck)
 
+
+;; mu4e
+;; (package! mu4e-views)
 
 ;; (package! with-editor)
 
@@ -106,3 +112,6 @@
 ;; has some dependencies
 ;; https://github.com/kiwanami/emacs-edbi#installation
 (package! sql-indent)
+
+(package! tree-sitter)
+(package! tree-sitter-langs)

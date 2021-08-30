@@ -24,13 +24,13 @@
         ;; +childframe)     ; a nicer company UI (Emacs 26+ only)
         ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;; (ivy              ; a search engine for love and life
-       ;;  ;; +fuzzy
-       ;;  +icons
-       ;;  ;; +childframe
-       ;;  )
-       (vertico
-        +icons)
+       (ivy              ; a search engine for love and life
+        ;; +fuzzy
+        +icons
+        ;; +childframe
+        )
+       ;; (vertico
+       ;;  +icons)
 
        :ui
        ;; deft              ; notational velocity for Emacs
@@ -52,8 +52,9 @@
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-       ;; (ligatures         ; replace bits of code with pretty symbols
-       ;;  +extra)
+       (:cond ((version< "28" emacs-version)
+                (ligatures         ; replace bits of code with pretty symbols
+                 +extra)))
         ;; +fira)
        ;; tabs              ; an tab bar for Emacs
        (treemacs          ; a project drawer, like neotree but cooler
@@ -77,7 +78,7 @@
        ;; parinfer          ; turn lisp into python, sort of
        rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
-       ;;word-wrap         ; soft wrapping with language-aware indent
+       word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
        (dired             ; making dired pretty [functional]
@@ -120,7 +121,8 @@
        ;; +offline)        ; ...or in Dash docsets locally
        (lsp +peek)
        ;;macos             ; MacOS-specific commands
-       magit             ; a git porcelain for Emacs
+       (magit             ; a git porcelain for Emacs
+        +forge)
        ;;make              ; run make tasks from Emacs
        ;; (pass +auth)        ; password manager for nerds
        ;;pdf               ; pdf enhancements
@@ -206,7 +208,7 @@
        yaml                ; JSON, but readable
 
        :email
-       ;;(mu4e +gmail)
+       (mu4e +gmail +org)
        ;;notmuch
        ;;(wanderlust +gmail)
 

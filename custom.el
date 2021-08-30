@@ -172,7 +172,6 @@
       (priority date)
       :super-groups org-super-agenda-groups)))
  '(org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
- '(package-selected-packages '(org-roam-server))
  '(safe-local-variable-values
    '((lsp-file-watch-ignored-directories . t)
      (lsp-file-watch-threshold . t)))

@@ -723,4 +723,4 @@ as the default task."
              (not org-clock-resolving-clocks-due-to-idleness))
     (bh/clock-in-parent-task)))
 
-(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+;; (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)

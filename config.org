@@ -80,12 +80,19 @@ font string. You generally only need these two:
 #+BEGIN_SRC elisp
 ;; (setq doom-font (font-spec :family "Fira Code" :size 13)
 ;;       doom-variable-pitch-font (font-spec :family "Fira Code")
-;;       doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+;;       doom-unicode-font (font-spec :family "Fira Code")
 ;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 13)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-      doom-unicode-font (font-spec :family "DejaVu Sans Mono")
-      doom-big-font (font-spec :family "JetBrains Mono" :size 20))
+
+(if (string= system-name "lendl-fujitsu")
+    (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
+          doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+          doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+          doom-big-font (font-spec :family "JetBrains Mono" :size 40))
+                                        ; set a smaller font all non-hidpi workstations
+  (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
+        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+        doom-unicode-font (font-spec :family "DejaVu Sans Mono")
+        doom-big-font (font-spec :family "JetBrains Mono" :size 20)))
 #+END_SRC
 
 #+BEGIN_SRC elisp
@@ -155,6 +162,17 @@ font string. You generally only need these two:
  ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 #+end_src
+** Org Emphasis
+
+Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
+#+begin_src elisp
+;; (after! org
+;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
+;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
+;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+;;   )
+#+end_src
+
 ** popup rules
 :PROPERTIES:
 :ID:       1f322103-dc44-4293-b354-a8f5301b89e4
@@ -171,6 +189,19 @@ font string. You generally only need these two:
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 
+** tree-sitter
+
+#+begin_src elisp
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(after! tree-sitter-langs
+  (pushnew! tree-sitter-major-mode-language-alist
+            '(scss-mode . css)))
+#+end_src
 * Motions
 :PROPERTIES:
 :ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
@@ -232,23 +263,15 @@ First I like to add some extra fancy stuff to make orgmode more appealing when i
 always generate an id for a link
 
 #+BEGIN_SRC elisp
-(use-package org-id
-  :after org
-  :config
+(after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
-        org-id-track-globally t))
+        org-id-track-globally t)
+   (org-id-update-id-locations)
+  )
 #+END_SRC
 
 rebuild orgid file on start
-
-#+begin_src elisp
-(after! org
-  ;; (async-start
-   (org-id-update-id-locations)
-   ;; 'ignore)
-   )
-#+end_src
 
 ** Auto-saving org-mode files
 :PROPERTIES:
@@ -276,6 +299,8 @@ Automatically saving all org-buffers
   (setq org-startup-indented 'indent
          org-startup-folded 'fold
          org-startup-with-inline-images t
+         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
+         org-image-actual-width (* (default-font-width) 40)
          )
 )
 (add-hook 'org-mode-hook 'org-indent-mode)
@@ -315,6 +340,7 @@ From here we load some extra key bindings that I use often
       :map org-mode-map
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
+      "N" #'org-add-note
 
       :prefix ("s" . "Tree/Subtree")
       ;; :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
@@ -335,6 +361,8 @@ From here we load some extra key bindings that I use often
 
 (map! :after org-agenda
       :map org-agenda-mode-map
+      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
+      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
       :localleader
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
@@ -349,11 +377,9 @@ From here we load some extra key bindings that I use often
       :desc "Prioity tree down" "D" #'org-agenda-priority-tree-down
       )
 
-(map! ;;:after org-agenda
-      :map org-agenda-mode-map
-      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
-      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
-      )
+;; (map! ;;:after org-agenda
+;;       :map org-agenda-mode-map
+;;       )
 #+END_SRC
 
 Adding additional search functions
@@ -398,9 +424,10 @@ Set default Priority to C
           (org-ql-block '(and (todo "NEXT")
                               (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
                                        (property "assignee" "Stefan Lendl"))
+
                                   (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "C")
-                                           (ancestors (priority >= "C"))
+                                       (or (priority >= "B")
+                                           (ancestors (priority >= "B"))
                                            (deadline auto)
                                            (ancestors (deadline auto)))))
                               (not (tags "SOMEDAY"))
@@ -477,7 +504,7 @@ Set default Priority to C
                          (org-super-agenda-groups stfl/priority-groups)
                          ))
                         ))
-("d" "Agenda and tasks D+"
+        ("d" "Agenda and tasks D+"
          ((agenda "Agenda"
                   ((org-agenda-use-time-grid t)
                    (org-deadline-warning-days 1)
@@ -487,8 +514,8 @@ Set default Priority to C
                               (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
                                        (property "assignee" "Stefan Lendl"))
                                   (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "C")
-                                           (ancestors (priority >= "C"))
+                                       (or (priority >= "D")
+                                           (ancestors (priority >= "D"))
                                            (deadline auto)
                                            (ancestors (deadline auto)))))
                                (not (tags "SOMEDAY"))
@@ -536,7 +563,7 @@ Set default Priority to C
                   ((org-agenda-span 'week)
                    (org-agenda-start-on-weekday 1)))))
         ("r" . "Weekly Review")
-        ("rc" "Close the last week and finish done tasks"
+        ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT")
                               (not (tags "SOMEDAY" "HABIT"))
 
@@ -689,9 +716,6 @@ Set default Priority to C
         ))
 #+end_src
 
-#+RESULTS:
-: ((b Agenda and tasks B+ ((agenda Agenda ((org-agenda-use-time-grid t) (org-deadline-warning-days 1) (org-agenda-span '1) (org-agenda-start-day (org-today)))) (org-ql-block '(and (todo NEXT) (or (and (tags org_jira) (property assignee Stefan Lendl)) (and (not (tags org_jira)) (or (priority >= C) (ancestors (priority >= C)) (deadline auto) (ancestors (deadline auto))))) (not (tags SOMEDAY)) (not (scheduled)) (not (habit))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 7) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo PROJ) (priority >= B) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (not (tags SOMEDAY)))))) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo WAIT) (or (priority >= B) (ancestors (priority >= B)) (deadline auto) (ancestors (deadline auto))) (not (tags SOMEDAY)) (not (scheduled))) ((org-ql-block-header Waiting) (org-super-agenda-header-separator ) (org-deadline-warning-days 7) (org-super-agenda-groups stfl/priority-groups))))) (c Agenda and tasks C+ ((agenda Agenda ((org-agenda-use-time-grid t) (org-deadline-warning-days 1) (org-agenda-span '1) (org-agenda-start-day (org-today)))) (org-ql-block '(and (todo NEXT) (or (and (tags org_jira) (property assignee Stefan Lendl)) (and (not (tags org_jira)) (or (priority >= C) (ancestors (priority >= C)) (deadline auto) (ancestors (deadline auto))))) (not (tags SOMEDAY)) (not (scheduled)) (not (habit))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo PROJ) (priority >= C) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (not (tags SOMEDAY)))))) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo WAIT) (or (priority >= C) (ancestors (priority >= C)) (deadline auto) (ancestors (deadline auto))) (not (tags SOMEDAY)) (not (scheduled))) ((org-ql-block-header Waiting) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))))) (d Agenda and tasks D+ ((agenda Agenda ((org-agenda-use-time-grid t) (org-deadline-warning-days 1) (org-agenda-span '1) (org-agenda-start-day (org-today)))) (org-ql-block '(and (todo NEXT) (or (and (tags org_jira) (property assignee Stefan Lendl)) (and (not (tags org_jira)) (or (priority >= C) (ancestors (priority >= C)) (deadline auto) (ancestors (deadline auto))))) (not (tags SOMEDAY)) (not (scheduled)) (not (habit))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo PROJ) (priority >= D) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (not (tags SOMEDAY)))))) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo WAIT) (or (priority >= D) (ancestors (priority >= D)) (deadline auto) (ancestors (deadline auto))) (not (tags SOMEDAY)) (not (scheduled))) ((org-ql-block-header Waiting) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))))) (a Agenda Weekly ((agenda  ((org-agenda-span 'week) (org-agenda-start-on-weekday 1))))) (r . Weekly Review) (rc Close the last week and finish done tasks ((org-ql-block '(and (todo NEXT) (not (tags SOMEDAY HABIT)) (not (scheduled)) (not (habit)) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 30) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo WAIT) (not (tags SOMEDAY)) (not (scheduled)) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Waiting) (org-super-agenda-header-separator ) (org-deadline-warning-days 30) (org-super-agenda-groups stfl/priority-groups))) (org-ql-block '(and (todo PROJ) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (not (tags SOMEDAY)))))) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-deadline-warning-days 30) (org-super-agenda-groups stfl/priority-groups))))) (rl Agenda Weekly with Log ((agenda  ((org-agenda-span 'week) (org-agenda-start-on-weekday 1) (org-agenda-archives-mode t) (org-agenda-start-with-log-mode '(closed)) (org-agenda-show-log t) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp ^.*DONE )))))) (rp Plan Projects ((org-ql-block '(and (todo PROJ) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (tags SOMEDAY)))) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Projects) (org-super-agenda-header-separator ) (org-deadline-warning-days 45) (org-super-agenda-groups stfl/priority-groups))))) (rn Plan Next Actions ((org-ql-block '(and (todo NEXT) (not (tags SOMEDAY)) (not (scheduled)) (not (habit)) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))))) (rs Stuck Projects ((org-ql-block '(and (todo PROJ) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (not (tags SOMEDAY)))))) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))))) (rS SOMEDAY ((org-ql-block '(and (todo PROJ) (or (and (priority <= D) (not (ancestors (priority > D))) (not (children (priority > D)))) (tags SOMEDAY) (children (and (todo NEXT WAIT) (tags SOMEDAY)))) (not (scheduled)) (not (habit)) (not (deadline))) ((org-ql-block-header Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups '((:tag SOMEDAY :order 10) (:auto-priority))))) (org-ql-block '(and (todo NEXT) (or (and (priority <= D) (not (ancestors (priority > D)))) (tags SOMEDAY)) (not (scheduled)) (not (habit)) (not (deadline))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-super-agenda-groups '((:tag SOMEDAY :order 10) (:auto-priority))))))) (ro Old Agenda and tasks ((agenda Agenda ((org-agenda-use-time-grid t) (org-deadline-warning-days 3) (org-agenda-span '1) (org-agenda-start-day (org-today)))) (org-ql-block '(and (todo) (not (tags SOMEDAY)) (not (and (todo TODO) (ancestors (todo PROJ)))) (not (scheduled)) (not (deadline))) ((org-super-agenda-groups stfl/org-super-agenda-groups) (org-ql-block-header Tasks))))))
-
 #+begin_src elisp
 (setq stfl/priority-groups
      '((:tag "SOMEDAY" :order 90)
@@ -723,32 +747,33 @@ Set default Priority to C
 #+end_src
 
 #+begin_src elisp
-(setq org-agenda-diary-file "~/.org/diary.org"
-      ;; org-agenda-dim-blocked-tasks t
-      org-agenda-dim-blocked-tasks 'invisible
-      org-agenda-use-time-grid t
-      ;; org-agenda-hide-tags-regexp "\\w+"
-      org-agenda-compact-blocks nil
-      org-agenda-block-separator ""
-      org-agenda-tags-column 0
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-unavailable-files t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-timestamp-if-done t
-      org-agenda-window-setup 'current-window
-      org-agenda-start-on-weekday nil
-      org-agenda-span 'day
-      org-agenda-start-day "-0d"
-      org-deadline-warning-days 7
-      org-agenda-show-future-repeats t
-      org-agenda-skip-deadline-prewarning-if-scheduled nil
-      org-agenda-tags-todo-honor-ignore-options 1
-      ;; org-agenda-todo-ignore-with-date nil
-      ;; org-agenda-todo-ignore-deadlines nil
-      ;; org-agenda-todo-ignore-timestamp nil
-      org-agenda-todo-list-sublevels t
-      org-agenda-include-deadlines t
-      )
+(after! org
+  (setq org-agenda-diary-file "~/.org/diary.org"
+        ;; org-agenda-dim-blocked-tasks t
+        org-agenda-dim-blocked-tasks 'invisible
+        org-agenda-use-time-grid t
+        ;; org-agenda-hide-tags-regexp "\\w+"
+        org-agenda-compact-blocks nil
+        org-agenda-block-separator ""
+        org-agenda-tags-column 0
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-unavailable-files t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-skip-timestamp-if-done t
+        org-agenda-window-setup 'current-window
+        org-agenda-start-on-weekday nil
+        org-agenda-span 'day
+        org-agenda-start-day "-0d"
+        org-deadline-warning-days 7
+        org-agenda-show-future-repeats t
+        org-agenda-skip-deadline-prewarning-if-scheduled t
+        org-agenda-tags-todo-honor-ignore-options 1
+        ;; org-agenda-todo-ignore-with-date nil
+        ;; org-agenda-todo-ignore-deadlines nil
+        ;; org-agenda-todo-ignore-timestamp nil
+        org-agenda-todo-list-sublevels t
+        org-agenda-include-deadlines t
+        ))
 #+end_src
 
 Setting up my initial agenda settings
@@ -763,7 +788,7 @@ Setting up my initial agenda settings
                                      "~/.org/gtd/tickler.org"
                                      "~/.org/calendar.org"
                                      "~/.org/gtd/todo.org"
-                                     "~/.org/jira/active.org"
+                                     "~/.org/jira/"
                                      "~/.org/gtd/projects/")))
 ;; (append (file-expand-wildcards "~/.org/gtd/*.org")
 ;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
@@ -901,13 +926,13 @@ Here we setup the capture templates we want for ~org-capture~. I use a file temp
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
            (file "~/.doom.d/templates/template-inbox.org"))
           ("P" "Protocol"
-           plain
-           (file "~/.org/gtd/inbox.org")
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
-           plain
-           (file "~/.org/gtd/inbox.org")
+           entry
+           (file+headline "~/.org/gtd/inbox.org" "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           )
@@ -929,9 +954,10 @@ update brackets when copying a link from org-protocol
 :END:
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-image-actual-width 400
-        org-archive-location "~/.org/gtd/archive/%s::datetree"
-        ))
+  (setq
+   ;; org-image-actual-width 400
+   org-archive-location "~/.org/gtd/archive/%s::datetree"
+   ))
 #+END_SRC
 
 ** org-habit
@@ -961,11 +987,11 @@ Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 #+BEGIN_SRC elisp
 (use-package! org-edna
   :after org
-  ;; :config (org-edna-mode)
-  :hook org-mode-hook
+  ;; :hook org-mode-hook  ;; load package after hook
+  ;; :config (org-edna-mode)  ;; enable after load
   )
 
-;; (add-hook 'org-mode-hook 'org-edna-mode)
+(add-hook! 'org-mode-hook #'org-edna-mode)
 #+END_SRC
 
 Some functions to quickly add TRIGGER and BLOCKER properties
@@ -1189,18 +1215,6 @@ REVIEW should we define any additional tags?
                         ("@PC" . ?p)
                         ("@phone" . ?f)
                         (:endgrouptag)
-                        ;; (:startgrouptag)
-                        ;; ("Categories" . nil)
-                        ;; (:grouptags)
-                        ;; ("wohnung")
-                        ;; ("health")
-                        ;; ("bike")
-                        ;; ("friends")
-                        ;; ("emacs")
-                        ;; ("gtd")
-                        ;; ("shopping")
-                        ;; ("learning")
-                        ;; (:endgrouptag)
                         (:startgrouptag)
                         ("Process" . nil)
                         (:grouptags)
@@ -1213,8 +1227,9 @@ REVIEW should we define any additional tags?
                         (:startgrouptag)
                         ("Areas" . nil)
                         (:grouptags)
-                        ("pulswerk" . ?$)
+                        ("#work" . ?$)
                         ("#personal" . ?_)
+                        ("#emacs" . ?-)
                         )))
 #+END_SRC
 
@@ -1239,48 +1254,68 @@ REVIEW should we define any additional tags?
   (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
 #+END_SRC
 
-** Org-Roam
+** org-roam
 :PROPERTIES:
 :ID:       812f2cef-61c0-4299-907d-a601e577f59d
 :END:
-These are my default ROAM settings
+
 #+BEGIN_SRC elisp
-(setq! org-roam-tag-sources '(prop last-directory)
-       org-roam-db-location "~/.emacs.d/roam.db"
-       org-roam-directory "~/.org/")
+(after! org-roam
+  (setq org-roam-tag-sources '(prop last-directory)
+        org-roam-db-location "~/.emacs.d/roam.db"
+        org-roam-directory "~/.org/")
 
-(setq! org-roam-file-exclude-regexp "*/.stversions/*")
-;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
+  (setq org-roam-file-exclude-regexp "*/.stversions/*")
+  ;; (add-to-list 'safe-local-variable-values '(org-roam-directory . "."))
 
-(setq org-roam-dailies-capture-templates
-   '(("d" "daily" plain (function org-roam-capture--get-point) ""
-      :immediate-finish t
-      :file-name "roam/journal/%<%Y-%m-%d-%a>"
-      :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
+  ;; (setq org-roam-dailies-capture-templates
+  ;;       '(("d" "daily" plain (function org-roam-capture--get-point) ""
+  ;;          :immediate-finish t
+  ;;          :file-name "roam/journal/%<%Y-%m-%d-%a>"
+  ;;          :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
 
-(setq org-roam-capture-templates
-        '(("f" "fleeting" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/fleeting/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
-           :unnarrowed t)
-          ("p" "private" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/private/${slug}"
-           :head "#+title: ${title}\n"
-           :unnarrowed t)
-          ("c" "coding" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "roam/coding/${slug}"
-           :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
-           :unnarrowed t)
-           ))
+  ;; (setq org-roam-capture-templates
+  ;;       '(("f" "fleeting" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/fleeting/${slug}"
+  ;;          :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
+  ;;          :unnarrowed t)
+  ;;         ("p" "private" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/private/${slug}"
+  ;;          :head "#+title: ${title}\n"
+  ;;          :unnarrowed t)
+  ;;         ("c" "coding" plain (function org-roam-capture--get-point)
+  ;;          "%?"
+  ;;          :file-name "roam/coding/${slug}"
+  ;;          :head "#+title: ${title}\n#+roam_tags: %^{tags}\n\n"
+  ;;          :unnarrowed t)
+  ;;         ))
+  )
 #+END_SRC
 
 rebuild org-roam cache at start
 
 #+begin_src elisp
 ;; (after! org-roam (org-roam-db-build-cache))
+#+end_src
+
+** org-roam-ui
+#+begin_src elisp
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 #+end_src
 
 ** Roam Server
@@ -1307,38 +1342,38 @@ rebuild org-roam cache at start
 #+END_SRC
 
 ** Roam Export Backlinks + Content
-:PROPERTIES:
-:ID:       e29a30f2-f6ae-43f3-a39d-26caa15dec61
-:END:
-#+BEGIN_SRC elisp
-(defun my/org-roam--backlinks-list-with-content (file)
-  (with-temp-buffer
-    (if-let* ((backlinks (org-roam--get-backlinks file))
-              (grouped-backlinks (--group-by (nth 0 it) backlinks)))
-        (progn
-          (insert (format "\n\n* %d Backlinks\n"
-                          (length backlinks)))
-          (dolist (group grouped-backlinks)
-            (let ((file-from (car group))
-                  (bls (cdr group)))
-              (insert (format "** [[file:%s][%s]]\n"
-                              file-from
-                              (org-roam--get-title-or-slug file-from)))
-              (dolist (backlink bls)
-                (pcase-let ((`(,file-from _ ,props) backlink))
-                  (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
-                  (insert "\n\n")))))))
-    (buffer-string)))
+# :PROPERTIES:
+# :ID:       e29a30f2-f6ae-43f3-a39d-26caa15dec61
+# :END:
+# #+BEGIN_SRC elisp
+# (defun my/org-roam--backlinks-list-with-content (file)
+#   (with-temp-buffer
+#     (if-let* ((backlinks (org-roam--get-backlinks file))
+#               (grouped-backlinks (--group-by (nth 0 it) backlinks)))
+#         (progn
+#           (insert (format "\n\n* %d Backlinks\n"
+#                           (length backlinks)))
+#           (dolist (group grouped-backlinks)
+#             (let ((file-from (car group))
+#                   (bls (cdr group)))
+#               (insert (format "** [[file:%s][%s]]\n"
+#                               file-from
+#                               (org-roam--get-title-or-slug file-from)))
+#               (dolist (backlink bls)
+#                 (pcase-let ((`(,file-from _ ,props) backlink))
+#                   (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
+#                   (insert "\n\n")))))))
+#     (buffer-string)))
 
-(defun my/org-export-preprocessor (backend)
-  (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
-    (unless (string= links "")
-      (save-excursion
-        (goto-char (point-max))
-        (insert (concat "\n* Backlinks\n") links)))))
+# (defun my/org-export-preprocessor (backend)
+#   (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
+#     (unless (string= links "")
+#       (save-excursion
+#         (goto-char (point-max))
+#         (insert (concat "\n* Backlinks\n") links)))))
 
-(add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
-#+END_SRC
+# (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
+# #+END_SRC
 
 ** org-gcal
 :PROPERTIES:
@@ -1389,6 +1424,9 @@ Org babel to generate mermaid diagrams from org src blocks
 #+end_src
 
 ** Resolve syncthing conflicts
+:PROPERTIES:
+:ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
+:END:
 
 From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/ In termux, you also need to pkg install diffutils.
 
@@ -1486,7 +1524,6 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 ;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
 ;;   (setq company-idle-delay 0.25))
 #+END_SRC
-
 ** Define Word
 :PROPERTIES:
 :ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
@@ -1521,6 +1558,139 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
   )
 #+END_SRC
 
+** E-Mail
+:PROPERTIES:
+:ID:       8e96aa1e-257e-4826-a0bb-6c3be8537fe9
+:END:
+
+*** mu4e
+
+#+begin_src elisp
+(set-email-account! "gmail"
+  '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+    (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+    (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+    (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+    (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+    ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+    ;; (mu4e-compose-signature . "---\nStefan Lendl")
+    )
+  t)
+#+end_src
+
+#+begin_src elisp
+(set-email-account! "pulswerk"
+  '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+    (mu4e-drafts-folder     . "/pulswerk/Drafts")
+    (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+    (mu4e-refile-folder     . "/pulswerk/Archive")
+    (smtpmail-smtp-user     . "lendl@pulswerk.at")
+    ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+    ;; (mu4e-compose-signature . "---\nStefan Lendl")
+    )
+  t)
+#+end_src
+
+#+begin_src elisp
+(after! mu4e
+  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
+  (setq mu4e-context-policy 'ask-if-none
+        mu4e-compose-context-policy 'always-ask)
+
+  (setq mu4e-maildir-shortcuts
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
+
+  (setq mu4e-bookmarks
+        '(
+          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
+          (:key ?u :name "Unread messages"
+           :query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
+          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
+          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
+          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
+          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
+          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
+          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
+          ))
+  )
+#+end_src
+
+set up the query for mu4e-alert to also limit the search range
+#+begin_src elisp
+(after! mu4e-alert
+  (setq mu4e-alert-interesting-mail-query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+#+end_src
+
+#+begin_src elisp
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+#+end_src
+
+*** Sending Mail
+
+#+begin_src elisp
+(after! mu4e
+  (setq sendmail-program "/usr/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+#+end_src
+
+*** TODO mu4e-views
+requies emacs compiled with ~xwidgets~
+
+it can still use the browser view.
+select via ~mu4e-views-mu4e-select-view-msg-method~
+
+#+begin_src elisp
+;; (use-package! mu4e-views
+;;   :after mu4e
+;;   )
+#+end_src
+
+*** org-msg
+
+#+begin_src elisp
+(setq +org-msg-accent-color "#1a5fb4"
+      org-msg-greeting-fmt "\nHi %s,\n\n"
+      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
+
+(map! :map org-msg-edit-mode-map
+      :after org-msg
+      :n "G" #'org-msg-goto-body)
+#+end_src
+
 ** ediff
 :PROPERTIES:
 :ID:       c186f137-d99f-45ab-930b-297091895183
@@ -1551,6 +1721,44 @@ forcing text comparison even if diff thinks files are binary
 ;;       )
 #+end_src
 
+** ansi colors in plaintext files
+
+https://tecosaur.github.io/emacs-config/config.html#plaintext
+
+#+begin_src elisp
+(after! text-mode
+  (add-hook! 'text-mode-hook
+             ;; Apply ANSI color codes
+             (with-silent-modifications
+               (ansi-color-apply-on-region (point-min) (point-max)))))
+#+end_src
+** org-babel
+
+*** Auto :async if possible
+https://tecosaur.github.io/emacs-config/config.html#babel
+
+#+begin_src elisp
+(add-transient-hook! #'org-babel-execute-src-block
+  (require 'ob-async))
+
+(defvar org-babel-auto-async-languages '()
+  "Babel languages which should be executed asyncronously by default.")
+
+(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+  "Eagarly add an :async parameter to the src information, unless it seems problematic.
+This only acts o languages in `org-babel-auto-async-languages'.
+Not added when either:
++ session is not \"none\"
++ :sync is set"
+  :around #'org-babel-get-src-block-info
+  (let ((result (funcall orig-fn light datum)))
+    (when (and (string= "none" (cdr (assoc :session (caddr result))))
+               (member (car result) org-babel-auto-async-languages)
+               (not (assoc :async (caddr result))) ; don't duplicate
+               (not (assoc :sync (caddr result))))
+      (push '(:async) (caddr result)))
+    result))
+#+end_src
 * Custom Functions
 :PROPERTIES:
 :ID:       c2e19f11-90cd-4bc9-ad99-36a5a680c084
@@ -1635,14 +1843,14 @@ set todo value to *PROJ* for all TODOs with sub-todos
 :END:
 
 #+BEGIN_SRC elisp
-(use-package! gitlab-ci-mode
-  :mode ".gitlab-ci.yml"
-  )
+;; (use-package! gitlab-ci-mode
+;;   :mode ".gitlab-ci.yml"
+;;   )
 
-(use-package! gitlab-ci-mode-flycheck
-  :after flycheck gitlab-ci-mode
-  :init
-  (gitlab-ci-mode-flycheck-enable))
+;; (use-package! gitlab-ci-mode-flycheck
+;;   :after flycheck gitlab-ci-mode
+;;   :init
+;;   (gitlab-ci-mode-flycheck-enable))
 #+END_SRC
 ** Kubernetes
 :PROPERTIES:
@@ -1795,11 +2003,16 @@ ORDER BY priority, created DESC
    "P" #'org-jira-progress-issue-next
    "a" #'org-jira-assign-issue
    "r" #'org-jira-refresh-issue
-   "R" #'org-jira-refresh-issues-in-buffer
+   "b" #'org-jira-refresh-issues-in-buffer
    "u" #'org-jira-update-issue
-   "s" #'org-jira-create-subtask
-   "S" #'org-jira-get-subtask
+   "S" #'org-jira-create-subtask
+   "s" #'org-jira-get-subtasks
    "t" #'org-jira-todo-to-jira
+   (:prefix ("w" . "Worklogs")
+    "c" #'org-jira-update-worklogs-from-org-clocks
+    "u" #'org-jira-update-worklogs
+    "i" #'org-jira-update-worklogs-for-issue
+    )
    (:prefix ("c" . "Comments")
     :desc "Add Comment" "c" #'org-jira-add-comment
     :desc "Update Comment" "u" #'org-jira-update-comment
@@ -1850,6 +2063,9 @@ ORDER BY priority, created DESC
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 #+END_SRC
 ** private config is config.org
+:PROPERTIES:
+:ID:       b1cd6206-b586-45d7-8b1f-e03823bde124
+:END:
 
 ~doom/goto-private-config-file~ goes to ~config.el~ which I will never edit by hand.
 Opening ~config.org~ makes much more sense.
@@ -1864,7 +2080,5 @@ Opening ~config.org~ makes much more sense.
 bind it to ~SPC h d c~
 
 #+begin_src elisp
-(define-key! help-map
-  "dc"   #'stfl/goto-private-config-file
-  )
+(define-key! help-map "dc" #'stfl/goto-private-config-file)
 #+end_src
