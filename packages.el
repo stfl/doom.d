@@ -72,7 +72,7 @@
 (package! org-web-tools)
 (package! ob-mermaid)
 
-(package! org-gcal)
+;; (package! org-gcal)
 
 ;; Orgmode Packages
 (package! org-analyzer) ;; needs java
@@ -103,9 +103,10 @@
 ;; (package! origami)
 
 ;; kubernetes
-;; (package! kubernetes)
-;; (package! kubernetes-evil)
-;; (package! k8s-mode)
+(package! kubernetes)
+(package! kubernetes-evil)
+(package! kubernetes-helm)
+(package! k8s-mode)
 
 (package! edbi)
 (package! edbi-minor-mode)
@@ -113,5 +114,5 @@
 ;; https://github.com/kiwanami/emacs-edbi#installation
 (package! sql-indent)
 
-(package! tree-sitter)
-(package! tree-sitter-langs)
+;; (package! tree-sitter)
+;; (package! tree-sitter-langs)

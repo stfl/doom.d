@@ -7,7 +7,6 @@ Goal: %^{Goal}
 
 ** NEXT %^{Next Action}
 :PROPERTIES:
-:ID:     %(org-id-new)
 :CREATED: %U
 :END:
 

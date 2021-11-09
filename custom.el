@@ -5,10 +5,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auth-source-gpg-encrypt-to nil)
- '(auth-sources '("~/.config/authinfo/authinfo.gpg"))
  '(haskell-interactive-popup-errors nil)
- '(org-level-color-stars-only nil)
  '(org-ql-views
    '(("All current TODO" :title "All not scheduled TODOs" :buffers-files org-agenda-files :query
       (and
@@ -171,8 +168,22 @@
       :title "Review: Stuck projects" :sort
       (priority date)
       :super-groups org-super-agenda-groups)))
- '(org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
  '(safe-local-variable-values
-   '((lsp-file-watch-ignored-directories . t)
-     (lsp-file-watch-threshold . t)))
- '(warning-suppress-types '(((org-roam)) ((org-roam)))))
+   '((org-use-tag-inheritance)
+     (lsp-file-watch-ignored-directories . t)
+     (lsp-file-watch-threshold . t))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
+ '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
+ '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
+ '(org-property-value ((t (:height 0.85))) t)
+ '(org-ql-view-due-date ((t (:foreground "dark goldenrod"))))
+ '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
+ '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
+ '(outline-1 ((t (:height 1.5))))
+ '(outline-2 ((t (:height 1.25))))
+ '(outline-3 ((t (:height 1.15)))))
