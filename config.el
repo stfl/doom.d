@@ -153,7 +153,7 @@
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
   ;; (add-hook 'auto-save-hook 'org-id-update-id-locations 20)
-  ;; )
+  )
 
 ;; (after! org-roam
 ;;   (add-hook 'auto-save-hook 'org-roam-build-cache 40))
