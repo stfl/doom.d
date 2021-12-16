@@ -1,0 +1,14 @@
+* PROJ [#I] Wäsche waschen
+** NEXT Waschmaschine einschalten
+SCHEDULED: %^t
+:PROPERTIES:
+:TRIGGER:  next-sibling todo!(NEXT) scheduled!("++3h")
+:END:
+** DONE Wäsche aufhängen
+:PROPERTIES:
+:TRIGGER:  next-sibling todo!(NEXT) scheduled!("++2d")
+:END:
+** DONE Wäsche abnehmen
+:PROPERTIES:
+:TRIGGER:  parent todo!(DONE) archive!
+:END:

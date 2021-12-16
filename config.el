@@ -48,8 +48,8 @@
 ;;       doom-unicode-font (font-spec :family "Fira Code")
 ;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
 
-(if (string= system-name "lendl-fujitsu")
-    (setq doom-font (font-spec :family "JetBrainsMono" :size 27 :weight 'light)
+(if (string= (system-name) "lendl-fujitsu")
+    (setq doom-font (font-spec :family "JetBrainsMono" :size 13 :weight 'light)
           doom-big-font (font-spec :family "JetBrainsMono" :size 36))
       ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
       ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
@@ -147,16 +147,10 @@
   (setq org-id-link-to-org-use-id t
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
         org-id-track-globally t)
-   (org-id-update-id-locations)
   )
 
 (after! org
-  (add-hook 'auto-save-hook 'org-save-all-org-buffers 10)
-  ;; (add-hook 'auto-save-hook 'org-id-update-id-locations 20)
-  )
-
-;; (after! org-roam
-;;   (add-hook 'auto-save-hook 'org-roam-build-cache 40))
+  (run-with-idle-timer 30 t #'org-save-all-org-buffers))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -196,11 +190,6 @@
       "N" #'org-add-note
 
       :prefix ("s" . "Tree/Subtree")
-      ;; :desc "Rifle Org Directory" "/" #'helm-org-rifle-org-directory
-      ;; :desc "Rifle Buffer" "B" #'helm-org-rifle-current-buffer
-      ;; :desc "Rifle Agenda Files" "A" #'helm-org-rifle-agenda-files
-      ;; :desc "Rifle Project Files" "#" #'helm-org-rifle-project-files
-      ;; :desc "Rifle Other Project(s)" "$" #'helm-org-rifle-other-files
       :desc "Match sparse tree" "M" #'org-match-sparse-tree
 
       :prefix ("l" . "links")
@@ -220,35 +209,153 @@
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
-      ;; :desc "Priority" "p" #'org-agenda-priority
-      ;; :prefix ("s" . "search and set")
       :prefix ("p" . "priorities")
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
       :desc "Prioity down" "d" #'org-agenda-priority-down
-      :desc "Prioity tree" "P" #'org-agenda-priority-tree
-      :desc "Prioity tree up" "U" #'org-agenda-priority-tree-up
-      :desc "Prioity tree down" "D" #'org-agenda-priority-tree-down
+      :desc "Someday/Maybe toggle" "s" #'stfl/org-agenda-toggle-someday
+      :desc "Add to Someday/Maybe" "S" #'stfl/org-agenda-set-someday
+      :desc "Tickler toggle" "t" #'stfl/org-agenda-toggle-tickler
+      :desc "Add to Tickler" "T" #'stfl/org-agenda-set-tickler
+      :desc "Remove Someday/Maybe" "r" #'stfl/org-agenda-remove-someday
       )
 
 ;; (map! ;;:after org-agenda
 ;;       :map org-agenda-mode-map
 ;;       )
 
-;; (defun zyro/rifle-roam ()
-;;   "Rifle through your ROAM directory"
-;;   (interactive)
-;;   (helm-org-rifle-directories org-roam-directory))
+(defun stfl/org-agenda-set-someday (&optional do-schedule)
+  "Marks the current agenda entry as SOMEDAY
 
-;; (map! :after org
-;;       :map org-mode-map
-;;       :leader
-;;       :prefix ("n" . "notes")
-;;       :desc "Rifle ROAM Notes" "!" #'zyro/rifle-roam)
+When called with the universial prefix `C-u` asks for a date on which it will be
+relevant again"
+  (interactive "P")
+  (org-agenda-set-tags "SOMEDAY" 'on)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule (unless do-schedule '(4))))
+
+(defun stfl/org-agenda-set-tickler ()
+  "Marks the current agenda entry as SOMEDAY and assign a scheduled date"
+  (interactive)
+  (stfl/org-agenda-set-someday '(4)))
+
+(defun stfl/org-agenda-remove-someday ()
+  "Remove SOMEDAY tag and scheduling from the current element and reintegrate into the Agenda"
+  (interactive)
+  (unless (stfl/org-agenda-someday?)
+    (error "Element has no SOMEDAY tag"))
+  (org-agenda-set-tags "SOMEDAY" 'off)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule '(4)))
+
+(defun stfl/org-agenda-someday? ()
+  (-find (-partial 'string= "SOMEDAY") (org-get-at-bol 'tags)))
+
+(defun stfl/org-agenda-toggle-someday (&optional do-schedule)
+  "Toggle the SOMEDAY status
+
+When called with the universial prefix `C-u` asks for a date on which it will be
+relevant again (Tickler)"
+  (interactive "P")
+  (if (stfl/org-agenda-someday?)
+      (stfl/org-agenda-remove-someday)
+    (stfl/org-agenda-set-someday (when do-schedule '(4)))))
+
+(defun stfl/org-agenda-toggle-tickler ()
+  "Toggle SOMEDAY status and ask for a date when to put on the tickler"
+  (interactive)
+  (stfl/org-agenda-toggle-someday '(4)))
 
 (after! org
   (setq org-priority-default ?E)
   (setq org-priority-lowest ?I))
+
+(after! org-fancy-priorities
+  (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
+
+(after! org
+  (custom-declare-face '+org-priority-a  '((t)) "")
+  (custom-declare-face '+org-priority-b  '((t)) "")
+  (custom-declare-face '+org-priority-c  '((t)) "")
+  (custom-declare-face '+org-priority-d  '((t)) "")
+  (custom-declare-face '+org-priority-e  '((t)) "")
+  (custom-declare-face '+org-priority-f  '((t)) "")
+  (custom-declare-face '+org-priority-g  '((t)) "")
+  (custom-declare-face '+org-priority-h  '((t)) "")
+  (custom-declare-face '+org-priority-i  '((t)) "")
+
+  (custom-set-faces!
+    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+    '(+org-priority-d  :foreground "gold3" :weight bold)
+    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+    '(+org-priority-g  :foreground "cyan4" :weight bold)
+    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
+
+;; (after! org
+(setq!
+       ;; org-agenda-dim-blocked-tasks t
+       org-agenda-dim-blocked-tasks 'invisible
+       org-agenda-use-time-grid t
+       ;; org-agenda-hide-tags-regexp "\\w+"
+       org-agenda-compact-blocks t
+       org-agenda-block-separator ""
+       org-agenda-tags-column 0
+       org-agenda-skip-scheduled-if-done t
+       org-agenda-skip-unavailable-files t
+       org-agenda-skip-deadline-if-done t
+       org-agenda-skip-timestamp-if-done t
+       org-agenda-window-setup 'current-window
+       org-agenda-start-on-weekday nil
+       org-agenda-span 'day
+       org-agenda-start-day "-0d"
+       org-deadline-warning-days 7
+       org-agenda-show-future-repeats t
+       org-agenda-skip-deadline-prewarning-if-scheduled t
+       org-agenda-tags-todo-honor-ignore-options 1
+       ;; org-agenda-todo-ignore-with-date nil
+       ;; org-agenda-todo-ignore-deadlines nil
+       ;; org-agenda-todo-ignore-timestamp nil
+       org-agenda-todo-list-sublevels t
+       org-agenda-include-deadlines t
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+
+(after! org
+  (setq org-enforce-todo-checkbox-dependencies nil
+        org-enforce-todo-dependencies nil))
+
+(after! org
+  (setq! org-clock-continuously t))
+
+(after! org
+  (setq org-agenda-diary-file "~/.org/diary.org"
+        org-agenda-files '("~/.org/gtd/inbox.org"
+                           ;; "~/.org/gtd/someday.org"
+                           "~/.org/gtd/tickler.org"
+                           "~/.org/gtd/todo.org"
+                           "~/.org/gtd/projects/"
+                           "~/.org/jira/"
+                           "~/.org/gcal/")))
+
+(after! org
 
 (defun stfl/agenda-query-stuck-projects()
   '(and (todo "PROJ")
@@ -257,61 +364,52 @@
         (not (children (and (todo "NEXT" "WAIT")
                             (not (tags "SOMEDAY")))))))
 
-(defvar stfl/agenda-backlog-prio-threshold ?F)
+(setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
+(setq stfl/agenda-max-prio-group ?D)
+(setq stfl/agenda-deadline-fib-offset 2)
 
-(defun stfl/agenda-ts-now-day+ (adjust-days)
-  (ts-format "%Y-%m-%d" (ts-adjust 'day adjust-days (ts-now))))
+(defun stfl/agenda-day ()
+  '(agenda "Agenda"
+           ((org-agenda-use-time-grid t)
+            (org-deadline-warning-days 0)
+            (org-agenda-span '1)
+            (org-agenda-start-day (org-today)))))
 
-(defun scheduled-to(days)
-  `(or (not (scheduled))
-       (scheduled :to ,+days)))
+(defun stfl/agenda-query-prio-higher (prio)
+  `(or (priority >= (char-to-string ,prio))
+       (ancestors (priority >= (char-to-string ,prio)))
+       (deadline
+        :from +1
+        :to
+        ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
+          (fib        ;; increase the date range of interest with a fibonacci sequance
+           (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
+              (- prio 64)))) ;; use the priority value
+        (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
+                                              (- prio 64)))))))))
 
-(defun deadline-to(days)
-  `(or (not (deadline))
-       (deadline :to ,days)
-       (ancestors (deadline :to ,days))))
+(defun stfl/agenda-query-actions-prio-higher (prio)
+  `(and (todo "NEXT" "WAIT")
+        ,(stfl/agenda-query-prio-higher prio)
+        (not (tags "SOMEDAY"))
+        (not (scheduled))
+        (not (ts-active :on today))
+        (not (habit))))
 
 (setq org-agenda-custom-commands
-      '(
+      `(
         ("b" "Agenda and tasks B+"
-         ((agenda "Agenda"
-                  ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 1)
-                   (org-agenda-span '1)
-                   (org-agenda-start-day (org-today))))
-          (org-ql-block '(and (todo "NEXT")
-                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
-                                       (property "assignee" "Stefan Lendl"))
-
-                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "B")
-                                           (ancestors (priority >= "B"))
-                                           (deadline auto)
-                                           (ancestors (deadline auto)))))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (not (habit)))
-                        ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 7)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
+         (,(stfl/agenda-day)
+          (org-ql-block
+           (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+           ((org-ql-block-header "Next Actions")
+            (org-super-agenda-header-separator "")
+            (org-super-agenda-groups stfl/ancestor-priority-groups)
+            ))
           (org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/priority-groups)))
-          (org-ql-block '(and (todo "WAIT")
-                              (or (priority >= "B")
-                                  (ancestors (priority >= "B"))
-                                  (deadline auto)
-                                  (ancestors (deadline auto)))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled)))
-                        ((org-ql-block-header "Waiting")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 7)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
           ))
         ("c" "Agenda and tasks C+"
          ((agenda "Agenda"
@@ -391,35 +489,25 @@
                          (org-super-agenda-groups stfl/priority-groups)
                          ))
           ))
-        ;; ("t" "Tasks"
-        ;;  ((org-ql-block '(and (todo)
-        ;;                       (not (tags "SOMEDAY"))
-        ;;                       (not (and (todo "TODO")
-        ;;                                 (ancestors (todo "PROJ"))))
-        ;;                       (not (scheduled))
-        ;;                       (not (deadline)))
-        ;;                 ((org-super-agenda-groups stfl/org-super-agenda-groups)
-        ;;                  (org-ql-block-header "Tasks"))
-        ;;                 )))
         ("a" "Agenda Weekly"
          ((agenda ""
                   ((org-agenda-span 'week)
                    (org-agenda-start-on-weekday 1)))))
-        ("r" . "Weekly Review")
+        ("r" . "Review")
         ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT" "WAIT")
                               (not (tags "SOMEDAY" "HABIT" "org_jira"))
                               (not (habit))
                               (or (not (deadline))
-                                  (deadline :to +30)
-                                  (ancestors (deadline :to +30)))
+                                  (deadline :to "+30")
+                                  (ancestors (deadline :to "+30")))
                               (or (not (scheduled))
-                                  (scheduled :to +30))
+                                  (scheduled :to "+30"))
                               )
                         ((org-super-agenda-header-separator "")
                          (org-deadline-warning-days 30)
-                         (end (ts-format (ts-adjust 'day 60 (ts-now))))
-                         (org-super-agenda-groups stfl/priority-groups)
+                         (stfl/agenda-max-prio-group org-priority-lowest)
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-ql-block-header "Something to do")
                          ))
           (org-ql-block (stfl/agenda-query-stuck-projects)
@@ -508,6 +596,10 @@
                          )
                         )))
         ))
+
+;; nil ;; for less annoying output when eval the narrowed block
+
+) ;; (after! org
 
 ;; (defun stfl/agenda-next-wait ()
 ;;   (interactive)
@@ -601,6 +693,7 @@
         '((:tag "SOMEDAY" :order 90)
           (:name "[#A] MUST Do this week (<=2)"
            :priority "A"
+           ;; :deadline before  ;;TODO requires a date string https://github.com/alphapapa/org-super-agenda#normal-selectors
            :and (:tag "org_jira"
                  :property ("status" "In Progress")))
           (:name "[#B] SHOULD Do this week (<=3)"
@@ -630,56 +723,78 @@
            :priority
            ))))
 
-;; (after! org
-(setq! org-agenda-diary-file "~/.org/diary.org"
-       ;; org-agenda-dim-blocked-tasks t
-       org-agenda-dim-blocked-tasks 'invisible
-       org-agenda-use-time-grid t
-       ;; org-agenda-hide-tags-regexp "\\w+"
-       org-agenda-compact-blocks nil
-       org-agenda-block-separator ""
-       org-agenda-tags-column 0
-       org-agenda-skip-scheduled-if-done t
-       org-agenda-skip-unavailable-files t
-       org-agenda-skip-deadline-if-done t
-       org-agenda-skip-timestamp-if-done t
-       org-agenda-window-setup 'current-window
-       org-agenda-start-on-weekday nil
-       org-agenda-span 'day
-       org-agenda-start-day "-0d"
-       org-deadline-warning-days 7
-       org-agenda-show-future-repeats t
-       org-agenda-skip-deadline-prewarning-if-scheduled t
-       org-agenda-tags-todo-honor-ignore-options 1
-       ;; org-agenda-todo-ignore-with-date nil
-       ;; org-agenda-todo-ignore-deadlines nil
-       ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-todo-list-sublevels t
-       org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+(after! org-super-agenda
 
-(after! org (setq
-                  org-enforce-todo-checkbox-dependencies nil
-                  org-enforce-todo-dependencies nil
-                  org-habit-show-habits t))
+(defun stfl/org-super-agenda-ancestor-priority-or-default<= (item prio)
+  (org-with-point-at (org-find-text-property-in-string 'org-marker item)
+    (<= (stfl/org-min-ancestor-priority-or-default) prio)))
 
-(after! org (setq org-agenda-files '("~/.org/gtd/inbox.org"
-                                     ;; "~/.org/gtd/someday.org"
-                                     "~/.org/gtd/tickler.org"
-                                     "~/.org/calendar.org"
-                                     "~/.org/gtd/todo.org"
-                                     "~/.org/jira/"
-                                     "~/.org/gtd/projects/")))
-;; (append (file-expand-wildcards "~/.org/gtd/*.org")
-;;         (file-expand-wildcards "~/.org/gtd/projects/*.org"))))
+(defun stfl/org-super-agenda-ancestor-priority<= (item prio)
+  (org-with-point-at (org-find-text-property-in-string 'org-marker item)
+    (<= (stfl/org-min-ancestor-priority) prio)))
 
-;; (after! org
-;;   (setq org-agenda-files '("~/.org/gtd/inbox.org"
-;;                            "~/.org/gtd/projects.org"
-;;                            "~/.org/gtd/tickler.org"))
+;; (defun stfl/org-super-agenda-parent-PROJ-priority= (item prio)
+;;   (org-with-point-at (org-find-text-property-in-string 'org-marker item)
+;;     (<= (stfl/org-parent-PROJ-priority-or-adjusted-default) prio)))
 
-(after! org
-  (setq! org-clock-continuously t))
+(defun stfl/org-PROJ-priority<= (marker prio)
+  (<= (stfl/org-parent-PROJ-priority-or-adjusted-default marker) prio))
+
+(defun stfl/org-PROJ-priority= (marker prio)
+  (let ((proj-prio (stfl/org-parent-PROJ-priority-or-adjusted-default marker)))
+    (when proj-prio
+      (= proj-prio prio))))
+
+(defun stfl/org-parent-PROJ-priority-or-adjusted-default (marker)
+  (org-with-point-at marker
+    (stfl/org-at-point-parent-PROJ-priority-or-adjusted-default)))
+
+(defun fib (n)
+  (fib-iter 1 0 n))
+
+(defun fib-iter (a b count)
+  (if (= count 0)
+      b
+    (fib-iter (+ a b) a (- count 1))))
+
+(setq stfl/ancestor-priority-groups
+      `,(mapcar
+         (lambda (prio)
+           `(:name ,(let ((prio-str (char-to-string prio)))
+                      (format "[#%s] Priority %s" prio-str prio-str))
+             :deadline (before ,(ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now))))
+             :scheduled (before ,(ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now))))
+             :priority ,(char-to-string prio)
+             :pred ((lambda (item) (stfl/org-PROJ-priority= (org-find-text-property-in-string 'org-marker item) ,prio)))
+             ;; :pred ((lambda (item))) TODO (stfl/org-PROJ-deadline-before (org-find-text-property-in-string 'org-marker item)
+             ;;              (ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now)))
+             :order ,prio
+             ))
+         (number-sequence org-priority-highest org-priority-lowest)))
+
+(defun stfl/org-min-ancestor-priority-or-default ()
+  (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
+           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
+                      (org-up-heading-safe))))
+
+(defun stfl/org-min-ancestor-priority-or-lowest ()
+  (cl-loop minimize (save-match-data (stfl/org-priority-or-lowest))
+           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
+                      (org-up-heading-safe))))
+
+(defun stfl/org-priority-or-lowest ()
+  (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
+         (prio (cond (prio-raw prio-raw)
+                     (t org-priority-lowest)))) ;; display empty prio below default
+    prio))
+
+(defun stfl/org-at-point-parent-PROJ-priority-or-adjusted-default ()
+  (cl-loop minimize (when (equal "PROJ" (nth 2 (org-heading-components)))
+                      (stfl/org-priority-or-default))
+           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
+                      (org-up-heading-safe))))
+
+)
 
 (defun stfl/org-ql-min-ancestor-priority< (a b)
   "Return non-nil if A's minimum ancestor priority is higher than B's.
@@ -688,7 +803,8 @@ org-default-priority is treated as lower than the same set value"
   (cl-macrolet ((priority (item)
                           `(org-with-point-at (org-element-property :org-marker ,item)
                              (stfl/org-min-ancestor-priority))))
-    ;; NOTE: Priorities are numbers in Org elements.  This might differ from the priority selector logic.
+    ;; NOTE: Priorities are numbers in Org elements.
+    ;; This might differ from the priority selector logic.
     (let ((a-priority (priority a))
           (b-priority (priority b)))
       (cond ((and a-priority b-priority)
@@ -706,13 +822,12 @@ org-default-priority is treated as lower than the same set value"
 (defun stfl/org-priority-or-default ()
   (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
          (prio (cond (prio-raw prio-raw)
-                     (t (+ 0.5 org-priority-default))))) ;;
-    display empty prio below default prio))
+                     (t (+ 0.5 org-priority-default))))) ;; display empty prio below default
+    prio))
 
 (after! org
   (setq org-capture-templates
-        '(
-          ("n" "capture to inbox"
+        '(("n" "capture to inbox"
            entry
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
            (file "~/.doom.d/templates/template-inbox.org"))
@@ -725,10 +840,15 @@ org-default-priority is treated as lower than the same set value"
            entry
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
            (file "~/.doom.d/templates/template-scheduled.org"))
+          ("v" "Versicherung"
+           entry
+           (file "~/.org/gtd/projects/versicherung.org")
+           (function stfl/org-capture-template-versicherung)
+           :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-inbox.org"))
+           (file "~/.doom.d/templates/template-deadline.org"))
           ("P" "Protocol"
            entry
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
@@ -739,14 +859,44 @@ org-default-priority is treated as lower than the same set value"
            (file+headline "~/.org/gtd/inbox.org" "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
-          )
-        ))
-
-(defun transform-square-brackets-to-round-ones(string-to-transform)
-  "Transforms [ into ( and ] into ), other chars left unchanged."
-  (concat
-  (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+          ("h" "Haushalt")
+          ("hw" "Wäsche"
+           entry
+           (file+headline "~/.org/gtd/todo.org" "Haushalt")
+           (file "~/.doom.d/templates/template-wäsche.org"))
+          ))
   )
+
+(after! org
+  (defun stfl/org-capture-versicherung-post ()
+    (unless org-note-abort
+      (mkdir (org-capture-get :directory) t)))
+
+  (defun stfl/build-versicherung-dir (root date title)
+    (let ((year (nth 5 (parse-time-string date))))
+      (format "%s/%d/%s %s" root year date title)))
+
+  (defun stfl/org-capture-template-versicherung ()
+    (interactive)
+    (let* ((date (org-read-date nil nil nil "Datum der Behandlung" nil nil t))
+           (title (read-string "Title: "))
+           (directory (stfl/build-versicherung-dir (org-capture-get :root) date title)))
+      (org-capture-put :directory directory)
+      (add-hook! 'org-capture-after-finalize-hook :local #'stfl/org-capture-versicherung-post)
+      (format "* OEGK [%s] %s
+:PROPERTIES:
+:CREATED: %%U
+:date: [%s]
+:betrag: %%^{Betrag|0}
+:oegk: 0
+:generali: 0
+:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|}
+:END:
+
+[[file:%s]]
+
+%%?" date title date directory)))
+)
 
 (after! org
   (setq
@@ -759,11 +909,11 @@ org-default-priority is treated as lower than the same set value"
   :config
   (add-to-list 'org-modules 'org-habit)
 
-  (setq org-habit-preceding-days 14
-        org-habit-following-days 7)
-
-  ;; Length of the habit graph
-  (setq org-habit-graph-column 31))
+  (setq org-habit-show-habits t
+        org-habit-preceding-days 14
+        org-habit-following-days 7
+        ;; org-habit-graph-column 31 ;; Length of the habit graph
+        ))
 
 (use-package! org-edna
   :after org
@@ -937,6 +1087,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#emacs" . ?-)
                         )))
 
+(defun nm/org-id-prompt-id ()
+  "Prompt for the id during completion of id: link."
+  (let ((dest (org-refile-get-location))
+        (name nil)
+        (id nil))
+    (save-excursion
+      (find-file (cadr dest))
+      (goto-char (nth 3 dest))
+      (setq id (org-id-get (point) t)
+            name (org-get-heading t t t t)))
+    (org-insert-link nil (concat "id:" id) name)))
+
+(after! org
+  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
+
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory "~/.org/"
@@ -945,6 +1110,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
+
+(after! org-raom
+   (org-roam-update-org-id-locations))
 
 ;; (after! org-roam (org-roam-db-build-cache))
 
@@ -963,46 +1131,42 @@ Org-mode properties drawer already, keep the headline and don’t insert
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 
-;; (use-package! org-roam-server
-;;   ;; :ensure t
-;;   :after org-roam
-;;   :config
-;;   (setq org-roam-server-host "127.0.0.1"
-;;         org-roam-server-port 7070
-;;         org-roam-server-export-inline-images t
-;;         org-roam-server-authenticate nil
-;;         org-roam-server-network-poll nil
-;;         org-roam-server-network-arrows 'from
-;;         org-roam-server-network-label-truncate t
-;;         org-roam-server-network-label-truncate-length 60
-;;         org-roam-server-network-label-wrap-length 20)
-
-;;   ;; (org-roam-server-mode)
-;;   )
-
 (after! org-gcal
 ;; (use-package! org-gcal
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
-        org-gcal-fetch-file-alist '(("ste.lendl@gmail.com" .  "~/.org/calendar.org"))
+        org-gcal-fetch-file-alist
+        '(("ste.lendl@gmail.com" .  "~/.org/gcal/stefan.org")
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . "~/.org/gcal/oskar.org"))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
-        org-gcal-down-days 180
-        ))
+        org-gcal-down-days 180))
 
 (map!
+ :after org
  :map org-mode-map
  :leader
  (:prefix ("n" . "notes")
   (:prefix ("j" . "sync")
    :desc "sync Google Calendar" "g" #'org-gcal-sync)))
 
+(map!
+ :after org
+ :map org-mode-map
+ :localleader
+ :prefix ("C" . "Google Calendar")
+   :desc "sync Google Calendar" "g" #'org-gcal-sync
+   "S" #'org-gcal-sync-buffer
+   "p" #'org-gcal-post-at-point
+   "d" #'org-gcal-delete-at-point
+   "f" #'org-gcal-fetch
+   "F" #'org-gcal-fetch-buffer)
+
 (use-package! ob-mermaid
   :after org
   :init
-        (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
+  (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
   :config
-        (add-to-list 'org-babel-load-languages '(mermaid . t))
-  )
+  (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
 (map! :after org
       :map org-mode-map
@@ -1270,14 +1434,6 @@ ORDER BY priority, created DESC
         ;; ediff-window-setup-function 'ediff-setup-windows-plain
         ediff-split-window-function 'split-window-horizontally))
 
-;; (use-package! origami)
-
-;; (map! :after '(org-agenda origami)
-;;       :map org-agenda-mode-map
-;;       :desc "" "TAB" #'origami-toggle-node
-;;       ;; :desc "" "" #'org-agenda-priority-tree-down
-;;       )
-
 (after! text-mode
   (add-hook! 'text-mode-hook
              ;; Apply ANSI color codes
@@ -1308,17 +1464,6 @@ Not added when either:
 (load! "org-customs.el")
 (load! "org-helpers.el")
 (load! "org-helpers-nm.el")
-
-;; (setq org-tasks-properties-metadata (list "SOURCE"))
-;; (map! :after org
-;;       :map org-mode-map
-;;       :localleader
-;;       :prefix ("j" . "nicks functions")
-;;       :desc "Clarify properties" "c" #'nm/org-clarify-metadata)
-
-;; (bind-key "<f7>" #'nm/org-capture-to-file)
-
-;; (add-hook 'before-save-hook #'nm/org-assign-tasks-proj)
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
@@ -1395,6 +1540,11 @@ Not added when either:
 
 (use-package! ztree)
 
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
+(after! magit
+  (setq magit-diff-refine-hunk 'all))
+
 (after! forge (setq forge-topic-list-columns
                     '(("#" 5 t (:right-align t) number nil)
                       ("Title" 60 t nil title  nil)
@@ -1404,8 +1554,6 @@ Not added when either:
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-;; (after! todoist (setq todoist-token (get-auth-info "todoist" "stfl")))
-
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
 (defun stfl/goto-private-config-file ()
@@ -1414,23 +1562,3 @@ Not added when either:
   (find-file (expand-file-name "config.org" doom-private-dir)))
 
 (define-key! help-map "dc" #'stfl/goto-private-config-file)
-
-(defun nm/org-id-prompt-id ()
-  "Prompt for the id during completion of id: link."
-  (let ((dest (org-refile-get-location))
-        (name nil)
-        (id nil))
-    (save-excursion
-      (find-file (cadr dest))
-      (goto-char (nth 3 dest))
-      (setq id (org-id-get (point) t)
-            name (org-get-heading t t t t)))
-    (org-insert-link nil (concat "id:" id) name)))
-
-(after! org
-  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
-(after! magit
-  (setq magit-diff-refine-hunk 'all))

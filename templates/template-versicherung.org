@@ -1,0 +1,10 @@
+* OEGK %^{Datum} %^{Title}
+:PROPERTIES:
+:CREATED: %U
+:oegk: 0
+:generali: 0
+:END:
+
+[[file:~/Documents/Finanzielles/Einreichung Versicherung/%{Datum}]]
+
+%?

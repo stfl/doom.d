@@ -169,7 +169,10 @@
       (priority date)
       :super-groups org-super-agenda-groups)))
  '(safe-local-variable-values
-   '((org-use-tag-inheritance)
+   '((max-specpd-size . 100000)
+     (max-specpd-size . 20000)
+     (authinfo-mode . t)
+     (org-use-tag-inheritance)
      (lsp-file-watch-ignored-directories . t)
      (lsp-file-watch-threshold . t))))
 (custom-set-faces
