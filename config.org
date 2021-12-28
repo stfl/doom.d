@@ -974,6 +974,10 @@ not acutally used
 :ID:       e2830ec6-a2f9-4778-9bb2-f6d130ef61d2
 :END:
 
+#+begin_src elisp :tangle packages.el
+(package! org-super-agenda)
+#+end_src
+
 #+begin_src elisp
 (use-package! org-super-agenda
   :after (org-agenda evil-org-agenda)
@@ -1160,6 +1164,10 @@ not acutally used
 :ID:       617698c9-8d19-4dd5-a13f-541fa6a8c343
 :END:
 
+#+begin_src elisp :tangle packages.el
+(package! org-ql)
+#+end_src
+
 #+begin_src elisp
 (defun stfl/org-ql-min-ancestor-priority< (a b)
   "Return non-nil if A's minimum ancestor priority is higher than B's.
@@ -1312,6 +1320,12 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 :PROPERTIES:
 :ID:       39318530-055d-492b-8cde-5cd379602ea6
 :END:
+
+
+#+begin_src elisp :tangle packages.el
+(package! org-edna)
+#+end_src
+
 Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 #+BEGIN_SRC elisp
 (use-package! org-edna
@@ -1639,6 +1653,16 @@ rebuild org-roam cache at start
 :PROPERTIES:
 :ID:       3eda31cf-7dda-43be-b65c-a8b3599b4b72
 :END:
+
+
+#+begin_src elisp :tangle packages.el
+(package! websocket)
+(package! org-roam-ui
+  :recipe (:host github
+           :repo "org-roam/org-roam-ui"
+           :files ("*.el" "out")))
+#+end_src
+
 #+begin_src elisp
 (use-package! websocket
     :after org-roam)
@@ -1699,6 +1723,11 @@ rebuild org-roam cache at start
 :ID:       819cb74f-3d27-4a76-bb81-06b9d1b714b5
 :END:
 Org babel to generate mermaid diagrams from org src blocks
+
+
+#+begin_src elisp :tangle packages.el
+(package! ob-mermaid)
+#+end_src
 
 #+begin_src elisp
 (use-package! ob-mermaid
@@ -1804,6 +1833,11 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 :PROPERTIES:
 :ID:       9e6bc5aa-89b0-43f0-aad1-2c8212e0bae7
 :END:
+
+#+begin_src elisp :tangle packages.el
+(package! org-jira)
+#+end_src
+
 #+BEGIN_SRC elisp
 (use-package! org-jira
   :after org
@@ -2207,6 +2241,14 @@ Not added when either:
 :ID:       fd4fae8c-3a70-449f-b3d5-52c25f76ec0a
 :END:
 
+
+#+begin_src elisp :tangle packages.el
+(package! kubernetes)
+(package! kubernetes-evil)
+(package! kubernetes-helm)
+(package! k8s-mode)
+#+end_src
+
 #+begin_src elisp
 (use-package! kubernetes
   :commands (kubernetes-overview))
@@ -2232,18 +2274,31 @@ Not added when either:
 :PROPERTIES:
 :ID:       4efebc11-28ba-4f18-a758-a4af693d6f69
 :END:
+
+#+begin_src elisp :tangle packages.el
+(package! sql-indent)
+#+end_src
+
 #+begin_src elisp
 (use-package! sql-indent
   :after sql-mode
 )
 #+end_src
 
-*** Database Interface (edbi)
+** Database Interface (edbi)
 :PROPERTIES:
 :ID:       e54ac6a8-7cf4-47ea-abe6-500512022534
 :END:
 
 [[roam:edbi setup]]
+
+EDBI has some dependencies has some dependencies
+[[https://github.com/kiwanami/emacs-edbi#installation][Installation Instructions]]
+
+#+begin_src elisp :tangle packages.el
+(package! edbi)
+(package! edbi-minor-mode)
+#+end_src
 
 #+begin_src elisp
 (use-package! edbi
@@ -2261,10 +2316,15 @@ Not added when either:
 #+end_src
 
 * Collaboration and VCS
-** Directory tree diff
+** Directory tree diff - ztree
 :PROPERTIES:
 :ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
 :END:
+
+#+begin_src elisp :tangle packages.el
+(package! ztree)
+#+end_src
+
 #+BEGIN_SRC elisp
 (use-package! ztree)
 #+END_SRC
