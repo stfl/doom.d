@@ -147,6 +147,7 @@
   (setq org-id-link-to-org-use-id t
         org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
         org-id-track-globally t)
+   (org-id-update-id-locations)
   )
 
 (after! org
@@ -205,10 +206,12 @@
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
+
       :localleader
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
+
       :prefix ("p" . "priorities")
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
@@ -218,6 +221,12 @@
       :desc "Tickler toggle" "t" #'stfl/org-agenda-toggle-tickler
       :desc "Add to Tickler" "T" #'stfl/org-agenda-set-tickler
       :desc "Remove Someday/Maybe" "r" #'stfl/org-agenda-remove-someday
+
+      :prefix ("v" . "View up to priority")
+      "v" #'stfl/org-agenda-show-priorities
+      "l" #'stfl/org-agenda-show-less-priorities
+      "m" #'stfl/org-agenda-show-more-priorities
+      "r" #'stfl/org-agenda-reset-show-priorities
       )
 
 ;; (map! ;;:after org-agenda
@@ -365,8 +374,34 @@ relevant again (Tickler)"
                             (not (tags "SOMEDAY")))))))
 
 (setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
-(setq stfl/agenda-max-prio-group ?D)
-(setq stfl/agenda-deadline-fib-offset 2)
+(setq-default stfl/agenda-max-prio-group ?D)
+(setq stfl/agenda-deadline-fib-offset 3)
+
+(defun stfl/org-agenda-show-priorities (&optional priority)
+  (interactive "P")
+  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
+                        (priority)
+                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
+  (when (or (< new org-priority-highest) (> new org-priority-highest))
+    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
+  (setq stfl/agenda-max-prio-group new)
+  (message "Showing up to priority %c" new)
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-reset-show-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-more-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-less-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
+  (org-agenda-redo-all))
 
 (defun stfl/agenda-day ()
   '(agenda "Agenda"
@@ -377,6 +412,8 @@ relevant again (Tickler)"
 
 (defun stfl/agenda-query-prio-higher (prio)
   `(or (priority >= (char-to-string ,prio))
+       (and ,(> stfl/agenda-max-prio-group org-priority-default)
+            (not (priority)))  ;; default priority is treated at nil in org-ql
        (ancestors (priority >= (char-to-string ,prio)))
        (deadline
         :from +1
@@ -404,13 +441,11 @@ relevant again (Tickler)"
            (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
            ((org-ql-block-header "Next Actions")
             (org-super-agenda-header-separator "")
-            (org-super-agenda-groups stfl/ancestor-priority-groups)
-            ))
+            (org-super-agenda-groups stfl/ancestor-priority-groups)))
           (org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
+                         (org-super-agenda-groups stfl/org-super-agenda-today-habit-tickler-groups)))))
         ("c" "Agenda and tasks C+"
          ((agenda "Agenda"
                   ((org-agenda-use-time-grid t)
@@ -686,7 +721,7 @@ relevant again (Tickler)"
 
   ;; Update ‘org-super-agenda-header-map’
 
-(setq org-super-agenda-header-map evil-org-agenda-mode-map))
+  (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 
 (after! org-super-agenda
   (setq stfl/priority-groups
@@ -758,19 +793,31 @@ relevant again (Tickler)"
     (fib-iter (+ a b) a (- count 1))))
 
 (setq stfl/ancestor-priority-groups
-      `,(mapcar
-         (lambda (prio)
-           `(:name ,(let ((prio-str (char-to-string prio)))
-                      (format "[#%s] Priority %s" prio-str prio-str))
-             :deadline (before ,(ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now))))
-             :scheduled (before ,(ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now))))
-             :priority ,(char-to-string prio)
-             :pred ((lambda (item) (stfl/org-PROJ-priority= (org-find-text-property-in-string 'org-marker item) ,prio)))
-             ;; :pred ((lambda (item))) TODO (stfl/org-PROJ-deadline-before (org-find-text-property-in-string 'org-marker item)
-             ;;              (ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now)))
-             :order ,prio
-             ))
-         (number-sequence org-priority-highest org-priority-lowest)))
+      (append
+       `,(mapcar
+          (lambda (prio)
+            (let ((prio-str (char-to-string prio))
+                  (until-date-str (ts-format "%Y-%m-%d"
+                                             (ts-adjust 'day
+                                                        (fib (+ stfl/agenda-deadline-fib-offset (- prio 64)))
+                                                        (ts-now)))))
+              `(:name ,(format "[#%s] Priority %s" prio-str prio-str)
+                :deadline (before ,until-date-str)
+                :scheduled (before ,until-date-str)
+                :priority ,prio-str
+                :pred ((lambda (item)
+                         (stfl/org-PROJ-priority=
+                          (org-find-text-property-in-string 'org-marker item)
+                          ,prio)))
+                ;; :pred ((lambda (item))) TODO (stfl/org-PROJ-deadline-before (org-find-text-property-in-string 'org-marker item)
+                ;;              (ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now)))
+                :order ,prio)))
+          (number-sequence org-priority-highest org-priority-lowest))
+       `((:name "Default Priority (Rest)"
+          :anything t                                ;; catch the rest
+          :order ,(+ 0.5 org-priority-default))      ;; and order in the appropriate position
+         )
+       ))
 
 (defun stfl/org-min-ancestor-priority-or-default ()
   (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
@@ -795,6 +842,20 @@ relevant again (Tickler)"
                       (org-up-heading-safe))))
 
 )
+
+(setq stfl/org-super-agenda-today-habit-tickler-groups
+      '((:time-grid t
+         :order 0)
+        (:name "Tickler"
+         :tag "SOMEDAY"
+         :order 20)
+        (:name "Habits"
+         :tag "HABIT"
+         :habit t
+         :order 90)
+        (:name "Today"
+         :anything t
+         :order 10)))
 
 (defun stfl/org-ql-min-ancestor-priority< (a b)
   "Return non-nil if A's minimum ancestor priority is higher than B's.
@@ -1087,21 +1148,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#emacs" . ?-)
                         )))
 
-(defun nm/org-id-prompt-id ()
-  "Prompt for the id during completion of id: link."
-  (let ((dest (org-refile-get-location))
-        (name nil)
-        (id nil))
-    (save-excursion
-      (find-file (cadr dest))
-      (goto-char (nth 3 dest))
-      (setq id (org-id-get (point) t)
-            name (org-get-heading t t t t)))
-    (org-insert-link nil (concat "id:" id) name)))
-
-(after! org
-  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
-
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory "~/.org/"
@@ -1110,9 +1156,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
-
-(after! org-raom
-   (org-roam-update-org-id-locations))
 
 ;; (after! org-roam (org-roam-db-build-cache))
 
@@ -1540,11 +1583,6 @@ Not added when either:
 
 (use-package! ztree)
 
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
-(after! magit
-  (setq magit-diff-refine-hunk 'all))
-
 (after! forge (setq forge-topic-list-columns
                     '(("#" 5 t (:right-align t) number nil)
                       ("Title" 60 t nil title  nil)
@@ -1562,3 +1600,23 @@ Not added when either:
   (find-file (expand-file-name "config.org" doom-private-dir)))
 
 (define-key! help-map "dc" #'stfl/goto-private-config-file)
+
+(defun nm/org-id-prompt-id ()
+  "Prompt for the id during completion of id: link."
+  (let ((dest (org-refile-get-location))
+        (name nil)
+        (id nil))
+    (save-excursion
+      (find-file (cadr dest))
+      (goto-char (nth 3 dest))
+      (setq id (org-id-get (point) t)
+            name (org-get-heading t t t t)))
+    (org-insert-link nil (concat "id:" id) name)))
+
+(after! org
+  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
+(after! magit
+  (setq magit-diff-refine-hunk 'all))
