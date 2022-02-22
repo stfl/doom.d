@@ -48,21 +48,23 @@
 ;;       doom-unicode-font (font-spec :family "Fira Code")
 ;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
 
-(if (string= (system-name) "lendl-fujitsu")
-    (setq doom-font (font-spec :family "JetBrainsMono" :size 13 :weight 'light)
-          doom-big-font (font-spec :family "JetBrainsMono" :size 36))
-      ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
-      ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
-;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
-;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-;;       doom-unicode-font (font-spec :family "JetBrains Mono")
-;;       doom-big-font (font-spec :family "JetBrains Mono" :size 40))
+;; (if (string= (system-name) "lendl-fujitsu")
+;;     (setq doom-font (font-spec :family "JetBrainsMono" :size 13)
+;;           doom-variable-pitch-font (font-spec :family "JetBrainsMono")
+;;           doom-big-font (font-spec :family "JetBrainsMono" :size 20))
+  ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
+  ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+  ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
+  ;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+  ;;       doom-unicode-font (font-spec :family "JetBrains Mono")
+  ;;       doom-big-font (font-spec :family "JetBrains Mono" :size 40))
                                         ; set a smaller font all non-hidpi workstations
-(setq doom-font (font-spec :family "JetBrains Mono" :size 13)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-      doom-big-font (font-spec :family "JetBrains Mono" :size 20)))
+  (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
+        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+        doom-big-font (font-spec :family "JetBrains Mono" :size 20))
+;; )
 
-(setq doom-unicode-font doom-font)
+;; (setq doom-unicode-font doom-font)
 
 (custom-set-faces!
  '(org-date :foreground "dark goldenrod" :height 0.85)
@@ -326,7 +328,7 @@ relevant again (Tickler)"
        org-agenda-use-time-grid t
        ;; org-agenda-hide-tags-regexp "\\w+"
        org-agenda-compact-blocks t
-       org-agenda-block-separator ""
+       ;; org-agenda-block-separator "-"
        org-agenda-tags-column 0
        org-agenda-skip-scheduled-if-done t
        org-agenda-skip-unavailable-files t
@@ -340,6 +342,9 @@ relevant again (Tickler)"
        org-agenda-show-future-repeats t
        org-agenda-skip-deadline-prewarning-if-scheduled t
        org-agenda-tags-todo-honor-ignore-options 1
+       org-agenda-skip-scheduled-delay-if-deadline t
+       org-agenda-skip-scheduled-if-deadline-is-shown t
+       org-agenda-skip-timestamp-if-deadline-is-shown t
        ;; org-agenda-todo-ignore-with-date nil
        ;; org-agenda-todo-ignore-deadlines nil
        ;; org-agenda-todo-ignore-timestamp nil
@@ -361,7 +366,7 @@ relevant again (Tickler)"
                            "~/.org/gtd/tickler.org"
                            "~/.org/gtd/todo.org"
                            "~/.org/gtd/projects/"
-                           "~/.org/jira/"
+                           ;; "~/.org/jira/"
                            "~/.org/gcal/")))
 
 (after! org
@@ -408,6 +413,8 @@ relevant again (Tickler)"
            ((org-agenda-use-time-grid t)
             (org-deadline-warning-days 0)
             (org-agenda-span '1)
+            (org-super-agenda-header-separator "\n")
+            (org-super-agenda-groups stfl/org-super-agenda-today-habit-tickler-groups)
             (org-agenda-start-day (org-today)))))
 
 (defun stfl/agenda-query-prio-higher (prio)
@@ -437,93 +444,16 @@ relevant again (Tickler)"
       `(
         ("b" "Agenda and tasks B+"
          (,(stfl/agenda-day)
-          (org-ql-block
-           (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
-           ((org-ql-block-header "Next Actions")
-            (org-super-agenda-header-separator "")
-            (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/org-super-agenda-today-habit-tickler-groups)))))
-        ("c" "Agenda and tasks C+"
-         ((agenda "Agenda"
-                  ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 1)
-                   (org-agenda-span '1)
-                   (org-agenda-start-day (org-today))))
-          (org-ql-block '(and (todo "NEXT")
-                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
-                                       (property "assignee" "Stefan Lendl"))
-                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "C")
-                                           (ancestors (priority >= "C"))
-                                           (deadline auto)
-                                           (ancestors (deadline auto)))))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (not (habit)))
+          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
                         ((org-ql-block-header "Next Actions")
+                         (org-agenda-block-separator "\n")
                          (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
           (org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          (org-ql-block '(and (todo "WAIT")
-                              (or (priority >= "C")
-                                  (ancestors (priority >= "C"))
-                                  (deadline auto)
-                                  (ancestors (deadline auto)))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled)))
-                        ((org-ql-block-header "Waiting")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
                          (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
-        ("d" "Agenda and tasks D+"
-         ((agenda "Agenda"
-                  ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 1)
-                   (org-agenda-span '1)
-                   (org-agenda-start-day (org-today))))
-          (org-ql-block '(and (todo "NEXT")
-                              (or (and (tags "org_jira")        ; for org-jira I need to also check the assignee
-                                       (property "assignee" "Stefan Lendl"))
-                                  (and (not (tags "org_jira"))  ; otherwise I consider the regular org priority
-                                       (or (priority >= "D")
-                                           (ancestors (priority >= "D"))
-                                           (deadline auto)
-                                           (ancestors (deadline auto)))))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (not (habit)))
-                        ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          (org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          (org-ql-block '(and (todo "WAIT")
-                              (or (priority >= "D")
-                                  (ancestors (priority >= "D"))
-                                  (deadline auto)
-                                  (ancestors (deadline auto)))
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled)))
-                        ((org-ql-block-header "Waiting")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
+                         ))))
         ("a" "Agenda Weekly"
          ((agenda ""
                   ((org-agenda-span 'week)
@@ -612,24 +542,6 @@ relevant again (Tickler)"
                                                     (:auto-priority)
                                                     ))))
           ))
-        ("ro" "Old Agenda and tasks"
-         ((agenda "Agenda"
-                  ((org-agenda-use-time-grid t)
-                   (org-deadline-warning-days 3)
-                   (org-agenda-span '1)
-                   (org-agenda-start-day (org-today))))
-          (org-ql-block '(and (todo)
-                              (not (tags "SOMEDAY"))
-                              (not (and (todo "TODO")
-                                        (ancestors (todo "PROJ"))))
-                              (not (scheduled))
-                              (not (deadline)))
-                        ((org-super-agenda-groups stfl/org-super-agenda-groups)
-                         ;; TODO super-agenda to separate priorities
-                         (org-ql-block-header "Tasks")
-                         ;; TODO sort not yet possible: https://github.com/alphapapa/org-ql/pull/44
-                         )
-                        )))
         ))
 
 ;; nil ;; for less annoying output when eval the narrowed block
@@ -1136,9 +1048,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         (:grouptags)
                         ("SOMEDAY" . ?S)
                         ("REFILE" . ?R)
-                        ("TICKLER" . ?T)
-                        ("DELIGATED" . ?D)
                         ("HABIT" . ?H)
+                        ("LASTMILE" . ?L)
                         (:endgrouptag)
                         (:startgrouptag)
                         ("Areas" . nil)
@@ -1147,6 +1058,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#personal" . ?_)
                         ("#emacs" . ?-)
                         )))
+
+(defun nm/org-id-prompt-id ()
+  "Prompt for the id during completion of id: link."
+  (let ((dest (org-refile-get-location))
+        (name nil)
+        (id nil))
+    (save-excursion
+      (find-file (cadr dest))
+      (goto-char (nth 3 dest))
+      (setq id (org-id-get (point) t)
+            name (org-get-heading t t t t)))
+    (org-insert-link nil (concat "id:" id) name)))
+
+(after! org
+  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
 
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
@@ -1182,7 +1108,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
         '(("ste.lendl@gmail.com" .  "~/.org/gcal/stefan.org")
           ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . "~/.org/gcal/oskar.org"))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
-        org-gcal-down-days 180))
+        org-gcal-down-days 180
+
+        org-gcal-auto-archive nil ;; workaround for "rx "**" range error" https://github.com/kidd/org-gcal.el/issues/172
+        ))
 
 (map!
  :after org
@@ -1539,9 +1468,16 @@ Not added when either:
   (setq lsp-idle-delay 0.8)
   )
 
-(after! poetry
-  (setq poetry-tracking-strategy 'projectile)
-  )
+(after! poetry (setq poetry-tracking-strategy 'projectile))
+
+(use-package! numpydoc
+  :after python-mode
+  :commands numpydoc-generate
+  :config
+  (map! :map python-mode-map
+        :localleader
+        :prefix ("d" . "docstring")
+        :desc "Generate Docstring" "d" #'numpydoc-generate))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
@@ -1581,7 +1517,19 @@ Not added when either:
   )
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
+(use-package! exercism-mode
+  :after projectile
+  :if (executable-find "exercism")
+  :commands exercism
+  :config (exercism-mode +1)
+  :custom (exercism-web-browser-function 'browse-url))
+
 (use-package! ztree)
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
+(after! magit
+  (setq magit-diff-refine-hunk 'all))
 
 (after! forge (setq forge-topic-list-columns
                     '(("#" 5 t (:right-align t) number nil)
@@ -1592,6 +1540,8 @@ Not added when either:
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
+(after! magit-todos (magit-todos-mode))
+
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
 (defun stfl/goto-private-config-file ()
@@ -1600,23 +1550,3 @@ Not added when either:
   (find-file (expand-file-name "config.org" doom-private-dir)))
 
 (define-key! help-map "dc" #'stfl/goto-private-config-file)
-
-(defun nm/org-id-prompt-id ()
-  "Prompt for the id during completion of id: link."
-  (let ((dest (org-refile-get-location))
-        (name nil)
-        (id nil))
-    (save-excursion
-      (find-file (cadr dest))
-      (goto-char (nth 3 dest))
-      (setq id (org-id-get (point) t)
-            name (org-get-heading t t t t)))
-    (org-insert-link nil (concat "id:" id) name)))
-
-(after! org
-  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
-(after! magit
-  (setq magit-diff-refine-hunk 'all))

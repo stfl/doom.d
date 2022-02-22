@@ -1,7 +1,6 @@
 * TODO %^{Task}
 :PROPERTIES:
 :CREATED: %U
-:ID: %(org-id-new)
 :END:
 
 %?

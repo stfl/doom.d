@@ -14,6 +14,8 @@
 
 (package! org-jira)
 
+(package! numpydoc)
+
 (package! kubernetes)
 (package! kubernetes-evil)
 (package! kubernetes-helm)
@@ -23,5 +25,7 @@
 
 (package! edbi)
 (package! edbi-minor-mode)
+
+(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode"))
 
 (package! ztree)
