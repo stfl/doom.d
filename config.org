@@ -57,7 +57,7 @@ Set a few settings if we detect terminal mode
 start maximized
 
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
 ** Theme
@@ -413,6 +413,7 @@ From here we load some extra key bindings that I use often
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
 
       :localleader
+      "N" #'org-add-note
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
@@ -438,6 +439,42 @@ From here we load some extra key bindings that I use often
 ;;       :map org-agenda-mode-map
 ;;       )
 #+END_SRC
+** Modern Org Style (org-modern)
+
+I am currently not using this. I like some of the ideas but unfortunately it's
+not as I was hoping it to look so I will have to heavily customize for it to
+work
+
+#+begin_src elisp :tangle packages.el
+;; (package! org-modern)
+#+end_src
+
+#+begin_src elisp
+;; (use-package! org-modern
+;;   :after org
+;;   :config
+;;   (setq org-auto-align-tags nil
+;;         org-tags-column 0
+;;         org-catch-invisible-edits 'show-and-error
+;;         org-special-ctrl-a/e t
+;;         org-insert-heading-respect-content t
+
+;;         ;; Org styling, hide markup etc.
+;;         org-hide-emphasis-markers t
+;;         org-pretty-entities t
+;;         org-ellipsis "…"
+
+;;         ;; Agenda styling
+;;         org-agenda-block-separator ?─
+;;         org-agenda-time-grid '((daily today require-timed)
+;;                                (800 1000 1200 1400 1600 1800 2000)
+;;                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+;;         org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────")
+;;   )
+
+;; (add-hook 'org-mode-hook #'org-modern-mode)
+;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+#+end_src
 
 ** handle SOMEDAY entries
 
@@ -612,7 +649,7 @@ Adjusting clock settings
   (setq! org-clock-continuously t))
 #+END_SRC
 
-Agenda Files
+*** Agenda Files
 
 #+begin_src elisp
 (after! org
@@ -1159,7 +1196,6 @@ org-default-priority is treated as lower than the same set value"
   )
 #+END_SRC
 
-
 *** Capture Bills for Insurance Claims
 
 #+BEGIN_SRC elisp
@@ -1287,11 +1323,11 @@ After much feedback and discussing with other users, I decided to simplify the k
 | KILL    | Abandoned or terminated.                                     |
 
 #+BEGIN_SRC elisp
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+;; (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+;; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 #+end_src
 
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
@@ -1311,14 +1347,15 @@ After much feedback and discussing with other users, I decided to simplify the k
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next)))
+          ("NEXT" . +org-todo-next))
+        )
 )
 #+END_SRC
 
 
 Increase indenation in org-indent
 #+BEGIN_SRC elisp
-(after! org (setq org-indent-indentation-per-level 4))
+(after! org (setq org-indent-indentation-per-level 2))
 #+END_SRC
 
 Remove TODO keywrods from org-mode (it will still work in agenda)
@@ -1333,31 +1370,31 @@ Remove TODO keywrods from org-mode (it will still work in agenda)
 #+END_SRC
 
 #+begin_src elisp
-(set-ligatures! 'org-mode
-    :alist '((":PROPERTIES:" . "⏍")
-             (":properties:" . "⏍")
-             (":LOGBOOK:" . "㏒")
-             (":logbook:" . "㏒")
-             ))
+;; (set-ligatures! 'org-mode
+;;     :alist '((":PROPERTIES:" . "⏍")
+;;              (":properties:" . "⏍")
+;;              (":LOGBOOK:" . "㏒")
+;;              (":logbook:" . "㏒")
+;;              ))
 #+end_src
 
 [[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][Doom emacs org-mode ricing]]
 Org-superstar config
 #+BEGIN_SRC elisp
-(after! org-superstar
-  ;; Every non-TODO headline now have no bullet
-  ;; (setq org-superstar-headline-bullets-list '("　"))
-  (setq org-superstar-leading-bullet ?　)
-  ;; Enable custom bullets for TODO items
-  (setq org-superstar-special-todo-items t)
-  (setq org-superstar-todo-bullet-alist
-        '(("TODO" "☐")
-          ("NEXT" "➡")
-          ("PROJ" "⎚")
-          ("WAIT" "⏳")
-          ("KILL" "✘")
-          ("DONE" "✔")))
-  (org-superstar-restart))
+;; (after! org-superstar
+;;   ;; Every non-TODO headline now have no bullet
+;;   ;; (setq org-superstar-headline-bullets-list '("　"))
+;;   (setq org-superstar-leading-bullet ?　)
+;;   ;; Enable custom bullets for TODO items
+;;   (setq org-superstar-special-todo-items t)
+;;   (setq org-superstar-todo-bullet-alist
+;;         '(("TODO" "☐")
+;;           ("NEXT" "➡")
+;;           ("PROJ" "⎚")
+;;           ("WAIT" "⏳")
+;;           ("KILL" "✘")
+;;           ("DONE" "✔")))
+;;   (org-superstar-restart))
 #+END_SRC
 
 ** Logging and Drawers
@@ -1516,8 +1553,8 @@ Roam directory setup
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory "~/.org/"
-        org-roam-db-location "~/.emacs.d/roam.db"
-        org-roam-file-exclude-regexp "*/.stversions/*"))
+        org-roam-db-location "~/.emacs.d/.local/roam.db"
+        org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 #+END_SRC
 
 do not automatically open the roam side-pane
@@ -2145,6 +2182,35 @@ projectile speeds this up significantly.
         :prefix ("d" . "docstring")
         :desc "Generate Docstring" "d" #'numpydoc-generate))
 #+end_src
+*** emacs ipython notebook (ein)
+
+ein displays images in a separate window by default. Use inline images instead
+
+#+begin_src elisp
+(after! ein
+  (setq! ein:output-area-inlined-images t
+         ein:worksheet-warn-obsolesced-keybinding nil))
+#+end_src
+
+To enable this in the notebook, configure matplotlib to produce inline images.
+
+#+begin_src python :tangle nil
+%matplotlib inline
+#+end_src
+
+don't kill the *ein: buffer with ~ESC~ which causes the buffer not to work properly
+
+#+begin_src elisp
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
+#+end_src
+
+org babel integration for ein
+
+#+begin_src elisp
+(when (featurep! :tools ein)
+  (after! org
+    (require 'ob-ein)))
+#+end_src
 
 ** MQL
 :PROPERTIES:
@@ -2339,6 +2405,8 @@ display more columns in forge list topic
 activate magit-todo to display the TODOs section in magit buffer
 
 #+begin_src elisp
+(setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+
 (after! magit-todos (magit-todos-mode))
 #+end_src
 

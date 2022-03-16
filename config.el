@@ -24,7 +24,7 @@
 ;;    (setq doom-theme 'doom-solarized-dark)
 ;;    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; (setq doom-theme 'zaiste)
 (setq doom-theme 'doom-one)
@@ -210,6 +210,7 @@
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
 
       :localleader
+      "N" #'org-add-note
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
@@ -234,6 +235,31 @@
 ;; (map! ;;:after org-agenda
 ;;       :map org-agenda-mode-map
 ;;       )
+
+;; (use-package! org-modern
+;;   :after org
+;;   :config
+;;   (setq org-auto-align-tags nil
+;;         org-tags-column 0
+;;         org-catch-invisible-edits 'show-and-error
+;;         org-special-ctrl-a/e t
+;;         org-insert-heading-respect-content t
+
+;;         ;; Org styling, hide markup etc.
+;;         org-hide-emphasis-markers t
+;;         org-pretty-entities t
+;;         org-ellipsis "…"
+
+;;         ;; Agenda styling
+;;         org-agenda-block-separator ?─
+;;         org-agenda-time-grid '((daily today require-timed)
+;;                                (800 1000 1200 1400 1600 1800 2000)
+;;                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+;;         org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────")
+;;   )
+
+;; (add-hook 'org-mode-hook #'org-modern-mode)
+;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun stfl/org-agenda-set-someday (&optional do-schedule)
   "Marks the current agenda entry as SOMEDAY
@@ -917,11 +943,11 @@ org-default-priority is treated as lower than the same set value"
       :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
       )
 
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+;; (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+;; (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+;; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (after! org
   (setq org-todo-keywords
@@ -937,10 +963,11 @@ org-default-priority is treated as lower than the same set value"
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next)))
+          ("NEXT" . +org-todo-next))
+        )
 )
 
-(after! org (setq org-indent-indentation-per-level 4))
+(after! org (setq org-indent-indentation-per-level 2))
 
 ;; (set-ligatures! 'org-mode
 ;;     :alist '(("TODO " . "")
@@ -950,27 +977,27 @@ org-default-priority is treated as lower than the same set value"
 ;;              ("DONE " . "")
 ;;              ("KILL " . "")))
 
-(set-ligatures! 'org-mode
-    :alist '((":PROPERTIES:" . "⏍")
-             (":properties:" . "⏍")
-             (":LOGBOOK:" . "㏒")
-             (":logbook:" . "㏒")
-             ))
+;; (set-ligatures! 'org-mode
+;;     :alist '((":PROPERTIES:" . "⏍")
+;;              (":properties:" . "⏍")
+;;              (":LOGBOOK:" . "㏒")
+;;              (":logbook:" . "㏒")
+;;              ))
 
-(after! org-superstar
-  ;; Every non-TODO headline now have no bullet
-  ;; (setq org-superstar-headline-bullets-list '("　"))
-  (setq org-superstar-leading-bullet ?　)
-  ;; Enable custom bullets for TODO items
-  (setq org-superstar-special-todo-items t)
-  (setq org-superstar-todo-bullet-alist
-        '(("TODO" "☐")
-          ("NEXT" "➡")
-          ("PROJ" "⎚")
-          ("WAIT" "⏳")
-          ("KILL" "✘")
-          ("DONE" "✔")))
-  (org-superstar-restart))
+;; (after! org-superstar
+;;   ;; Every non-TODO headline now have no bullet
+;;   ;; (setq org-superstar-headline-bullets-list '("　"))
+;;   (setq org-superstar-leading-bullet ?　)
+;;   ;; Enable custom bullets for TODO items
+;;   (setq org-superstar-special-todo-items t)
+;;   (setq org-superstar-todo-bullet-alist
+;;         '(("TODO" "☐")
+;;           ("NEXT" "➡")
+;;           ("PROJ" "⎚")
+;;           ("WAIT" "⏳")
+;;           ("KILL" "✘")
+;;           ("DONE" "✔")))
+;;   (org-superstar-restart))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
@@ -1077,8 +1104,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory "~/.org/"
-        org-roam-db-location "~/.emacs.d/roam.db"
-        org-roam-file-exclude-regexp "*/.stversions/*"))
+        org-roam-db-location "~/.emacs.d/.local/roam.db"
+        org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
@@ -1479,6 +1506,16 @@ Not added when either:
         :prefix ("d" . "docstring")
         :desc "Generate Docstring" "d" #'numpydoc-generate))
 
+(after! ein
+  (setq! ein:output-area-inlined-images t
+         ein:worksheet-warn-obsolesced-keybinding nil))
+
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
+
+(when (featurep! :tools ein)
+  (after! org
+    (require 'ob-ein)))
+
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
 ;; (use-package! gitlab-ci-mode
@@ -1539,6 +1576,8 @@ Not added when either:
                       ("Labels" 8 t nil labels nil)
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
+
+(setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
 
