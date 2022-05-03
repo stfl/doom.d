@@ -48,10 +48,10 @@
 ;;       doom-unicode-font (font-spec :family "Fira Code")
 ;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
 
-;; (if (string= (system-name) "lendl-fujitsu")
-;;     (setq doom-font (font-spec :family "JetBrainsMono" :size 13)
-;;           doom-variable-pitch-font (font-spec :family "JetBrainsMono")
-;;           doom-big-font (font-spec :family "JetBrainsMono" :size 20))
+(if (string= (system-name) "manjaro.stfl.sh")
+  (setq doom-font (font-spec :family "JetBrains Mono" :size 20)
+        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
+        doom-big-font (font-spec :family "JetBrains Mono" :size 30))
   ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
   ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
   ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
@@ -62,7 +62,7 @@
   (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
         doom-variable-pitch-font (font-spec :family "JetBrains Mono")
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
-;; )
+  )
 
 ;; (setq doom-unicode-font doom-font)
 
@@ -125,6 +125,51 @@
 ;;   (pushnew! tree-sitter-major-mode-language-alist
 ;;             '(scss-mode . css)))
 
+;; (after! (solaire-mode demap)
+(use-package! demap
+  :after solaire-mode
+  :commands demap-toggle
+  :config
+  (setq demap-minimap-window-width 15)
+  (let ((gray1 "#1A1C22")
+        (gray2 "#21242b")
+        (gray3 "#282c34")
+        (gray4 "#2b3038") )
+    (face-spec-set 'demap-minimap-font-face
+                   `((t :background ,gray2
+                        :inherit    unspecified
+                        :family     "minimap"
+                        :height     10          )))
+    (face-spec-set 'demap-visible-region-face
+                   `((t :background ,gray4
+                        :inherit    unspecified )))
+    (face-spec-set 'demap-visible-region-inactive-face
+                   `((t :background ,gray3
+                        :inherit    unspecified )))
+    (face-spec-set 'demap-current-line-face
+                   `((t :background ,gray1
+                        :inherit    unspecified )))
+    (face-spec-set 'demap-current-line-inactive-face
+                   `((t :background ,gray1
+                        :inherit    unspecified ))))
+
+  ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
+
+;;   (defun my-track-window-update-p()
+;;     "my minimap update predicate function.
+
+;; minimaps only show windows in the same frame"
+;;     (and (demap-track-w-mode-update-p-func-default)
+;;          (get-buffer-window) ))
+
+;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
+
+  (map!
+   :leader
+   :prefix ("t" "+toggle")
+   :desc "Minimap" "m" #'demap-toggle)
+  )
+
 (after! evil-snipe
   (setq evil-snipe-scope 'whole-visible)
   (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
@@ -154,6 +199,8 @@
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+
+(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -199,6 +246,9 @@
       "o" #'org-open-at-point
       "g" #'eos/org-add-ids-to-headlines-in-file
 
+      :prefix ("d" . "dates/deadlines")
+      "c" #'org-cancel-repeater
+
       :prefix ("r" . "refile")
       :desc "Refile to reference" "R" #'stfl/refile-to-roam
       :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
@@ -210,7 +260,7 @@
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
 
       :localleader
-      "N" #'org-add-note
+      "N" #'org-agenda-add-note
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
@@ -235,31 +285,6 @@
 ;; (map! ;;:after org-agenda
 ;;       :map org-agenda-mode-map
 ;;       )
-
-;; (use-package! org-modern
-;;   :after org
-;;   :config
-;;   (setq org-auto-align-tags nil
-;;         org-tags-column 0
-;;         org-catch-invisible-edits 'show-and-error
-;;         org-special-ctrl-a/e t
-;;         org-insert-heading-respect-content t
-
-;;         ;; Org styling, hide markup etc.
-;;         org-hide-emphasis-markers t
-;;         org-pretty-entities t
-;;         org-ellipsis "…"
-
-;;         ;; Agenda styling
-;;         org-agenda-block-separator ?─
-;;         org-agenda-time-grid '((daily today require-timed)
-;;                                (800 1000 1200 1400 1600 1800 2000)
-;;                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-;;         org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────")
-;;   )
-
-;; (add-hook 'org-mode-hook #'org-modern-mode)
-;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun stfl/org-agenda-set-someday (&optional do-schedule)
   "Marks the current agenda entry as SOMEDAY
@@ -347,14 +372,288 @@ relevant again (Tickler)"
           (?H . +org-priority-h)
           (?I . +org-priority-i))))
 
+(defun stfl/agenda-query-stuck-projects()
+  '(and (todo "PROJ")
+        ;; (priority >= "B")
+        (not (tags "SOMEDAY"))
+        (not (children (and (todo "NEXT" "WAIT")
+                            (not (tags "SOMEDAY")))))))
+
+(defun stfl/org-agenda-show-priorities (&optional priority)
+  (interactive "P")
+  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
+                        (priority)
+                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
+  (when (or (< new org-priority-highest) (> new org-priority-highest))
+    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
+  (setq stfl/agenda-max-prio-group new)
+  (message "Showing up to priority %c" new)
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-reset-show-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-more-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-less-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
+  (org-agenda-redo-all))
+
+(defun stfl/agenda-day ()
+  '(agenda "Agenda"
+           ((org-agenda-use-time-grid t)
+            (org-deadline-warning-days 0)
+            (org-agenda-span '1)
+            ;; (org-super-agenda-header-separator "\n")
+            (org-super-agenda-groups stfl/org-super-agenda-today-groups)
+            (org-agenda-start-day (org-today)))))
+
+(defun prio-deadline>= (prio)
+  `(and (or (priority >= (char-to-string ,prio))
+            (and ,(> stfl/agenda-max-prio-group org-priority-default)
+                 (not (priority)))  ;; default priority is treated as nil in org-ql
+            (ancestors (priority >= (char-to-string ,prio)))
+            (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
+                            (fib        ;; increase the date range of interest with a fibonacci sequance
+                             (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
+                                (- prio 64))))) ;; use the priority value
+            (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
+                                                   (- prio 64)))))))))
+
+(defun stfl/agenda-query-actions-prio-higher (prio)
+  `(and (todo "NEXT" "WAIT")
+        ,(prio-deadline>= prio)
+        (not ,(someday-habit))
+        (not (ancestors (deadline :to 0)))
+        (not (deadline :to 0))
+        (not (scheduled))))
+
+(defun someday-habit()
+  '(or (tags "SOMEDAY" "HABIT")
+        (habit)))
+
+(defun not-someday-habit()
+  `(not ,(someday-habit)))
+
+(defun not-sched-or-dead(from)
+  `(and (not (scheduled :from today))
+       (not (deadline :from ,from))))
+
+(map! :after org-ql
+      :map org-ql-view-map
+      "z" #'org-ql-view-dispatch)
+
+(after! org-ql
+  (setq! org-ql-views
+         (list (cons "LASTMILE"
+                     (list :title "LASTMILE"
+                           :buffers-files org-agenda-files
+                           :sort 'priority
+                           :super-groups #'stfl/ancestor-priority-groups
+                           :query `(and
+                                    (todo "NEXT")
+                                    (tags "LASTMILE")
+                                    ,(not-someday-habit)
+                                    ,(not-sched-or-dead 14))
+                           :narrow nil))
+               ;;     ("Home and Sarah"
+               ;;     :title "Home and Sarah"
+               ;;     :buffers-files org-agenda-files
+               ;;     :sort priority
+               ;;     :super-groups stfl/ancestor-priority-groups
+               ;;     :query `(and
+               ;;             (todo "NEXT" "NEXT")
+               ;;             (tags "@sarah" "@home")
+               ;;             ,(not-someday-habit)
+               ;;             ,(not-sched-or-dead 14))
+               ;;     :narrow nil)
+               ;; ("Standalong NEXT"
+               ;;     :title "Standalone NEXT"
+               ;;     :buffers-files org-agenda-files
+               ;;     :sort priority
+               ;;     :super-groups stfl/ancestor-priority-groups
+               ;;     :query `(and
+               ;;             (todo "NEXT" "NEXT")
+               ;;             (not (ancestors (todo "PROJ")))
+               ;;             ,(not-someday-habit)
+               ;;             ,(prio-deadline>= org-priority-lowest)
+               ;;     :narrow nil))
+               ;; ("Open Loops"
+               ;;     :title "Open Loops"
+               ;;     :buffers-files org-agenda-files
+               ;;     :sort priority
+               ;;     :super-groups stfl/ancestor-priority-groups
+               ;;     :query `(and
+               ;;             (todo "NEXT" "NEXT")
+               ;;             ;; (not (ancestors (todo "PROJ")))
+               ;;             ,(not-someday-habit)
+               ;;             ,(prio-deadline>= org-priority-lowest)
+               ;;     :narrow nil))
+               ;; ("Stuck Standalone NEXT and WAIT"
+               ;;     :title "Stuck Standalong NEXT"
+               ;;     :buffers-files org-agenda-files
+               ;;     :sort priority
+               ;;     :super-groups stfl/ancestor-priority-groups
+               ;;     :query `(and
+               ;;             (todo "NEXT" "WAIT")
+               ;;             (not (ancestors (todo "PROJ")))
+               ;;             (not (scheduled))
+               ;;             (not (deadline))
+               ;;             (not (tags "@crypto_rotation" "inbox"))
+               ;;             ,(not-someday-habit)
+               ;;             (not ,(stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group))
+               ;;     :narrow nil))
+               ;; ("Crypo Rotation"
+               ;;     :title "Crypto Rotation"
+               ;;     :buffers-files org-agenda-files
+               ;;     :sort date
+               ;;     :super-groups stfl/ancestor-priority-groups
+               ;;     :query `(and
+               ;;             (todo "NEXT" "TODO")
+               ;;             (ts-active :to today)
+               ;;             (tags "@crypto_rotation")
+               ;;             ,(not-someday-habit)
+               ;;             (not ,(stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group))
+               ;;     :narrow nil))
+
+               ;; ("Calendar: This week"
+               ;;       (lambda ()
+               ;;         "Show items with an active timestamp during this calendar week."
+               ;;         (interactive)
+               ;;         (let* ((ts (ts-now))
+               ;;                (beg-of-week (->> ts
+               ;;                               (ts-adjust 'day (- (ts-dow (ts-now))))
+               ;;                               (ts-apply :hour 0 :minute 0 :second 0)))
+               ;;                (end-of-week (->> ts
+               ;;                               (ts-adjust 'day (- 6 (ts-dow (ts-now))))
+               ;;                               (ts-apply :hour 23 :minute 59 :second 59))))
+               ;;           (org-ql-search (org-agenda-files)
+               ;;             `(ts-active :from ,beg-of-week
+               ;;                         :to ,end-of-week)
+               ;;             :title "This week"
+               ;;             :super-groups 'org-super-agenda-groups
+               ;;             :sort '(priority)))))
+               ;; ("Calendar: Next week"
+               ;;       (lambda ()
+               ;;         "Show items with an active timestamp during the next calendar week."
+               ;;         (interactive)
+               ;;         (let* ((ts (ts-adjust 'day 7 (ts-now)))
+               ;;                (beg-of-week (->> ts
+               ;;                               (ts-adjust 'day (- (ts-dow (ts-now))))
+               ;;                               (ts-apply :hour 0 :minute 0 :second 0)))
+               ;;                (end-of-week (->> ts
+               ;;                               (ts-adjust 'day (- 6 (ts-dow (ts-now))))
+               ;;                               (ts-apply :hour 23 :minute 59 :second 59))))
+               ;;           (org-ql-search (org-agenda-files)
+               ;;             `(ts-active :from ,beg-of-week
+               ;;                         :to ,end-of-week)
+               ;;             :title "Next week"
+               ;;             :super-groups 'org-super-agenda-groups
+               ;;             :sort '(priority)))))
+
+               ;; ("Review: Recently timestamped" 'org-ql-view-recent-items)
+               ;; ((propertize "Review: Dangling tasks"
+               ;;                   'help-echo "Tasks whose ancestor is done")
+               ;;       (list :buffers-files #'org-agenda-files
+               ;;             :query '(and (todo)
+               ;;                          (ancestors (done)))
+               ;;             :title (propertize "Review: Dangling tasks"
+               ;;                                'help-echo "Tasks whose ancestor is done")
+               ;;             :sort '(todo priority date)
+               ;;             :super-groups '((:auto-parent t))))
+               ;; ((propertize "Review: Stale tasks"
+               ;;                   'help-echo "Tasks without a timestamp in the past 2 weeks")
+               ;;       (list :buffers-files #'org-agenda-files
+               ;;             :query '(and (todo)
+               ;;                          (not (ts :from -14)))
+               ;;             :title (propertize "Review: Stale tasks"
+               ;;                                'help-echo "Tasks without a timestamp in the past 2 weeks")
+               ;;             :sort '(todo priority date)
+               ;;             :super-groups '((:auto-parent t))))
+               ;; (,(propertize "Review: Stuck projects"
+               ;;                   'help-echo "Tasks with sub-tasks but no NEXT sub-tasks")
+               ;;       (list :buffers-files #'org-agenda-files
+               ;;             :query (and (todo)
+               ;;                          (descendants (todo))
+               ;;                          (not (descendants (todo "NEXT"))))
+               ;;             :title (propertize "Review: Stuck projects"
+               ;;                                'help-echo "Tasks with sub-tasks but no NEXT sub-tasks")
+               ;;             :sort (date priority)
+               ;;             :super-groups 'org-super-agenda-groups))
+               )))
+
+;; (defun stfl/agenda-next-wait ()
+;;   (interactive)
+;;   (let* ((ts-default-format "%Y-%m-%d")
+;;          (end (ts-format (ts-adjust 'day 60 (ts-now)))))
+;;     (org-ql-search (org-agenda-files)
+;;       `(and (todo "NEXT" "WAIT")
+;;             (not (tags "org_jira" "SOMEDAY" "TICKLER" "HABIT"))
+;;             ;; (not (children (and (todo "NEXT" "WAIT")
+;;             ;;                     (not (tags "SOMEDAY")))))
+;;             (or (not (scheduled))
+;;                 (scheduled :to ,end))
+;;             (or (not (deadline))
+;;                 (deadline auto)
+;;                 (ancestors (deadline auto))))
+;;       :title "Weekly Review"
+;;       :super-groups stfl/priority-groups)))
+
+;; ;; Past week intraspection
+;; (defun past-week-range (num)
+;;   "Return timestamps (BEG . END) spanning the previous*NUM calendar week."
+;;   (let* (;; Bind `now' to the current timestamp to ensure all calculations
+;;          ;; begin from the same timestamp.  (In the unlikely event that
+;;          ;; the execution of this code spanned from one day into the next,
+;;          ;; that would cause a wrong result.)
+;;          (now (ts-now))
+;;          ;; We start by calculating the offsets for the beginning and
+;;          ;; ending timestamps using the current day of the week.  Note
+;;          ;; that the `ts-dow' slot uses the "%w" format specifier, which
+;;          ;; counts from Sunday to Saturday as a number from 0 to 6.
+;;          (adjust-beg-day (- (+ (* num 7) (ts-dow now))))
+;;          (adjust-end-day (- (- (* num 7) (- 6 (ts-dow now)))))
+;;          ;; Make beginning/end timestamps based on `now', with adjusted
+;;          ;; day and hour/minute/second values.  These functions return
+;;          ;; new timestamps, so `now' is unchanged.
+;;          (beg (thread-last now
+;;                            ;; `ts-adjust' makes relative adjustments to timestamps.
+;;                            (ts-adjust 'day adjust-beg-day)
+;;                            ;; `ts-apply' applies absolute values to timestamps.
+;;                            (ts-apply :hour 0 :minute 0 :second 0)))
+;;          (end (thread-last now
+;;                            (ts-adjust 'day adjust-end-day)
+;;                            (ts-apply :hour 23 :minute 59 :second 59))))
+;;     (cons beg end)))
+
+;; ;; Weekly Review
+;; (defun org-user/week-intraspection ()
+;;   (interactive)
+;;   (let* ((week-num (read-number "How many weeks in past? " 1))
+;;          (ts-default-format "%Y-%m-%d")
+;;          (wbeg (ts-format (car (past-week-range week-num))))
+;;          (wend (ts-format (cdr (past-week-range week-num)))))
+;;     (org-ql-search (org-agenda-files)
+;;       `(and (done)
+;;             (closed :from ,wbeg :to ,wend))
+;;       :title "Weekly Review"
+;;       :super-groups (quote ((:auto-ts t))))))
+
 ;; (after! org
 (setq!
        ;; org-agenda-dim-blocked-tasks t
        org-agenda-dim-blocked-tasks 'invisible
        org-agenda-use-time-grid t
        ;; org-agenda-hide-tags-regexp "\\w+"
-       org-agenda-compact-blocks t
-       ;; org-agenda-block-separator "-"
+       ;; org-agenda-compact-blocks t
+       ;; org-agenda-block-separator ?\n
+       org-agenda-block-separator ?-
        org-agenda-tags-column 0
        org-agenda-skip-scheduled-if-done t
        org-agenda-skip-unavailable-files t
@@ -397,74 +696,9 @@ relevant again (Tickler)"
 
 (after! org
 
-(defun stfl/agenda-query-stuck-projects()
-  '(and (todo "PROJ")
-        ;; (priority >= "B")
-        (not (tags "SOMEDAY"))
-        (not (children (and (todo "NEXT" "WAIT")
-                            (not (tags "SOMEDAY")))))))
-
 (setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
 (setq-default stfl/agenda-max-prio-group ?D)
 (setq stfl/agenda-deadline-fib-offset 3)
-
-(defun stfl/org-agenda-show-priorities (&optional priority)
-  (interactive "P")
-  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
-                        (priority)
-                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
-  (when (or (< new org-priority-highest) (> new org-priority-highest))
-    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
-  (setq stfl/agenda-max-prio-group new)
-  (message "Showing up to priority %c" new)
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-reset-show-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-more-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-less-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
-  (org-agenda-redo-all))
-
-(defun stfl/agenda-day ()
-  '(agenda "Agenda"
-           ((org-agenda-use-time-grid t)
-            (org-deadline-warning-days 0)
-            (org-agenda-span '1)
-            (org-super-agenda-header-separator "\n")
-            (org-super-agenda-groups stfl/org-super-agenda-today-habit-tickler-groups)
-            (org-agenda-start-day (org-today)))))
-
-(defun stfl/agenda-query-prio-higher (prio)
-  `(or (priority >= (char-to-string ,prio))
-       (and ,(> stfl/agenda-max-prio-group org-priority-default)
-            (not (priority)))  ;; default priority is treated at nil in org-ql
-       (ancestors (priority >= (char-to-string ,prio)))
-       (deadline
-        :from +1
-        :to
-        ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-          (fib        ;; increase the date range of interest with a fibonacci sequance
-           (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-              (- prio 64)))) ;; use the priority value
-        (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
-                                              (- prio 64)))))))))
-
-(defun stfl/agenda-query-actions-prio-higher (prio)
-  `(and (todo "NEXT" "WAIT")
-        ,(stfl/agenda-query-prio-higher prio)
-        (not (tags "SOMEDAY"))
-        (not (scheduled))
-        (not (ts-active :on today))
-        (not (habit))))
 
 (setq org-agenda-custom-commands
       `(
@@ -472,12 +706,12 @@ relevant again (Tickler)"
          (,(stfl/agenda-day)
           (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
                         ((org-ql-block-header "Next Actions")
-                         (org-agenda-block-separator "\n")
-                         (org-super-agenda-header-separator "")
+                         ;; (org-agenda-block-separator "\n")
+                         ;; (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           (org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
+                         ;; (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/priority-groups)
                          ))))
         ("a" "Agenda Weekly"
@@ -574,68 +808,11 @@ relevant again (Tickler)"
 
 ) ;; (after! org
 
-;; (defun stfl/agenda-next-wait ()
-;;   (interactive)
-;;   (let* ((ts-default-format "%Y-%m-%d")
-;;          (end (ts-format (ts-adjust 'day 60 (ts-now)))))
-;;     (org-ql-search (org-agenda-files)
-;;       `(and (todo "NEXT" "WAIT")
-;;             (not (tags "org_jira" "SOMEDAY" "TICKLER" "HABIT"))
-;;             ;; (not (children (and (todo "NEXT" "WAIT")
-;;             ;;                     (not (tags "SOMEDAY")))))
-;;             (or (not (scheduled))
-;;                 (scheduled :to ,end))
-;;             (or (not (deadline))
-;;                 (deadline auto)
-;;                 (ancestors (deadline auto))))
-;;       :title "Weekly Review"
-;;       :super-groups stfl/priority-groups)))
-
-;; ;; Past week intraspection
-;; (defun past-week-range (num)
-;;   "Return timestamps (BEG . END) spanning the previous*NUM calendar week."
-;;   (let* (;; Bind `now' to the current timestamp to ensure all calculations
-;;          ;; begin from the same timestamp.  (In the unlikely event that
-;;          ;; the execution of this code spanned from one day into the next,
-;;          ;; that would cause a wrong result.)
-;;          (now (ts-now))
-;;          ;; We start by calculating the offsets for the beginning and
-;;          ;; ending timestamps using the current day of the week.  Note
-;;          ;; that the `ts-dow' slot uses the "%w" format specifier, which
-;;          ;; counts from Sunday to Saturday as a number from 0 to 6.
-;;          (adjust-beg-day (- (+ (* num 7) (ts-dow now))))
-;;          (adjust-end-day (- (- (* num 7) (- 6 (ts-dow now)))))
-;;          ;; Make beginning/end timestamps based on `now', with adjusted
-;;          ;; day and hour/minute/second values.  These functions return
-;;          ;; new timestamps, so `now' is unchanged.
-;;          (beg (thread-last now
-;;                            ;; `ts-adjust' makes relative adjustments to timestamps.
-;;                            (ts-adjust 'day adjust-beg-day)
-;;                            ;; `ts-apply' applies absolute values to timestamps.
-;;                            (ts-apply :hour 0 :minute 0 :second 0)))
-;;          (end (thread-last now
-;;                            (ts-adjust 'day adjust-end-day)
-;;                            (ts-apply :hour 23 :minute 59 :second 59))))
-;;     (cons beg end)))
-
-;; ;; Weekly Review
-;; (defun org-user/week-intraspection ()
-;;   (interactive)
-;;   (let* ((week-num (read-number "How many weeks in past? " 1))
-;;          (ts-default-format "%Y-%m-%d")
-;;          (wbeg (ts-format (car (past-week-range week-num))))
-;;          (wend (ts-format (cdr (past-week-range week-num)))))
-;;     (org-ql-search (org-agenda-files)
-;;       `(and (done)
-;;             (closed :from ,wbeg :to ,wend))
-;;       :title "Weekly Review"
-;;       :super-groups (quote ((:auto-ts t))))))
-
 (use-package! org-super-agenda
   :after (org-agenda evil-org-agenda)
   :config
   (org-super-agenda-mode)
-  (setq org-super-agenda-header-separator "")
+  (setq org-super-agenda-header-separator "\n")
 
   (setq stfl/org-super-agenda-groups
         '((:name "Today"
@@ -781,12 +958,15 @@ relevant again (Tickler)"
 
 )
 
-(setq stfl/org-super-agenda-today-habit-tickler-groups
+(setq stfl/org-super-agenda-today-groups
       '((:time-grid t
          :order 0)
         (:name "Tickler"
          :tag "SOMEDAY"
          :order 20)
+        (:name "Crypto Rotation"
+         :tag "@crypto_rotation"
+         :order 40)
         (:name "Habits"
          :tag "HABIT"
          :habit t
@@ -943,11 +1123,11 @@ org-default-priority is treated as lower than the same set value"
       :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
       )
 
-;; (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-;; (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-;; (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-;; (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-;; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (after! org
   (setq org-todo-keywords
@@ -1015,6 +1195,31 @@ org-default-priority is treated as lower than the same set value"
         org-track-ordered-property-with-tag t
         org-hierarchical-todo-statistics nil
         ))
+
+;; (use-package! org-modern
+;;   :after org
+;;   :config
+;;   (setq org-auto-align-tags nil
+;;         org-tags-column 0
+;;         org-catch-invisible-edits 'show-and-error
+;;         org-special-ctrl-a/e t
+;;         org-insert-heading-respect-content t
+
+;;         ;; Org styling, hide markup etc.
+;;         org-hide-emphasis-markers t
+;;         org-pretty-entities t
+;;         org-ellipsis "…"
+
+;;         ;; Agenda styling
+;;         org-agenda-block-separator ?─
+;;         org-agenda-time-grid '((daily today require-timed)
+;;                                (800 1000 1200 1400 1600 1800 2000)
+;;                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+;;         org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────")
+;;   )
+
+;; (add-hook 'org-mode-hook #'org-modern-mode)
+;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun stfl/build-my-someday-files ()
   (file-expand-wildcards "~/.org/gtd/someday/*.org"))
@@ -1086,21 +1291,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#emacs" . ?-)
                         )))
 
-(defun nm/org-id-prompt-id ()
-  "Prompt for the id during completion of id: link."
-  (let ((dest (org-refile-get-location))
-        (name nil)
-        (id nil))
-    (save-excursion
-      (find-file (cadr dest))
-      (goto-char (nth 3 dest))
-      (setq id (org-id-get (point) t)
-            name (org-get-heading t t t t)))
-    (org-insert-link nil (concat "id:" id) name)))
-
-(after! org
-  (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
-
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory "~/.org/"
@@ -1137,7 +1327,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
-        org-gcal-auto-archive nil ;; workaround for "rx "**" range error" https://github.com/kidd/org-gcal.el/issues/172
+        ;; org-gcal-auto-archive nil ;; workaround for "rx "**" range error" https://github.com/kidd/org-gcal.el/issues/17
         ))
 
 (map!
@@ -1265,7 +1455,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                                                       (cons "High" ?C)
                                                       ;; (cons "Medium" ?E)  ;; no org priority for /default/
                                                       (cons "Low" ?E)
-                                                      (cons "Lowest" ?G))
+                                                      (cons "Lowest" ?F))
 
         org-jira-custom-jqls '((:jql "
 assignee='Stefan Lendl'
@@ -1471,8 +1661,12 @@ Not added when either:
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq gc-cons-threshold 100000000)
+  ;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  ;; (setq gc-cons-threshold 100000000)
+  (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
+                 "[/\\\\]__pycache__\\'"
+                 "[/\\\\]uploads\\"))
+    (add-to-list 'lsp-file-watch-ignored-directories dir))
   ;; (setq lsp-log-io t)
   )
 
@@ -1580,6 +1774,23 @@ Not added when either:
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
+
+(use-package! edit-server
+  :defer t
+  :commands edit-server-start
+  :init (if after-init-time
+              (edit-server-start)
+            (add-hook 'after-init-hook
+                      #'(lambda() (edit-server-start))))
+  :config (setq edit-server-new-frame-alist
+                '((name . "Edit with Emacs FRAME")
+                  (top . 200)
+                  (left . 200)
+                  (width . 80)
+                  (height . 25)
+                  (minibuffer . t)
+                  (menu-bar-lines . t)
+                  (window-system . x))))
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 

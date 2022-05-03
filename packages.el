@@ -1,10 +1,13 @@
-;; (package! org-modern)
+(package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
+;; (package! demap)
 
 (package! org-super-agenda)
 
 (package! org-ql)
 
 (package! org-edna)
+
+;; (package! org-modern)
 
 (package! websocket)
 (package! org-roam-ui
@@ -31,3 +34,5 @@
 (package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode"))
 
 (package! ztree)
+
+(package! edit-server)
