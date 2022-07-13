@@ -31,8 +31,7 @@
         ;; )
        (vertico
         +icons
-        +childframe
-        )
+        +childframe)
 
        :ui
        ;; deft              ; notational velocity for Emacs
@@ -72,7 +71,8 @@
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       format          ; automated prettiness
+       (format          ; automated prettiness
+        +onsave)
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -125,11 +125,10 @@
        (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
-        +forge
-        )
+        +forge)
        ;;make              ; run make tasks from Emacs
        ;; (pass +auth)        ; password manager for nerds
-       ;;pdf               ; pdf enhancements
+       pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
@@ -173,12 +172,12 @@
        ;;lean
        ;;factor
        ;;ledger            ; an accounting system in Emacs
-       (lua               ; one-based indices? one-based indices
-        +lsp
-        +fennel)
+       ;; (lua               ; one-based indices? one-based indices
+       ;;  +lsp
+       ;;  +fennel)
        (markdown +grip)          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
-       ;; nix               ; I hereby declare "nix geht mehr!"
+       nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers

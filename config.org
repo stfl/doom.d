@@ -113,8 +113,9 @@ font string. You generally only need these two:
   (setq doom-font (font-spec :family "JetBrains Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "JetBrains Mono")
         doom-big-font (font-spec :family "JetBrains Mono" :size 30))
-  ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
-  ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+  ;; (setq doom-font (font-spec :family "Noto Sans" :size 20)
+  ;;       doom-variable-pitch-font (font-spec :family "Noto Sans")
+  ;;       doom-big-font (font-spec :family "Noto Sans" :size 30))
   ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
   ;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
   ;;       doom-unicode-font (font-spec :family "JetBrains Mono")
@@ -125,7 +126,7 @@ font string. You generally only need these two:
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-;; (setq doom-unicode-font doom-font)
+(setq doom-unicode-font doom-font)
 #+END_SRC
 
 font detection taken from tecosaur https://tecosaur.github.io/emacs-config/config.html#font-face
@@ -214,20 +215,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
  ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 #+end_src
-** Org Emphasis
-:PROPERTIES:
-:ID:       c8b37906-ad3a-4891-9234-6c8627fb4d61
-:END:
-
-Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
-#+begin_src elisp
-;; (after! org
-;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
-;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
-;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-;;   )
-#+end_src
-
 ** popup rules
 :PROPERTIES:
 :ID:       1f322103-dc44-4293-b354-a8f5301b89e4
@@ -244,22 +231,6 @@ Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 
-** tree-sitter
-:PROPERTIES:
-:ID:       fa02905e-84e4-466c-9d73-396836c94195
-:END:
-
-#+begin_src elisp
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-;; (after! tree-sitter-langs
-;;   (pushnew! tree-sitter-major-mode-language-alist
-;;             '(scss-mode . css)))
-#+end_src
 ** Minimap (demap.el)
 
 #+begin_src elisp :tangle packages.el
@@ -270,7 +241,6 @@ Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
 #+begin_src elisp
 ;; (after! (solaire-mode demap)
 (use-package! demap
-  :after solaire-mode
   :commands demap-toggle
   :config
   (setq demap-minimap-window-width 15)
@@ -660,7 +630,6 @@ and add change the color of the symbols to color range from red to blue
            ((org-agenda-use-time-grid t)
             (org-deadline-warning-days 0)
             (org-agenda-span '1)
-            ;; (org-super-agenda-header-separator "\n")
             (org-super-agenda-groups stfl/org-super-agenda-today-groups)
             (org-agenda-start-day (org-today)))))
 
@@ -1281,6 +1250,9 @@ Adjusting clock settings
 ;; nil ;; for less annoying output when eval the narrowed block
 #+end_src
 
+#+RESULTS:
+: ((b Agenda and tasks B+ ((agenda Agenda ((org-agenda-use-time-grid t) (org-deadline-warning-days 0) (org-agenda-span '1) (org-agenda-skip-function (lambda (e) (not (-contains? (org-get-tags) @crypto_rotation)))) (org-super-agenda-groups stfl/org-super-agenda-today-groups) (org-agenda-start-day (org-today)))) (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group) ((org-ql-block-header Next Actions) (org-super-agenda-groups stfl/ancestor-priority-groups))) (org-ql-block (stfl/agenda-query-stuck-projects) ((org-ql-block-header Stuck Projects) (org-super-agenda-groups stfl/priority-groups))))) (a Agenda Weekly ((agenda  ((org-agenda-span 'week) (org-agenda-start-on-weekday 1))))) (r . Review) (rc Close open NEXT Actions and WAIT ((org-ql-block '(and (todo NEXT WAIT) (not (tags SOMEDAY HABIT org_jira)) (not (habit)) (or (not (deadline)) (deadline :to +30) (ancestors (deadline :to +30))) (or (not (scheduled)) (scheduled :to +30))) ((org-super-agenda-header-separator ) (org-deadline-warning-days 30) (stfl/agenda-max-prio-group org-priority-lowest) (org-super-agenda-groups stfl/ancestor-priority-groups) (org-ql-block-header Something to do))) (org-ql-block (stfl/agenda-query-stuck-projects) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))))) (rl Agenda Weekly with Log ((agenda  ((org-agenda-span 'week) (org-agenda-start-on-weekday 1) (org-agenda-archives-mode t) (org-agenda-start-with-log-mode '(closed)) (org-agenda-show-log t) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp ^.*DONE )))))) (rp Plan Projects ((org-ql-block '(and (todo PROJ) (not (tags SOMEDAY)) (not (children (and (todo NEXT WAIT) (tags SOMEDAY)))) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Projects) (org-super-agenda-header-separator ) (org-deadline-warning-days 45) (org-super-agenda-groups stfl/priority-groups))))) (rn Plan Next Actions ((org-ql-block '(and (todo NEXT) (not (tags SOMEDAY)) (not (scheduled)) (not (habit)) (or (not (deadline)) (deadline auto) (ancestors (deadline auto)))) ((org-ql-block-header Next Actions) (org-super-agenda-header-separator ) (org-deadline-warning-days 14) (org-super-agenda-groups stfl/priority-groups))))) (rs Stuck Projects ((org-ql-block (stfl/agenda-query-stuck-projects) ((org-ql-block-header Stuck Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups stfl/priority-groups))))) (rS SOMEDAY ((org-ql-block '(and (todo PROJ) (or (and (priority <= (char-to-string stfl/agenda-backlog-prio-threshold)) (not (ancestors (priority > (char-to-string stfl/agenda-backlog-prio-threshold)))) (not (children (priority > (char-to-string stfl/agenda-backlog-prio-threshold))))) (tags SOMEDAY) (children (and (todo NEXT WAIT) (tags SOMEDAY)))) (not (scheduled)) (not (habit)) (not (deadline))) ((org-ql-block-header Projects) (org-super-agenda-header-separator ) (org-super-agenda-groups '((:tag SOMEDAY :order 10) (:auto-priority))))))))
+
 #+begin_src elisp
 ) ;; (after! org
 #+end_src
@@ -1466,9 +1438,9 @@ Adjusting clock settings
         (:name "Tickler"
          :tag "SOMEDAY"
          :order 20)
-        (:name "Crypto Rotation"
-         :tag "@crypto_rotation"
-         :order 40)
+        (:discard (:name "Crypto Rotation"
+                   :tag "@crypto_rotation"
+                   :order 40))
         (:name "Habits"
          :tag "HABIT"
          :habit t
@@ -1973,11 +1945,12 @@ do not automatically open the roam side-pane
   (setq +org-roam-open-buffer-on-find-file nil))
 #+end_src
 
-  # ;; (setq org-roam-dailies-capture-templates
-  # ;;       '(("d" "daily" plain (function org-roam-capture--get-point) ""
-  # ;;          :immediate-finish t
-  # ;;          :file-name "roam/journal/%<%Y-%m-%d-%a>"
-  # ;;          :head "#+TITLE: %<%Y-%m-%d %a>\n#+STARTUP: content\n\n")))
+#+begin_src elisp
+(setq org-roam-dailies-capture-templates
+      ' (("d" "default"
+          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+#+end_src
 
   # ;; (setq org-roam-capture-templates
   # ;;       '(("f" "fleeting" plain (function org-roam-capture--get-point)
@@ -1997,12 +1970,6 @@ do not automatically open the roam side-pane
   # ;;          :unnarrowed t)
   # ;;         ))
   # )
-
-rebuild org-roam cache at start
-
-#+begin_src elisp
-;; (after! org-roam (org-roam-db-build-cache))
-#+end_src
 
 ** org-roam-ui
 :PROPERTIES:
@@ -2262,6 +2229,64 @@ ORDER BY priority, created DESC
      :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql))))
 #+END_SRC
 
+** org-babel
+
+*** Auto :async if possible
+:PROPERTIES:
+:ID:       d41d54d8-bf68-42be-8004-f67c49cf950a
+:END:
+https://tecosaur.github.io/emacs-config/config.html#babel
+
+#+begin_src elisp
+(add-transient-hook! #'org-babel-execute-src-block
+  (require 'ob-async))
+
+(defvar org-babel-auto-async-languages '()
+  "Babel languages which should be executed asyncronously by default.")
+
+(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+  "Eagarly add an :async parameter to the src information, unless it seems problematic.
+This only acts o languages in `org-babel-auto-async-languages'.
+Not added when either:
++ session is not \"none\"
++ :sync is set"
+  :around #'org-babel-get-src-block-info
+  (let ((result (funcall orig-fn light datum)))
+    (when (and (string= "none" (cdr (assoc :session (caddr result))))
+               (member (car result) org-babel-auto-async-languages)
+               (not (assoc :async (caddr result))) ; don't duplicate
+               (not (assoc :sync (caddr result))))
+      (push '(:async) (caddr result)))
+    result))
+#+end_src
+** Org Emphasis
+:PROPERTIES:
+:ID:       c8b37906-ad3a-4891-9234-6c8627fb4d61
+:END:
+
+Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
+#+begin_src elisp
+;; (after! org
+;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
+;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
+;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+;;   )
+#+end_src
+** Org Pandoc Import
+
+https://github.com/tecosaur/org-pandoc-import
+
+#+begin_src elisp :tangle packages.el
+;; (package! org-pandoc-import
+;;   :recipe (:host github
+;;            :repo "tecosaur/org-pandoc-import"
+;;            :files ("*.el" "filters" "preprocessors")))
+#+end_src
+
+#+begin_src elisp
+;; (use-package! org-pandoc-import :after org)
+#+end_src
+
 * Module Settings
 ** Company mode
 :PROPERTIES:
@@ -2480,36 +2505,6 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 #+end_src
-** org-babel
-
-*** Auto :async if possible
-:PROPERTIES:
-:ID:       d41d54d8-bf68-42be-8004-f67c49cf950a
-:END:
-https://tecosaur.github.io/emacs-config/config.html#babel
-
-#+begin_src elisp
-(add-transient-hook! #'org-babel-execute-src-block
-  (require 'ob-async))
-
-(defvar org-babel-auto-async-languages '()
-  "Babel languages which should be executed asyncronously by default.")
-
-(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
-  "Eagarly add an :async parameter to the src information, unless it seems problematic.
-This only acts o languages in `org-babel-auto-async-languages'.
-Not added when either:
-+ session is not \"none\"
-+ :sync is set"
-  :around #'org-babel-get-src-block-info
-  (let ((result (funcall orig-fn light datum)))
-    (when (and (string= "none" (cdr (assoc :session (caddr result))))
-               (member (car result) org-babel-auto-async-languages)
-               (not (assoc :async (caddr result))) ; don't duplicate
-               (not (assoc :sync (caddr result))))
-      (push '(:async) (caddr result)))
-    result))
-#+end_src
 * Custom Functions
 :PROPERTIES:
 :ID:       c2e19f11-90cd-4bc9-ad99-36a5a680c084
@@ -2548,6 +2543,19 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 #+END_SRC
+** Code Formatting
+
+mapping doom's ~+format/buffer~ and ~+format/region~
+
+#+begin_src elisp
+(map! (:when (featurep! :editor format)
+       :v "g Q" '+format/region
+       :v "SPC =" '+format/region
+       :leader
+       :desc "Format Buffer" "=" #'+format/buffer
+       (:prefix ("b" "+buffer")
+        :desc "Format Buffer" "f" #'+format/buffer)))
+#+end_src
 
 ** PHP
 :PROPERTIES:
@@ -2579,6 +2587,26 @@ projectile speeds this up significantly.
 
 #+begin_src elisp
 (after! poetry (setq poetry-tracking-strategy 'projectile))
+#+end_src
+*** conda
+
+automatically activate a conda environment if present in a project
+
+#+begin_src elisp
+(after! conda (conda-env-autoactivate-mode))
+#+end_src
+
+projectile does not recognize conda projects as
+
+#+begin_src elisp
+(after! projectile
+  (projectile-register-project-type 'python-conda '("environment.yml")
+                                    :project-file "environment.yml"
+                                    :compile "conda build"  ;; does not exist
+                                    :test "conda run pytest"
+                                    :test-dir "tests"
+                                    :test-prefix "test_"
+                                    :test-suffix"_test"))
 #+end_src
 
 *** numpydoc.el
@@ -2625,6 +2653,40 @@ org babel integration for ein
 (when (featurep! :tools ein)
   (after! org
     (require 'ob-ein)))
+#+end_src
+*** Debug Test at point workaround
+
+debugging python tests at point do not work with the default configuration.
+might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
+
+#+begin_src elisp
+(after! (python-mode dap-mode)
+  (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
+                             (list :type "python-test-at-point  "
+                                   :args ""
+                                   :program nil
+                                   :module "pytest"
+                                   :request "launch"
+                                   :name "Python :: Run pytest (at point)")))
+#+end_src
+
+** Rust
+
+#+begin_src elisp
+(after! rustic
+  (setq lsp-rust-analyzer-inlay-hints-mode t))
+#+end_src
+
+configre dap-mode for rust
+#+begin_src elisp
+(after! (rust-mode dap-mode)
+  (dap-register-debug-template "Rust::GDB Run Configuration"
+                               (list :type "gdb"
+                                     :request "launch"
+                                     :name "GDB::Run"
+                                     :gdbpath "rust-gdb"
+                                     :target nil
+                                     :cwd nil)))
 #+end_src
 
 ** MQL

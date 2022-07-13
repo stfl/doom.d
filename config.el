@@ -52,8 +52,9 @@
   (setq doom-font (font-spec :family "JetBrains Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "JetBrains Mono")
         doom-big-font (font-spec :family "JetBrains Mono" :size 30))
-  ;; doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 27)
-  ;; doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+  ;; (setq doom-font (font-spec :family "Noto Sans" :size 20)
+  ;;       doom-variable-pitch-font (font-spec :family "Noto Sans")
+  ;;       doom-big-font (font-spec :family "Noto Sans" :size 30))
   ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
   ;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
   ;;       doom-unicode-font (font-spec :family "JetBrains Mono")
@@ -64,7 +65,7 @@
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-;; (setq doom-unicode-font doom-font)
+(setq doom-unicode-font doom-font)
 
 (custom-set-faces!
  '(org-date :foreground "dark goldenrod" :height 0.85)
@@ -102,12 +103,6 @@
  ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
  ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 
-;; (after! org
-;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
-;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
-;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-;;   )
-
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
 
 (after! org-ql
@@ -115,19 +110,8 @@
     "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
     ))
 
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-;; (after! tree-sitter-langs
-;;   (pushnew! tree-sitter-major-mode-language-alist
-;;             '(scss-mode . css)))
-
 ;; (after! (solaire-mode demap)
 (use-package! demap
-  :after solaire-mode
   :commands demap-toggle
   :config
   (setq demap-minimap-window-width 15)
@@ -410,7 +394,6 @@ relevant again (Tickler)"
            ((org-agenda-use-time-grid t)
             (org-deadline-warning-days 0)
             (org-agenda-span '1)
-            ;; (org-super-agenda-header-separator "\n")
             (org-super-agenda-groups stfl/org-super-agenda-today-groups)
             (org-agenda-start-day (org-today)))))
 
@@ -964,9 +947,9 @@ relevant again (Tickler)"
         (:name "Tickler"
          :tag "SOMEDAY"
          :order 20)
-        (:name "Crypto Rotation"
-         :tag "@crypto_rotation"
-         :order 40)
+        (:discard (:name "Crypto Rotation"
+                   :tag "@crypto_rotation"
+                   :order 40))
         (:name "Habits"
          :tag "HABIT"
          :habit t
@@ -1300,7 +1283,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 
-;; (after! org-roam (org-roam-db-build-cache))
+(setq org-roam-dailies-capture-templates
+      ' (("d" "default"
+          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
 
 (use-package! websocket
     :after org-roam)
@@ -1497,6 +1483,35 @@ ORDER BY priority, created DESC
     (:prefix ("j" . "sync")
      :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql))))
 
+(add-transient-hook! #'org-babel-execute-src-block
+  (require 'ob-async))
+
+(defvar org-babel-auto-async-languages '()
+  "Babel languages which should be executed asyncronously by default.")
+
+(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+  "Eagarly add an :async parameter to the src information, unless it seems problematic.
+This only acts o languages in `org-babel-auto-async-languages'.
+Not added when either:
++ session is not \"none\"
++ :sync is set"
+  :around #'org-babel-get-src-block-info
+  (let ((result (funcall orig-fn light datum)))
+    (when (and (string= "none" (cdr (assoc :session (caddr result))))
+               (member (car result) org-babel-auto-async-languages)
+               (not (assoc :async (caddr result))) ; don't duplicate
+               (not (assoc :sync (caddr result))))
+      (push '(:async) (caddr result)))
+    result))
+
+;; (after! org
+;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
+;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
+;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+;;   )
+
+;; (use-package! org-pandoc-import :after org)
+
 ;; (after! org
 ;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
 ;;   (setq company-idle-delay 0.25))
@@ -1629,27 +1644,6 @@ ORDER BY priority, created DESC
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
-(add-transient-hook! #'org-babel-execute-src-block
-  (require 'ob-async))
-
-(defvar org-babel-auto-async-languages '()
-  "Babel languages which should be executed asyncronously by default.")
-
-(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
-  "Eagarly add an :async parameter to the src information, unless it seems problematic.
-This only acts o languages in `org-babel-auto-async-languages'.
-Not added when either:
-+ session is not \"none\"
-+ :sync is set"
-  :around #'org-babel-get-src-block-info
-  (let ((result (funcall orig-fn light datum)))
-    (when (and (string= "none" (cdr (assoc :session (caddr result))))
-               (member (car result) org-babel-auto-async-languages)
-               (not (assoc :async (caddr result))) ; don't duplicate
-               (not (assoc :sync (caddr result))))
-      (push '(:async) (caddr result)))
-    result))
-
 (load! "org-customs.el")
 (load! "org-helpers.el")
 (load! "org-helpers-nm.el")
@@ -1676,6 +1670,14 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
+(map! (:when (featurep! :editor format)
+       :v "g Q" '+format/region
+       :v "SPC =" '+format/region
+       :leader
+       :desc "Format Buffer" "=" #'+format/buffer
+       (:prefix ("b" "+buffer")
+        :desc "Format Buffer" "f" #'+format/buffer)))
+
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
@@ -1690,6 +1692,17 @@ Not added when either:
   )
 
 (after! poetry (setq poetry-tracking-strategy 'projectile))
+
+(after! conda (conda-env-autoactivate-mode))
+
+(after! projectile
+  (projectile-register-project-type 'python-conda '("environment.yml")
+                                    :project-file "environment.yml"
+                                    :compile "conda build"  ;; does not exist
+                                    :test "conda run pytest"
+                                    :test-dir "tests"
+                                    :test-prefix "test_"
+                                    :test-suffix"_test"))
 
 (use-package! numpydoc
   :after python-mode
@@ -1709,6 +1722,27 @@ Not added when either:
 (when (featurep! :tools ein)
   (after! org
     (require 'ob-ein)))
+
+(after! (python-mode dap-mode)
+  (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
+                             (list :type "python-test-at-point  "
+                                   :args ""
+                                   :program nil
+                                   :module "pytest"
+                                   :request "launch"
+                                   :name "Python :: Run pytest (at point)")))
+
+(after! rustic
+  (setq lsp-rust-analyzer-inlay-hints-mode t))
+
+(after! (rust-mode dap-mode)
+  (dap-register-debug-template "Rust::GDB Run Configuration"
+                               (list :type "gdb"
+                                     :request "launch"
+                                     :name "GDB::Run"
+                                     :gdbpath "rust-gdb"
+                                     :target nil
+                                     :cwd nil)))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
