@@ -9,6 +9,9 @@
 
 ;; (package! org-modern)
 
+(when (version<= "29" emacs-version)
+  (package! emacsql-sqlite-builtin))
+
 (package! websocket)
 (package! org-roam-ui
   :recipe (:host github

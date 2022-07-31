@@ -188,12 +188,11 @@
 
 (after! org
   (setq org-startup-indented 'indent
-         org-startup-folded 'fold
-         org-startup-with-inline-images t
-         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
-         org-image-actual-width (* (default-font-width) 40)
-         )
-)
+        org-startup-folded 'fold
+        org-startup-with-inline-images t
+        ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
+        org-image-actual-width (* (default-font-width) 40)
+        ))
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 
@@ -1280,6 +1279,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
         org-roam-db-location "~/.emacs.d/.local/roam.db"
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 
+(when (version<= "29" emacs-version)
+  (setq org-roam-database-connector 'sqlite-builtin))
+
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 
@@ -1669,6 +1671,9 @@ Not added when either:
        :leader
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
+
+(setq +format-on-save-enabled-modes
+      '(not nix-mode))
 
 (map! (:when (featurep! :editor format)
        :v "g Q" '+format/region

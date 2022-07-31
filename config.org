@@ -378,12 +378,11 @@ Automatically saving all org-buffers when emacs is idle for 30 seconds.
 #+BEGIN_SRC elisp
 (after! org
   (setq org-startup-indented 'indent
-         org-startup-folded 'fold
-         org-startup-with-inline-images t
-         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
-         org-image-actual-width (* (default-font-width) 40)
-         )
-)
+        org-startup-folded 'fold
+        org-startup-with-inline-images t
+        ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
+        org-image-actual-width (* (default-font-width) 40)
+        ))
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 #+END_SRC
@@ -1938,6 +1937,19 @@ Roam directory setup
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 #+END_SRC
 
+Use the builtin sqlite in emacs >=29
+Besides roam cannot find the sqlite binary in NixOS but builtin works..
+
+#+begin_src elisp :tangle packages.el
+(when (version<= "29" emacs-version)
+  (package! emacsql-sqlite-builtin))
+#+end_src
+
+#+begin_src elisp
+(when (version<= "29" emacs-version)
+  (setq org-roam-database-connector 'sqlite-builtin))
+#+end_src
+
 do not automatically open the roam side-pane
 
 #+begin_src elisp
@@ -2544,6 +2556,16 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 #+END_SRC
 ** Code Formatting
+
+do not enable +onsave formatting on specifc modes.
+
+My NixOS config is based on [[github:hlissner/dotfiles]] and auto-formating would
+deroy any changes of pulling some changes.
+
+#+BEGIN_SRC elisp
+(setq +format-on-save-enabled-modes
+      '(not nix-mode))
+#+END_SRC
 
 mapping doom's ~+format/buffer~ and ~+format/region~
 
