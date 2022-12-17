@@ -1,0 +1,10 @@
+* Monthly Clock Report
+
+- TODO work in progress
+
+# #+BEGIN: clocktable :scope agenda-with-archives :maxlevel 3 :emphasize t :indent t :block 2022-Q4 :match "+pulswerk" :hidefiles t
+
+# #+BEGIN: clocktable :scope ("~/.org/gtd/projects/pulswerk.org" "~/.org/gtd/archive/pulswerk.org") :maxlevel 2 :emphasize t :indent t :block 2022-Q4 :hidefiles t
+
+#+BEGIN: clocktable :scope ("~/.org/gtd/projects/pulswerk.org" "~/.org/gtd/archive/pulswerk.org") :maxlevel 2 :emphasize t :indent t :block lastmonth :hidefiles t
+#+END:

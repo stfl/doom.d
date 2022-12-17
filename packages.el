@@ -9,9 +9,6 @@
 
 ;; (package! org-modern)
 
-(when (version<= "29" emacs-version)
-  (package! emacsql-sqlite-builtin))
-
 (package! websocket)
 (package! org-roam-ui
   :recipe (:host github
@@ -27,6 +24,12 @@
 ;;            :repo "tecosaur/org-pandoc-import"
 ;;            :files ("*.el" "filters" "preprocessors")))
 
+(when (version<= "29" emacs-version)
+  (package! emacsql-sqlite-builtin))
+
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+
 (package! numpydoc)
 
 (package! kubernetes)
@@ -40,6 +43,8 @@
 (package! edbi-minor-mode)
 
 (package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode"))
+
+(package! jest)
 
 (package! ztree)
 

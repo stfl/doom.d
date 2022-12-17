@@ -162,8 +162,10 @@
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
       evil-want-fine-undo t
-      auto-save-default t
       inhibit-compacting-font-caches t)
+
+(setq auto-save-default t)
+(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 (setq org-directory "~/.org/")
 
@@ -183,8 +185,6 @@
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
-
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -355,12 +355,171 @@ relevant again (Tickler)"
           (?H . +org-priority-h)
           (?I . +org-priority-i))))
 
+;; (after! org
+(setq!
+       ;; org-agenda-dim-blocked-tasks t
+       org-agenda-dim-blocked-tasks 'invisible
+       org-agenda-use-time-grid t
+       ;; org-agenda-hide-tags-regexp "\\w+"
+       ;; org-agenda-compact-blocks t
+       ;; org-agenda-block-separator ?\n
+       org-agenda-block-separator ?-
+       org-agenda-tags-column 0
+       org-agenda-skip-scheduled-if-done t
+       org-agenda-skip-unavailable-files t
+       org-agenda-skip-deadline-if-done t
+       org-agenda-skip-timestamp-if-done t
+       org-agenda-window-setup 'current-window
+       org-agenda-start-on-weekday nil
+       org-agenda-span 'day
+       org-agenda-start-day "-0d"
+       org-deadline-warning-days 7
+       org-agenda-show-future-repeats t
+       org-agenda-skip-deadline-prewarning-if-scheduled t
+       org-agenda-tags-todo-honor-ignore-options 1
+       org-agenda-skip-scheduled-delay-if-deadline t
+       org-agenda-skip-scheduled-if-deadline-is-shown t
+       org-agenda-skip-timestamp-if-deadline-is-shown t
+       ;; org-agenda-todo-ignore-with-date nil
+       ;; org-agenda-todo-ignore-deadlines nil
+       ;; org-agenda-todo-ignore-timestamp nil
+       org-agenda-todo-list-sublevels t
+       org-agenda-include-deadlines t
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+
+(after! org
+  (setq org-enforce-todo-checkbox-dependencies nil
+        org-enforce-todo-dependencies nil))
+
+(after! org
+  (setq! org-clock-continuously t))
+
+(after! org
+  (setq org-agenda-diary-file "~/.org/diary.org"
+        org-agenda-files '("~/.org/gtd/inbox.org"
+                           ;; "~/.org/gtd/someday.org"
+                           "~/.org/gtd/tickler.org"
+                           "~/.org/gtd/todo.org"
+                           "~/.org/gtd/projects/"
+                           ;; "~/.org/jira/"
+                           "~/.org/gcal/")))
+
+(after! org
+
+(setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
+(setq-default stfl/agenda-max-prio-group ?D)
+(setq stfl/agenda-deadline-fib-offset 3)
+
+(setq org-agenda-custom-commands
+      `(
+        ("b" "Agenda and tasks B+"
+         (,(stfl/agenda-day)
+          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+                        ((org-ql-block-header "Next Actions")
+                         ;; (org-agenda-block-separator "\n")
+                         ;; (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
+          (org-ql-block (stfl/agenda-query-stuck-projects)
+                        ((org-ql-block-header "Stuck Projects")
+                         ;; (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))))
+        ("a" "Agenda Weekly"
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)))))
+        ("r" . "Review")
+        ("rc" "Close open NEXT Actions and WAIT"
+         ((org-ql-block '(and (todo "NEXT" "WAIT")
+                              (not (tags "SOMEDAY" "HABIT" "org_jira"))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline :to "+30")
+                                  (ancestors (deadline :to "+30")))
+                              (or (not (scheduled))
+                                  (scheduled :to "+30"))
+                              )
+                        ((org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 30)
+                         (stfl/agenda-max-prio-group org-priority-lowest)
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-ql-block-header "Something to do")
+                         ))
+          (org-ql-block (stfl/agenda-query-stuck-projects)
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/priority-groups)))
+          ))
+        ("rl" "Agenda Weekly with Log"
+         ;; TODO add archive!
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-archives-mode t)
+                   (org-agenda-start-with-log-mode '(closed))
+                   (org-agenda-show-log t)
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))
+                   ))))
+        ("rp" "Plan Projects"
+         ((org-ql-block '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              ;; (not (children "SOMEDAY")))
+                              (not (children (and (todo "NEXT" "WAIT")
+                                                  (tags "SOMEDAY"))))
+                              (or (not (deadline))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
+                        ((org-ql-block-header "Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 45)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+          ))
+        ("rn" "Plan Next Actions"
+         ((org-ql-block '(and (todo "NEXT")
+                              (not (tags "SOMEDAY"))
+                              (not (scheduled))
+                              (not (habit))
+                              (or (not (deadline))
+                                  (deadline auto)
+                                  (ancestors (deadline auto))))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-header-separator "")
+                         (org-deadline-warning-days 14)
+                         (org-super-agenda-groups stfl/priority-groups)
+                         ))
+          ))
+        ("rs" "Stuck Projects"
+         ((org-ql-block (stfl/agenda-query-stuck-projects)
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/priority-groups)))
+          ))
+        ("rS" "SOMEDAY"
+         ((org-ql-block '(and (todo "PROJ")
+                              (or (and (priority <= (char-to-string stfl/agenda-backlog-prio-threshold))
+                                       (not (ancestors (priority > (char-to-string stfl/agenda-backlog-prio-threshold))))
+                                       (not (children (priority > (char-to-string stfl/agenda-backlog-prio-threshold)))))
+                                  (tags "SOMEDAY")
+                                  (children (and (todo "NEXT" "WAIT")
+                                                 (tags "SOMEDAY"))))
+                              (not (scheduled))
+                              (not (habit))
+                              (not (deadline)))
+                        ((org-ql-block-header "Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
+                                                    (:auto-priority)
+                                                    ))))
+          ))
+        ))
+
+;; nil ;; for less annoying output when eval the narrowed block
+
+) ;; (after! org
+
 (defun stfl/agenda-query-stuck-projects()
-  '(and (todo "PROJ")
-        ;; (priority >= "B")
-        (not (tags "SOMEDAY"))
-        (not (children (and (todo "NEXT" "WAIT")
-                            (not (tags "SOMEDAY")))))))
+  '(stuck-proj))
 
 (defun stfl/org-agenda-show-priorities (&optional priority)
   (interactive "P")
@@ -426,6 +585,43 @@ relevant again (Tickler)"
 (defun not-sched-or-dead(from)
   `(and (not (scheduled :from today))
        (not (deadline :from ,from))))
+
+(after! org-ql
+  (org-ql-defpred tickler ()
+    "match entries in the \"tickler\"."
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo) (tags-local "SOMEDAY") (scheduled)))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
+
+  (org-ql-defpred tickler-proj ()
+    "match PROJ in the \"tickler\" or all children in \"tickler\"."
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "PROJ")
+                              (or (tickler)
+                                  (and (children (tickler))
+                                       (not (children (and (todo "NEXT" "WAIT")
+                                                           (not (tickler)))))))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "PROJ")
+                            (or (tickler)
+                                (and (children (tickler))
+                                     (not (children (and (todo "NEXT" "WAIT")
+                                                         (not (tickler))))))))))))
+
+  (org-ql-defpred (stuck-proj stuck) ()
+    "Stuck Project"
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              (not (children (todo "NEXT" "WAIT")))
+                              (not (tickler-proj))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "PROJ")
+                            (not (tags "SOMEDAY"))
+                            (not (children (todo "NEXT" "WAIT")))
+                            (not (tickler-proj)))))))
+  )
 
 (map! :after org-ql
       :map org-ql-view-map
@@ -626,169 +822,6 @@ relevant again (Tickler)"
 ;;             (closed :from ,wbeg :to ,wend))
 ;;       :title "Weekly Review"
 ;;       :super-groups (quote ((:auto-ts t))))))
-
-;; (after! org
-(setq!
-       ;; org-agenda-dim-blocked-tasks t
-       org-agenda-dim-blocked-tasks 'invisible
-       org-agenda-use-time-grid t
-       ;; org-agenda-hide-tags-regexp "\\w+"
-       ;; org-agenda-compact-blocks t
-       ;; org-agenda-block-separator ?\n
-       org-agenda-block-separator ?-
-       org-agenda-tags-column 0
-       org-agenda-skip-scheduled-if-done t
-       org-agenda-skip-unavailable-files t
-       org-agenda-skip-deadline-if-done t
-       org-agenda-skip-timestamp-if-done t
-       org-agenda-window-setup 'current-window
-       org-agenda-start-on-weekday nil
-       org-agenda-span 'day
-       org-agenda-start-day "-0d"
-       org-deadline-warning-days 7
-       org-agenda-show-future-repeats t
-       org-agenda-skip-deadline-prewarning-if-scheduled t
-       org-agenda-tags-todo-honor-ignore-options 1
-       org-agenda-skip-scheduled-delay-if-deadline t
-       org-agenda-skip-scheduled-if-deadline-is-shown t
-       org-agenda-skip-timestamp-if-deadline-is-shown t
-       ;; org-agenda-todo-ignore-with-date nil
-       ;; org-agenda-todo-ignore-deadlines nil
-       ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-todo-list-sublevels t
-       org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
-
-(after! org
-  (setq org-enforce-todo-checkbox-dependencies nil
-        org-enforce-todo-dependencies nil))
-
-(after! org
-  (setq! org-clock-continuously t))
-
-(after! org
-  (setq org-agenda-diary-file "~/.org/diary.org"
-        org-agenda-files '("~/.org/gtd/inbox.org"
-                           ;; "~/.org/gtd/someday.org"
-                           "~/.org/gtd/tickler.org"
-                           "~/.org/gtd/todo.org"
-                           "~/.org/gtd/projects/"
-                           ;; "~/.org/jira/"
-                           "~/.org/gcal/")))
-
-(after! org
-
-(setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
-(setq-default stfl/agenda-max-prio-group ?D)
-(setq stfl/agenda-deadline-fib-offset 3)
-
-(setq org-agenda-custom-commands
-      `(
-        ("b" "Agenda and tasks B+"
-         (,(stfl/agenda-day)
-          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
-                        ((org-ql-block-header "Next Actions")
-                         ;; (org-agenda-block-separator "\n")
-                         ;; (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         ;; (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))))
-        ("a" "Agenda Weekly"
-         ((agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)))))
-        ("r" . "Review")
-        ("rc" "Close open NEXT Actions and WAIT"
-         ((org-ql-block '(and (todo "NEXT" "WAIT")
-                              (not (tags "SOMEDAY" "HABIT" "org_jira"))
-                              (not (habit))
-                              (or (not (deadline))
-                                  (deadline :to "+30")
-                                  (ancestors (deadline :to "+30")))
-                              (or (not (scheduled))
-                                  (scheduled :to "+30"))
-                              )
-                        ((org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 30)
-                         (stfl/agenda-max-prio-group org-priority-lowest)
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-ql-block-header "Something to do")
-                         ))
-          (org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
-        ("rl" "Agenda Weekly with Log"
-         ;; TODO add archive!
-         ((agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)
-                   (org-agenda-archives-mode t)
-                   (org-agenda-start-with-log-mode '(closed))
-                   (org-agenda-show-log t)
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))
-                   ))))
-        ("rp" "Plan Projects"
-         ((org-ql-block '(and (todo "PROJ")
-                              (not (tags "SOMEDAY"))
-                              ;; (not (children "SOMEDAY")))
-                              (not (children (and (todo "NEXT" "WAIT")
-                                                  (tags "SOMEDAY"))))
-                              (or (not (deadline))
-                                  (deadline auto)
-                                  (ancestors (deadline auto))))
-                        ((org-ql-block-header "Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 45)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
-        ("rn" "Plan Next Actions"
-         ((org-ql-block '(and (todo "NEXT")
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (not (habit))
-                              (or (not (deadline))
-                                  (deadline auto)
-                                  (ancestors (deadline auto))))
-                        ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
-        ("rs" "Stuck Projects"
-         ((org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
-        ("rS" "SOMEDAY"
-         ((org-ql-block '(and (todo "PROJ")
-                              (or (and (priority <= (char-to-string stfl/agenda-backlog-prio-threshold))
-                                       (not (ancestors (priority > (char-to-string stfl/agenda-backlog-prio-threshold))))
-                                       (not (children (priority > (char-to-string stfl/agenda-backlog-prio-threshold)))))
-                                  (tags "SOMEDAY")
-                                  (children (and (todo "NEXT" "WAIT")
-                                                 (tags "SOMEDAY"))))
-                              (not (scheduled))
-                              (not (habit))
-                              (not (deadline)))
-                        ((org-ql-block-header "Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
-                                                    (:auto-priority)
-                                                    ))))
-          ))
-        ))
-
-;; nil ;; for less annoying output when eval the narrowed block
-
-) ;; (after! org
 
 (use-package! org-super-agenda
   :after (org-agenda evil-org-agenda)
@@ -1003,7 +1036,7 @@ org-default-priority is treated as lower than the same set value"
            (file "~/.doom.d/templates/template-scheduled.org"))
           ("v" "Versicherung"
            entry
-           (file "~/.org/gtd/projects/versicherung.org")
+           (file+headline "~/.org/gtd/projects/versicherung.org" "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
@@ -1075,6 +1108,12 @@ org-default-priority is treated as lower than the same set value"
         org-habit-following-days 7
         ;; org-habit-graph-column 31 ;; Length of the habit graph
         ))
+
+(after! org-clock
+
+  (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
+        org-time-stamp-rounding-minutes '(0 15)
+        org-log-note-clock-out t))
 
 (use-package! org-edna
   :after org
@@ -1278,9 +1317,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
         org-roam-directory "~/.org/"
         org-roam-db-location "~/.emacs.d/.local/roam.db"
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
-
-(when (version<= "29" emacs-version)
-  (setq org-roam-database-connector 'sqlite-builtin))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
@@ -1646,9 +1682,22 @@ Not added when either:
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
+(when (version<= "29" emacs-version)
+  (setq org-roam-database-connector 'sqlite-builtin
+        forge-database-connector 'sqlite-builtin
+        code-review-db-database-connector 'sqlite-builtin))
+
 (load! "org-customs.el")
 (load! "org-helpers.el")
 (load! "org-helpers-nm.el")
+
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
@@ -1672,8 +1721,7 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-(setq +format-on-save-enabled-modes
-      '(not nix-mode))
+(after! format-all-mode (add-to-list '+format-on-save-enabled-modes 'nix-mode t))
 
 (map! (:when (featurep! :editor format)
        :v "g Q" '+format/region
@@ -1728,6 +1776,19 @@ Not added when either:
   (after! org
     (require 'ob-ein)))
 
+(after! org
+  (setq org-babel-default-header-args:jupyter-python
+        '((:results . "value")
+          (:session . "jupyter")
+          (:kernel . "python3")
+          (:pandoc . "t")
+          (:exports . "both")
+          (:cache . "no")
+          (:noweb . "no")
+          (:hlines . "no")
+          (:tangle . "no")
+          (:eval . "never-export"))))
+
 (after! (python-mode dap-mode)
   (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
                              (list :type "python-test-at-point  "
@@ -1737,8 +1798,14 @@ Not added when either:
                                    :request "launch"
                                    :name "Python :: Run pytest (at point)")))
 
-(after! rustic
-  (setq lsp-rust-analyzer-inlay-hints-mode t))
+(after! lsp-rust
+  (setq! lsp-rust-analyzer-server-display-inlay-hints t
+         lsp-rust-analyzer-display-chaining-hints t
+         lsp-rust-analyzer-display-closure-return-type-hints t
+         lsp-rust-analyzer-hide-named-constructor t
+         lsp-rust-analyzer-binding-mode-hints t
+         lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+         lsp-rust-analyzer-display-parameter-hints t))
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
@@ -1793,6 +1860,16 @@ Not added when either:
   :commands exercism
   :config (exercism-mode +1)
   :custom (exercism-web-browser-function 'browse-url))
+
+(map! :after rjsx-mode
+      :map rjsx-mode-map
+      :localleader
+      :prefix ("t" "test")
+      "f" #'jest-file
+      "t" #'jest-function
+      "k" #'jest-file-dwim
+      "m" #'jest-repeat
+      "p" #'jest-popup)
 
 (use-package! ztree)
 

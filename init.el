@@ -21,7 +21,8 @@
        :completion
        (company          ; the ultimate code completion backend
         +auto            ; as-you-type code completion
-        +childframe)     ; a nicer company UI (Emacs 26+ only)
+        +childframe   ; a nicer company UI (Emacs 26+ only)
+        )
         ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy              ; a search engine for love and life
@@ -31,14 +32,15 @@
         ;; )
        (vertico
         +icons
-        +childframe)
+        ;; +childframe
+        )
 
        :ui
        ;; deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)  ; 🙂
+       ;; (emoji +unicode)  ; 🙂
        ;; fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
