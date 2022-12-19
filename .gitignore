@@ -1,2 +1,5 @@
 /intelephense.txt
 /.stversions/
+*.sync-conflict*
+/node_modules/
+/yarn.lock

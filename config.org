@@ -361,7 +361,7 @@ always generate an id for a link
 
 rebuild orgid file on start
 
-** Auto-saving org-mode files
+** TODO Auto-saving org-mode files
 :PROPERTIES:
 :ID:       d206a353-12c6-4d53-9f6f-97e24840c79e
 :END:
@@ -651,7 +651,7 @@ Adjusting clock settings
   (setq org-agenda-diary-file "~/.org/diary.org"
         org-agenda-files '("~/.org/gtd/inbox.org"
                            ;; "~/.org/gtd/someday.org"
-                           "~/.org/gtd/tickler.org"
+                           ;; "~/.org/gtd/tickler.org"
                            "~/.org/gtd/todo.org"
                            "~/.org/gtd/projects/"
                            ;; "~/.org/jira/"
@@ -723,35 +723,21 @@ Adjusting clock settings
                    (org-agenda-show-log t)
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))
                    ))))
-        ("rp" "Plan Projects"
-         ((org-ql-block '(and (todo "PROJ")
-                              (not (tags "SOMEDAY"))
-                              ;; (not (children "SOMEDAY")))
-                              (not (children (and (todo "NEXT" "WAIT")
-                                                  (tags "SOMEDAY"))))
-                              (or (not (deadline))
-                                  (deadline auto)
-                                  (ancestors (deadline auto))))
-                        ((org-ql-block-header "Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 45)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
-        ("rn" "Plan Next Actions"
-         ((org-ql-block '(and (todo "NEXT")
-                              (not (tags "SOMEDAY"))
-                              (not (scheduled))
-                              (not (habit))
-                              (or (not (deadline))
-                                  (deadline auto)
-                                  (ancestors (deadline auto))))
-                        ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 14)
-                         (org-super-agenda-groups stfl/priority-groups)
-                         ))
-          ))
+        ("rb" "Private Backlog"
+         ((org-ql-block '(and (or (todo "PROJ")
+                                  (standalone-next))
+                              (not (tags "#work"))
+                              (not (my-habit)))
+                        ((org-ql-block-header "Work Backlog")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-dim-blocked-tasks t)))))
+        ("wb" "Work Backlog"
+         ((org-ql-block '(and (or (todo "PROJ")
+                                  (standalone-next))
+                              (tags "#work"))
+                        ((org-ql-block-header "Work Backlog")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-dim-blocked-tasks t)))))
         ("rs" "Stuck Projects"
          ((org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
@@ -898,7 +884,32 @@ some helper functions
                             (not (tags "SOMEDAY"))
                             (not (children (todo "NEXT" "WAIT")))
                             (not (tickler-proj)))))))
-  )
+
+
+  (org-ql-defpred standalone-next ()
+    "Stuck Project"
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "NEXT")
+                              (not (ancestors (todo "PROJ")))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "NEXT")
+                            (not (ancestors (todo "PROJ"))))))))
+
+  (org-ql-defpred someday ()
+    "Stuck Project"
+    :normalizers ((`(,predicate-names)
+                   (rec '(tags "SOMEDAY"))))
+    :preambles ((`(,predicate-names)
+                 (rec '(tags "SOMEDAY")))))
+
+  (org-ql-defpred my-habit ()
+    "Stuck Project"
+    :normalizers ((`(,predicate-names)
+                   (rec '(or (tags "SOMEDAY") (habit)))))
+    :preambles ((`(,predicate-names)
+                 (rec '(or (tags "SOMEDAY") (habit))))))
+
+)
 #+end_src
 
 
@@ -923,10 +934,10 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 
 #+begin_src elisp
 (after! org-ql
-  (setq! org-ql-views
+  (setq org-ql-views
          (list (cons "LASTMILE"
                      (list :title "LASTMILE"
-                           :buffers-files org-agenda-files
+                           :buffers-files 'org-agenda-files
                            :sort 'priority
                            :super-groups #'stfl/ancestor-priority-groups
                            :query `(and
@@ -935,6 +946,36 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
                                     ,(not-someday-habit)
                                     ,(not-sched-or-dead 14))
                            :narrow nil))
+               (cons "PROJ Backlock Active"
+                     (list :title "PROJ Backlog"
+                           :buffers-files 'org-agenda-files
+                           :sort 'priority
+                           :super-groups #'stfl/ancestor-priority-groups
+                           :query `(and (todo "PROJ")
+                                        ,(not-someday-habit)
+                                        (not (tickler-proj)))
+                           :narrow nil))
+               (cons "PROJ Backlock #work"
+                     (list :title "#work backlog with tickler"
+                           :buffers-files 'org-agenda-files
+                           :sort 'priority
+                           :super-groups #'stfl/ancestor-priority-groups
+                           :query `(and (or (todo "PROJ")
+                                            (standalone-next))
+                                        (tags "#work")
+                                        ,(not-someday-habit)
+                                        (not (tickler-proj)))
+                           :narrow nil))
+               (cons "PROJ Backlock #work (full)"
+                     (list :title "#work backlog with tickler"
+                           :buffers-files 'org-agenda-files
+                           :sort 'priority
+                           :super-groups #'stfl/ancestor-priority-groups
+                           :query `(and (or (todo "PROJ")
+                                            (standalone-next))
+                                        (tags "#work"))
+                           :narrow nil))
+
                ;;     ("Home and Sarah"
                ;;     :title "Home and Sarah"
                ;;     :buffers-files org-agenda-files
@@ -1059,7 +1100,8 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
                ;;                                'help-echo "Tasks with sub-tasks but no NEXT sub-tasks")
                ;;             :sort (date priority)
                ;;             :super-groups 'org-super-agenda-groups))
-               )))
+               ))
+  )
 #+end_src
 
 *** Agenda for NEXT and WAIT for weekly review
@@ -1164,7 +1206,7 @@ not acutally used
 
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 #+end_src
-*** NEXT Custom priority grouping
+*** Custom priority grouping
 #+begin_src elisp
 (after! org-super-agenda
   (setq stfl/priority-groups
@@ -1234,7 +1276,9 @@ not acutally used
 (defun stfl/org-parent-PROJ-priority-or-adjusted-default (marker)
   (org-with-point-at marker
     (stfl/org-at-point-parent-PROJ-priority-or-adjusted-default)))
+#+end_src
 
+#+begin_src elisp
 (defun fib (n)
   (fib-iter 1 0 n))
 
@@ -1245,6 +1289,15 @@ not acutally used
 
 (setq stfl/ancestor-priority-groups
       (append
+       `((:name "Tickler"
+          :and (:scheduled t
+                :tag "SOMEDAY")
+          :order ,(+ 1 org-priority-lowest))      ;; and order in the appropriate position
+         )
+       `((:name "Someday"
+          :tag "SOMEDAY"
+          :order ,(+ 2 org-priority-lowest))      ;; and order in the appropriate position
+         )
        `,(mapcar
           (lambda (prio)
             (let ((prio-str (char-to-string prio))
@@ -2106,6 +2159,7 @@ ORDER BY priority, created DESC
 #+END_SRC
 
 ** org-babel
+
 *** Auto :async if possible
 :PROPERTIES:
 :ID:       d41d54d8-bf68-42be-8004-f67c49cf950a
@@ -2606,6 +2660,7 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
                                    :request "launch"
                                    :name "Python :: Run pytest (at point)")))
 #+end_src
+
 ** Rust
 
 #+begin_src elisp
