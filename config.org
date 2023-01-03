@@ -986,7 +986,7 @@ some helper functions
 ;;     :preambles ((`(,predicate-names)
 ;;                  (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
 
-;; )
+)
 #+end_src
 
 *** NEXT Keymap

@@ -712,7 +712,7 @@ relevant again (Tickler)"
 ;;     :preambles ((`(,predicate-names)
 ;;                  (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
 
-;; )
+)
 
 (map! :after org-ql
       :map org-ql-view-map
