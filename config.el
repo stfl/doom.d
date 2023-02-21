@@ -392,9 +392,6 @@ relevant again (Tickler)"
         org-enforce-todo-dependencies nil))
 
 (after! org
-  (setq! org-clock-continuously t))
-
-(after! org
   (setq org-agenda-diary-file "~/.org/diary.org"
         org-agenda-files '("~/.org/gtd/inbox.org"
                            ;; "~/.org/gtd/someday.org"
@@ -412,19 +409,33 @@ relevant again (Tickler)"
 
 (setq org-agenda-custom-commands
       `(
+        ;; ("a" "Private Agenda Today"
+        ;;  (,(stfl/agenda-day)
+        ;;   (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+        ;;                 ((org-ql-block-header "Next Actions")
+        ;;                  ;; (org-agenda-block-separator "\n")
+        ;;                  ;; (org-super-agenda-header-separator "")
+        ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)))
+        ;;   (org-ql-block ((and (stuck-proj)
+        ;;                       (private))
+        ;;                  ((org-ql-block-header "Stuck Projects")
+        ;;                   ;; (org-super-agenda-header-separator "")
+        ;;                   (org-super-agenda-groups stfl/priority-groups)
+        ;;                   )))))
         ("a" "Private Agenda Today"
-         (,(stfl/agenda-day)
-          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
-                        ((org-ql-block-header "Next Actions")
-                         ;; (org-agenda-block-separator "\n")
-                         ;; (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block ((and (stuck-proj)
+         (,(stfl/agenda-day)  ;; FIXME still showing all
+          (org-ql-block `(and (todo "NEXT" "WAIT")
+                              ,(prio-deadline>= stfl/agenda-max-prio-group)
+                              (not ,(someday-habit))
+                              (not (ancestors (deadline :to 0)))
+                              (not (deadline :to 0))
+                              (not (scheduled))
                               (private))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
+          (org-ql-block '(and (stuck-proj) (private))
                          ((org-ql-block-header "Stuck Projects")
-                          ;; (org-super-agenda-header-separator "")
-                          (org-super-agenda-groups stfl/priority-groups)
-                          )))))
+                          (org-super-agenda-groups stfl/priority-groups)))))
         ("A" "Agenda Weekly"
          ((agenda ""
                   ((org-agenda-span 'week)
@@ -506,8 +517,21 @@ relevant again (Tickler)"
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
         ("wa" "Work Agenda Today"
-         (,(stfl/agenda-day)
-          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+         ((org-ql-block '(and (work)
+                             (not (done))
+                             (or (habit)
+                                 (deadline :to today)
+                                 (scheduled :to today)
+                                 (ts-active :on today)))
+                        ((org-ql-block-header "Today")
+                         (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
+          (org-ql-block `(and (todo "NEXT" "WAIT")
+                              ,(prio-deadline>= stfl/agenda-max-prio-group)
+                              (not ,(someday-habit))
+                              (not (ancestors (deadline :to 0)))
+                              (not (deadline :to 0))
+                              (not (scheduled))
+                              (work))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           ))
@@ -1187,6 +1211,7 @@ org-default-priority is treated as lower than the same set value"
 
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
+        org-duration-format 'h:mm  ;; format hours and don't Xd (days)
         org-log-note-clock-out t))
 
 (use-package! org-edna
@@ -1220,6 +1245,7 @@ org-default-priority is treated as lower than the same set value"
 
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic '((t (:inherit (bold org-cite org-todo)))) "")
 (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
@@ -1229,6 +1255,7 @@ org-default-priority is treated as lower than the same set value"
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
+           "EPIC(e)"  ; A set of Projects
            "NEXT(n)"  ; Task is next to be worked on.
            "WAIT(w)"  ; Something external is holding up this task
            "|"
@@ -1237,9 +1264,9 @@ org-default-priority is treated as lower than the same set value"
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
+          ("EPIC" . +org-todo-epic)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next))
-        )
+          ("NEXT" . +org-todo-next)))
 )
 
 (after! org (setq org-indent-indentation-per-level 2))
@@ -1624,6 +1651,14 @@ Not added when either:
 
 ;; (use-package! org-pandoc-import :after org)
 
+(after! org-tree-slide
+  (add-hook 'org-tree-slide-play-hook #'doom-disable-line-numbers-h)
+  (add-hook 'org-tree-slide-stop-hook #'doom-disable-line-numbers-h))
+
+(after! org-tree-slide
+  (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
+  (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
+
 ;; (after! org
 ;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
 ;;   (setq company-idle-delay 0.25))
@@ -1795,7 +1830,9 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-(after! format-all-mode (add-to-list '+format-on-save-enabled-modes 'nix-mode t))
+(when (featurep! :editor format)
+  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
+)
 
 (map! (:when (featurep! :editor format)
        :v "g Q" '+format/region

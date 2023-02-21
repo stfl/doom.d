@@ -637,12 +637,6 @@ org todo checkboxes
         org-enforce-todo-dependencies nil))
 #+END_SRC
 
-Adjusting clock settings
-#+BEGIN_SRC elisp
-(after! org
-  (setq! org-clock-continuously t))
-#+END_SRC
-
 *** Agenda Files
 
 #+begin_src elisp
@@ -658,7 +652,7 @@ Adjusting clock settings
 
 #+end_src
 
-*** Agenda Commands
+*** Agenda Custom Commands
 :PROPERTIES:
 :ID:       d7086f3e-df0a-48ba-af95-1af25a49ca06
 :END:
@@ -674,19 +668,33 @@ Adjusting clock settings
 
 (setq org-agenda-custom-commands
       `(
+        ;; ("a" "Private Agenda Today"
+        ;;  (,(stfl/agenda-day)
+        ;;   (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+        ;;                 ((org-ql-block-header "Next Actions")
+        ;;                  ;; (org-agenda-block-separator "\n")
+        ;;                  ;; (org-super-agenda-header-separator "")
+        ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)))
+        ;;   (org-ql-block ((and (stuck-proj)
+        ;;                       (private))
+        ;;                  ((org-ql-block-header "Stuck Projects")
+        ;;                   ;; (org-super-agenda-header-separator "")
+        ;;                   (org-super-agenda-groups stfl/priority-groups)
+        ;;                   )))))
         ("a" "Private Agenda Today"
-         (,(stfl/agenda-day)
-          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
-                        ((org-ql-block-header "Next Actions")
-                         ;; (org-agenda-block-separator "\n")
-                         ;; (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block ((and (stuck-proj)
+         (,(stfl/agenda-day)  ;; FIXME still showing all
+          (org-ql-block `(and (todo "NEXT" "WAIT")
+                              ,(prio-deadline>= stfl/agenda-max-prio-group)
+                              (not ,(someday-habit))
+                              (not (ancestors (deadline :to 0)))
+                              (not (deadline :to 0))
+                              (not (scheduled))
                               (private))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
+          (org-ql-block '(and (stuck-proj) (private))
                          ((org-ql-block-header "Stuck Projects")
-                          ;; (org-super-agenda-header-separator "")
-                          (org-super-agenda-groups stfl/priority-groups)
-                          )))))
+                          (org-super-agenda-groups stfl/priority-groups)))))
         ("A" "Agenda Weekly"
          ((agenda ""
                   ((org-agenda-span 'week)
@@ -768,8 +776,21 @@ Adjusting clock settings
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
         ("wa" "Work Agenda Today"
-         (,(stfl/agenda-day)
-          (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
+         ((org-ql-block '(and (work)
+                             (not (done))
+                             (or (habit)
+                                 (deadline :to today)
+                                 (scheduled :to today)
+                                 (ts-active :on today)))
+                        ((org-ql-block-header "Today")
+                         (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
+          (org-ql-block `(and (todo "NEXT" "WAIT")
+                              ,(prio-deadline>= stfl/agenda-max-prio-group)
+                              (not ,(someday-habit))
+                              (not (ancestors (deadline :to 0)))
+                              (not (deadline :to 0))
+                              (not (scheduled))
+                              (work))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           ))
@@ -1545,6 +1566,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
+        org-duration-format 'h:mm  ;; format hours and don't Xd (days)
         org-log-note-clock-out t))
 #+end_src
 
@@ -1611,6 +1633,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 #+BEGIN_SRC elisp
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic '((t (:inherit (bold org-cite org-todo)))) "")
 (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
 (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
@@ -1624,6 +1647,7 @@ After much feedback and discussing with other users, I decided to simplify the k
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "PROJ(p)"  ; Project with multiple task items.
+           "EPIC(e)"  ; A set of Projects
            "NEXT(n)"  ; Task is next to be worked on.
            "WAIT(w)"  ; Something external is holding up this task
            "|"
@@ -1632,9 +1656,9 @@ After much feedback and discussing with other users, I decided to simplify the k
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
+          ("EPIC" . +org-todo-epic)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next))
-        )
+          ("NEXT" . +org-todo-next)))
 )
 #+END_SRC
 
@@ -2229,6 +2253,24 @@ https://github.com/tecosaur/org-pandoc-import
 #+begin_src elisp
 ;; (use-package! org-pandoc-import :after org)
 #+end_src
+** Org Tree Slide (+present)
+
+disable line numbers in presentations.
+
+#+begin_src elisp
+(after! org-tree-slide
+  (add-hook 'org-tree-slide-play-hook #'doom-disable-line-numbers-h)
+  (add-hook 'org-tree-slide-stop-hook #'doom-disable-line-numbers-h))
+#+end_src
+
+Starting org-tree-slide fails with an error.
+https://github.com/doomemacs/doomemacs/issues/7058
+
+#+begin_src elisp
+(after! org-tree-slide
+  (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
+  (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
+#+end_src
 
 * Module Settings
 ** Company mode
@@ -2449,7 +2491,6 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
                (ansi-color-apply-on-region (point-min) (point-max)))))
 #+end_src
 
-
 ** sqlite-builtin on emacs >=29
 
 Use the builtin sqlite in emacs >=29
@@ -2529,7 +2570,9 @@ My NixOS config is based on [[github:hlissner/dotfiles]] and auto-formating woul
 deroy any changes of pulling some changes.
 
 #+BEGIN_SRC elisp
-(after! format-all-mode (add-to-list '+format-on-save-enabled-modes 'nix-mode t))
+(when (featurep! :editor format)
+  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
+)
 #+END_SRC
 
 mapping doom's ~+format/buffer~ and ~+format/region~
