@@ -167,7 +167,7 @@
 (setq auto-save-default t)
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
-(setq org-directory "~/.org/")
+(setq org-directory "~/.org")
 
 (after! org
   (setq org-hide-emphasis-markers t
@@ -178,10 +178,9 @@
 
 (after! org-id
   (setq org-id-link-to-org-use-id t
-        org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
+        org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t)
-   (org-id-update-id-locations)
-  )
+   (org-id-update-id-locations))
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
@@ -392,14 +391,14 @@ relevant again (Tickler)"
         org-enforce-todo-dependencies nil))
 
 (after! org
-  (setq org-agenda-diary-file "~/.org/diary.org"
-        org-agenda-files '("~/.org/gtd/inbox.org"
-                           ;; "~/.org/gtd/someday.org"
-                           ;; "~/.org/gtd/tickler.org"
-                           "~/.org/gtd/todo.org"
-                           "~/.org/gtd/projects/"
-                           ;; "~/.org/jira/"
-                           "~/.org/gcal/")))
+  (setq org-agenda-diary-file (doom-path org-directory "diary.org")
+        org-agenda-files (list (doom-path org-directory "gtd/inbox.org")
+                           ;; (doom-path org-directory "gtd/someday.org")
+                           ;; (doom-path org-directory "gtd/tickler.org")
+                           (doom-path org-directory "gtd/todo.org")
+                           (doom-path org-directory "gtd/projects/")
+                           ;; (doom-path org-directory "jira/")
+                           (doom-path org-directory "gcal/"))))
 
 (after! org
 
@@ -1119,42 +1118,42 @@ org-default-priority is treated as lower than the same set value"
 
 (after! org
   (setq org-capture-templates
-        '(("n" "capture to inbox"
+        `(("n" "capture to inbox"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            (file "~/.doom.d/templates/template-inbox.org"))
           ("p" "Project"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            (file "~/.doom.d/templates/template-projects.org")
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            (file "~/.doom.d/templates/template-scheduled.org"))
           ("v" "Versicherung"
            entry
-           (file+headline "~/.org/gtd/projects/versicherung.org" "Einreichungen")
+           (file+headline (doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            (file "~/.doom.d/templates/template-deadline.org"))
           ("P" "Protocol"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline "~/.org/gtd/todo.org" "Haushalt")
+           (file+headline (doom-path org-directory "gtd/todo.org") "Haushalt")
            (file "~/.doom.d/templates/template-wäsche.org"))
           ))
   )
@@ -1193,7 +1192,7 @@ org-default-priority is treated as lower than the same set value"
 (after! org
   (setq
    ;; org-image-actual-width 400
-   org-archive-location "~/.org/gtd/archive/%s::datetree"
+   org-archive-location (doom-path org-directory "gtd/archive/%s::datetree") ;; FIXME
    ))
 
 (use-package! org-habit
@@ -1344,18 +1343,19 @@ org-default-priority is treated as lower than the same set value"
 ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun stfl/build-my-someday-files ()
-  (file-expand-wildcards "~/.org/gtd/someday/*.org"))
+  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
 
 (after! org
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 4)
+                             ;; ((doom-path org-directory "gtd/someday.org") :maxlevel . 4)  ;; TODO
                              ("~/.org/gtd/someday.org" :maxlevel . 4)
                              (stfl/build-my-someday-files :maxlevel . 4))
         org-refile-use-outline-path 'buffer-name
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm))
 
-(defun stfl/build-my-roam-files () (file-expand-wildcards "~/.org/roam/**/*.org"))
+(defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
 (defun stfl/refile-to-roam ()
   (interactive)
@@ -1415,8 +1415,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-directory "~/.org/"
-        org-roam-db-location "~/.emacs.d/.local/roam.db"
+        org-roam-directory org-directory
+        org-roam-db-location (doom-path doom-local-dir "roam.db")
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 
 (after! org-roam
@@ -1447,8 +1447,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
-        '(("ste.lendl@gmail.com" .  "~/.org/gcal/stefan.org")
-          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . "~/.org/gcal/oskar.org"))
+        '(("ste.lendl@gmail.com" .  (doom-path org-directory "gcal/stefan.org"))
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . (doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
@@ -1492,7 +1492,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (ibizaman/syncthing-resolve-conflicts "~/.org/"))
+  (ibizaman/syncthing-resolve-conflicts org-directory))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
   "Resolve all conflicts under given DIRECTORY."
@@ -1563,7 +1563,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package! org-jira
   :after org
-  :init (setq org-jira-working-dir "~/.org/jira/"
+  :init (setq org-jira-working-dir (doom-path org-directory "jira/")
               jiralib-url "https://pulswerk.atlassian.net")
   ;; (defconst org-jira-progress-issue-flow
   ;;     '(("To Do" . "In Progress"
@@ -1797,8 +1797,8 @@ Not added when either:
         code-review-db-database-connector 'sqlite-builtin))
 
 (load! "org-customs.el")
-(load! "org-helpers.el")
-(load! "org-helpers-nm.el")
+;; (load! "org-helpers.el")
+;; (load! "org-helpers-nm.el")
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
