@@ -191,7 +191,7 @@
         +roam2
         +gnuplot
         +present)        ; using org-mode for presentations
-       ;;perl              ; write code no one else can comprehend
+       ;; raku              ; write code no one else can comprehend
        (php                ; perl's insecure younger brother
         +lsp
         +tree-sitter)

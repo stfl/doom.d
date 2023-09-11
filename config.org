@@ -2885,6 +2885,16 @@ small exercises. The exercises can can be solved locally.
       "m" #'jest-repeat
       "p" #'jest-popup)
 #+end_src
+** AsciiDoc
+
+#+begin_src elisp :tangle packages.el
+;; bbatsov/adoc-mode
+(package! adoc-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! adoc-mode)
+#+end_src
 
 * Collaboration and VCS
 ** Directory tree diff - ztree

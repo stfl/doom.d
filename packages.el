@@ -46,6 +46,9 @@
 
 (package! jest)
 
+;; bbatsov/adoc-mode
+(package! adoc-mode)
+
 (package! ztree)
 
 (package! edit-server)

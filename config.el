@@ -1982,6 +1982,8 @@ Not added when either:
       "m" #'jest-repeat
       "p" #'jest-popup)
 
+(use-package! adoc-mode)
+
 (use-package! ztree)
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
