@@ -65,7 +65,7 @@
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-(setq doom-unicode-font doom-font)
+;; (setq doom-unicode-font doom-font)
 
 (custom-set-faces!
  '(org-date :foreground "dark goldenrod" :height 0.85)
@@ -153,6 +153,10 @@
    :prefix ("t" "+toggle")
    :desc "Minimap" "m" #'demap-toggle)
   )
+
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
 
 (after! evil-snipe
   (setq evil-snipe-scope 'whole-visible)
@@ -1796,7 +1800,10 @@ Not added when either:
         forge-database-connector 'sqlite-builtin
         code-review-db-database-connector 'sqlite-builtin))
 
-(load! "org-customs.el")
+(after! vterm
+  (setq! vterm-max-scrollback 200000))
+
+;; (load! "org-customs.el")
 ;; (load! "org-helpers.el")
 ;; (load! "org-helpers-nm.el")
 
@@ -1810,8 +1817,7 @@ Not added when either:
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1)
-  )
+  :config (lsp-treemacs-sync-mode 1))
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
@@ -1830,11 +1836,7 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-(when (featurep! :editor format)
-  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
-)
-
-(map! (:when (featurep! :editor format)
+(map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
        :v "SPC =" '+format/region
        :leader
@@ -1846,14 +1848,11 @@ Not added when either:
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-        ;; (get-auth-info "intelephense" "sutter"))
-  ;; (setq lsp-intelephense-trace-server "verbose")
-  ;; (setq lsp-intelephense-multi-root t)
-  ;; (setq lsp-intelephense-clear-cache t)
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                         "**/node_modules/**" "**/bower_components/**"
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8)
-  )
+  (setq lsp-idle-delay 0.8))
 
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 
@@ -1883,7 +1882,7 @@ Not added when either:
 
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
-(when (featurep! :tools ein)
+(when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
 

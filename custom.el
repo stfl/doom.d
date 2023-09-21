@@ -5,18 +5,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
    '((org-time-stamp-rounding-minutes 0 15)
      (org-clock-rounding-minutes . 15)
      (eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook"
-           (add-hook 'write-contents-functions
-                     (lambda nil
-                       (delete-trailing-whitespace)
-                       nil))
-           (require 'whitespace)
-           "Sometimes the mode needs to be toggled off and on."
-           (whitespace-mode 0)
-           (whitespace-mode 1))
+      (add-hook 'write-contents-functions
+                (lambda nil
+                  (delete-trailing-whitespace)
+                  nil))
+      (require 'whitespace)
+      "Sometimes the mode needs to be toggled off and on."
+      (whitespace-mode 0)
+      (whitespace-mode 1))
      (whitespace-line-column . 80)
      (whitespace-style face tabs trailing lines-tail))))
 (custom-set-faces
@@ -36,7 +37,7 @@
  '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
  '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
  '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
- '(org-property-value ((t (:height 0.85))) t)
+ '(org-property-value ((t (:height 0.85))))
  '(org-ql-view-due-date ((t (:foreground "dark goldenrod"))))
  '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
  '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))

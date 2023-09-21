@@ -126,7 +126,7 @@ font string. You generally only need these two:
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-(setq doom-unicode-font doom-font)
+;; (setq doom-unicode-font doom-font)
 #+END_SRC
 
 font detection taken from tecosaur https://tecosaur.github.io/emacs-config/config.html#font-face
@@ -283,6 +283,16 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
    :desc "Minimap" "m" #'demap-toggle)
   )
 #+end_src
+** Open External Browser
+
+Use Brave browser if availible. The default should actually respect the $BROWSER env
+
+#+begin_src elisp
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+#+end_src
+
 * Motions
 :PROPERTIES:
 :ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
@@ -317,6 +327,14 @@ limit evil-snipe to the bufffer
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
 :END:
+** Pinning Org due to API changes causing problems in org-ql
+
+https://github.com/alphapapa/org-ql/issues/364
+
+#+begin_src elisp :tangle packages.el
+(package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59")
+#+end_src
+
 ** General
 :PROPERTIES:
 :ID:       90a92aaa-d50a-4524-9a97-bad904b60939
@@ -2505,13 +2523,25 @@ Use the builtin sqlite in emacs >=29
         forge-database-connector 'sqlite-builtin
         code-review-db-database-connector 'sqlite-builtin))
 #+end_src
+** vterm
+
+#+begin_src elisp
+(after! vterm
+  (setq! vterm-max-scrollback 200000))
+#+end_src
+
+*** TODO vterm tramp shell
+
+vterm-tramp-shells (("docker" "/bin/sh")
+("ssh" "/bin/bash")
+)
 
 * Custom Functions
 :PROPERTIES:
 :ID:       c2e19f11-90cd-4bc9-ad99-36a5a680c084
 :END:
 #+BEGIN_SRC elisp
-(load! "org-customs.el")
+;; (load! "org-customs.el")
 ;; (load! "org-helpers.el")
 ;; (load! "org-helpers-nm.el")
 #+END_SRC
@@ -2541,8 +2571,7 @@ Use the builtin sqlite in emacs >=29
 #+BEGIN_SRC elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1)
-  )
+  :config (lsp-treemacs-sync-mode 1))
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
@@ -2563,21 +2592,10 @@ Use the builtin sqlite in emacs >=29
 #+END_SRC
 ** Code Formatting
 
-do not enable +onsave formatting on specifc modes.
-
-My NixOS config is based on [[github:hlissner/dotfiles]] and auto-formating would
-deroy any changes of pulling some changes.
-
-#+BEGIN_SRC elisp
-(when (featurep! :editor format)
-  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
-)
-#+END_SRC
-
 mapping doom's ~+format/buffer~ and ~+format/region~
 
 #+begin_src elisp
-(map! (:when (featurep! :editor format)
+(map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
        :v "SPC =" '+format/region
        :leader
@@ -2595,14 +2613,11 @@ mapping doom's ~+format/buffer~ and ~+format/region~
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-        ;; (get-auth-info "intelephense" "sutter"))
-  ;; (setq lsp-intelephense-trace-server "verbose")
-  ;; (setq lsp-intelephense-multi-root t)
-  ;; (setq lsp-intelephense-clear-cache t)
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                         "**/node_modules/**" "**/bower_components/**"
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8)
-  )
+  (setq lsp-idle-delay 0.8))
 #+END_SRC
 
 ** Python
@@ -2679,7 +2694,7 @@ don't kill the *ein: buffer with ~ESC~ which causes the buffer not to work prope
 org babel integration for ein
 
 #+begin_src elisp
-(when (featurep! :tools ein)
+(when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
 #+end_src

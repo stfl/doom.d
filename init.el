@@ -1,4 +1,4 @@
-; init.el -*- lexical-binding: t; -*-
+                                        ; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load in.
 ;; Remember to run 'doom sync' after modifying it!
@@ -23,13 +23,13 @@
         +auto            ; as-you-type code completion
         +childframe   ; a nicer company UI (Emacs 26+ only)
         )
-        ;; helm              ; the *other* search engine for love and life
+       ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy              ; a search engine for love and life
-        ;; +fuzzy
-        ;; +icons
-        ;; +childframe
-        ;; )
+       ;; +fuzzy
+       ;; +icons
+       ;; +childframe
+       ;; )
        (vertico
         +icons
         ;; +childframe
@@ -44,9 +44,9 @@
        ;; fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
-       ; (:cond ((unless (string= system-name "stefan-t3600")
-                ;; indent-guides     ; highlighted indent columns
-                ; )))
+                                        ; (:cond ((unless (string= system-name "stefan-t3600")
+       ;; indent-guides     ; highlighted indent columns
+                                        ; )))
        ;; minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
@@ -58,7 +58,7 @@
        ;; (ligatures         ; replace bits of code with pretty symbols
        ;;  ;; +extra
        ;;  )
-        ;; +fira)
+       ;; +fira)
        ;; tabs              ; an tab bar for Emacs
        (treemacs          ; a project drawer, like neotree but cooler
         +lsp)            ; lsp-treemacs
@@ -87,7 +87,7 @@
        :emacs
        (dired             ; making dired pretty [functional]
         +icons)
-        ;; +ranger)
+       ;; +ranger)
        ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
@@ -183,14 +183,18 @@
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers
-        +hugo            ; use Emacs for hugo blogging
+        ;; +hugo            ; use Emacs for hugo blogging
         +pretty
-        +jupyter        ; ipython/jupyter support for babel
+        ;; +passwords    ; org-passwords
+        ;; +crypt        ; org-crypt
+        ;; +jupyter        ; ipython/jupyter support for babel
+        ;; +contacts     ; Enable [[doom-package:org-contacts]] integration.
         +pandoc          ; export-with-pandoc support
-        +pomodoro        ; be fruitful with the tomato technique
+        ;; +pomodoro        ; be fruitful with the tomato technique
         +roam2
-        +gnuplot
-        +present)        ; using org-mode for presentations
+        ;; +gnuplot
+        ;; +present      ; using org-mode for presentations
+        )
        ;; raku              ; write code no one else can comprehend
        (php                ; perl's insecure younger brother
         +lsp
@@ -241,6 +245,6 @@
        :config
        literate
        (default
-         +bindings
-         +smartparens)
+        +bindings
+        +smartparens)
        )

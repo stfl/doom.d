@@ -9,3 +9,13 @@ git clone --depth 1 git@github.com:doomemacs/doomemacs ~/.config/emacs
 git clone git@github.com:stfl/doom.d.git ~/.config/doom
 ~/.config/emacs/bin/doom install
 #+END_SRC
+
+* Bootstrap org-mode files
+
+first clone the repo.
+
+#+begin_src bash
+git clone git@github.com:stfl/org.git ~/.org
+#+end_src
+
+Setup Syncthing to sync the ~org~ share which excludes the .git/ dir.
