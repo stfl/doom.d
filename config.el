@@ -80,29 +80,6 @@
  '(outline-3 :height 1.15)
  )
 
-;; (custom-set-faces!
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it byrhand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
-;;  '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
-;;  '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
-;;  '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
-;;  '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
-;;  '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
-;;  '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
-;;  '(org-level-5 ((t (:inherit outline-5 :extend t))))
-;;  '(org-level-6 ((t (:inherit outline-6 :extend t))))
-;;  '(org-level-7 ((t (:inherit outline-7 :extend t))))
-;;  '(org-level-8 ((t (:inherit outline-8 :extend t))))
-;;  '(org-property-value ((t (:height 0.85))) t)
-;;  '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
-;;  '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
-;;  )
- ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
- ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
-
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
 
 (after! org-ql
@@ -1682,27 +1659,103 @@ Not added when either:
   (setq projectile-files-cache-expire 30)
   )
 
-(set-email-account! "gmail"
-  '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
-    (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
-    (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
-    (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
-    (smtpmail-smtp-user     . "ste.lendl@gmail.com")
-    ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
+(after! notmuch
+  (setq +notmuch-sync-backend 'mbsync
+        +notmuch-mail-folder "~/Mail"
+        notmuch-draft-folder "proxmox/Entw&APw-rfe"
+        notmuch-fcc-dirs "proxmox/Sent"
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp"
+        ;; notmuch-mua-compose-in 'new-window
+        notmuch-mua-compose-in 'current-window
+        notmuch-show-logo nil
+        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
+        +word-wrap-mode nil
+        )
+  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
+  ;; (add-hook! 'notmuch-show-mode (lambda ()
+  ;;                                 (setq truncate-lines t
+  ;;                                       +word-wrap-mode nil))
+             )
 
-(set-email-account! "pulswerk"
-  '((mu4e-sent-folder       . "/pulswerk/Sent Items")
-    (mu4e-drafts-folder     . "/pulswerk/Drafts")
-    (mu4e-trash-folder      . "/pulswerk/Deleted Items")
-    (mu4e-refile-folder     . "/pulswerk/Archive")
-    (smtpmail-smtp-user     . "lendl@pulswerk.at")
-    ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
+(map! :after notmuch
+      :map notmuch-common-keymap
+      ;; :desc "TODO" :n "Z" #'
+      ;; TODO TAB toggle fold
+      :n "?" #'notmuch-help
+      :map notmuch-show-mode-map
+      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
+      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      )
+
+;; #848d94
+(custom-set-faces!
+ '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
+ ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
+ ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
+
+ ;; '(notmuch-message-summary-face :foreground "#aa8d94")
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
+
+ ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
+ ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+)
+
+;; (after! notmuch
+;;   (defun notmuch-show-spaces-n (n)
+;;     "Return a string comprised of `n-1' spaces and a tree sysmbol"
+;;     (if (= n 0)
+;;         ""
+;;       (concat (make-string (- n 1) ? ) "╰"))))
+
+;; (set-popup-rule! "^\\*notmuch-hello" :side 'left :size 30 :ttl 0)  ;; default
+(after! notmuch
+  (set-popup-rules!
+    ;; '(("^\\*notmuch-hello" :side left :size 50 :ttl 0))  ;; default
+    ;; '(("^\\*notmuch-hello" :ignore t))
+    '(("^\\*notmuch-hello" :ignore t))
+    ;; '(("^\\*subject:" :action #'switch-to-buffer-other-window))
+    '(("^\\*subject:" :ignore t))))
+;; :ignore t)
+
+;; (set-popup-rule!
+;;   ;; :action #'display-buffer-pop-up-window
+;;   :action #'switch-to-buffer-other-window
+;;   ;; :action #'display-buffer-use-some-window
+;;   ;; :vslot -1
+;;   ;; :slot -1
+;;   ;; :side 'top
+;;   ;; :size 0.6
+;;   :ttl 0)
+
+;; (set-email-account! "gmail"
+;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+;;     (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+;;     (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+;;     (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+;;     ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+
+;; (set-email-account! "pulswerk"
+;;   '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+;;     (mu4e-drafts-folder     . "/pulswerk/Drafts")
+;;     (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+;;     (mu4e-refile-folder     . "/pulswerk/Archive")
+;;     (smtpmail-smtp-user     . "lendl@pulswerk.at")
+;;     ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
 
 (after! mu4e
   ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
@@ -1802,10 +1855,6 @@ Not added when either:
 
 (after! vterm
   (setq! vterm-max-scrollback 200000))
-
-;; (load! "org-customs.el")
-;; (load! "org-helpers.el")
-;; (load! "org-helpers-nm.el")
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -1981,7 +2030,18 @@ Not added when either:
       "m" #'jest-repeat
       "p" #'jest-popup)
 
+(after! rjsx-mode
+  (setq-local tab-width 8)
+  (setq indent-tabs-mode t))
+
 (use-package! adoc-mode)
+
+(add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
+
+(after! cperl-mode
+  (setq-local tab-width 8)
+  (setq indent-tabs-mode t
+        perl-indent-level 4))
 
 (use-package! ztree)
 
