@@ -3,3 +3,4 @@
 *.sync-conflict*
 /node_modules/
 /yarn.lock
+/nil
