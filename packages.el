@@ -17,9 +17,11 @@
            :repo "org-roam/org-roam-ui"
            :files ("*.el" "out")))
 
-(package! ob-mermaid)
+(package! ob-mermaid
+  :disable t)
 
-(package! org-jira)
+(package! org-jira
+  :disable t)
 
 ;; (package! org-pandoc-import
 ;;   :recipe (:host github
@@ -48,8 +50,16 @@
 
 (package! jest)
 
+(package! logview)
+
 ;; bbatsov/adoc-mode
 (package! adoc-mode)
+
+;; (package! jinx)
+
+(package! lsp-ltex
+  :disable t
+  )
 
 (package! ztree)
 

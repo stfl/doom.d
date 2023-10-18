@@ -276,10 +276,13 @@ Use Brave browser if availible. The default should actually respect the $BROWSER
 limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible)
-  (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
-  )
+  (setq evil-snipe-scope 'whole-visible
+        evil-snipe-repeat-scope nil))
 #+END_SRC
+
+#+begin_src elisp
+(map! :leader "f ." #'find-file-at-point)
+#+end_src
 
 * Buffer Settings
 :PROPERTIES:
@@ -309,6 +312,51 @@ https://github.com/alphapapa/org-ql/issues/364
 
 #+begin_src elisp :tangle packages.el
 (package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59")
+#+end_src
+
+** Theme :theme:
+
+#+begin_src elisp
+(after! org
+  (custom-set-faces!
+    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
+#+end_src
+
+Priority specific faces
+
+#+begin_src elisp
+(after! org
+  (custom-declare-face '+org-priority-a  '((t)) "")
+  (custom-declare-face '+org-priority-b  '((t)) "")
+  (custom-declare-face '+org-priority-c  '((t)) "")
+  (custom-declare-face '+org-priority-d  '((t)) "")
+  (custom-declare-face '+org-priority-e  '((t)) "")
+  (custom-declare-face '+org-priority-f  '((t)) "")
+  (custom-declare-face '+org-priority-g  '((t)) "")
+  (custom-declare-face '+org-priority-h  '((t)) "")
+  (custom-declare-face '+org-priority-i  '((t)) "")
+
+  (custom-set-faces!
+    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+    '(+org-priority-d  :foreground "gold3" :weight bold)
+    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+    '(+org-priority-g  :foreground "cyan4" :weight bold)
+    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
 #+end_src
 
 ** General
@@ -348,7 +396,8 @@ always generate an id for a link
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t)
-   (org-id-update-id-locations))
+   ;;(org-id-update-id-locations)
+  )
 #+END_SRC
 
 rebuild orgid file on start
@@ -543,41 +592,6 @@ To make the priorities mor visually appealing we add some nice symbols.
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
-
-#+begin_src elisp
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-#+end_src
 
 ** Agenda
 :PROPERTIES:
@@ -1447,41 +1461,41 @@ org-default-priority is treated as lower than the same set value"
   (setq org-capture-templates
         `(("n" "capture to inbox"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-inbox.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-projects.org")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-scheduled.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
           ("v" "Versicherung"
            entry
-           (file+headline (doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
+           (file+headline ,(doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-deadline.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
           ("P" "Protocol"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline (doom-path org-directory "gtd/todo.org") "Haushalt")
-           (file "~/.doom.d/templates/template-wäsche.org"))
+           (file+headline ,(doom-path org-directory "gtd/todo.org") "Haushalt")
+           (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
 #+END_SRC
@@ -1906,10 +1920,11 @@ do not automatically open the roam side-pane
 #+end_src
 
 #+begin_src elisp
-(setq org-roam-dailies-capture-templates
-      ' (("d" "default"
-          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
-          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default"
+           entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 #+end_src
 
   # ;; (setq org-roam-capture-templates
@@ -1973,8 +1988,8 @@ do not automatically open the roam side-pane
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
-        '(("ste.lendl@gmail.com" .  (doom-path org-directory "gcal/stefan.org"))
-          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . (doom-path org-directory "gcal/oskar.org")))
+        `(("ste.lendl@gmail.com" . ,(doom-path org-directory "gcal/stefan.org"))
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
@@ -2013,7 +2028,8 @@ Org babel to generate mermaid diagrams from org src blocks
 
 
 #+begin_src elisp :tangle packages.el
-(package! ob-mermaid)
+(package! ob-mermaid
+  :disable t)
 #+end_src
 
 #+begin_src elisp
@@ -2030,8 +2046,8 @@ Org babel to generate mermaid diagrams from org src blocks
 :ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
 :END:
 
-From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/ In termux, you also need to pkg install diffutils.
-
+From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/
+/In termux, you also need to pkg install diffutils./
 
 #+begin_src elisp
 (map! :after org
@@ -2046,7 +2062,8 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 #+begin_src elisp
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (ibizaman/syncthing-resolve-conflicts org-directory))
+  (let ((org-startup-folded 'showeverything))
+    (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
   "Resolve all conflicts under given DIRECTORY."
@@ -2123,7 +2140,8 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 :END:
 
 #+begin_src elisp :tangle packages.el
-(package! org-jira)
+(package! org-jira
+  :disable t)
 #+end_src
 
 #+BEGIN_SRC elisp
@@ -2332,13 +2350,28 @@ https://github.com/doomemacs/doomemacs/issues/7058
         notmuch-mua-compose-in 'current-window
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        +word-wrap-mode nil
+        +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
+        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed")
+                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+                                 (:key ">" :name "sent"    :query "tag:sent")
+                                 (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
+                                 (:key "d" :name "drafts"  :query "tag:draft"))
+        notmuch-archive-tags '("+archive" "-inbox" "-unread")
+        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
+        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
         )
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
   ;; (add-hook! 'notmuch-show-mode (lambda ()
   ;;                                 (setq truncate-lines t
   ;;                                       +word-wrap-mode nil))
-             )
+  )
+#+end_src
+
+#+begin_src elisp
 #+end_src
 
 Use the (almost) default keybindings in evil normal-mode
@@ -2942,6 +2975,19 @@ small exercises. The exercises can can be solved locally.
   :custom (exercism-web-browser-function 'browse-url))
 #+end_src
 ** Javascript | Typescript
+*** Proxmox specific code indentation style
+
+#+begin_src emacs-lisp
+(setq-hook! 'rjsx-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+#+end_src
+
+#+begin_src emacs-lisp
+(after! js
+  (setq js-indent-level 4
+        js-jsx-indent-level 4))
+#+end_src
 
 *** Jest Testing Framework
 
@@ -2961,33 +3007,117 @@ small exercises. The exercises can can be solved locally.
       "p" #'jest-popup)
 #+end_src
 
-#+begin_src emacs-lisp
-(after! rjsx-mode
-  (setq-local tab-width 8)
-  (setq indent-tabs-mode t))
-#+end_src
-
-** AsciiDoc
-
-#+begin_src elisp :tangle packages.el
-;; bbatsov/adoc-mode
-(package! adoc-mode)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! adoc-mode)
-#+end_src
 ** Perl
+
+always use the better cperl-mode instead of perl-mode
 
 #+begin_src elisp
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 #+end_src
 
 #+begin_src elisp
-(after! cperl-mode
-  (setq-local tab-width 8)
-  (setq indent-tabs-mode t
-        perl-indent-level 4))
+(after! cperl
+  (setq cperl-indent-level 4
+        cperl-close-paren-offset -4
+        cperl-continued-statement-offset 4
+        cperl-indent-parens-as-block t))
+#+end_src
+
+Proxmox specific Perl indentation style using a tab where 8 spaces would be
+used.
+
+#+begin_src elisp
+(setq-hook! 'cperl-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+#+end_src
+** Logview
+
+#+begin_src elisp :tangle packages.el
+(package! logview)
+#+end_src
+
+#+begin_src elisp
+(use-package! logview
+  :commands logview-mode
+  :config (setq truncate-lines t))
+#+end_src
+
+** AsciiDoc (adoc)
+
+#+begin_src elisp :tangle packages.el
+;; bbatsov/adoc-mode
+(package! adoc-mode)
+#+end_src
+
+~TODO~ adoc-mode requires org due to inhereting the theme
+
+#+begin_src emacs-lisp
+(use-package! adoc-mode
+  :defer t
+  :config
+  (map! :map adoc-mode-map
+        :localleader
+        :desc "consult headers in this file" "." #'consult-imenu
+        :desc "consult headers in project" "/" #'consult-imenu-multi
+        "p" #'treemacs-find-tag)
+  (custom-set-faces!
+    '(adoc-code-face :inherit org-block)
+    '(adoc-complex-replacement-face :inherit org-code :bold t)
+    '(adoc-meta-face :inherit org-meta-line)
+    '(adoc-typewriter-face :inherit org-code)
+    '(adoc-verbatim-face :inherit org-verbatim)
+    '(adoc-internal-reference-face :inherit org-link)
+    '(adoc-reference-face :inherit org-link)
+    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+    '(adoc-bold-face :bold t)
+    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+    '(adoc-warning-face :inherit org-warning)))
+#+end_src
+
+#+begin_src elisp
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+#+end_src
+
+** Spell- Grammer Checking
+*** TODO Jinx
+
+#+begin_src elisp :tangle packages.el
+;; (package! jinx)
+#+end_src
+
+#+begin_src elisp
+;; (use-package! jinx)
+#+end_src
+
+*** LTEX
+
+#+begin_src elisp :tangle packages.el
+(package! lsp-ltex
+  :disable t
+  )
+#+end_src
+
+manually add adoc-mode to the list.. I don't like that...
+
+#+begin_src elisp
+;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
+(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+#+end_src
+
+#+begin_src elisp
+(use-package! lsp-ltex
+  :after ;; (lsp-mode adoc-mode)
+        lsp-ltex-active-modes
+  :hook (adoc-mode . (lambda ()
+                       (require 'lsp-ltex)
+                       (lsp-deferred)))  ; or lsp-deferred
+  :init
+  (setq lsp-ltex-server-store-path "~/.nix-profile/bin/ltex-ls"
+        lsp-ltex-version "16.0.0"
+        lsp-ltex-mother-tongue "de-AT"
+        lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 #+end_src
 
 * Collaboration and VCS
@@ -3014,7 +3144,7 @@ This will enable gravatars when viewing commits. The service used by default is 
 
 *** Enable granular diff-highlights for all hunks
 
-By default, changes are highlighted *linewise* for all but the selected hunk. This
+By default, changes are highlighted *line-wise* for all but the selected hunk. This
 has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
 visible hunks with:
 

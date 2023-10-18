@@ -92,7 +92,7 @@
        (ibuffer
         +icons)           ; interactive buffer management
        vc                ; version-control and Emacs, sitting in a tree
-       undo; +tree)
+       (undo +tree)
 
        :term
        eshell            ; a consistent, cross-platform shell (WIP)
@@ -103,10 +103,10 @@
        :checkers
        (syntax              ; tasing you for every semicolon you forget
         +childframe)
-       ;; (spell             ; tasing you for misspelling mispelling
-       ;;  +aspell
-       ;;  ;; +everywhere
-       ;;  )
+       (spell             ; tasing you for misspelling mispelling
+        +aspell
+        ;; +everywhere
+        )
        ;; grammar           ; tasing grammar mistake every you make
 
        :tools

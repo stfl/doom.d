@@ -136,9 +136,10 @@
          browse-url-chromium-program "brave"))
 
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible)
-  (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
-  )
+  (setq evil-snipe-scope 'whole-visible
+        evil-snipe-repeat-scope nil))
+
+(map! :leader "f ." #'find-file-at-point)
 
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
@@ -147,6 +148,43 @@
 
 (setq auto-save-default t)
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
+
+(after! org
+  (custom-set-faces!
+    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
+
+(after! org
+  (custom-declare-face '+org-priority-a  '((t)) "")
+  (custom-declare-face '+org-priority-b  '((t)) "")
+  (custom-declare-face '+org-priority-c  '((t)) "")
+  (custom-declare-face '+org-priority-d  '((t)) "")
+  (custom-declare-face '+org-priority-e  '((t)) "")
+  (custom-declare-face '+org-priority-f  '((t)) "")
+  (custom-declare-face '+org-priority-g  '((t)) "")
+  (custom-declare-face '+org-priority-h  '((t)) "")
+  (custom-declare-face '+org-priority-i  '((t)) "")
+
+  (custom-set-faces!
+    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+    '(+org-priority-d  :foreground "gold3" :weight bold)
+    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+    '(+org-priority-g  :foreground "cyan4" :weight bold)
+    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
 
 (setq org-directory "~/.org")
 
@@ -161,7 +199,8 @@
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t)
-   (org-id-update-id-locations))
+   ;;(org-id-update-id-locations)
+  )
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
@@ -301,39 +340,6 @@ relevant again (Tickler)"
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
-
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
 
 ;; (after! org
 (setq!
@@ -1101,41 +1107,41 @@ org-default-priority is treated as lower than the same set value"
   (setq org-capture-templates
         `(("n" "capture to inbox"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-inbox.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-projects.org")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-scheduled.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
           ("v" "Versicherung"
            entry
-           (file+headline (doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
+           (file+headline ,(doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
-           (file "~/.doom.d/templates/template-deadline.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
           ("P" "Protocol"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline (doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline (doom-path org-directory "gtd/todo.org") "Haushalt")
-           (file "~/.doom.d/templates/template-wäsche.org"))
+           (file+headline ,(doom-path org-directory "gtd/todo.org") "Haushalt")
+           (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
 
@@ -1403,10 +1409,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 
-(setq org-roam-dailies-capture-templates
-      ' (("d" "default"
-          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
-          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default"
+           entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 
 (use-package! websocket
     :after org-roam)
@@ -1428,8 +1435,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
-        '(("ste.lendl@gmail.com" .  (doom-path org-directory "gcal/stefan.org"))
-          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . (doom-path org-directory "gcal/oskar.org")))
+        `(("ste.lendl@gmail.com" . ,(doom-path org-directory "gcal/stefan.org"))
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
@@ -1473,7 +1480,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (ibizaman/syncthing-resolve-conflicts org-directory))
+  (let ((org-startup-folded 'showeverything))
+    (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
   "Resolve all conflicts under given DIRECTORY."
@@ -1672,13 +1680,27 @@ Not added when either:
         notmuch-mua-compose-in 'current-window
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        +word-wrap-mode nil
+        +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
+        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed")
+                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+                                 (:key ">" :name "sent"    :query "tag:sent")
+                                 (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
+                                 (:key "d" :name "drafts"  :query "tag:draft"))
+        notmuch-archive-tags '("+archive" "-inbox" "-unread")
+        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
+        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
         )
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
   ;; (add-hook! 'notmuch-show-mode (lambda ()
   ;;                                 (setq truncate-lines t
   ;;                                       +word-wrap-mode nil))
-             )
+  )
+
+
 
 (map! :after notmuch
       :map notmuch-common-keymap
@@ -2020,6 +2042,14 @@ Not added when either:
   :config (exercism-mode +1)
   :custom (exercism-web-browser-function 'browse-url))
 
+(setq-hook! 'rjsx-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+
+(after! js
+  (setq js-indent-level 4
+        js-jsx-indent-level 4))
+
 (map! :after rjsx-mode
       :map rjsx-mode-map
       :localleader
@@ -2030,18 +2060,62 @@ Not added when either:
       "m" #'jest-repeat
       "p" #'jest-popup)
 
-(after! rjsx-mode
-  (setq-local tab-width 8)
-  (setq indent-tabs-mode t))
-
-(use-package! adoc-mode)
-
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
-(after! cperl-mode
-  (setq-local tab-width 8)
-  (setq indent-tabs-mode t
-        perl-indent-level 4))
+(after! cperl
+  (setq cperl-indent-level 4
+        cperl-close-paren-offset -4
+        cperl-continued-statement-offset 4
+        cperl-indent-parens-as-block t))
+
+(setq-hook! 'cperl-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+
+(use-package! logview
+  :commands logview-mode
+  :config (setq truncate-lines t))
+
+(use-package! adoc-mode
+  :defer t
+  :config
+  (map! :map adoc-mode-map
+        :localleader
+        :desc "consult headers in this file" "." #'consult-imenu
+        :desc "consult headers in project" "/" #'consult-imenu-multi
+        "p" #'treemacs-find-tag)
+  (custom-set-faces!
+    '(adoc-code-face :inherit org-block)
+    '(adoc-complex-replacement-face :inherit org-code :bold t)
+    '(adoc-meta-face :inherit org-meta-line)
+    '(adoc-typewriter-face :inherit org-code)
+    '(adoc-verbatim-face :inherit org-verbatim)
+    '(adoc-internal-reference-face :inherit org-link)
+    '(adoc-reference-face :inherit org-link)
+    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+    '(adoc-bold-face :bold t)
+    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+    '(adoc-warning-face :inherit org-warning)))
+
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+
+;; (use-package! jinx)
+
+;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
+(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+
+(use-package! lsp-ltex
+  :after ;; (lsp-mode adoc-mode)
+        lsp-ltex-active-modes
+  :hook (adoc-mode . (lambda ()
+                       (require 'lsp-ltex)
+                       (lsp-deferred)))  ; or lsp-deferred
+  :init
+  (setq lsp-ltex-server-store-path "~/.nix-profile/bin/ltex-ls"
+        lsp-ltex-version "16.0.0"
+        lsp-ltex-mother-tongue "de-AT"
+        lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 
 (use-package! ztree)
 
