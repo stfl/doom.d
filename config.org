@@ -276,8 +276,8 @@ Use Brave browser if availible. The default should actually respect the $BROWSER
 limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible
-        evil-snipe-repeat-scope nil))
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
 #+END_SRC
 
 #+begin_src elisp
@@ -647,15 +647,17 @@ org todo checkboxes
 *** Agenda Files
 
 #+begin_src elisp
+(setq stfl/proxmox-support-dir "~/Support/")
+#+end_src
+
+#+begin_src elisp
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
-        org-agenda-files (list (doom-path org-directory "gtd/inbox.org")
-                           ;; (doom-path org-directory "gtd/someday.org")
-                           ;; (doom-path org-directory "gtd/tickler.org")
-                           (doom-path org-directory "gtd/todo.org")
-                           (doom-path org-directory "gtd/projects/")
-                           ;; (doom-path org-directory "jira/")
-                           (doom-path org-directory "gcal/"))))
+        org-agenda-files `(,(doom-path org-directory "gtd/inbox.org")
+                           ,(doom-path org-directory "gtd/todo.org")
+                           ,(doom-path org-directory "gtd/projects/")
+                           ,(doom-path org-directory "gcal/")
+                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
 #+end_src
 
 *** Agenda Custom Commands
@@ -1569,10 +1571,10 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
 #+begin_src elisp
 (after! org-clock
-
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+        org-clock-report-include-clocking-task t
         org-log-note-clock-out t))
 #+end_src
 
@@ -2338,19 +2340,15 @@ https://github.com/doomemacs/doomemacs/issues/7058
 
 #+begin_src elisp
 (after! notmuch
-  (setq +notmuch-sync-backend 'mbsync
+  (setq +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
+        +notmuch-sync-backend 'mbsync
         +notmuch-mail-folder "~/Mail"
         notmuch-draft-folder "proxmox/Entw&APw-rfe"
         notmuch-fcc-dirs "proxmox/Sent"
-        message-sendmail-f-is-evil 't
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp"
-        ;; notmuch-mua-compose-in 'new-window
+        notmuch-mua-cite-function 'message-cite-original-without-signature
         notmuch-mua-compose-in 'current-window
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
         notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
         notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
                                  (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
@@ -2363,6 +2361,14 @@ https://github.com/doomemacs/doomemacs/issues/7058
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
         +notmuch-spam-tags '("+spam" "-inbox" "-unread")
         +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
+        notmuch-mua-hidden-headers nil
+
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp"
         )
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
   ;; (add-hook! 'notmuch-show-mode (lambda ()
@@ -2387,13 +2393,19 @@ Use the (almost) default keybindings in evil normal-mode
       ;; :g "<mouse-2>" #'notmuch-show-toggle-message
       ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
       ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      :g "C-c C-e" #'notmuch-show-resume-message
+      :n "ge" #'notmuch-show-resume-message
+      :map notmuch-tree-mode-map
+      :g "C-c C-e" #'notmuch-tree-resume-message
+      :n "ge" #'notmuch-tree-resume-message
       )
 #+end_src
 
 #+begin_src elisp
  ;; #848d94
 (custom-set-faces!
- '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
  ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
  ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
  ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
@@ -2405,39 +2417,32 @@ Use the (almost) default keybindings in evil normal-mode
 
  ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
  ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face
+   ;; :foreground ,(doom-color 'fg)
+   :weight bold
+   ;; :underline t
+   :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
 )
 #+end_src
 
-overwrite the space intendation function to show a a tree
-#+begin_src elisp
-;; (after! notmuch
-;;   (defun notmuch-show-spaces-n (n)
-;;     "Return a string comprised of `n-1' spaces and a tree sysmbol"
-;;     (if (= n 0)
-;;         ""
-;;       (concat (make-string (- n 1) ? ) "╰"))))
-#+end_src
+There is more fine grained face control for search based on tags :
 
+# ;; (setq notmuch-search-line-faces
+# ;;       '(("unread" . (:foreground "green"))
+# ;;         ("inbox" . (:foreground "red" :background "blue"))))
+
+Reset the default popup-rules defined by doom's module
 #+begin_src elisp
-;; (set-popup-rule! "^\\*notmuch-hello" :side 'left :size 30 :ttl 0)  ;; default
 (after! notmuch
   (set-popup-rules!
-    ;; '(("^\\*notmuch-hello" :side left :size 50 :ttl 0))  ;; default
-    ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*notmuch-hello" :ignore t))
-    ;; '(("^\\*subject:" :action #'switch-to-buffer-other-window))
     '(("^\\*subject:" :ignore t))))
-;; :ignore t)
-
-;; (set-popup-rule!
-;;   ;; :action #'display-buffer-pop-up-window
-;;   :action #'switch-to-buffer-other-window
-;;   ;; :action #'display-buffer-use-some-window
-;;   ;; :vslot -1
-;;   ;; :slot -1
-;;   ;; :side 'top
-;;   ;; :size 0.6
-;;   :ttl 0)
 #+end_src
 
 *** mu4e
@@ -3023,8 +3028,7 @@ always use the better cperl-mode instead of perl-mode
         cperl-indent-parens-as-block t))
 #+end_src
 
-Proxmox specific Perl indentation style using a tab where 8 spaces would be
-used.
+Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
 
 #+begin_src elisp
 (setq-hook! 'cperl-mode-hook

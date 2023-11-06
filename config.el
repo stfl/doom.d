@@ -136,8 +136,8 @@
          browse-url-chromium-program "brave"))
 
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible
-        evil-snipe-repeat-scope nil))
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
 
 (map! :leader "f ." #'find-file-at-point)
 
@@ -377,15 +377,15 @@ relevant again (Tickler)"
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
+(setq stfl/proxmox-support-dir "~/Support/")
+
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
-        org-agenda-files (list (doom-path org-directory "gtd/inbox.org")
-                           ;; (doom-path org-directory "gtd/someday.org")
-                           ;; (doom-path org-directory "gtd/tickler.org")
-                           (doom-path org-directory "gtd/todo.org")
-                           (doom-path org-directory "gtd/projects/")
-                           ;; (doom-path org-directory "jira/")
-                           (doom-path org-directory "gcal/"))))
+        org-agenda-files `(,(doom-path org-directory "gtd/inbox.org")
+                           ,(doom-path org-directory "gtd/todo.org")
+                           ,(doom-path org-directory "gtd/projects/")
+                           ,(doom-path org-directory "gcal/")
+                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
 
 (after! org
 
@@ -1194,10 +1194,10 @@ org-default-priority is treated as lower than the same set value"
         ))
 
 (after! org-clock
-
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+        org-clock-report-include-clocking-task t
         org-log-note-clock-out t))
 
 (use-package! org-edna
@@ -1668,19 +1668,15 @@ Not added when either:
   )
 
 (after! notmuch
-  (setq +notmuch-sync-backend 'mbsync
+  (setq +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
+        +notmuch-sync-backend 'mbsync
         +notmuch-mail-folder "~/Mail"
         notmuch-draft-folder "proxmox/Entw&APw-rfe"
         notmuch-fcc-dirs "proxmox/Sent"
-        message-sendmail-f-is-evil 't
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp"
-        ;; notmuch-mua-compose-in 'new-window
+        notmuch-mua-cite-function 'message-cite-original-without-signature
         notmuch-mua-compose-in 'current-window
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
         notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
         notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
                                  (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
@@ -1693,6 +1689,14 @@ Not added when either:
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
         +notmuch-spam-tags '("+spam" "-inbox" "-unread")
         +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
+        notmuch-mua-hidden-headers nil
+
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp"
         )
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
   ;; (add-hook! 'notmuch-show-mode (lambda ()
@@ -1712,11 +1716,17 @@ Not added when either:
       ;; :g "<mouse-2>" #'notmuch-show-toggle-message
       ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
       ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      :g "C-c C-e" #'notmuch-show-resume-message
+      :n "ge" #'notmuch-show-resume-message
+      :map notmuch-tree-mode-map
+      :g "C-c C-e" #'notmuch-tree-resume-message
+      :n "ge" #'notmuch-tree-resume-message
       )
 
 ;; #848d94
 (custom-set-faces!
- '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
  ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
  ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
  ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
@@ -1728,34 +1738,23 @@ Not added when either:
 
  ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
  ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face
+   ;; :foreground ,(doom-color 'fg)
+   :weight bold
+   ;; :underline t
+   :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
 )
 
-;; (after! notmuch
-;;   (defun notmuch-show-spaces-n (n)
-;;     "Return a string comprised of `n-1' spaces and a tree sysmbol"
-;;     (if (= n 0)
-;;         ""
-;;       (concat (make-string (- n 1) ? ) "╰"))))
-
-;; (set-popup-rule! "^\\*notmuch-hello" :side 'left :size 30 :ttl 0)  ;; default
 (after! notmuch
   (set-popup-rules!
-    ;; '(("^\\*notmuch-hello" :side left :size 50 :ttl 0))  ;; default
-    ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*notmuch-hello" :ignore t))
-    ;; '(("^\\*subject:" :action #'switch-to-buffer-other-window))
     '(("^\\*subject:" :ignore t))))
-;; :ignore t)
-
-;; (set-popup-rule!
-;;   ;; :action #'display-buffer-pop-up-window
-;;   :action #'switch-to-buffer-other-window
-;;   ;; :action #'display-buffer-use-some-window
-;;   ;; :vslot -1
-;;   ;; :slot -1
-;;   ;; :side 'top
-;;   ;; :size 0.6
-;;   :ttl 0)
 
 ;; (set-email-account! "gmail"
 ;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
