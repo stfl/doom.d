@@ -1739,11 +1739,7 @@ Not added when either:
  ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
  ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
  `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face
-   ;; :foreground ,(doom-color 'fg)
-   :weight bold
-   ;; :underline t
-   :slant italic)
+ '(notmuch-search-unread-face :weight bold :slant italic)
  `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
  `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
  `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
@@ -2061,11 +2057,11 @@ Not added when either:
 
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
-(after! cperl
-  (setq cperl-indent-level 4
-        cperl-close-paren-offset -4
-        cperl-continued-statement-offset 4
-        cperl-indent-parens-as-block t))
+;; (after! cperl
+(setq! cperl-indent-level 4
+       cperl-close-paren-offset -4
+       cperl-continued-statement-offset 4
+       cperl-indent-parens-as-block t)
 
 (setq-hook! 'cperl-mode-hook
   tab-width 8
@@ -2135,6 +2131,9 @@ Not added when either:
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
+
+(custom-set-faces!
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
 
 (use-package! edit-server
   :defer t

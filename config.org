@@ -2418,11 +2418,7 @@ Use the (almost) default keybindings in evil normal-mode
  ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
  ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
  `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face
-   ;; :foreground ,(doom-color 'fg)
-   :weight bold
-   ;; :underline t
-   :slant italic)
+ '(notmuch-search-unread-face :weight bold :slant italic)
  `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
  `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
  `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
@@ -3021,11 +3017,11 @@ always use the better cperl-mode instead of perl-mode
 #+end_src
 
 #+begin_src elisp
-(after! cperl
-  (setq cperl-indent-level 4
-        cperl-close-paren-offset -4
-        cperl-continued-statement-offset 4
-        cperl-indent-parens-as-block t))
+;; (after! cperl
+(setq! cperl-indent-level 4
+       cperl-close-paren-offset -4
+       cperl-continued-statement-offset 4
+       cperl-indent-parens-as-block t)
 #+end_src
 
 Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
@@ -3200,6 +3196,14 @@ activate magit-todo to display the TODOs section in magit buffer
 
 (after! magit-todos (magit-todos-mode))
 #+end_src
+
+*** Theme
+
+#+begin_src elisp
+(custom-set-faces!
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
+#+end_src
+
 ** Edit with Emacs (in the Browser)
 
 #+begin_src elisp :tangle packages.el
