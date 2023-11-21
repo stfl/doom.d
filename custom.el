@@ -6,7 +6,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
+   '("88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e" "02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
    '((org-time-stamp-rounding-minutes 0 15)
@@ -46,19 +46,8 @@
  '(adoc-typewriter-face ((t (:inherit org-code))))
  '(adoc-verbatim-face ((t (:inherit org-verbatim))))
  '(adoc-warning-face ((t (:inherit org-warning))))
+ '(magit-branch-current ((t (:foreground "#51afef" :box t))))
  '(notmuch-message-summary-face ((t (:foreground "#848d94"))))
- '(notmuch-search-unread-face ((t (:foreground "#bbc2cf" :weight 'bold))))
- '(notmuch-tree-no-match-face ((t (:foreground "#848d94"))))
- '(notmuch-wash-cited-text ((t (:foreground "#73797e"))))
- '(org-code ((t (:foreground "#f1d1a2" :extend t))))
- '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
- '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
- '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
- '(org-property-value ((t (:height 0.85))))
+ '(notmuch-search-subject ((t (:foreground "#b1b8c4"))))
  '(org-ql-view-due-date ((t (:foreground "dark goldenrod"))))
- '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
- '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
- '(outline-1 ((t (:height 1.5))))
- '(outline-2 ((t (:height 1.25))))
- '(outline-3 ((t (:height 1.15))))
  '(ts-fold-replacement-face ((t (:foreground nil :box nil :inherit font-lock-comment-face :weight light)))))

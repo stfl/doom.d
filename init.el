@@ -41,11 +41,10 @@
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;; (emoji +unicode)  ; 🙂
-       ;; fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
                                         ; (:cond ((unless (string= system-name "stefan-t3600")
-       ;; indent-guides     ; highlighted indent columns
+       indent-guides     ; highlighted indent columns
                                         ; )))
        ;; minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
@@ -121,9 +120,9 @@
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
-        +docsets
+        +docsets         ; ...or in Dash docsets locally
         +dictionary)
-       ;; +offline)        ; ...or in Dash docsets locally
+       ;; +offline)
        (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs

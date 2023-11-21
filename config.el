@@ -18,11 +18,22 @@
             secret))
       nil)))
 
-;; (when (equal (window-system) nil)
-;;   (and
-;;    (bind-key "C-<down>" #'+org/insert-item-below)
-;;    (setq doom-theme 'doom-solarized-dark)
-;;    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+
+(defun stfl/goto-private-config-file ()
+  "Open your private config.el file."
+  (interactive)
+  (find-file (expand-file-name "config.org" doom-private-dir)))
+
+(define-key! help-map "dc" #'stfl/goto-private-config-file)
+
+;; (global-auto-revert-mode 1)
+(setq undo-limit 80000000
+      evil-want-fine-undo t
+      inhibit-compacting-font-caches t)
+
+(setq auto-save-default t)
+(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -135,19 +146,14 @@
   (setq! browse-url-browser-function 'browse-url-chromium
          browse-url-chromium-program "brave"))
 
+(after! highlight-indent-guides
+  (setq! highlight-indent-guides-auto-character-face-perc 20))
+
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
 
 (map! :leader "f ." #'find-file-at-point)
-
-;; (global-auto-revert-mode 1)
-(setq undo-limit 80000000
-      evil-want-fine-undo t
-      inhibit-compacting-font-caches t)
-
-(setq auto-save-default t)
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 (after! org
   (custom-set-faces!
@@ -186,6 +192,13 @@
           (?H . +org-priority-h)
           (?I . +org-priority-i))))
 
+(after! org
+  (auto-fill-mode))
+;; (add-hook! 'org-mode-hook
+;;   (setq-local ;; +word-wrap-extra-indent 'single
+;;               +word-wrap-fill-style 'hard)
+;;   (+word-wrap-mode +1))
+
 (setq org-directory "~/.org")
 
 (after! org
@@ -198,9 +211,11 @@
 (after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
-        org-id-track-globally t)
-   ;;(org-id-update-id-locations)
-  )
+        org-id-track-globally t))
+
+(after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
+
+(after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
@@ -1667,198 +1682,6 @@ Not added when either:
   (setq projectile-files-cache-expire 30)
   )
 
-(after! notmuch
-  (setq +word-wrap-mode nil     ;; disable word-wrap in the notmuch show buffer
-        +notmuch-sync-backend 'mbsync
-        +notmuch-mail-folder "~/Mail"
-        notmuch-draft-folder "proxmox/Entw&APw-rfe"
-        notmuch-fcc-dirs "proxmox/Sent"
-        notmuch-mua-cite-function 'message-cite-original-without-signature
-        notmuch-mua-compose-in 'current-window
-        notmuch-show-logo nil
-        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
-        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
-                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
-                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed")
-                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
-                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
-                                 (:key ">" :name "sent"    :query "tag:sent")
-                                 (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
-                                 (:key "d" :name "drafts"  :query "tag:draft"))
-        notmuch-archive-tags '("+archive" "-inbox" "-unread")
-        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
-        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
-
-        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
-        notmuch-mua-hidden-headers nil
-
-        message-sendmail-f-is-evil 't
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp"
-        )
-  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
-  ;; (add-hook! 'notmuch-show-mode (lambda ()
-  ;;                                 (setq truncate-lines t
-  ;;                                       +word-wrap-mode nil))
-  )
-
-
-
-(map! :after notmuch
-      :map notmuch-common-keymap
-      ;; :desc "TODO" :n "Z" #'
-      ;; TODO TAB toggle fold
-      :n "?" #'notmuch-help
-      :map notmuch-show-mode-map
-      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
-      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
-      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
-      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
-      :g "C-c C-e" #'notmuch-show-resume-message
-      :n "ge" #'notmuch-show-resume-message
-      :map notmuch-tree-mode-map
-      :g "C-c C-e" #'notmuch-tree-resume-message
-      :n "ge" #'notmuch-tree-resume-message
-      )
-
-;; #848d94
-(custom-set-faces!
- ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
- ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
- ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
-
- ;; '(notmuch-message-summary-face :foreground "#aa8d94")
- '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
- ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
-
- ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
- ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
- `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face :weight bold :slant italic)
- `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
- `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
- `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
- `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
- `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
-)
-
-(after! notmuch
-  (set-popup-rules!
-    '(("^\\*notmuch-hello" :ignore t))
-    '(("^\\*subject:" :ignore t))))
-
-;; (set-email-account! "gmail"
-;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
-;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
-;;     (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
-;;     (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
-;;     (smtpmail-smtp-user     . "ste.lendl@gmail.com")
-;;     ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
-;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
-;;     )
-;;   t)
-
-;; (set-email-account! "pulswerk"
-;;   '((mu4e-sent-folder       . "/pulswerk/Sent Items")
-;;     (mu4e-drafts-folder     . "/pulswerk/Drafts")
-;;     (mu4e-trash-folder      . "/pulswerk/Deleted Items")
-;;     (mu4e-refile-folder     . "/pulswerk/Archive")
-;;     (smtpmail-smtp-user     . "lendl@pulswerk.at")
-;;     ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
-;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
-;;     )
-;;   t)
-
-(after! mu4e
-  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
-  (setq mu4e-context-policy 'ask-if-none
-        mu4e-compose-context-policy 'always-ask)
-
-  (setq mu4e-maildir-shortcuts
-    '((:key ?g :maildir "/gmail/Inbox"   )
-      (:key ?p :maildir "/pulswerk/INBOX")
-      (:key ?u :maildir "/gmail/Categories/Updates")
-      (:key ?j :maildir "/pulswerk/Jira"  )
-      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
-      ))
-
-  (setq mu4e-bookmarks
-        '(
-          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
-          (:key ?u :name "Unread messages"
-           :query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
-          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
-          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
-          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
-          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
-          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
-          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
-          ))
-  )
-
-(after! mu4e-alert
-  (setq mu4e-alert-interesting-mail-query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
-
-(after! mu4e
-  (setq mu4e-headers-fields
-        '((:flags . 6)
-          (:account-stripe . 2)
-          (:from-or-to . 25)
-          (:folder . 10)
-          (:recipnum . 2)
-          (:subject . 80)
-          (:human-date . 8))
-        +mu4e-min-header-frame-width 142
-        mu4e-headers-date-format "%d/%m/%y"
-        mu4e-headers-time-format "⧖ %H:%M"
-        mu4e-headers-results-limit 1000
-        mu4e-index-cleanup t)
-
-  (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
-            '((:folder .
-               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
-                (lambda (msg)
-                  (+mu4e-colorize-str
-                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
-                   '+mu4e-header--folder-colors)))))))
-
-(after! mu4e
-  (setq sendmail-program "/usr/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
-        message-send-mail-function #'message-send-mail-with-sendmail))
-
-;; (use-package! mu4e-views
-;;   :after mu4e
-;;   )
-
-(setq +org-msg-accent-color "#1a5fb4"
-      org-msg-greeting-fmt "\nHi %s,\n\n"
-      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
-
-(map! :map org-msg-edit-mode-map
-      :after org-msg
-      :n "G" #'org-msg-goto-body)
-
-(after! ediff
-  (setq ediff-diff-options "--text"
-        ediff-diff3-options "--text"
-        ediff-toggle-skip-similar t
-        ediff-diff-options "-w"
-        ;; ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally))
-
 (after! text-mode
   (add-hook! 'text-mode-hook
              ;; Apply ANSI color codes
@@ -2135,6 +1958,194 @@ Not added when either:
 (custom-set-faces!
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
 
+(after! notmuch
+  (setq +notmuch-sync-backend 'mbsync
+        +notmuch-mail-folder "~/Mail"
+        notmuch-draft-folder "proxmox/Entw&APw-rfe"
+        notmuch-fcc-dirs "proxmox/Sent"
+        notmuch-mua-cite-function 'message-cite-original-without-signature
+        notmuch-mua-compose-in 'current-window
+        notmuch-show-logo nil
+        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
+        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+                                 (:key "d" :name "drafts"  :query "tag:draft")
+                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
+                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+                                 (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
+                                 ;; (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
+                                 (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+                                 (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
+                                 (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        notmuch-archive-tags '("+archive" "-inbox" "-unread")
+        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
+        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
+        notmuch-mua-hidden-headers nil
+
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp")
+  (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
+  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
+
+(map! :after notmuch
+      :map notmuch-common-keymap
+      ;; :desc "TODO" :n "Z" #'
+      ;; TODO TAB toggle fold
+      :n "?" #'notmuch-help
+      :map notmuch-show-mode-map
+      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
+      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      :g "C-c C-e" #'notmuch-show-resume-message
+      :n "ge" #'notmuch-show-resume-message
+      :map notmuch-tree-mode-map
+      :g "C-c C-e" #'notmuch-tree-resume-message
+      :n "ge" #'notmuch-tree-resume-message
+      )
+
+;; #848d94
+(custom-set-faces!
+ ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
+ ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
+ ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
+
+ ;; '(notmuch-message-summary-face :foreground "#aa8d94")
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
+
+ ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
+ ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face :weight bold :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
+)
+
+(after! notmuch
+  (set-popup-rules!
+    '(("^\\*notmuch-hello" :ignore t))
+    '(("^\\*subject:" :ignore t))))
+
+;; (set-email-account! "gmail"
+;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+;;     (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+;;     (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+;;     (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+;;     ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+
+;; (set-email-account! "pulswerk"
+;;   '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+;;     (mu4e-drafts-folder     . "/pulswerk/Drafts")
+;;     (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+;;     (mu4e-refile-folder     . "/pulswerk/Archive")
+;;     (smtpmail-smtp-user     . "lendl@pulswerk.at")
+;;     ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+
+(after! mu4e
+  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
+  (setq mu4e-context-policy 'ask-if-none
+        mu4e-compose-context-policy 'always-ask)
+
+  (setq mu4e-maildir-shortcuts
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
+
+  (setq mu4e-bookmarks
+        '(
+          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
+          (:key ?u :name "Unread messages"
+           :query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
+          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
+          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
+          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
+          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
+          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
+          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
+          ))
+  )
+
+(after! mu4e-alert
+  (setq mu4e-alert-interesting-mail-query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+
+(after! mu4e
+  (setq sendmail-program "/usr/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+
+;; (use-package! mu4e-views
+;;   :after mu4e
+;;   )
+
+(setq +org-msg-accent-color "#1a5fb4"
+      org-msg-greeting-fmt "\nHi %s,\n\n"
+      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
+
+(map! :map org-msg-edit-mode-map
+      :after org-msg
+      :n "G" #'org-msg-goto-body)
+
+(after! ediff
+  (setq ediff-diff-options "--text"
+        ediff-diff3-options "--text"
+        ediff-toggle-skip-similar t
+        ediff-diff-options "-w"
+        ;; ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally))
+
 (use-package! edit-server
   :defer t
   :commands edit-server-start
@@ -2151,12 +2162,3 @@ Not added when either:
                   (minibuffer . t)
                   (menu-bar-lines . t)
                   (window-system . x))))
-
-(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
-
-(defun stfl/goto-private-config-file ()
-  "Open your private config.el file."
-  (interactive)
-  (find-file (expand-file-name "config.org" doom-private-dir)))
-
-(define-key! help-map "dc" #'stfl/goto-private-config-file)

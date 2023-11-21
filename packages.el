@@ -63,4 +63,7 @@
 
 (package! ztree)
 
+;; (package! mailscripts.el
+;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
+
 (package! edit-server)
