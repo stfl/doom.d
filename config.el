@@ -18,11 +18,22 @@
             secret))
       nil)))
 
-;; (when (equal (window-system) nil)
-;;   (and
-;;    (bind-key "C-<down>" #'+org/insert-item-below)
-;;    (setq doom-theme 'doom-solarized-dark)
-;;    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+
+(defun stfl/goto-private-config-file ()
+  "Open your private config.el file."
+  (interactive)
+  (find-file (expand-file-name "config.org" doom-private-dir)))
+
+(define-key! help-map "dc" #'stfl/goto-private-config-file)
+
+;; (global-auto-revert-mode 1)
+(setq undo-limit 80000000
+      evil-want-fine-undo t
+      inhibit-compacting-font-caches t)
+
+(setq auto-save-default t)
+(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -65,7 +76,7 @@
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-(setq doom-unicode-font doom-font)
+;; (setq doom-unicode-font doom-font)
 
 (custom-set-faces!
  '(org-date :foreground "dark goldenrod" :height 0.85)
@@ -79,29 +90,6 @@
  '(outline-2 :height 1.25)
  '(outline-3 :height 1.15)
  )
-
-;; (custom-set-faces!
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it byrhand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
-;;  '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
-;;  '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
-;;  '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
-;;  '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
-;;  '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
-;;  '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
-;;  '(org-level-5 ((t (:inherit outline-5 :extend t))))
-;;  '(org-level-6 ((t (:inherit outline-6 :extend t))))
-;;  '(org-level-7 ((t (:inherit outline-7 :extend t))))
-;;  '(org-level-8 ((t (:inherit outline-8 :extend t))))
-;;  '(org-property-value ((t (:height 0.85))) t)
-;;  '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
-;;  '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
-;;  )
- ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
- ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
 
 (set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
 
@@ -154,20 +142,64 @@
    :desc "Minimap" "m" #'demap-toggle)
   )
 
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+
+(after! highlight-indent-guides
+  (setq! highlight-indent-guides-auto-character-face-perc 20))
+
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible)
-  (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
-  )
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
 
-;; (global-auto-revert-mode 1)
-(setq undo-limit 80000000
-      evil-want-fine-undo t
-      inhibit-compacting-font-caches t)
+(map! :leader "f ." #'find-file-at-point)
 
-(setq auto-save-default t)
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
+(after! org
+  (custom-set-faces!
+    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
 
-(setq org-directory "~/.org/")
+(after! org
+  (custom-declare-face '+org-priority-a  '((t)) "")
+  (custom-declare-face '+org-priority-b  '((t)) "")
+  (custom-declare-face '+org-priority-c  '((t)) "")
+  (custom-declare-face '+org-priority-d  '((t)) "")
+  (custom-declare-face '+org-priority-e  '((t)) "")
+  (custom-declare-face '+org-priority-f  '((t)) "")
+  (custom-declare-face '+org-priority-g  '((t)) "")
+  (custom-declare-face '+org-priority-h  '((t)) "")
+  (custom-declare-face '+org-priority-i  '((t)) "")
+
+  (custom-set-faces!
+    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+    '(+org-priority-d  :foreground "gold3" :weight bold)
+    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+    '(+org-priority-g  :foreground "cyan4" :weight bold)
+    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
+
+(after! org
+  (auto-fill-mode))
+;; (add-hook! 'org-mode-hook
+;;   (setq-local ;; +word-wrap-extra-indent 'single
+;;               +word-wrap-fill-style 'hard)
+;;   (+word-wrap-mode +1))
+
+(setq org-directory "~/.org")
 
 (after! org
   (setq org-hide-emphasis-markers t
@@ -178,10 +210,12 @@
 
 (after! org-id
   (setq org-id-link-to-org-use-id t
-        org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
-        org-id-track-globally t)
-   (org-id-update-id-locations)
-  )
+        org-id-locations-file (doom-path doom-local-dir "org-id-locations")
+        org-id-track-globally t))
+
+(after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
+
+(after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
 (after! org
   (run-with-idle-timer 30 t #'org-save-all-org-buffers))
@@ -322,39 +356,6 @@ relevant again (Tickler)"
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
 
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-
 ;; (after! org
 (setq!
        ;; org-agenda-dim-blocked-tasks t
@@ -391,15 +392,15 @@ relevant again (Tickler)"
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
+(setq stfl/proxmox-support-dir "~/Support/")
+
 (after! org
-  (setq org-agenda-diary-file "~/.org/diary.org"
-        org-agenda-files '("~/.org/gtd/inbox.org"
-                           ;; "~/.org/gtd/someday.org"
-                           ;; "~/.org/gtd/tickler.org"
-                           "~/.org/gtd/todo.org"
-                           "~/.org/gtd/projects/"
-                           ;; "~/.org/jira/"
-                           "~/.org/gcal/")))
+  (setq org-agenda-diary-file (doom-path org-directory "diary.org")
+        org-agenda-files `(,(doom-path org-directory "gtd/inbox.org")
+                           ,(doom-path org-directory "gtd/todo.org")
+                           ,(doom-path org-directory "gtd/projects/")
+                           ,(doom-path org-directory "gcal/")
+                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
 
 (after! org
 
@@ -1119,43 +1120,43 @@ org-default-priority is treated as lower than the same set value"
 
 (after! org
   (setq org-capture-templates
-        '(("n" "capture to inbox"
+        `(("n" "capture to inbox"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-inbox.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-projects.org")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-scheduled.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
           ("v" "Versicherung"
            entry
-           (file+headline "~/.org/gtd/projects/versicherung.org" "Einreichungen")
+           (file+headline ,(doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-deadline.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
           ("P" "Protocol"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline "~/.org/gtd/todo.org" "Haushalt")
-           (file "~/.doom.d/templates/template-wäsche.org"))
+           (file+headline ,(doom-path org-directory "gtd/todo.org") "Haushalt")
+           (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
 
@@ -1193,7 +1194,7 @@ org-default-priority is treated as lower than the same set value"
 (after! org
   (setq
    ;; org-image-actual-width 400
-   org-archive-location "~/.org/gtd/archive/%s::datetree"
+   org-archive-location (doom-path org-directory "gtd/archive/%s::datetree") ;; FIXME
    ))
 
 (use-package! org-habit
@@ -1208,10 +1209,10 @@ org-default-priority is treated as lower than the same set value"
         ))
 
 (after! org-clock
-
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+        org-clock-report-include-clocking-task t
         org-log-note-clock-out t))
 
 (use-package! org-edna
@@ -1344,18 +1345,19 @@ org-default-priority is treated as lower than the same set value"
 ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
 (defun stfl/build-my-someday-files ()
-  (file-expand-wildcards "~/.org/gtd/someday/*.org"))
+  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
 
 (after! org
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 4)
+                             ;; ((doom-path org-directory "gtd/someday.org") :maxlevel . 4)  ;; TODO
                              ("~/.org/gtd/someday.org" :maxlevel . 4)
                              (stfl/build-my-someday-files :maxlevel . 4))
         org-refile-use-outline-path 'buffer-name
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm))
 
-(defun stfl/build-my-roam-files () (file-expand-wildcards "~/.org/roam/**/*.org"))
+(defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
 (defun stfl/refile-to-roam ()
   (interactive)
@@ -1415,17 +1417,18 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-directory "~/.org/"
-        org-roam-db-location "~/.emacs.d/.local/roam.db"
+        org-roam-directory org-directory
+        org-roam-db-location (doom-path doom-local-dir "roam.db")
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 
-(setq org-roam-dailies-capture-templates
-      ' (("d" "default"
-          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
-          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default"
+           entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 
 (use-package! websocket
     :after org-roam)
@@ -1447,8 +1450,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
-        '(("ste.lendl@gmail.com" .  "~/.org/gcal/stefan.org")
-          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . "~/.org/gcal/oskar.org"))
+        `(("ste.lendl@gmail.com" . ,(doom-path org-directory "gcal/stefan.org"))
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
@@ -1492,7 +1495,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (ibizaman/syncthing-resolve-conflicts "~/.org/"))
+  (let ((org-startup-folded 'showeverything))
+    (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
   "Resolve all conflicts under given DIRECTORY."
@@ -1563,7 +1567,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package! org-jira
   :after org
-  :init (setq org-jira-working-dir "~/.org/jira/"
+  :init (setq org-jira-working-dir (doom-path org-directory "jira/")
               jiralib-url "https://pulswerk.atlassian.net")
   ;; (defconst org-jira-progress-issue-flow
   ;;     '(("To Do" . "In Progress"
@@ -1678,113 +1682,6 @@ Not added when either:
   (setq projectile-files-cache-expire 30)
   )
 
-(set-email-account! "gmail"
-  '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
-    (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
-    (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
-    (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
-    (smtpmail-smtp-user     . "ste.lendl@gmail.com")
-    ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
-
-(set-email-account! "pulswerk"
-  '((mu4e-sent-folder       . "/pulswerk/Sent Items")
-    (mu4e-drafts-folder     . "/pulswerk/Drafts")
-    (mu4e-trash-folder      . "/pulswerk/Deleted Items")
-    (mu4e-refile-folder     . "/pulswerk/Archive")
-    (smtpmail-smtp-user     . "lendl@pulswerk.at")
-    ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
-
-(after! mu4e
-  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
-  (setq mu4e-context-policy 'ask-if-none
-        mu4e-compose-context-policy 'always-ask)
-
-  (setq mu4e-maildir-shortcuts
-    '((:key ?g :maildir "/gmail/Inbox"   )
-      (:key ?p :maildir "/pulswerk/INBOX")
-      (:key ?u :maildir "/gmail/Categories/Updates")
-      (:key ?j :maildir "/pulswerk/Jira"  )
-      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
-      ))
-
-  (setq mu4e-bookmarks
-        '(
-          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
-          (:key ?u :name "Unread messages"
-           :query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
-          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
-          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
-          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
-          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
-          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
-          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
-          ))
-  )
-
-(after! mu4e-alert
-  (setq mu4e-alert-interesting-mail-query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
-
-(after! mu4e
-  (setq mu4e-headers-fields
-        '((:flags . 6)
-          (:account-stripe . 2)
-          (:from-or-to . 25)
-          (:folder . 10)
-          (:recipnum . 2)
-          (:subject . 80)
-          (:human-date . 8))
-        +mu4e-min-header-frame-width 142
-        mu4e-headers-date-format "%d/%m/%y"
-        mu4e-headers-time-format "⧖ %H:%M"
-        mu4e-headers-results-limit 1000
-        mu4e-index-cleanup t)
-
-  (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
-            '((:folder .
-               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
-                (lambda (msg)
-                  (+mu4e-colorize-str
-                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
-                   '+mu4e-header--folder-colors)))))))
-
-(after! mu4e
-  (setq sendmail-program "/usr/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
-        message-send-mail-function #'message-send-mail-with-sendmail))
-
-;; (use-package! mu4e-views
-;;   :after mu4e
-;;   )
-
-(setq +org-msg-accent-color "#1a5fb4"
-      org-msg-greeting-fmt "\nHi %s,\n\n"
-      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
-
-(map! :map org-msg-edit-mode-map
-      :after org-msg
-      :n "G" #'org-msg-goto-body)
-
-(after! ediff
-  (setq ediff-diff-options "--text"
-        ediff-diff3-options "--text"
-        ediff-toggle-skip-similar t
-        ediff-diff-options "-w"
-        ;; ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally))
-
 (after! text-mode
   (add-hook! 'text-mode-hook
              ;; Apply ANSI color codes
@@ -1796,9 +1693,10 @@ Not added when either:
         forge-database-connector 'sqlite-builtin
         code-review-db-database-connector 'sqlite-builtin))
 
-(load! "org-customs.el")
-(load! "org-helpers.el")
-(load! "org-helpers-nm.el")
+(after! vterm
+  (setq! vterm-max-scrollback 200000))
+
+(map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -1810,8 +1708,7 @@ Not added when either:
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1)
-  )
+  :config (lsp-treemacs-sync-mode 1))
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
@@ -1830,11 +1727,7 @@ Not added when either:
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
-(when (featurep! :editor format)
-  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
-)
-
-(map! (:when (featurep! :editor format)
+(map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
        :v "SPC =" '+format/region
        :leader
@@ -1846,14 +1739,11 @@ Not added when either:
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-        ;; (get-auth-info "intelephense" "sutter"))
-  ;; (setq lsp-intelephense-trace-server "verbose")
-  ;; (setq lsp-intelephense-multi-root t)
-  ;; (setq lsp-intelephense-clear-cache t)
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                         "**/node_modules/**" "**/bower_components/**"
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8)
-  )
+  (setq lsp-idle-delay 0.8))
 
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 
@@ -1883,7 +1773,7 @@ Not added when either:
 
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
-(when (featurep! :tools ein)
+(when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
 
@@ -1972,6 +1862,14 @@ Not added when either:
   :config (exercism-mode +1)
   :custom (exercism-web-browser-function 'browse-url))
 
+(setq-hook! 'rjsx-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+
+(after! js
+  (setq js-indent-level 4
+        js-jsx-indent-level 4))
+
 (map! :after rjsx-mode
       :map rjsx-mode-map
       :localleader
@@ -1981,6 +1879,63 @@ Not added when either:
       "k" #'jest-file-dwim
       "m" #'jest-repeat
       "p" #'jest-popup)
+
+(add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
+
+;; (after! cperl
+(setq! cperl-indent-level 4
+       cperl-close-paren-offset -4
+       cperl-continued-statement-offset 4
+       cperl-indent-parens-as-block t)
+
+(setq-hook! 'cperl-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+
+(use-package! logview
+  :commands logview-mode
+  :config (setq truncate-lines t))
+
+(use-package! adoc-mode
+  :defer t
+  :config
+  (map! :map adoc-mode-map
+        :localleader
+        :desc "consult headers in this file" "." #'consult-imenu
+        :desc "consult headers in project" "/" #'consult-imenu-multi
+        "p" #'treemacs-find-tag)
+  (custom-set-faces!
+    '(adoc-code-face :inherit org-block)
+    '(adoc-complex-replacement-face :inherit org-code :bold t)
+    '(adoc-meta-face :inherit org-meta-line)
+    '(adoc-typewriter-face :inherit org-code)
+    '(adoc-verbatim-face :inherit org-verbatim)
+    '(adoc-internal-reference-face :inherit org-link)
+    '(adoc-reference-face :inherit org-link)
+    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+    '(adoc-bold-face :bold t)
+    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+    '(adoc-warning-face :inherit org-warning)))
+
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+
+;; (use-package! jinx)
+
+;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
+(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+
+(use-package! lsp-ltex
+  :after ;; (lsp-mode adoc-mode)
+        lsp-ltex-active-modes
+  :hook (adoc-mode . (lambda ()
+                       (require 'lsp-ltex)
+                       (lsp-deferred)))  ; or lsp-deferred
+  :init
+  (setq lsp-ltex-server-store-path "~/.nix-profile/bin/ltex-ls"
+        lsp-ltex-version "16.0.0"
+        lsp-ltex-mother-tongue "de-AT"
+        lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 
 (use-package! ztree)
 
@@ -2002,6 +1957,216 @@ Not added when either:
 
 (after! magit-todos (magit-todos-mode))
 
+(custom-set-faces!
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
+
+(after! notmuch
+  (setq +notmuch-sync-backend 'mbsync
+        +notmuch-mail-folder "~/Mail"
+        notmuch-draft-folder "proxmox/Entw&APw-rfe"
+        notmuch-fcc-dirs "proxmox/Sent"
+        notmuch-mua-cite-function 'message-cite-original-without-signature
+        notmuch-mua-compose-in 'current-window
+        notmuch-show-logo nil
+        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
+        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-saved-searches
+        '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+          (:key "d" :name "drafts"  :query "tag:draft")
+          (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+          (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+          (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
+          (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
+          (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        notmuch-archive-tags '("+archive" "-inbox" "-unread")
+        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
+        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        stfl/notmuch-unwatch-tags (append notmuch-archive-tags '("-my-pr" "-watch" "-review"))
+        stfl/notmuch-kill-tags (cons "+killed" stfl/notmuch-unwatch-tags)
+
+        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
+        notmuch-mua-hidden-headers nil
+
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp")
+  (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
+  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
+
+(after! notmuch
+  (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+
+  (defun stfl/notmuch-search-kill-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-kill-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+  )
+
+(map! :after notmuch
+      :map notmuch-common-keymap
+      :n "?" #'notmuch-help
+      :map notmuch-show-mode-map
+      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
+      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      :g "C-c C-e" #'notmuch-show-resume-message
+      :n "ge" #'notmuch-show-resume-message
+      ;; :n "A" '(λ! (notmuch-search-tag-all "-archive -my-pr -watch"))  ;; TODO need to tag ENTIRE thread oterhwise it will be tagged again with afew
+      :map notmuch-tree-mode-map
+      :g "C-c C-e" #'notmuch-tree-resume-message
+      :n "ge" #'notmuch-tree-resume-message
+      :n "A" (λ! (notmuch-tree-tag-thread stfl/notmuch-unwatch-tags))
+      :n "K" (λ! (notmuch-tree-tag-thread stfl/notmuch-kill-tags))
+      :map notmuch-search-mode-map
+      :n "A" #'stfl/notmuch-search-unwatch-thread
+      :n "K" #'stfl/notmuch-search-kill-thread
+      )
+
+;; #848d94
+(custom-set-faces!
+ ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
+ ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
+ ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
+
+ ;; '(notmuch-message-summary-face :foreground "#aa8d94")
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
+
+ ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
+ ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face :weight bold :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
+)
+
+(after! notmuch
+  (set-popup-rules!
+    ;; '(("^\\*notmuch-hello" :ignore t))
+    '(("^\\*subject:" :ignore t))))
+
+;; (set-email-account! "gmail"
+;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+;;     (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+;;     (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+;;     (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+;;     ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+
+;; (set-email-account! "pulswerk"
+;;   '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+;;     (mu4e-drafts-folder     . "/pulswerk/Drafts")
+;;     (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+;;     (mu4e-refile-folder     . "/pulswerk/Archive")
+;;     (smtpmail-smtp-user     . "lendl@pulswerk.at")
+;;     ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+
+(after! mu4e
+  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
+  (setq mu4e-context-policy 'ask-if-none
+        mu4e-compose-context-policy 'always-ask)
+
+  (setq mu4e-maildir-shortcuts
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
+
+  (setq mu4e-bookmarks
+        '(
+          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
+          (:key ?u :name "Unread messages"
+           :query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
+          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
+          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
+          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
+          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
+          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
+          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
+          ))
+  )
+
+(after! mu4e-alert
+  (setq mu4e-alert-interesting-mail-query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+
+(after! mu4e
+  (setq sendmail-program "/usr/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+
+;; (use-package! mu4e-views
+;;   :after mu4e
+;;   )
+
+(setq +org-msg-accent-color "#1a5fb4"
+      org-msg-greeting-fmt "\nHi %s,\n\n"
+      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
+
+(map! :map org-msg-edit-mode-map
+      :after org-msg
+      :n "G" #'org-msg-goto-body)
+
+(after! ediff
+  (setq ediff-diff-options "--text"
+        ediff-diff3-options "--text"
+        ediff-toggle-skip-similar t
+        ediff-diff-options "-w"
+        ;; ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally))
+
 (use-package! edit-server
   :defer t
   :commands edit-server-start
@@ -2018,12 +2183,3 @@ Not added when either:
                   (minibuffer . t)
                   (menu-bar-lines . t)
                   (window-system . x))))
-
-(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
-
-(defun stfl/goto-private-config-file ()
-  "Open your private config.el file."
-  (interactive)
-  (find-file (expand-file-name "config.org" doom-private-dir)))
-
-(define-key! help-map "dc" #'stfl/goto-private-config-file)

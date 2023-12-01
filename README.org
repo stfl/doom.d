@@ -5,80 +5,17 @@
 * Installation
 
 #+BEGIN_SRC sh
-git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
-git clone git@github.com:stfl/doom.d.git ~/.doom.d
-~/.emacs.d/bin/doom install
+git clone --depth 1 git@github.com:doomemacs/doomemacs ~/.config/emacs
+git clone git@github.com:stfl/doom.d.git ~/.config/doom
+~/.config/emacs/bin/doom install
 #+END_SRC
 
-** Global Dependencies
+* Bootstrap org-mode files
 
-Ubuntu
-#+BEGIN_SRC sh
-sudo apt install fonts-firacode
-#+END_SRC
-
-Arch | Manjaro
-#+BEGIN_SRC sh
-sudo pacman -S ttf-fira-code
-#+END_SRC
-
-* Modules
-
-** Python
-[[file:~/.emacs.d/modules/tools/direnv/README.org][tools/direnv]]
-
-*** Pyright
-
-**** Ubuntu
-pyright requires node 12 and ubuntu 20.04 only has version 10 in the repo
-https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-de
+first clone the repo.
 
 #+begin_src bash
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash
-sudo apt-get install -y nodejs
+git clone git@github.com:stfl/org.git ~/.org
 #+end_src
 
-#+begin_src bash
-sudo npm install -g pyright
-#+end_src
-
-**** Arch
-
-#+BEGIN_SRC bash
-yay -S pyright
-#+END_SRC
-
-* Build Emacs from Source
-
-Ubuntu 20.04 has Emacs 26.3 in the repository and the package is built without
-dynamic module support. Therefore it is recommended to build Emacs 27 from
-source with custom flags.
-
-** Dependencies
-#+begin_src bash
-sudo apt install -y autoconf make gcc texinfo libgtk-3-dev libxpm-dev \
-     libjpeg-dev libgif-dev libtiff5-dev libgnutls28-dev libncurses5-dev \
-     libjansson-dev libharfbuzz-dev libharfbuzz-bin
-#+end_src
-
-** Emacs source
-#+begin_src bash
-git clone --branch emacs-27 --depth 1 https://github.com/emacs-mirror/emacs.git
-#+end_src
-
-** configure
-#+begin_src bash
-./autogen.sh
-
-./configure --with-json --with-modules --with-harfbuzz --with-compress-install \
-            --with-threads --with-included-regex --with-zlib --without-sound --without-gsettings \
-            --with-cairo --with-xwidgets --without-pop --prefix=$HOME/.local --with-mailutils
-#+end_src
-** build
-
-#+begin_src bash
-make
-make install
-#+end_src
-
-
+Setup Syncthing to sync the ~org~ share which excludes the .git/ dir.

@@ -1,7 +1,8 @@
 #+title: doom-emacs config
 #+startup: content
 
-* User Information
+* General
+** User Information
 :PROPERTIES:
 :ID:       47537e03-28e5-4adf-ac0b-ab8249ce01bf
 :END:
@@ -35,19 +36,51 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
             secret))
       nil)))
 #+END_SRC
-
-* Terminal Mode
+** literate config
+*** Don't auto-recompile literate-config
 :PROPERTIES:
-:ID:       2ecfb384-6c47-45c9-b7ea-2eb3c9b25311
+:ID:       7f52c1ee-6fff-4e04-96fa-8c5a2bf3ad14
+:END:
+#+BEGIN_SRC elisp
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+#+END_SRC
+*** private config file
+:PROPERTIES:
+:ID:       b1cd6206-b586-45d7-8b1f-e03823bde124
 :END:
 
-Set a few settings if we detect terminal mode
+~doom/goto-private-config-file~ goes to ~config.el~ which I will never edit by hand.
+Opening ~config.org~ makes much more sense.
+
+#+begin_src elisp
+(defun stfl/goto-private-config-file ()
+  "Open your private config.el file."
+  (interactive)
+  (find-file (expand-file-name "config.org" doom-private-dir)))
+#+end_src
+
+bind it to ~SPC h d c~
+
+#+begin_src elisp
+(define-key! help-map "dc" #'stfl/goto-private-config-file)
+#+end_src
+
+** Buffer Settings
+:PROPERTIES:
+:ID:       508b2ffc-2dfd-49e1-b44e-af2994a59df0
+:END:
 #+BEGIN_SRC elisp
-;; (when (equal (window-system) nil)
-;;   (and
-;;    (bind-key "C-<down>" #'+org/insert-item-below)
-;;    (setq doom-theme 'doom-solarized-dark)
-;;    (setq doom-font (font-spec :family "Source Code Pro" :size 20))))
+;; (global-auto-revert-mode 1)
+(setq undo-limit 80000000
+      evil-want-fine-undo t
+      inhibit-compacting-font-caches t)
+#+END_SRC
+
+*** Auto-saving all buffers
+
+#+BEGIN_SRC elisp
+(setq auto-save-default t)
+(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 #+END_SRC
 
 * UI
@@ -126,7 +159,7 @@ font string. You generally only need these two:
         doom-big-font (font-spec :family "JetBrains Mono" :size 20))
   )
 
-(setq doom-unicode-font doom-font)
+;; (setq doom-unicode-font doom-font)
 #+END_SRC
 
 font detection taken from tecosaur https://tecosaur.github.io/emacs-config/config.html#font-face
@@ -191,30 +224,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
  )
 #+end_src
 
-#+begin_src elisp
-;; (custom-set-faces!
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it byrhand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(org-date ((t (:foreground "dark goldenrod" :height 0.85))))
-;;  '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.8))))
-;;  '(org-drawer ((t (:foreground "dark gray" :height 0.8))))
-;;  '(org-level-1 ((t (:inherit outline-1 :extend t :height 1.5))))
-;;  '(org-level-2 ((t (:inherit outline-2 :extend t :height 1.25))))
-;;  '(org-level-3 ((t (:inherit outline-3 :extend t :height 1.15))))
-;;  '(org-level-4 ((t (:inherit outline-4 :extend t :height 1.0))))
-;;  '(org-level-5 ((t (:inherit outline-5 :extend t))))
-;;  '(org-level-6 ((t (:inherit outline-6 :extend t))))
-;;  '(org-level-7 ((t (:inherit outline-7 :extend t))))
-;;  '(org-level-8 ((t (:inherit outline-8 :extend t))))
-;;  '(org-property-value ((t (:height 0.85))) t)
-;;  '(org-special-keyword ((t (:foreground "#83898d" :height 0.8))))
-;;  '(org-tag ((t (:foreground "#83898d" :weight light :height 0.7))))
-;;  )
- ;; '(fixed-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil 13 nil nil nil nil>))))
- ;; '(variable-pitch ((t (:font #<font-spec nil nil JetBrains\ Mono nil nil nil nil nil nil nil nil nil nil>))))
-#+end_src
 ** popup rules
 :PROPERTIES:
 :ID:       1f322103-dc44-4293-b354-a8f5301b89e4
@@ -283,6 +292,24 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
    :desc "Minimap" "m" #'demap-toggle)
   )
 #+end_src
+** Open External Browser
+
+Use Brave browser if availible. The default should actually respect the $BROWSER env
+
+#+begin_src elisp
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+#+end_src
+** Indent Guides
+
+Make the indent guides a little brighter to be more visible in doom-one dark theme.
+
+#+begin_src elisp
+(after! highlight-indent-guides
+  (setq! highlight-indent-guides-auto-character-face-perc 20))
+#+end_src
+
 * Motions
 :PROPERTIES:
 :ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
@@ -290,33 +317,80 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
 (after! evil-snipe
-  (setq evil-snipe-scope 'whole-visible)
-  (setq evil-snipe-repeat-scope nil)  ;; same as evil-snipe-scope
-  )
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
 #+END_SRC
 
-* Buffer Settings
-:PROPERTIES:
-:ID:       508b2ffc-2dfd-49e1-b44e-af2994a59df0
-:END:
-#+BEGIN_SRC elisp
-;; (global-auto-revert-mode 1)
-(setq undo-limit 80000000
-      evil-want-fine-undo t
-      inhibit-compacting-font-caches t)
-#+END_SRC
-
-** Auto-saving all buffers
-
-#+BEGIN_SRC elisp
-(setq auto-save-default t)
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
-#+END_SRC
+#+begin_src elisp
+(map! :leader "f ." #'find-file-at-point)
+#+end_src
 
 * Org mode settings
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
 :END:
+** Pinning Org due to API changes causing problems in org-ql
+
+https://github.com/alphapapa/org-ql/issues/364
+
+#+begin_src elisp :tangle packages.el
+(package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59")
+#+end_src
+
+** Theme :theme:
+
+#+begin_src elisp
+(after! org
+  (custom-set-faces!
+    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
+#+end_src
+
+Priority specific faces
+
+#+begin_src elisp
+(after! org
+  (custom-declare-face '+org-priority-a  '((t)) "")
+  (custom-declare-face '+org-priority-b  '((t)) "")
+  (custom-declare-face '+org-priority-c  '((t)) "")
+  (custom-declare-face '+org-priority-d  '((t)) "")
+  (custom-declare-face '+org-priority-e  '((t)) "")
+  (custom-declare-face '+org-priority-f  '((t)) "")
+  (custom-declare-face '+org-priority-g  '((t)) "")
+  (custom-declare-face '+org-priority-h  '((t)) "")
+  (custom-declare-face '+org-priority-i  '((t)) "")
+
+  (custom-set-faces!
+    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+    '(+org-priority-d  :foreground "gold3" :weight bold)
+    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+    '(+org-priority-g  :foreground "cyan4" :weight bold)
+    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
+#+end_src
+
+#+begin_src elisp
+(after! org
+  (auto-fill-mode))
+;; (add-hook! 'org-mode-hook
+;;   (setq-local ;; +word-wrap-extra-indent 'single
+;;               +word-wrap-fill-style 'hard)
+;;   (+word-wrap-mode +1))
+#+end_src
+
 ** General
 :PROPERTIES:
 :ID:       90a92aaa-d50a-4524-9a97-bad904b60939
@@ -324,7 +398,7 @@ limit evil-snipe to the bufffer
 Org directory
 
 #+BEGIN_SRC elisp
-(setq org-directory "~/.org/")
+(setq org-directory "~/.org")
 #+END_SRC
 
 First I like to add some extra fancy stuff to make orgmode more appealing when i'm using =+pretty= flag.
@@ -352,13 +426,21 @@ always generate an id for a link
 #+BEGIN_SRC elisp
 (after! org-id
   (setq org-id-link-to-org-use-id t
-        org-id-locations-file "~/.emacs.d/.local/.org-id-locations"
-        org-id-track-globally t)
-   (org-id-update-id-locations)
-  )
+        org-id-locations-file (doom-path doom-local-dir "org-id-locations")
+        org-id-track-globally t))
 #+END_SRC
 
-rebuild orgid file on start
+rebuild orgid file on start at the first time emacs is idle for 20 sec
+
+#+begin_src elisp
+(after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
+#+end_src
+
+also rebuild that via org-roam
+
+#+begin_src elisp
+(after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
+#+end_src
 
 ** TODO Auto-saving org-mode files
 :PROPERTIES:
@@ -551,41 +633,6 @@ To make the priorities mor visually appealing we add some nice symbols.
 
 and add change the color of the symbols to color range from red to blue
 
-#+begin_src elisp
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-#+end_src
-
 ** Agenda
 :PROPERTIES:
 :ID:       b426d554-e01c-4792-8dfa-e0db617c4384
@@ -640,16 +687,17 @@ org todo checkboxes
 *** Agenda Files
 
 #+begin_src elisp
-(after! org
-  (setq org-agenda-diary-file "~/.org/diary.org"
-        org-agenda-files '("~/.org/gtd/inbox.org"
-                           ;; "~/.org/gtd/someday.org"
-                           ;; "~/.org/gtd/tickler.org"
-                           "~/.org/gtd/todo.org"
-                           "~/.org/gtd/projects/"
-                           ;; "~/.org/jira/"
-                           "~/.org/gcal/")))
+(setq stfl/proxmox-support-dir "~/Support/")
+#+end_src
 
+#+begin_src elisp
+(after! org
+  (setq org-agenda-diary-file (doom-path org-directory "diary.org")
+        org-agenda-files `(,(doom-path org-directory "gtd/inbox.org")
+                           ,(doom-path org-directory "gtd/todo.org")
+                           ,(doom-path org-directory "gtd/projects/")
+                           ,(doom-path org-directory "gcal/")
+                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
 #+end_src
 
 *** Agenda Custom Commands
@@ -1453,43 +1501,43 @@ org-default-priority is treated as lower than the same set value"
 #+begin_src elisp
 (after! org
   (setq org-capture-templates
-        '(("n" "capture to inbox"
+        `(("n" "capture to inbox"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-inbox.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-projects.org")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-scheduled.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
           ("v" "Versicherung"
            entry
-           (file+headline "~/.org/gtd/projects/versicherung.org" "Einreichungen")
+           (file+headline ,(doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
-           (file "~/.doom.d/templates/template-deadline.org"))
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
           ("P" "Protocol"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline "~/.org/gtd/inbox.org" "Inbox")
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline "~/.org/gtd/todo.org" "Haushalt")
-           (file "~/.doom.d/templates/template-wäsche.org"))
+           (file+headline ,(doom-path org-directory "gtd/todo.org") "Haushalt")
+           (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
 #+END_SRC
@@ -1537,7 +1585,7 @@ org-default-priority is treated as lower than the same set value"
 (after! org
   (setq
    ;; org-image-actual-width 400
-   org-archive-location "~/.org/gtd/archive/%s::datetree"
+   org-archive-location (doom-path org-directory "gtd/archive/%s::datetree") ;; FIXME
    ))
 #+END_SRC
 
@@ -1563,10 +1611,10 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
 #+begin_src elisp
 (after! org-clock
-
   (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+        org-clock-report-include-clocking-task t
         org-log-note-clock-out t))
 #+end_src
 
@@ -1786,11 +1834,12 @@ work
 refile target -> build list of someday files dynamically
 #+BEGIN_SRC elisp
 (defun stfl/build-my-someday-files ()
-  (file-expand-wildcards "~/.org/gtd/someday/*.org"))
+  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
 
 (after! org
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 4)
+                             ;; ((doom-path org-directory "gtd/someday.org") :maxlevel . 4)  ;; TODO
                              ("~/.org/gtd/someday.org" :maxlevel . 4)
                              (stfl/build-my-someday-files :maxlevel . 4))
         org-refile-use-outline-path 'buffer-name
@@ -1800,7 +1849,7 @@ refile target -> build list of someday files dynamically
 
 refile to roam files by
 #+begin_src elisp
-(defun stfl/build-my-roam-files () (file-expand-wildcards "~/.org/roam/**/*.org"))
+(defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
 (defun stfl/refile-to-roam ()
   (interactive)
@@ -1900,8 +1949,8 @@ Roam directory setup
 #+BEGIN_SRC elisp
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-directory "~/.org/"
-        org-roam-db-location "~/.emacs.d/.local/roam.db"
+        org-roam-directory org-directory
+        org-roam-db-location (doom-path doom-local-dir "roam.db")
         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 #+END_SRC
 
@@ -1913,10 +1962,11 @@ do not automatically open the roam side-pane
 #+end_src
 
 #+begin_src elisp
-(setq org-roam-dailies-capture-templates
-      ' (("d" "default"
-          entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
-          :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default"
+           entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 #+end_src
 
   # ;; (setq org-roam-capture-templates
@@ -1937,6 +1987,7 @@ do not automatically open the roam side-pane
   # ;;          :unnarrowed t)
   # ;;         ))
   # )
+
 
 ** org-roam-ui
 :PROPERTIES:
@@ -1980,8 +2031,8 @@ do not automatically open the roam side-pane
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
-        '(("ste.lendl@gmail.com" .  "~/.org/gcal/stefan.org")
-          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . "~/.org/gcal/oskar.org"))
+        `(("ste.lendl@gmail.com" . ,(doom-path org-directory "gcal/stefan.org"))
+          ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
 
@@ -2020,7 +2071,8 @@ Org babel to generate mermaid diagrams from org src blocks
 
 
 #+begin_src elisp :tangle packages.el
-(package! ob-mermaid)
+(package! ob-mermaid
+  :disable t)
 #+end_src
 
 #+begin_src elisp
@@ -2037,8 +2089,8 @@ Org babel to generate mermaid diagrams from org src blocks
 :ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
 :END:
 
-From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/ In termux, you also need to pkg install diffutils.
-
+From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/
+/In termux, you also need to pkg install diffutils./
 
 #+begin_src elisp
 (map! :after org
@@ -2053,7 +2105,8 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 #+begin_src elisp
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (ibizaman/syncthing-resolve-conflicts "~/.org/"))
+  (let ((org-startup-folded 'showeverything))
+    (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
   "Resolve all conflicts under given DIRECTORY."
@@ -2130,13 +2183,14 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 :END:
 
 #+begin_src elisp :tangle packages.el
-(package! org-jira)
+(package! org-jira
+  :disable t)
 #+end_src
 
 #+BEGIN_SRC elisp
 (use-package! org-jira
   :after org
-  :init (setq org-jira-working-dir "~/.org/jira/"
+  :init (setq org-jira-working-dir (doom-path org-directory "jira/")
               jiralib-url "https://pulswerk.atlassian.net")
   ;; (defconst org-jira-progress-issue-flow
   ;;     '(("To Do" . "In Progress"
@@ -2226,6 +2280,32 @@ Not added when either:
       (push '(:async) (caddr result)))
     result))
 #+end_src
+*** Individual startup visibility with :hidden
+
+https://emacs.stackexchange.com/a/44923/30180
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (defun individual-visibility-source-blocks ()
+    "Fold some blocks in the current buffer with property :hidden"
+    (interactive)
+    (org-show-block-all)
+    (org-block-map
+     (lambda ()
+       (let ((case-fold-search t))
+         (when (and
+                (save-excursion
+                  (beginning-of-line 1)
+                  (looking-at org-block-regexp))
+                (cl-assoc
+                 ':hidden
+                 (cl-third
+                  (org-babel-get-src-block-info))))
+           (org-hide-block-toggle))))))
+
+  (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
+#+END_SRC
+
 ** Org Emphasis
 :PROPERTIES:
 :ID:       c8b37906-ad3a-4891-9234-6c8627fb4d61
@@ -2254,6 +2334,12 @@ https://github.com/tecosaur/org-pandoc-import
 ;; (use-package! org-pandoc-import :after org)
 #+end_src
 ** Org Tree Slide (+present)
+
+Don't emphasize the heading -> it's way too big
+
+#+begin_src elisp
+(after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
+#+end_src
 
 disable line numbers in presentations.
 
@@ -2315,167 +2401,6 @@ https://github.com/doomemacs/doomemacs/issues/7058
   )
 #+END_SRC
 
-** E-Mail
-:PROPERTIES:
-:ID:       8e96aa1e-257e-4826-a0bb-6c3be8537fe9
-:END:
-
-*** mu4e
-:PROPERTIES:
-:ID:       9caa475f-fe10-4a07-9696-c8ff031a1fd4
-:END:
-
-#+begin_src elisp
-(set-email-account! "gmail"
-  '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
-    (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
-    (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
-    (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
-    (smtpmail-smtp-user     . "ste.lendl@gmail.com")
-    ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
-#+end_src
-
-#+begin_src elisp
-(set-email-account! "pulswerk"
-  '((mu4e-sent-folder       . "/pulswerk/Sent Items")
-    (mu4e-drafts-folder     . "/pulswerk/Drafts")
-    (mu4e-trash-folder      . "/pulswerk/Deleted Items")
-    (mu4e-refile-folder     . "/pulswerk/Archive")
-    (smtpmail-smtp-user     . "lendl@pulswerk.at")
-    ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
-    ;; (mu4e-compose-signature . "---\nStefan Lendl")
-    )
-  t)
-#+end_src
-
-#+begin_src elisp
-(after! mu4e
-  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
-  (setq mu4e-context-policy 'ask-if-none
-        mu4e-compose-context-policy 'always-ask)
-
-  (setq mu4e-maildir-shortcuts
-    '((:key ?g :maildir "/gmail/Inbox"   )
-      (:key ?p :maildir "/pulswerk/INBOX")
-      (:key ?u :maildir "/gmail/Categories/Updates")
-      (:key ?j :maildir "/pulswerk/Jira"  )
-      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
-      ))
-
-  (setq mu4e-bookmarks
-        '(
-          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
-          (:key ?u :name "Unread messages"
-           :query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
-          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
-          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
-          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
-          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
-          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
-          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
-          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
-          ))
-  )
-#+end_src
-
-set up the query for mu4e-alert to also limit the search range
-#+begin_src elisp
-(after! mu4e-alert
-  (setq mu4e-alert-interesting-mail-query
-           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
-#+end_src
-
-#+begin_src elisp
-(after! mu4e
-  (setq mu4e-headers-fields
-        '((:flags . 6)
-          (:account-stripe . 2)
-          (:from-or-to . 25)
-          (:folder . 10)
-          (:recipnum . 2)
-          (:subject . 80)
-          (:human-date . 8))
-        +mu4e-min-header-frame-width 142
-        mu4e-headers-date-format "%d/%m/%y"
-        mu4e-headers-time-format "⧖ %H:%M"
-        mu4e-headers-results-limit 1000
-        mu4e-index-cleanup t)
-
-  (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
-            '((:folder .
-               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
-                (lambda (msg)
-                  (+mu4e-colorize-str
-                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
-                   '+mu4e-header--folder-colors)))))))
-#+end_src
-
-*** Sending Mail
-:PROPERTIES:
-:ID:       14a0b646-f10a-401a-824f-402052202859
-:END:
-
-#+begin_src elisp
-(after! mu4e
-  (setq sendmail-program "/usr/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
-        message-send-mail-function #'message-send-mail-with-sendmail))
-#+end_src
-
-*** TODO mu4e-views
-:PROPERTIES:
-:ID:       e8c11673-f1fa-47c8-894b-57f1becb3a2e
-:END:
-requies emacs compiled with ~xwidgets~
-
-it can still use the browser view.
-select via ~mu4e-views-mu4e-select-view-msg-method~
-
-#+begin_src elisp
-;; (use-package! mu4e-views
-;;   :after mu4e
-;;   )
-#+end_src
-
-*** org-msg
-:PROPERTIES:
-:ID:       0b9c8dce-ebc6-4025-861e-523afcb9f7a2
-:END:
-
-#+begin_src elisp
-(setq +org-msg-accent-color "#1a5fb4"
-      org-msg-greeting-fmt "\nHi %s,\n\n"
-      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
-
-(map! :map org-msg-edit-mode-map
-      :after org-msg
-      :n "G" #'org-msg-goto-body)
-#+end_src
-
-** ediff
-:PROPERTIES:
-:ID:       c186f137-d99f-45ab-930b-297091895183
-:END:
-forcing text comparison even if diff thinks files are binary
-#+begin_src elisp
-(after! ediff
-  (setq ediff-diff-options "--text"
-        ediff-diff3-options "--text"
-        ediff-toggle-skip-similar t
-        ediff-diff-options "-w"
-        ;; ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally))
-
-#+end_src
-
 ** ansi colors in plaintext files
 :PROPERTIES:
 :ID:       2e1dec14-e6d4-4a74-9643-b8ce695ecec8
@@ -2506,16 +2431,23 @@ Use the builtin sqlite in emacs >=29
         forge-database-connector 'sqlite-builtin
         code-review-db-database-connector 'sqlite-builtin))
 #+end_src
+** vterm
 
-* Custom Functions
-:PROPERTIES:
-:ID:       c2e19f11-90cd-4bc9-ad99-36a5a680c084
-:END:
-#+BEGIN_SRC elisp
-(load! "org-customs.el")
-(load! "org-helpers.el")
-(load! "org-helpers-nm.el")
-#+END_SRC
+#+begin_src elisp
+(after! vterm
+  (setq! vterm-max-scrollback 200000))
+#+end_src
+
+Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
+#+begin_src elisp
+(map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
+#+end_src
+
+*** TODO vterm tramp shell
+
+vterm-tramp-shells (("docker" "/bin/sh")
+("ssh" "/bin/bash")
+)
 
 * Coding
 ** Copilot
@@ -2542,8 +2474,7 @@ Use the builtin sqlite in emacs >=29
 #+BEGIN_SRC elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1)
-  )
+  :config (lsp-treemacs-sync-mode 1))
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
@@ -2564,21 +2495,10 @@ Use the builtin sqlite in emacs >=29
 #+END_SRC
 ** Code Formatting
 
-do not enable +onsave formatting on specifc modes.
-
-My NixOS config is based on [[github:hlissner/dotfiles]] and auto-formating would
-deroy any changes of pulling some changes.
-
-#+BEGIN_SRC elisp
-(when (featurep! :editor format)
-  (add-to-list '+format-on-save-enabled-modes 'nix-mode t)
-)
-#+END_SRC
-
 mapping doom's ~+format/buffer~ and ~+format/region~
 
 #+begin_src elisp
-(map! (:when (featurep! :editor format)
+(map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
        :v "SPC =" '+format/region
        :leader
@@ -2596,14 +2516,11 @@ mapping doom's ~+format/buffer~ and ~+format/region~
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
   (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
   (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"])
-        ;; (get-auth-info "intelephense" "sutter"))
-  ;; (setq lsp-intelephense-trace-server "verbose")
-  ;; (setq lsp-intelephense-multi-root t)
-  ;; (setq lsp-intelephense-clear-cache t)
+                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                         "**/node_modules/**" "**/bower_components/**"
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
   (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8)
-  )
+  (setq lsp-idle-delay 0.8))
 #+END_SRC
 
 ** Python
@@ -2680,10 +2597,11 @@ don't kill the *ein: buffer with ~ESC~ which causes the buffer not to work prope
 org babel integration for ein
 
 #+begin_src elisp
-(when (featurep! :tools ein)
+(when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
 #+end_src
+
 *** emacs-jupyter
 
 header arguments to for jupyter-python to work with plotly
@@ -2867,6 +2785,19 @@ small exercises. The exercises can can be solved locally.
   :custom (exercism-web-browser-function 'browse-url))
 #+end_src
 ** Javascript | Typescript
+*** Proxmox specific code indentation style
+
+#+begin_src emacs-lisp
+(setq-hook! 'rjsx-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+#+end_src
+
+#+begin_src emacs-lisp
+(after! js
+  (setq js-indent-level 4
+        js-jsx-indent-level 4))
+#+end_src
 
 *** Jest Testing Framework
 
@@ -2884,6 +2815,128 @@ small exercises. The exercises can can be solved locally.
       "k" #'jest-file-dwim
       "m" #'jest-repeat
       "p" #'jest-popup)
+#+end_src
+
+** Perl
+
+always use the better cperl-mode instead of perl-mode
+
+#+begin_src elisp
+(add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
+#+end_src
+
+#+begin_src elisp
+;; (after! cperl
+(setq! cperl-indent-level 4
+       cperl-close-paren-offset -4
+       cperl-continued-statement-offset 4
+       cperl-indent-parens-as-block t)
+#+end_src
+
+Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
+
+#+begin_src elisp
+(setq-hook! 'cperl-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+#+end_src
+
+*** Perl LSP
+
+#+begin_src bash :dir /sudo:: :tangle nil
+apt install -y libperl-languageserver-perl
+#+end_src
+
+** Logview
+
+#+begin_src elisp :tangle packages.el
+(package! logview)
+#+end_src
+
+#+begin_src elisp
+(use-package! logview
+  :commands logview-mode
+  :config (setq truncate-lines t))
+#+end_src
+
+** AsciiDoc (adoc)
+
+#+begin_src elisp :tangle packages.el
+;; bbatsov/adoc-mode
+(package! adoc-mode)
+#+end_src
+
+~TODO~ adoc-mode requires org due to inhereting the theme
+
+#+begin_src emacs-lisp
+(use-package! adoc-mode
+  :defer t
+  :config
+  (map! :map adoc-mode-map
+        :localleader
+        :desc "consult headers in this file" "." #'consult-imenu
+        :desc "consult headers in project" "/" #'consult-imenu-multi
+        "p" #'treemacs-find-tag)
+  (custom-set-faces!
+    '(adoc-code-face :inherit org-block)
+    '(adoc-complex-replacement-face :inherit org-code :bold t)
+    '(adoc-meta-face :inherit org-meta-line)
+    '(adoc-typewriter-face :inherit org-code)
+    '(adoc-verbatim-face :inherit org-verbatim)
+    '(adoc-internal-reference-face :inherit org-link)
+    '(adoc-reference-face :inherit org-link)
+    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+    '(adoc-bold-face :bold t)
+    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+    '(adoc-warning-face :inherit org-warning)))
+#+end_src
+
+#+begin_src elisp
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+#+end_src
+
+** Spell- Grammer Checking
+*** TODO Jinx
+:PROPERTIES:
+:ID:       4bdb3608-dd90-4bf5-a7cc-d7774d9bc2e2
+:END:
+
+#+begin_src elisp :tangle packages.el
+;; (package! jinx)
+#+end_src
+
+#+begin_src elisp
+;; (use-package! jinx)
+#+end_src
+
+*** LTEX
+
+#+begin_src elisp :tangle packages.el
+(package! lsp-ltex
+  :disable t
+  )
+#+end_src
+
+manually add adoc-mode to the list.. I don't like that...
+
+#+begin_src elisp
+;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
+(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+#+end_src
+
+#+begin_src elisp
+(use-package! lsp-ltex
+  :after ;; (lsp-mode adoc-mode)
+        lsp-ltex-active-modes
+  :hook (adoc-mode . (lambda ()
+                       (require 'lsp-ltex)
+                       (lsp-deferred)))  ; or lsp-deferred
+  :init
+  (setq lsp-ltex-server-store-path "~/.nix-profile/bin/ltex-ls"
+        lsp-ltex-version "16.0.0"
+        lsp-ltex-mother-tongue "de-AT"
+        lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 #+end_src
 
 * Collaboration and VCS
@@ -2910,7 +2963,7 @@ This will enable gravatars when viewing commits. The service used by default is 
 
 *** Enable granular diff-highlights for all hunks
 
-By default, changes are highlighted *linewise* for all but the selected hunk. This
+By default, changes are highlighted *line-wise* for all but the selected hunk. This
 has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
 visible hunks with:
 
@@ -2962,6 +3015,318 @@ activate magit-todo to display the TODOs section in magit buffer
 
 (after! magit-todos (magit-todos-mode))
 #+end_src
+
+*** Theme
+
+#+begin_src elisp
+(custom-set-faces!
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
+#+end_src
+
+** E-Mail
+:PROPERTIES:
+:ID:       8e96aa1e-257e-4826-a0bb-6c3be8537fe9
+:END:
+
+*** notmuch
+:PROPERTIES:
+:ID:       ae688436-87cb-47b8-9a21-ac9f211d5fb9
+:END:
+
+#+begin_src elisp
+(after! notmuch
+  (setq +notmuch-sync-backend 'mbsync
+        +notmuch-mail-folder "~/Mail"
+        notmuch-draft-folder "proxmox/Entw&APw-rfe"
+        notmuch-fcc-dirs "proxmox/Sent"
+        notmuch-mua-cite-function 'message-cite-original-without-signature
+        notmuch-mua-compose-in 'current-window
+        notmuch-show-logo nil
+        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
+        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
+        notmuch-saved-searches
+        '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+          (:key "d" :name "drafts"  :query "tag:draft")
+          (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+          (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+          (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
+          (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
+          (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        notmuch-archive-tags '("+archive" "-inbox" "-unread")
+        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
+        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        stfl/notmuch-unwatch-tags (append notmuch-archive-tags '("-my-pr" "-watch" "-review"))
+        stfl/notmuch-kill-tags (cons "+killed" stfl/notmuch-unwatch-tags)
+
+        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
+        notmuch-mua-hidden-headers nil
+
+        message-sendmail-f-is-evil 't
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp")
+  (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
+  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
+#+end_src
+
+Additional functions to apply tags according to my workflow
+
+#+begin_src elisp
+(after! notmuch
+  (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+
+  (defun stfl/notmuch-search-kill-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-kill-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+  )
+#+end_src
+
+Use the (almost) default keybindings in evil normal-mode
+
+#+begin_src elisp
+(map! :after notmuch
+      :map notmuch-common-keymap
+      :n "?" #'notmuch-help
+      :map notmuch-show-mode-map
+      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
+      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
+      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
+      :g "C-c C-e" #'notmuch-show-resume-message
+      :n "ge" #'notmuch-show-resume-message
+      ;; :n "A" '(λ! (notmuch-search-tag-all "-archive -my-pr -watch"))  ;; TODO need to tag ENTIRE thread oterhwise it will be tagged again with afew
+      :map notmuch-tree-mode-map
+      :g "C-c C-e" #'notmuch-tree-resume-message
+      :n "ge" #'notmuch-tree-resume-message
+      :n "A" (λ! (notmuch-tree-tag-thread stfl/notmuch-unwatch-tags))
+      :n "K" (λ! (notmuch-tree-tag-thread stfl/notmuch-kill-tags))
+      :map notmuch-search-mode-map
+      :n "A" #'stfl/notmuch-search-unwatch-thread
+      :n "K" #'stfl/notmuch-search-kill-thread
+      )
+#+end_src
+
+#+begin_src elisp
+ ;; #848d94
+(custom-set-faces!
+ ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
+ ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
+ ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
+ ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
+
+ ;; '(notmuch-message-summary-face :foreground "#aa8d94")
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
+
+ ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
+ ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face :weight bold :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
+)
+#+end_src
+
+There is more fine grained face control for search based on tags :
+
+# ;; (setq notmuch-search-line-faces
+# ;;       '(("unread" . (:foreground "green"))
+# ;;         ("inbox" . (:foreground "red" :background "blue"))))
+
+Reset the default popup-rules defined by doom's module
+#+begin_src elisp
+(after! notmuch
+  (set-popup-rules!
+    ;; '(("^\\*notmuch-hello" :ignore t))
+    '(("^\\*subject:" :ignore t))))
+#+end_src
+*** mailscripts.el
+https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
+
+The original purpose of this package was to make it easy to use the small
+mail-handling utilities shipped in Debian's 'mailscripts' package from
+within Emacs.  It now also contains some additional, thematically-related
+utilities which don't invoke any of those scripts.
+
+Entry points you might like to look at if you're new to this package:
+mailscripts-prepare-patch, notmuch-slurp-debbug,
+notmuch-extract-{thread,message}-patches{,-to-project}.
+
+
+#+begin_src elisp :tangle packages.el
+;; (package! mailscripts.el
+;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
+#+end_src
+
+*** mu4e
+:PROPERTIES:
+:ID:       9caa475f-fe10-4a07-9696-c8ff031a1fd4
+:END:
+
+#+begin_src elisp
+;; (set-email-account! "gmail"
+;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
+;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
+;;     (mu4e-trash-folder      . "/gmail/[Google Mail]/Trash")
+;;     (mu4e-refile-folder     . "/gmail/[Google Mail]/Alle Nachrichten")
+;;     (smtpmail-smtp-user     . "ste.lendl@gmail.com")
+;;     ;; (+mu4e-personal-addresses . "ste.lendl@gmail.com")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+#+end_src
+
+#+begin_src elisp
+;; (set-email-account! "pulswerk"
+;;   '((mu4e-sent-folder       . "/pulswerk/Sent Items")
+;;     (mu4e-drafts-folder     . "/pulswerk/Drafts")
+;;     (mu4e-trash-folder      . "/pulswerk/Deleted Items")
+;;     (mu4e-refile-folder     . "/pulswerk/Archive")
+;;     (smtpmail-smtp-user     . "lendl@pulswerk.at")
+;;     ;; (+mu4e-personal-addresses . "lendl@pulswerk.at")
+;;     ;; (mu4e-compose-signature . "---\nStefan Lendl")
+;;     )
+;;   t)
+#+end_src
+
+#+begin_src elisp
+(after! mu4e
+  ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
+  (setq mu4e-context-policy 'ask-if-none
+        mu4e-compose-context-policy 'always-ask)
+
+  (setq mu4e-maildir-shortcuts
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
+
+  (setq mu4e-bookmarks
+        '(
+          (:key ?i :name "Inboxes" :query "not flag:trashed and (m:/gmail/Inbox or m:/pulswerk/INBOX)")
+          (:key ?u :name "Unread messages"
+           :query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/* or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?p :name "pulswerk Relevant Unread" :query "flag:unread not flag:trashed and (m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)")
+          (:key ?g :name "gmail Relevant Unread" :query "flag:unread not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/*)")
+          ;; (:key ?t :name "Today's messages" :query "date:today..now" )
+          ;; (:key ?y :name "Yesterday's messages" :query "date:2d..1d")
+          ;; (:key ?7 :name "Last 7 days" :query "date:7d..now" :hide-unread t)
+          ;; ;; (:name "Messages with images" :query "mime:image/*" :key 112)
+          ;; (:key ?f :name "Flagged messages" :query "flag:flagged")
+          ;; (:key ?g :name "Gmail Inbox" :query "maildir:/gmail/Inbox and not flag:trashed")
+          ))
+  )
+#+end_src
+
+set up the query for mu4e-alert to also limit the search range
+#+begin_src elisp
+(after! mu4e-alert
+  (setq mu4e-alert-interesting-mail-query
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+#+end_src
+
+#+begin_src elisp
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+#+end_src
+
+*** Sending Mail
+:PROPERTIES:
+:ID:       14a0b646-f10a-401a-824f-402052202859
+:END:
+
+#+begin_src elisp
+(after! mu4e
+  (setq sendmail-program "/usr/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+#+end_src
+
+*** TODO mu4e-views
+:PROPERTIES:
+:ID:       e8c11673-f1fa-47c8-894b-57f1becb3a2e
+:END:
+requies emacs compiled with ~xwidgets~
+
+it can still use the browser view.
+select via ~mu4e-views-mu4e-select-view-msg-method~
+
+#+begin_src elisp
+;; (use-package! mu4e-views
+;;   :after mu4e
+;;   )
+#+end_src
+
+*** org-msg
+:PROPERTIES:
+:ID:       0b9c8dce-ebc6-4025-861e-523afcb9f7a2
+:END:
+
+#+begin_src elisp
+(setq +org-msg-accent-color "#1a5fb4"
+      org-msg-greeting-fmt "\nHi %s,\n\n"
+      org-msg-signature "\n\n#+begin_signature\n*MfG Stefan Lendl*\n#+end_signature")
+
+(map! :map org-msg-edit-mode-map
+      :after org-msg
+      :n "G" #'org-msg-goto-body)
+#+end_src
+
+** ediff
+:PROPERTIES:
+:ID:       c186f137-d99f-45ab-930b-297091895183
+:END:
+forcing text comparison even if diff thinks files are binary
+#+begin_src elisp
+(after! ediff
+  (setq ediff-diff-options "--text"
+        ediff-diff3-options "--text"
+        ediff-toggle-skip-similar t
+        ediff-diff-options "-w"
+        ;; ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally))
+
+#+end_src
+
 ** Edit with Emacs (in the Browser)
 
 #+begin_src elisp :tangle packages.el
@@ -2987,35 +3352,4 @@ activate magit-todo to display the TODOs section in magit buffer
                   (window-system . x))))
 
 #+end_src
-
-* literate config
-** Don't auto-recompile literate-config
-:PROPERTIES:
-:ID:       7f52c1ee-6fff-4e04-96fa-8c5a2bf3ad14
-:END:
-#+BEGIN_SRC elisp
-(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
-#+END_SRC
-** private config file
-:PROPERTIES:
-:ID:       b1cd6206-b586-45d7-8b1f-e03823bde124
-:END:
-
-~doom/goto-private-config-file~ goes to ~config.el~ which I will never edit by hand.
-Opening ~config.org~ makes much more sense.
-
-#+begin_src elisp
-(defun stfl/goto-private-config-file ()
-  "Open your private config.el file."
-  (interactive)
-  (find-file (expand-file-name "config.org" doom-private-dir)))
-#+end_src
-
-bind it to ~SPC h d c~
-
-#+begin_src elisp
-(define-key! help-map "dc" #'stfl/goto-private-config-file)
-#+end_src
-
-
 
