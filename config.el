@@ -1696,6 +1696,8 @@ Not added when either:
 (after! vterm
   (setq! vterm-max-scrollback 200000))
 
+(map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
+
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
@@ -1968,20 +1970,23 @@ Not added when either:
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
         notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
-        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
-                                 (:key "d" :name "drafts"  :query "tag:draft")
-                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
-                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
-                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
-                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
-                                 (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
-                                 ;; (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
-                                 (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
-                                 (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
-                                 (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        notmuch-saved-searches
+        '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+          (:key "d" :name "drafts"  :query "tag:draft")
+          (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+          (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+          (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
+          (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
+          (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
         +notmuch-spam-tags '("+spam" "-inbox" "-unread")
         +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        stfl/notmuch-unwatch-tags (append notmuch-archive-tags '("-my-pr" "-watch" "-review"))
+        stfl/notmuch-kill-tags (cons "+killed" stfl/notmuch-unwatch-tags)
 
         message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
         notmuch-mua-hidden-headers nil
@@ -1993,10 +1998,20 @@ Not added when either:
   (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
 
+(after! notmuch
+  (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+
+  (defun stfl/notmuch-search-kill-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-kill-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+  )
+
 (map! :after notmuch
       :map notmuch-common-keymap
-      ;; :desc "TODO" :n "Z" #'
-      ;; TODO TAB toggle fold
       :n "?" #'notmuch-help
       :map notmuch-show-mode-map
       ;; :g "<mouse-1>" #'notmuch-show-toggle-message
@@ -2005,9 +2020,15 @@ Not added when either:
       ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
       :g "C-c C-e" #'notmuch-show-resume-message
       :n "ge" #'notmuch-show-resume-message
+      ;; :n "A" '(λ! (notmuch-search-tag-all "-archive -my-pr -watch"))  ;; TODO need to tag ENTIRE thread oterhwise it will be tagged again with afew
       :map notmuch-tree-mode-map
       :g "C-c C-e" #'notmuch-tree-resume-message
       :n "ge" #'notmuch-tree-resume-message
+      :n "A" (λ! (notmuch-tree-tag-thread stfl/notmuch-unwatch-tags))
+      :n "K" (λ! (notmuch-tree-tag-thread stfl/notmuch-kill-tags))
+      :map notmuch-search-mode-map
+      :n "A" #'stfl/notmuch-search-unwatch-thread
+      :n "K" #'stfl/notmuch-search-kill-thread
       )
 
 ;; #848d94
@@ -2036,7 +2057,7 @@ Not added when either:
 
 (after! notmuch
   (set-popup-rules!
-    '(("^\\*notmuch-hello" :ignore t))
+    ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*subject:" :ignore t))))
 
 ;; (set-email-account! "gmail"

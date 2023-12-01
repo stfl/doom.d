@@ -2280,6 +2280,32 @@ Not added when either:
       (push '(:async) (caddr result)))
     result))
 #+end_src
+*** Individual startup visibility with :hidden
+
+https://emacs.stackexchange.com/a/44923/30180
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (defun individual-visibility-source-blocks ()
+    "Fold some blocks in the current buffer with property :hidden"
+    (interactive)
+    (org-show-block-all)
+    (org-block-map
+     (lambda ()
+       (let ((case-fold-search t))
+         (when (and
+                (save-excursion
+                  (beginning-of-line 1)
+                  (looking-at org-block-regexp))
+                (cl-assoc
+                 ':hidden
+                 (cl-third
+                  (org-babel-get-src-block-info))))
+           (org-hide-block-toggle))))))
+
+  (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
+#+END_SRC
+
 ** Org Emphasis
 :PROPERTIES:
 :ID:       c8b37906-ad3a-4891-9234-6c8627fb4d61
@@ -2308,6 +2334,12 @@ https://github.com/tecosaur/org-pandoc-import
 ;; (use-package! org-pandoc-import :after org)
 #+end_src
 ** Org Tree Slide (+present)
+
+Don't emphasize the heading -> it's way too big
+
+#+begin_src elisp
+(after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
+#+end_src
 
 disable line numbers in presentations.
 
@@ -2404,6 +2436,11 @@ Use the builtin sqlite in emacs >=29
 #+begin_src elisp
 (after! vterm
   (setq! vterm-max-scrollback 200000))
+#+end_src
+
+Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
+#+begin_src elisp
+(map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
 #+end_src
 
 *** TODO vterm tramp shell
@@ -3004,20 +3041,23 @@ activate magit-todo to display the TODOs section in magit buffer
         notmuch-show-logo nil
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
         notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
-        notmuch-saved-searches '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
-                                 (:key "d" :name "drafts"  :query "tag:draft")
-                                 (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
-                                 (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
-                                 (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
-                                 (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
-                                 (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
-                                 ;; (:key "m" :name "to-me"   :query "tag:to-me and not tag:archive")
-                                 (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
-                                 (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
-                                 (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        notmuch-saved-searches
+        '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
+          (:key "d" :name "drafts"  :query "tag:draft")
+          (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
+          (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
+          (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
+          (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
+          (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
         +notmuch-spam-tags '("+spam" "-inbox" "-unread")
         +notmuch-delete-tags '("+trash" "-inbox" "-unread")
+
+        stfl/notmuch-unwatch-tags (append notmuch-archive-tags '("-my-pr" "-watch" "-review"))
+        stfl/notmuch-kill-tags (cons "+killed" stfl/notmuch-unwatch-tags)
 
         message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
         notmuch-mua-hidden-headers nil
@@ -3030,13 +3070,27 @@ activate magit-todo to display the TODOs section in magit buffer
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
 #+end_src
 
+Additional functions to apply tags according to my workflow
+
+#+begin_src elisp
+(after! notmuch
+  (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+
+  (defun stfl/notmuch-search-kill-thread (&optional unarchive beg end)
+    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+    (let ((notmuch-archive-tags stfl/notmuch-kill-tags))
+      (notmuch-search-archive-thread unarchive beg end)))
+  )
+#+end_src
+
 Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (map! :after notmuch
       :map notmuch-common-keymap
-      ;; :desc "TODO" :n "Z" #'
-      ;; TODO TAB toggle fold
       :n "?" #'notmuch-help
       :map notmuch-show-mode-map
       ;; :g "<mouse-1>" #'notmuch-show-toggle-message
@@ -3045,9 +3099,15 @@ Use the (almost) default keybindings in evil normal-mode
       ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
       :g "C-c C-e" #'notmuch-show-resume-message
       :n "ge" #'notmuch-show-resume-message
+      ;; :n "A" '(λ! (notmuch-search-tag-all "-archive -my-pr -watch"))  ;; TODO need to tag ENTIRE thread oterhwise it will be tagged again with afew
       :map notmuch-tree-mode-map
       :g "C-c C-e" #'notmuch-tree-resume-message
       :n "ge" #'notmuch-tree-resume-message
+      :n "A" (λ! (notmuch-tree-tag-thread stfl/notmuch-unwatch-tags))
+      :n "K" (λ! (notmuch-tree-tag-thread stfl/notmuch-kill-tags))
+      :map notmuch-search-mode-map
+      :n "A" #'stfl/notmuch-search-unwatch-thread
+      :n "K" #'stfl/notmuch-search-kill-thread
       )
 #+end_src
 
@@ -3087,7 +3147,7 @@ Reset the default popup-rules defined by doom's module
 #+begin_src elisp
 (after! notmuch
   (set-popup-rules!
-    '(("^\\*notmuch-hello" :ignore t))
+    ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*subject:" :ignore t))))
 #+end_src
 *** mailscripts.el
@@ -3107,7 +3167,6 @@ notmuch-extract-{thread,message}-patches{,-to-project}.
 ;; (package! mailscripts.el
 ;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
 #+end_src
-
 
 *** mu4e
 :PROPERTIES:
