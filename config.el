@@ -1647,6 +1647,26 @@ Not added when either:
       (push '(:async) (caddr result)))
     result))
 
+(after! org
+  (defun individual-visibility-source-blocks ()
+    "Fold some blocks in the current buffer with property :hidden"
+    (interactive)
+    (org-show-block-all)
+    (org-block-map
+     (lambda ()
+       (let ((case-fold-search t))
+         (when (and
+                (save-excursion
+                  (beginning-of-line 1)
+                  (looking-at org-block-regexp))
+                (cl-assoc
+                 ':hidden
+                 (cl-third
+                  (org-babel-get-src-block-info))))
+           (org-hide-block-toggle))))))
+
+  (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
+
 ;; (after! org
 ;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
 ;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
@@ -1654,6 +1674,8 @@ Not added when either:
 ;;   )
 
 ;; (use-package! org-pandoc-import :after org)
+
+(after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
 
 (after! org-tree-slide
   (add-hook 'org-tree-slide-play-hook #'doom-disable-line-numbers-h)

@@ -1,7 +1,7 @@
 * TODO %^{Task}
 :PROPERTIES:
 :CREATED: %U
-:ID:       446b8a88-9f42-48d7-a3a8-335765323ae0
+:ID: %(org-id-uuid)
 :END:
 
 %?
