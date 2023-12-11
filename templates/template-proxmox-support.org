@@ -1,6 +1,7 @@
 #+title: %^{Title}
+#+ticketid: %^{Ticket ID}
 
-[[https://my.proxmox.com/en/dbsfk/ticket/view/%^{Ticket ID}}][Ticket %^{Ticket ID}]]
+[[https://my.proxmox.com/en/dbsfk/ticket/view/%^{Ticket ID}][Ticket %^{Ticket ID}]]
 
 * Initial description
 
