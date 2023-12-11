@@ -1554,7 +1554,7 @@ org-default-priority is treated as lower than the same set value"
 (defun stfl/get-support-dir (support-root ticketid title)
   (doom-path support-root (concat ticketid "-" title)))
 
-(defun stfl/capture-suport-file ()
+(defun stfl/capture-support-file ()
   (interactive)
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
