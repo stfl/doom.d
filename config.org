@@ -3023,7 +3023,7 @@ activate magit-todo to display the TODOs section in magit buffer
 
 #+begin_src elisp
 (after! magit
-  (setq transient-values . ((magit-commit "--signoff"))))
+  (setq transient-values  ((magit-commit "--signoff"))))
 #+end_src
 
 ** E-Mail
