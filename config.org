@@ -1566,7 +1566,7 @@ org-default-priority is treated as lower than the same set value"
       (error (format "Support directory already exists %s" support-dir)))
     (concat support-dir "/" "NOTES.org"))
 
-    )
+  )
 #+end_src
 
 *** Capture Bills for Insurance Claims
