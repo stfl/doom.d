@@ -1536,7 +1536,7 @@ org-default-priority is treated as lower than the same set value"
           ("x" "Proxmox")
           ("xs" "Enterprise Support"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("h" "Haushalt")
@@ -1547,6 +1547,12 @@ org-default-priority is treated as lower than the same set value"
           ))
   )
 #+END_SRC
+
+#+begin_src elisp
+(defun stfl/create-support-dir (support-root ticketid title)
+  (mkdir (concat support-root "/" ticketid "-" title))
+  )
+#+end_src
 
 *** Capture Bills for Insurance Claims
 
