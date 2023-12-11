@@ -1,6 +1,9 @@
+:PROPERTIES:
+:CREATED: %U
+:ID: %(org-id-uuid)
+:END:
 #+title: %^{Title}
 #+ticketid: %^{Ticket ID}
-#+CREATED: %U
 
 [[https://my.proxmox.com/en/dbsfk/ticket/view/%^{Ticket ID}][Ticket %^{Ticket ID}]]
 
