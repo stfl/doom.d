@@ -1533,6 +1533,12 @@ org-default-priority is treated as lower than the same set value"
            (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
+          ("x" "Proxmox")
+          ("s" "Enterprise Support"
+           entry
+           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
+           :empty-lines-after 1)
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
