@@ -1563,7 +1563,7 @@ org-default-priority is treated as lower than the same set value"
          (title (read-string "Title: "))
          (support-dir (stfl/get-support-dir support-root ticketid title)))
     (stfl/create-support-dir support-root ticketid title
-         (list support-dir ticketid title)))
+                             (list support-dir ticketid title)))
   )
 #+end_src
 
