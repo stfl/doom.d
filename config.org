@@ -1562,7 +1562,7 @@ org-default-priority is treated as lower than the same set value"
     (when (file-exists-p support-dir)
       (error (format "Support directory already exists %s" support-dir)))
     (write-region "" nil (doom-path support-dir ".projectile"))
-    (concat support-dir "/NOTES.org")))
+    (doom-path support-dir "NOTES.org")))
 #+end_src
 
 *** Capture Bills for Insurance Claims
