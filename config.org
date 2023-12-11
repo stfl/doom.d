@@ -1564,7 +1564,7 @@ org-default-priority is treated as lower than the same set value"
          (support-dir (stfl/get-support-dir support-root ticketid title)))
     (when (file-exists-p support-dir)
       (error (format "Support directory already exists %s" support-dir)))
-    (concat support-dir "/" "NOTES.org"))
+    (concat support-dir "/NOTES.org"))
 
   )
 #+end_src
