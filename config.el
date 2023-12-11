@@ -1982,6 +1982,9 @@ Not added when either:
 (custom-set-faces!
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
 
+(after! magit
+  (setq transient-values  '((magit-commit "--signoff"))))
+
 (after! notmuch
   (setq +notmuch-sync-backend 'mbsync
         +notmuch-mail-folder "~/Mail"
