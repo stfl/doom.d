@@ -1563,6 +1563,7 @@ org-default-priority is treated as lower than the same set value"
       (error (format "Support directory already exists %s" support-dir)))
     (write-region "" nil (doom-path support-dir ".projectile"))
     (projectile-add-known-project support-dir)
+    ;; TODO update org-agenda-files
     (doom-path support-dir "NOTES.org")))
 #+end_src
 
