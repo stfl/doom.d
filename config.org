@@ -1562,8 +1562,7 @@ org-default-priority is treated as lower than the same set value"
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
          (support-dir (stfl/get-support-dir support-root ticketid title)))
-    (stfl/create-support-dir support-root ticketid title
-                             (list support-dir ticketid title)))
+    (stfl/create-support-dir support-root ticketid title))
   )
 #+end_src
 
