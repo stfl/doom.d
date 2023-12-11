@@ -1550,7 +1550,12 @@ org-default-priority is treated as lower than the same set value"
 
 #+begin_src elisp
 (defun stfl/create-support-dir (support-root ticketid title)
-  (mkdir (concat support-root "/" ticketid "-" title))
+  (let ((support-dir (concat support-root "/" ticketid "-" title)))
+    (when (file-exists-p support-dir))
+        (error (format "Support directory already exists %s" support-dir))
+        (mkdir (concat support-root "/" ticketid "-" title))
+    )
+
   )
 #+end_src
 
