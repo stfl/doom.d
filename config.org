@@ -1559,6 +1559,7 @@ org-default-priority is treated as lower than the same set value"
          (support-dir (stfl/get-support-dir stfl/proxmox-support-dir ticketid title)))
     (when (file-exists-p support-dir)
       (error (format "Support directory already exists %s" support-dir)))
+    (mkdir support-dir)
     (write-region "" nil (doom-path support-dir ".projectile"))
     (projectile-add-known-project support-dir)
     ;; TODO update org-agenda-files
