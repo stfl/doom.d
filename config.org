@@ -1552,10 +1552,10 @@ org-default-priority is treated as lower than the same set value"
 (defun stfl/get-support-dir (support-root ticketid title)
   (concat support-root "/" ticketid "-" title))
 
-(defun stfl/capture-suport-file (support-root)
+(defun stfl/capture-suport-file ()
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
-         (support-dir (stfl/get-support-dir support-root ticketid title)))
+         (support-dir (stfl/get-support-dir stfl/proxmox-support-dir ticketid title)))
     (when (file-exists-p support-dir)
       (error (format "Support directory already exists %s" support-dir)))
     (concat support-dir "/NOTES.org")))
