@@ -3019,6 +3019,13 @@ activate magit-todo to display the TODOs section in magit buffer
 (custom-set-faces!
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
 #+end_src
+*** Default Sign-Off commits
+
+#+begin_src elisp
+(after! magit
+
+  )
+#+end_src
 
 ** E-Mail
 :PROPERTIES:
