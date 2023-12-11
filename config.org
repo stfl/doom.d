@@ -1558,11 +1558,12 @@ org-default-priority is treated as lower than the same set value"
       (error (format "Support directory already exists %s" support-dir)))
     (mkdir support-dir)))
 
-(defun stfl/read-suport-dir (support-root)
+(defun stfl/capture-suport-dir (support-root)
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
-         (support-dir (stfl/get-support-dir support-root ticketid title))
-    (list support-dir ticketid title)))
+         (support-dir (stfl/get-support-dir support-root ticketid title)))
+    (stfl/create-support-dir support-root ticketid title
+         (list support-dir ticketid title)))
   )
 #+end_src
 
