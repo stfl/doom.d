@@ -1554,12 +1554,12 @@ org-default-priority is treated as lower than the same set value"
 
 (defun stfl/create-support-dir (support-root ticketid title)
   (let (support-dir (stfl/get-support-dir support-root ticketid title))
-  (when (file-exists-p support-dir)
-    (error (format "Support directory already exists %s" support-dir)))
-  (mkdir support-dir)
-  )
+    (when (file-exists-p support-dir)
+      (error (format "Support directory already exists %s" support-dir)))
+    (mkdir support-dir)
+    )
 
-)
+  )
 #+end_src
 
 *** Capture Bills for Insurance Claims
