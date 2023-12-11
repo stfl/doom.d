@@ -1536,7 +1536,7 @@ org-default-priority is treated as lower than the same set value"
           ("x" "Proxmox")
           ("xs" "Enterprise Support"
            entry
-           (file ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file ,(stfl/capture-support-file stfl/proxmox-support-dir)))
            (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("h" "Haushalt")
