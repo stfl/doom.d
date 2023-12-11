@@ -1552,7 +1552,7 @@ org-default-priority is treated as lower than the same set value"
 
 #+begin_src elisp
 (defun stfl/get-support-dir (support-root ticketid title)
-  (doom-path support-root (concat ticketid "-" title))
+  (doom-path support-root (concat ticketid "-" title)))
 
 (defun stfl/capture-suport-file ()
   (interactive)
