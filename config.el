@@ -1156,7 +1156,7 @@ org-default-priority is treated as lower than the same set value"
           ("xs" "Enterprise Support"
            entry
            (file stfl/capture-support-file)
-           (file ,(doom-path doom-private-dir "templates/template-proxmox-suppport.org"))
+           (file ,(doom-path doom-private-dir "templates/template-proxmox-support.org"))
            )
           ("h" "Haushalt")
           ("hw" "Wäsche"
