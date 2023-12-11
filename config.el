@@ -1152,6 +1152,12 @@ org-default-priority is treated as lower than the same set value"
            (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
+          ("x" "Proxmox")
+          ("xs" "Enterprise Support"
+           entry
+           (file stfl/capture-support-file)
+           (file ,(doom-path doom-private-dir "templates/template-proxmox-suppport.org"))
+           )
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
@@ -1159,6 +1165,22 @@ org-default-priority is treated as lower than the same set value"
            (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
+
+(defun stfl/get-support-dir (support-root ticketid title)
+  (doom-path support-root (concat ticketid "-" title)))
+
+(defun stfl/capture-support-file ()
+  (interactive)
+  (let* ((ticketid (read-string "Ticket ID: "))
+         (title (read-string "Title: "))
+         (support-dir (stfl/get-support-dir stfl/proxmox-support-dir ticketid title)))
+    (when (file-exists-p support-dir)
+      (error (format "Support directory already exists %s" support-dir)))
+    (mkdir support-dir)
+    (write-region "" nil (doom-path support-dir ".projectile"))
+    (projectile-add-known-project support-dir)
+    ;; TODO update org-agenda-files
+    (doom-path support-dir "NOTES.org")))
 
 (after! org
   (defun stfl/org-capture-versicherung-post ()
