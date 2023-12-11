@@ -1562,7 +1562,8 @@ org-default-priority is treated as lower than the same set value"
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
          (support-dir (stfl/get-support-dir support-root ticketid title)))
-    (stfl/create-support-dir support-root ticketid title))
+    (when (file-exists-p support-dir)
+      (error (format "Support directory already exists %s" support-dir)))
   )
 #+end_src
 
