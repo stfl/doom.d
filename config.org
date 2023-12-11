@@ -1553,6 +1553,7 @@ org-default-priority is treated as lower than the same set value"
   (concat support-root "/" ticketid "-" title))
 
 (defun stfl/capture-suport-file ()
+  (interactive)
   (let* ((ticketid (read-string "Ticket ID: "))
          (title (read-string "Title: "))
          (support-dir (stfl/get-support-dir stfl/proxmox-support-dir ticketid title)))
