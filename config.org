@@ -16,12 +16,13 @@ clients, file templates and snippets.
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
-       ;; auth-source-cache-expiry nil ; default is 7200 (2h)
-       auth-source-gpg-encrypt-to nil)
+;; (setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
+;;        ;; auth-source-cache-expiry nil ; default is 7200 (2h)
+;;        auth-source-gpg-encrypt-to nil)
 #+END_SRC
 
 function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
+
 #+BEGIN_SRC elisp
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
@@ -36,6 +37,15 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
             secret))
       nil)))
 #+END_SRC
+
+get-password
+#+begin_src elisp
+(defun efs/lookup-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (when result
+      (funcall (plist-get (car result) :secret)))))
+#+end_src
+
 ** literate config
 *** Don't auto-recompile literate-config
 :PROPERTIES:
@@ -442,7 +452,7 @@ also rebuild that via org-roam
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 #+end_src
 
-** TODO Auto-saving org-mode files
+** Auto-saving org-mode files
 :PROPERTIES:
 :ID:       d206a353-12c6-4d53-9f6f-97e24840c79e
 :END:
@@ -450,9 +460,23 @@ also rebuild that via org-roam
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
 
 #+BEGIN_SRC elisp
-(after! org
-  (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+(after! org (run-with-idle-timer 30 t #'org-save-all-org-buffers))
 #+END_SRC
+** Completion backends in org-mode
+
+This is simply copied from discord.. Probably not that bad but don't know.. I
+wanted to disable completion of enflish words.  These propbably come from
+completion-at-point (capf)...
+
+#+begin_src elisp
+(after! org
+  (set-company-backend! 'org-mode
+    '(:separate company-capf
+      :separate company-org-roam
+      :separate company-yasnippet
+      :separate company-files)))
+#+end_src
+
 ** Orgmode Startup
 :PROPERTIES:
 :ID:       fadd0d57-a6dd-4d17-ab0c-784b5159b7ed
@@ -1638,7 +1662,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
 #+begin_src elisp
 (after! org-clock
-  (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
+  (setq org-clock-rounding-minutes 15  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
         org-clock-report-include-clocking-task t
@@ -2015,7 +2039,6 @@ do not automatically open the roam side-pane
   # ;;         ))
   # )
 
-
 ** org-roam-ui
 :PROPERTIES:
 :ID:       3eda31cf-7dda-43be-b65c-a8b3599b4b72
@@ -2062,7 +2085,6 @@ do not automatically open the roam side-pane
           ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
-
         ;; org-gcal-auto-archive nil ;; workaround for "rx "**" range error" https://github.com/kidd/org-gcal.el/issues/17
         ))
 
@@ -2070,7 +2092,7 @@ do not automatically open the roam side-pane
 
 #+begin_src elisp
 (map!
- :after org
+ :after (org org-gcal)
  :map org-mode-map
  :leader
  (:prefix ("n" . "notes")
@@ -2078,7 +2100,7 @@ do not automatically open the roam side-pane
    :desc "sync Google Calendar" "g" #'org-gcal-sync)))
 
 (map!
- :after org
+ :after (org org-gcal)
  :map org-mode-map
  :localleader
  :prefix ("C" . "Google Calendar")
@@ -2386,15 +2408,6 @@ https://github.com/doomemacs/doomemacs/issues/7058
 #+end_src
 
 * Module Settings
-** Company mode
-:PROPERTIES:
-:ID:       7181a2a3-911a-480f-b8c7-6bb96d11edf1
-:END:
-#+BEGIN_SRC elisp
-;; (after! org
-;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-;;   (setq company-idle-delay 0.25))
-#+END_SRC
 ** Define Word
 :PROPERTIES:
 :ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
@@ -3382,4 +3395,17 @@ forcing text comparison even if diff thinks files are binary
                   (window-system . x))))
 
 #+end_src
+** AI Chat gptel
 
+#+begin_src elisp :tangle packages.el
+(package! gptel)
+#+end_src
+
+#+begin_src elisp
+(use-package! gptel
+  :config
+  (setq! gptel-default-mode 'org-mode
+         gptel-api-key (efs/lookup-password :host "OpenAI-gptel"))
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
+#+end_src

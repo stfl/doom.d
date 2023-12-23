@@ -1,9 +1,9 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
-       ;; auth-source-cache-expiry nil ; default is 7200 (2h)
-       auth-source-gpg-encrypt-to nil)
+;; (setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
+;;        ;; auth-source-cache-expiry nil ; default is 7200 (2h)
+;;        auth-source-gpg-encrypt-to nil)
 
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
@@ -17,6 +17,11 @@
               (funcall secret)
             secret))
       nil)))
+
+(defun efs/lookup-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (when result
+      (funcall (plist-get (car result) :secret)))))
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
@@ -217,8 +222,14 @@
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
+(after! org (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+
 (after! org
-  (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+  (set-company-backend! 'org-mode
+    '(:separate company-capf
+      :separate company-org-roam
+      :separate company-yasnippet
+      :separate company-files)))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -1231,7 +1242,7 @@ org-default-priority is treated as lower than the same set value"
         ))
 
 (after! org-clock
-  (setq org-clock-rounding-minutes 5  ;; Org clock should clock in and out rounded to 5 minutes.
+  (setq org-clock-rounding-minutes 15  ;; Org clock should clock in and out rounded to 5 minutes.
         org-time-stamp-rounding-minutes '(0 15)
         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
         org-clock-report-include-clocking-task t
@@ -1476,12 +1487,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("vthesca8el8rcgto9dodd7k66c@group.calendar.google.com" . ,(doom-path org-directory "gcal/oskar.org")))
         org-gcal-token-file "~/.config/authinfo/org-gcal-token.gpg"
         org-gcal-down-days 180
-
         ;; org-gcal-auto-archive nil ;; workaround for "rx "**" range error" https://github.com/kidd/org-gcal.el/issues/17
         ))
 
 (map!
- :after org
+ :after (org org-gcal)
  :map org-mode-map
  :leader
  (:prefix ("n" . "notes")
@@ -1489,7 +1499,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
    :desc "sync Google Calendar" "g" #'org-gcal-sync)))
 
 (map!
- :after org
+ :after (org org-gcal)
  :map org-mode-map
  :localleader
  :prefix ("C" . "Google Calendar")
@@ -1706,10 +1716,6 @@ Not added when either:
 (after! org-tree-slide
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
-
-;; (after! org
-;;   (set-company-backend! 'org-mode 'company-capf '(company-yasnippet company-org-roam company-elisp))
-;;   (setq company-idle-delay 0.25))
 
 (use-package! define-word
   :after org
@@ -2230,3 +2236,8 @@ Not added when either:
                   (minibuffer . t)
                   (menu-bar-lines . t)
                   (window-system . x))))
+
+(use-package! gptel
+  :config
+  (setq! gptel-default-mode 'org-mode
+         gptel-api-key (efs/lookup-password :host "OpenAI-gptel")))
