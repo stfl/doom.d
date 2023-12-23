@@ -2240,4 +2240,6 @@ Not added when either:
 (use-package! gptel
   :config
   (setq! gptel-default-mode 'org-mode
-         gptel-api-key (efs/lookup-password :host "OpenAI-gptel")))
+         gptel-api-key (efs/lookup-password :host "OpenAI-gptel"))
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
