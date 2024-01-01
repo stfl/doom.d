@@ -1304,8 +1304,16 @@ org-default-priority is treated as lower than the same set value"
            "[-](S)"   ; Task is in progress
            "[?](W)"   ; Task is being held up or paused
            "|"
-           "[X](D)")  ; Task was completed
-          )
+           "[X](D)"))  ; Task was completed
+        org-todo-keyword-faces
+        '(("[-]"  . +org-todo-active)
+          ("STRT" . +org-todo-active)
+          ("[?]"  . +org-todo-onhold)
+          ("WAIT" . +org-todo-onhold)
+          ("HOLD" . +org-todo-onhold)
+          ("PROJ" . +org-todo-project)
+          ("NO"   . +org-todo-cancel)
+          ("KILL" . +org-todo-cancel)))
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)

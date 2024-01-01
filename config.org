@@ -1765,18 +1765,18 @@ After much feedback and discussing with other users, I decided to simplify the k
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
           ("STRT" . +org-todo-active)
+          ("NEXT" . +org-todo-next)
           ("[?]"  . +org-todo-onhold)
           ("WAIT" . +org-todo-onhold)
           ("HOLD" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
+          ("EPIC" . +org-todo-epic)
           ("NO"   . +org-todo-cancel)
           ("KILL" . +org-todo-cancel)))
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
-          ("EPIC" . +org-todo-epic)
           ("TODO" . +org-todo-active)
-          ("NEXT" . +org-todo-next)))
 )
 #+END_SRC
 
