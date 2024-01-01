@@ -1304,7 +1304,12 @@ org-default-priority is treated as lower than the same set value"
            "[-](S)"   ; Task is in progress
            "[?](W)"   ; Task is being held up or paused
            "|"
-           "[X](D)"))  ; Task was completed
+           "[X](D)")  ; Task was completed
+          (sequence
+           "|"
+           "OKAY(o)"
+           "YES(y)"
+           "NO(n)"))
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
           ("STRT" . +org-todo-active)
