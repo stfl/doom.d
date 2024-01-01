@@ -1298,7 +1298,14 @@ org-default-priority is treated as lower than the same set value"
            "IDEA(i)"  ; An unconfirmed and unapproved task or notion
            "|"
            "DONE(d@)"  ; Task successfully completed
-           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
+           "KILL(k@)")
+          (sequence
+           "[ ](T)"   ; A task that needs doing
+           "[-](S)"   ; Task is in progress
+           "[?](W)"   ; Task is being held up or paused
+           "|"
+           "[X](D)")  ; Task was completed
+          ) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("WAIT" . +org-todo-onhold)
           ("PROJ" . +org-todo-project)
