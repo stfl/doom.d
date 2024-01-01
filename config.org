@@ -837,7 +837,7 @@ org todo checkboxes
                                   (standalone-next))
                               (private)
                               (not (habit))
-                              (not (tags "HABIT"))))
+                              (not (tags "HABIT")))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
