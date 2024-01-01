@@ -1309,7 +1309,7 @@ org-default-priority is treated as lower than the same set value"
            "|"
            "OKAY(o)"
            "YES(y)"
-           "NO(n)"))
+           "NO(N)"))
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
           ("STRT" . +org-todo-active)

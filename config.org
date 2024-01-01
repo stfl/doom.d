@@ -1764,8 +1764,8 @@ After much feedback and discussing with other users, I decided to simplify the k
            "[X](D)")  ; Task was completed
           (sequence
            "|"
-           "OKAY(o)"
-           "YES(y)"
+           "OKAY(O)"
+           "YES(Y)"
            "NO(N)"))
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
