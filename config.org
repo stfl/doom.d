@@ -2492,6 +2492,12 @@ vterm-tramp-shells (("docker" "/bin/sh")
 )
 
 * Coding
+** ielm elisp Repl
+
+#+begin_src emacs-lisp :tangle yes
+
+#+end_src
+
 ** Copilot
 
 #+begin_src elisp :tangle packages.el
