@@ -1307,8 +1307,8 @@ org-default-priority is treated as lower than the same set value"
            "[X](D)")  ; Task was completed
           (sequence
            "|"
-           "OKAY(o)"
-           "YES(y)"
+           "OKAY(O)"
+           "YES(Y)"
            "NO(N)"))
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
