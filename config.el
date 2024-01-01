@@ -1296,6 +1296,7 @@ org-default-priority is treated as lower than the same set value"
            "WAIT(w)"  ; Something external is holding up this task
            "HOLD(h)"  ; This task is paused/on hold because of me
            "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+           "LOOP(r)"  ; A recurring task
            "|"
            "DONE(d@)"  ; Task successfully completed
            "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
