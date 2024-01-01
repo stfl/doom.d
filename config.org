@@ -2496,7 +2496,6 @@ vterm-tramp-shells (("docker" "/bin/sh")
 
 #+begin_src emacs-lisp :tangle yes
 (map! :leader ":" #'ielm)
-
 #+end_src
 
 ** Copilot
