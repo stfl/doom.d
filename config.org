@@ -1766,7 +1766,7 @@ After much feedback and discussing with other users, I decided to simplify the k
            "|"
            "OKAY(o)"
            "YES(y)"
-           "NO(n)"))
+           "NO(N)"))
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
           ("STRT" . +org-todo-active)
