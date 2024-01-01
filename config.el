@@ -1294,6 +1294,8 @@ org-default-priority is treated as lower than the same set value"
            "EPIC(e)"  ; A set of Projects
            "NEXT(n)"  ; Task is next to be worked on.
            "WAIT(w)"  ; Something external is holding up this task
+           "HOLD(h)"  ; This task is paused/on hold because of me
+           "IDEA(i)"  ; An unconfirmed and unapproved task or notion
            "|"
            "DONE(d@)"  ; Task successfully completed
            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
