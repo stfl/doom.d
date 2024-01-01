@@ -1782,7 +1782,6 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("KILL" . +org-todo-cancel))))
 #+END_SRC
 
-
 Increase indenation in org-indent
 #+BEGIN_SRC elisp
 (after! org (setq org-indent-indentation-per-level 2))
