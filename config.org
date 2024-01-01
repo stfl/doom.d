@@ -1788,26 +1788,6 @@ Increase indenation in org-indent
 (after! org (setq org-indent-indentation-per-level 2))
 #+END_SRC
 
-Remove TODO keywrods from org-mode (it will still work in agenda)
-#+BEGIN_SRC elisp
-;; (set-ligatures! 'org-mode
-;;     :alist '(("TODO " . "")
-;;              ("NEXT " . "")
-;;              ("PROJ " . "")
-;;              ("WAIT " . "")
-;;              ("DONE " . "")
-;;              ("KILL " . "")))
-#+END_SRC
-
-#+begin_src elisp
-;; (set-ligatures! 'org-mode
-;;     :alist '((":PROPERTIES:" . "⏍")
-;;              (":properties:" . "⏍")
-;;              (":LOGBOOK:" . "㏒")
-;;              (":logbook:" . "㏒")
-;;              ))
-#+end_src
-
 [[https://gist.github.com/mskorzhinskiy/8076d3a82fb78650088b7fa7243f08aa][Doom emacs org-mode ricing]]
 Org-superstar config
 #+BEGIN_SRC elisp

@@ -1290,14 +1290,14 @@ org-default-priority is treated as lower than the same set value"
   (setq org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
-           "PROJ(p)"  ; Project with multiple task items.
-           "EPIC(e)"  ; A set of Projects
            "NEXT(n)"  ; Task is next to be worked on.
            "STRT(s)"  ; A task that is in progress
            "WAIT(w)"  ; Something external is holding up this task
            "HOLD(h)"  ; This task is paused/on hold because of me
            "IDEA(i)"  ; An unconfirmed and unapproved task or notion
            "LOOP(r)"  ; A recurring task
+           "PROJ(p)"  ; Project with multiple task items.
+           "EPIC(e)"  ; A set of Projects
            "|"
            "DONE(d@)"  ; Task successfully completed
            "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
