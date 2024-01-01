@@ -1043,9 +1043,9 @@ some helper functions
   (org-ql-defpred my-habit ()
     "style habit or tag HABIT"
     :normalizers ((`(,predicate-names)
-                   (rec '(or (tags "SOMEDAY") (habit)))))
+                   (rec '(or (tags "HABIT") (habit)))))
     :preambles ((`(,predicate-names)
-                 (rec '(or (tags "SOMEDAY") (habit))))))
+                 (rec '(or (tags "HABIT") (habit))))))
 
 ;; (defun prio-deadline>= (prio)
 ;;   `(and (or (priority >= (char-to-string ,prio))
