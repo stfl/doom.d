@@ -2492,7 +2492,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 )
 
 * Coding
-** ielm elisp REPL
+** ielm REPL
 
 #+begin_src emacs-lisp :tangle yes
 (map! :leader ":" #'ielm)
