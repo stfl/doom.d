@@ -1772,12 +1772,7 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic)
           ("NO"   . +org-todo-cancel)
-          ("KILL" . +org-todo-cancel)))
-        org-todo-keyword-faces
-        '(("WAIT" . +org-todo-onhold)
-          ("PROJ" . +org-todo-project)
-          ("TODO" . +org-todo-active)
-)
+          ("KILL" . +org-todo-cancel))))
 #+END_SRC
 
 
