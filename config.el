@@ -1326,21 +1326,6 @@ org-default-priority is treated as lower than the same set value"
 
 (after! org (setq org-indent-indentation-per-level 2))
 
-;; (set-ligatures! 'org-mode
-;;     :alist '(("TODO " . "")
-;;              ("NEXT " . "")
-;;              ("PROJ " . "")
-;;              ("WAIT " . "")
-;;              ("DONE " . "")
-;;              ("KILL " . "")))
-
-;; (set-ligatures! 'org-mode
-;;     :alist '((":PROPERTIES:" . "⏍")
-;;              (":properties:" . "⏍")
-;;              (":LOGBOOK:" . "㏒")
-;;              (":logbook:" . "㏒")
-;;              ))
-
 ;; (after! org-superstar
 ;;   ;; Every non-TODO headline now have no bullet
 ;;   ;; (setq org-superstar-headline-bullets-list '("　"))
