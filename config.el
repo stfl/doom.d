@@ -1315,12 +1315,7 @@ org-default-priority is treated as lower than the same set value"
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic)
           ("NO"   . +org-todo-cancel)
-          ("KILL" . +org-todo-cancel)))
-        org-todo-keyword-faces
-        '(("WAIT" . +org-todo-onhold)
-          ("PROJ" . +org-todo-project)
-          ("TODO" . +org-todo-active)
-)
+          ("KILL" . +org-todo-cancel))))
 
 (after! org (setq org-indent-indentation-per-level 2))
 
