@@ -15,12 +15,6 @@ clients, file templates and snippets.
       user-mail-address "ste.lendl@gmail.com")
 #+END_SRC
 
-#+BEGIN_SRC elisp
-;; (setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
-;;        ;; auth-source-cache-expiry nil ; default is 7200 (2h)
-;;        auth-source-gpg-encrypt-to nil)
-#+END_SRC
-
 function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
 
 #+BEGIN_SRC elisp
