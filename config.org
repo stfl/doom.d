@@ -3386,7 +3386,6 @@ forcing text comparison even if diff thinks files are binary
 
 #+begin_src elisp
 (use-package! gptel
-  :after auth-source
   :config
   (setq! gptel-default-mode 'org-mode
          gptel-api-key (lookup-password :host "OpenAI-gptel"))
