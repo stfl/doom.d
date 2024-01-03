@@ -34,6 +34,8 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
 
 lookup-password
 
+some text
+
 #+begin_src elisp
 (defun lookup-password (&rest keys)
   (let ((result (apply #'auth-source-search keys)))
