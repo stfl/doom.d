@@ -1,10 +1,6 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-;; (setq! auth-sources '("~/.config/authinfo/authinfo.gpg")
-;;        ;; auth-source-cache-expiry nil ; default is 7200 (2h)
-;;        auth-source-gpg-encrypt-to nil)
-
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
                       :host host
@@ -1753,10 +1749,7 @@ Not added when either:
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
-;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 (after! lsp-mode
-  ;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  ;; (setq gc-cons-threshold 100000000)
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
                  "[/\\\\]__pycache__\\'"
                  "[/\\\\]uploads\\"))
@@ -1769,6 +1762,11 @@ Not added when either:
        :leader
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
+
+(after! lsp-mode
+  (setq! lsp-inlay-hint-enable t)
+  (custom-set-faces!
+    '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
@@ -1848,8 +1846,7 @@ Not added when either:
          lsp-rust-analyzer-display-closure-return-type-hints t
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
-         lsp-rust-analyzer-hide-named-constructor t
-         lsp-rust-analyzer-server-display-inlay-hints t))
+         lsp-rust-analyzer-hide-named-constructor t)
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
@@ -2042,7 +2039,9 @@ Not added when either:
         message-send-mail-function 'message-send-mail-with-sendmail
         sendmail-program "msmtp")
   (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
-  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode))
+  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
+  (defun +notmuch-get-sync-command ()
+    "mbsync -a && notmuch new && afew -n -t"))
 
 (after! notmuch
   (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
