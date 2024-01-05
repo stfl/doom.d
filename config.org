@@ -2684,7 +2684,7 @@ Enable inlay type hints
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
          lsp-rust-analyzer-hide-named-constructor t
-         lsp--hints t))
+         )
 #+end_src
 
 configre dap-mode for rust
