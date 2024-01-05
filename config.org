@@ -2520,7 +2520,7 @@ https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
        :leader
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
-#+END_SRC
+#+end_src
 ** Code Formatting
 
 mapping doom's ~+format/buffer~ and ~+format/region~
