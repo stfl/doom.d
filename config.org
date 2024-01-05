@@ -2511,7 +2511,10 @@ https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
     (add-to-list 'lsp-file-watch-ignored-directories dir))
   ;; (setq lsp-log-io t)
   )
+#+end_src
 
+
+#+begin_src elisp
 (map! (:after lsp
        :map lsp-mode-map
        :leader
