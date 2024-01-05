@@ -3100,9 +3100,7 @@ activate magit-todo to display the TODOs section in magit buffer
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
 
   (defun +notmuch-get-sync-command ()
-    "mbsync -a && notmuch new && afew -n -t"
-
-      )
+    "mbsync -a && notmuch new && afew -n -t")
 
 
 
