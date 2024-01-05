@@ -2508,9 +2508,7 @@ Do not watch cache directories
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
                  "[/\\\\]__pycache__\\'"
                  "[/\\\\]uploads\\"))
-    (add-to-list 'lsp-file-watch-ignored-directories dir))
-  ;; (setq lsp-log-io t)
-  )
+    (add-to-list 'lsp-file-watch-ignored-directories dir)))
 #+end_src
 
 *** Key Mappings
