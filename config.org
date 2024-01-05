@@ -2502,10 +2502,9 @@ map ielm to ~SPC :~
 #+end_src
 
 *** ignore directories
-
-to be ignored by lsp-mode watcher.
-
 https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
+
+do not watch cache directories
 #+begin_src elisp
 (after! lsp-mode
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
