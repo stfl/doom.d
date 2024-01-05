@@ -2492,6 +2492,7 @@ map ielm to ~SPC :~
 #+end_src
 
 ** LSP
+
 #+begin_src elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
@@ -2519,6 +2520,12 @@ Do not watch cache directories
        :leader
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
+#+end_src
+*** Inlay Hints
+
+#+begin_src elisp
+
+
 #+end_src
 ** Code Formatting
 
