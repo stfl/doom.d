@@ -2501,7 +2501,8 @@ map ielm to ~SPC :~
   :config (lsp-treemacs-sync-mode 1))
 #+end_src
 
-lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
+ignore several directories to be ignored by lsp-mode watcher.
+https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 #+begin_src elisp
 (after! lsp-mode
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
