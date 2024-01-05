@@ -1753,9 +1753,7 @@ Not added when either:
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
                  "[/\\\\]__pycache__\\'"
                  "[/\\\\]uploads\\"))
-    (add-to-list 'lsp-file-watch-ignored-directories dir))
-  ;; (setq lsp-log-io t)
-  )
+    (add-to-list 'lsp-file-watch-ignored-directories dir)))
 
 (map! (:after lsp
        :map lsp-mode-map
@@ -1846,7 +1844,7 @@ Not added when either:
          lsp-rust-analyzer-display-closure-return-type-hints t
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
-         lsp-rust-analyzer-hide-named-constructor t)
+         lsp-rust-analyzer-hide-named-constructor t))
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"

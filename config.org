@@ -2689,7 +2689,7 @@ This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inla
          lsp-rust-analyzer-display-closure-return-type-hints t
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
-         lsp-rust-analyzer-hide-named-constructor t)
+         lsp-rust-analyzer-hide-named-constructor t))
 #+end_src
 
 configre dap-mode for rust
