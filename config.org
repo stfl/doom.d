@@ -2492,9 +2492,6 @@ map ielm to ~SPC :~
 #+end_src
 
 ** LSP
-:PROPERTIES:
-:ID:       57007770-c5ba-40e9-a9af-3d2d8c835781
-:END:
 #+begin_src elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
@@ -2504,7 +2501,7 @@ map ielm to ~SPC :~
 *** ignore directories
 https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 
-do not watch cache directories
+Do not watch cache directories
 #+begin_src elisp
 (after! lsp-mode
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
