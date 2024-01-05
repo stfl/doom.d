@@ -2530,7 +2530,7 @@ https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable
   (setq! lsp-inlay-hint-enable t)
   (custom-set-faces!
     '(lsp-inlay-hint-face
-      :height 0.8
+      :height 0.9
       :italic t
       :inherit font-lock-comment-face)))
 #+end_src
