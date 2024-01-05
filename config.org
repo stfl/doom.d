@@ -2686,7 +2686,9 @@ Enable inlay type hints
          lsp-rust-analyzer-hide-named-constructor t)
 #+end_src
 
+*** Rust dap-mode
 configre dap-mode for rust
+
 #+begin_src elisp
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
