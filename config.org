@@ -2499,8 +2499,10 @@ map ielm to ~SPC :~
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
+#+end_src
 
 ;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
+#+begin_src elisp
 (after! lsp-mode
   ;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; (setq gc-cons-threshold 100000000)
@@ -2673,7 +2675,7 @@ Enable inlay type hints
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
          lsp-rust-analyzer-hide-named-constructor t
-         lsp-rust-analyzer-server-display-inlay-hints t))
+         lsp--hints t))
 #+end_src
 
 configre dap-mode for rust
