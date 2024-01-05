@@ -3098,7 +3098,8 @@ activate magit-todo to display the TODOs section in magit buffer
         sendmail-program "msmtp")
   (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
-  (defun +notmuch-get-sync-command () "mbsync -a && notmuch new && afew -n -t")
+  (defun +notmuch-get-sync-command ()
+    "mbsync -a && notmuch new && afew -n -t")
   )
 #+end_src
 
