@@ -2676,6 +2676,8 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 Configure inlay type hints
 
+This requires
+
 #+begin_src elisp
 (after! lsp-rust
   (setq! lsp-rust-analyzer-binding-mode-hints t
