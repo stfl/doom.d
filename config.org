@@ -2501,9 +2501,10 @@ map ielm to ~SPC :~
   :config (lsp-treemacs-sync-mode 1))
 #+end_src
 
-*** ignore watch directories
+*** ignore directories
 
 to be ignored by lsp-mode watcher.
+
 https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 #+begin_src elisp
 (after! lsp-mode
