@@ -2495,7 +2495,7 @@ map ielm to ~SPC :~
 :PROPERTIES:
 :ID:       57007770-c5ba-40e9-a9af-3d2d8c835781
 :END:
-#+BEGIN_SRC elisp
+#+begin_src elisp
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
