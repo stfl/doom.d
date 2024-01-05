@@ -2525,8 +2525,7 @@ Do not watch cache directories
 
 #+begin_src elisp
 (after! lsp-mode
-  (setq! inlay-hints-enabled t)
-  )
+  (setq! lsp-inlay-hints-enabled t))
 #+end_src
 ** Code Formatting
 
