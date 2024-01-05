@@ -2528,9 +2528,8 @@ https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable
 #+begin_src elisp
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t)
-  ()
-
-                )
+  (custom-set-faces!
+    '(lsp-inlay-hint-face :italic t :inherit font-lock-comment-face))
 #+end_src
 
 ** Code Formatting
