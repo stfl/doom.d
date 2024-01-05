@@ -2527,7 +2527,10 @@ https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable
 
 #+begin_src elisp
 (after! lsp-mode
-  (setq! lsp-inlay-hint-enable t))
+  (setq! lsp-inlay-hint-enable t)
+  ()
+
+                )
 #+end_src
 
 ** Code Formatting
