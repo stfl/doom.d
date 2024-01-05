@@ -2523,6 +2523,8 @@ Do not watch cache directories
 #+end_src
 *** Inlay Hints
 
+Enable hinlay hints and make the font a little smaller than the rest
+
 https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable
 
 #+begin_src elisp
