@@ -2527,6 +2527,7 @@ Do not watch cache directories
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t))
 #+end_src
+
 ** Code Formatting
 
 mapping doom's ~+format/buffer~ and ~+format/region~
