@@ -2501,7 +2501,7 @@ map ielm to ~SPC :~
   :config (lsp-treemacs-sync-mode 1))
 #+end_src
 
-;; improve performance of lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
+lsp-mode https://emacs-lsp.github.io/lsp-mode/page/performance/
 #+begin_src elisp
 (after! lsp-mode
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
