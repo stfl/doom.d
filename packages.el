@@ -32,7 +32,10 @@
   (package! emacsql-sqlite-builtin))
 
 (package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+  :pin "653fe7b"
+  :recipe (:host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
 
 (package! numpydoc)
 
