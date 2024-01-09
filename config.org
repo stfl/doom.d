@@ -2478,6 +2478,8 @@ map ielm to ~SPC :~
 
 ** Copilot
 
+Pinning copilot-mode due to: https://github.com/copilot-emacs/copilot.el/issues/228
+
 #+begin_src elisp :tangle packages.el
 (package! copilot
   :pin "653fe7b"
