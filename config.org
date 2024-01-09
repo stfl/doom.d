@@ -2480,7 +2480,11 @@ map ielm to ~SPC :~
 
 #+begin_src elisp :tangle packages.el
 (package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+  :recipe (:host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
+;; 653fe7b
+
 #+end_src
 
 #+begin_src elisp
