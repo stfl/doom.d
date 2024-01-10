@@ -1081,7 +1081,7 @@ some helper functions
 )
 #+end_src
 
-*** NEXT Keymap
+*** Keymap
 
 #+begin_src elisp
 (map! :after org-ql
