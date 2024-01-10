@@ -1935,7 +1935,7 @@ REVIEW should we define any additional tags?
                         ("Process" . nil)
                         (:grouptags)
                         ("SOMEDAY" . ?S)
-                        ("REFILE" . ?R)
+                        ;; ("REFILE" . ?R)
                         ("HABIT" . ?H)
                         ("LASTMILE" . ?L)
                         (:endgrouptag)
