@@ -1938,6 +1938,7 @@ REVIEW should we define any additional tags?
                         ;; ("REFILE" . ?R)
                         ("HABIT" . ?H)
                         ("LASTMILE" . ?L)
+                        ("DRAG" . ?D)
                         (:endgrouptag)
                         (:startgrouptag)
                         ("Areas" . nil)
