@@ -892,7 +892,7 @@ org todo checkboxes
         ("wB" "Backlog all #work"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (and (work) (not (tags "proxmox" "@office" "@proxmox"))))
+                              (and (work) (not (tags "proxmox" "@proxmox"))))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
