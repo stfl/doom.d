@@ -885,7 +885,7 @@ org todo checkboxes
         ("wB" "Backlog all #work"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "#work"))
+                              (work))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
