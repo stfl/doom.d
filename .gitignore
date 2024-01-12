@@ -1,7 +1,8 @@
-/intelephense.txt
-/.stversions/
 *.sync-conflict*
+.syncthing*.tmp
+/.stversions/
+/flycheck_init.el
+/intelephense.txt
+/nil
 /node_modules/
 /yarn.lock
-/nil
-.syncthing*.tmp
