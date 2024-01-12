@@ -127,127 +127,127 @@
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
         ;; +forge
-        ;; )
-        ;;make              ; run make tasks from Emacs
-        (pass +auth)        ; password manager for nerds
-        pdf               ; pdf enhancements
-        ;;prodigy           ; FIXME managing external services & code builders
-        rgb               ; creating color strings
-        ;;taskrunner        ; taskrunner for all your projects
-        ;;terraform         ; infrastructure as code
-        ;;tmux              ; an API for interacting with tmux
-        upload            ; map local to remote projects via ssh/ftp
-        tree-sitter
-
-        :lang
-        ;;agda              ; types of types of types of types...
-        ;;assembly          ; assembly for fun or debugging
-        ;; cc                 ; C/C++/Obj-C madness
-        ;; (cc +lsp)                ; C/C++/Obj-C madness
-        ;;clojure           ; java with a lisp
-        ;;common-lisp       ; if you've seen one lisp, you've seen them all
-        ;;coq               ; proofs-as-programs
-        ;;crystal           ; ruby at the speed of c
-        ;;csharp            ; unity, .NET, and mono shenanigans
-        data              ; config/data formats
-        ;;elixir            ; erlang done right
-        ;;elm               ; care for a cup of TEA?
-        emacs-lisp        ; drown in parentheses
-        ;;erlang            ; an elegant language for a more civilized age
-        ;;ess               ; emacs speaks statistics
-        ;;faust             ; dsp, but you get to keep your soul
-        ;;fsharp           ; ML stands for Microsoft's Language
-        ;;fstar             ; (dependent) types and (monadic) effects and Z3
-        ;;go                ; the hipster dialect
-        ;; (haskell            ; a language that's lazier than I am
-        ;;  +dante
-        ;;  +ghcide)
-        ;;hy                ; readability of scheme w/ speed of python
-        ;;idris             ;
-        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-        (javascript         ; all(hope(abandon(ye(who(enter(here))))))
-         +lsp
-         +tree-sitter)
-        ;;julia             ; a better, faster MATLAB
-        ;;kotlin            ; a better, slicker Java(Script)
-        ;;latex             ; writing papers in Emacs has never been so fun
-        ;;lean
-        ;;factor
-        ;;ledger            ; an accounting system in Emacs
-        ;; (lua               ; one-based indices? one-based indices
-        ;;  +lsp
-        ;;  +fennel)
-        (markdown +grip)          ; writing docs for people to ignore
-        ;;nim               ; python + lisp at the speed of c
-        nix               ; I hereby declare "nix geht mehr!"
-        ;;ocaml             ; an objective camel
-        (org              ; organize your plain life in plain text
-         +dragndrop       ; drag & drop files/images into org buffers
-         ;; +hugo            ; use Emacs for hugo blogging
-         +pretty
-         ;; +passwords    ; org-passwords
-         ;; +crypt        ; org-crypt
-         ;; +jupyter        ; ipython/jupyter support for babel
-         ;; +contacts     ; Enable [[doom-package:org-contacts]] integration.
-         +pandoc          ; export-with-pandoc support
-         ;; +pomodoro        ; be fruitful with the tomato technique
-         +roam2
-         ;; +gnuplot
-         ;; +present      ; using org-mode for presentations
-         )
-        ;; raku              ; write code no one else can comprehend
-        (php                ; perl's insecure younger brother
-         +lsp
-         +tree-sitter)
-        plantuml          ; diagrams for confusing people more
-        ;;purescript        ; javascript, but functional
-        (python             ; beautiful is better than ugly
-         +pyenv
-         +poetry
-         +lsp
-         +pyright
-         ;; +conda
-         +tree-sitter)
-        ;;qt                ; the 'cutest' gui framework ever
-        ;;racket            ; a DSL for DSLs
-        rest              ; Emacs as a REST client
-        ;;rst               ; ReST in peace
-        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-        (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-         +lsp
-         +tree-sitter)
-        ;;scala             ; java, but good
-        ;;scheme            ; a fully conniving family of lisps
-        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
-         +lsp
-         +tree-sitter)
-        ;;solidity          ; do you need a blockchain? No.
-        ;;swift             ; who asked for emoji variables?
-        ;;terra             ; Earth and Moon in alignment for performance.
-        (web                ; the tubes
-         +lsp
-         +tree-sitter)
-        yaml                ; JSON, but readable
-
-        :email
-        ;; (mu4e +gmail +org)
-        (notmuch
-         +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
-         +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
-         )
-        ;;(wanderlust +gmail)
-
-        :app
-        calendar                   ; A dated approach to timetabling
-        ;;emms                       ; Multimedia in Emacs is music to my ears
-        ;;irc               ; how neckbeards socialize
-        everywhere                   ; *leave* Emacs!? You must be joking.
-        ;;(rss +org)        ; emacs as an RSS reader
-        ;;twitter           ; twitter client https://twitter.com/vnought
-
-        :config
-        literate
-        (default
-         +bindings
-         +smartparens)
         )
+       ;;make              ; run make tasks from Emacs
+       (pass +auth)        ; password manager for nerds
+       pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       upload            ; map local to remote projects via ssh/ftp
+       tree-sitter
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;assembly          ; assembly for fun or debugging
+       ;; cc                 ; C/C++/Obj-C madness
+       ;; (cc +lsp)                ; C/C++/Obj-C madness
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       data              ; config/data formats
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp           ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;go                ; the hipster dialect
+       ;; (haskell            ; a language that's lazier than I am
+       ;;  +dante
+       ;;  +ghcide)
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ;
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       (javascript         ; all(hope(abandon(ye(who(enter(here))))))
+        +lsp
+        +tree-sitter)
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       ;;latex             ; writing papers in Emacs has never been so fun
+       ;;lean
+       ;;factor
+       ;;ledger            ; an accounting system in Emacs
+       ;; (lua               ; one-based indices? one-based indices
+       ;;  +lsp
+       ;;  +fennel)
+       (markdown +grip)          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       (org              ; organize your plain life in plain text
+        +dragndrop       ; drag & drop files/images into org buffers
+        ;; +hugo            ; use Emacs for hugo blogging
+        +pretty
+        ;; +passwords    ; org-passwords
+        ;; +crypt        ; org-crypt
+        ;; +jupyter        ; ipython/jupyter support for babel
+        ;; +contacts     ; Enable [[doom-package:org-contacts]] integration.
+        +pandoc          ; export-with-pandoc support
+        ;; +pomodoro        ; be fruitful with the tomato technique
+        +roam2
+        ;; +gnuplot
+        ;; +present      ; using org-mode for presentations
+        )
+       ;; raku              ; write code no one else can comprehend
+       (php                ; perl's insecure younger brother
+        +lsp
+        +tree-sitter)
+       plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       (python             ; beautiful is better than ugly
+        +pyenv
+        +poetry
+        +lsp
+        +pyright
+        ;; +conda
+        +tree-sitter)
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+        +lsp
+        +tree-sitter)
+       ;;scala             ; java, but good
+       ;;scheme            ; a fully conniving family of lisps
+       (sh                 ; she sells {ba,z,fi}sh shells on the C xor
+        +lsp
+        +tree-sitter)
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       (web                ; the tubes
+        +lsp
+        +tree-sitter)
+       yaml                ; JSON, but readable
+
+       :email
+       ;; (mu4e +gmail +org)
+       (notmuch
+        +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
+        +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
+        )
+       ;;(wanderlust +gmail)
+
+       :app
+       calendar                   ; A dated approach to timetabling
+       ;;emms                       ; Multimedia in Emacs is music to my ears
+       ;;irc               ; how neckbeards socialize
+       everywhere                   ; *leave* Emacs!? You must be joking.
+       ;;(rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       literate
+       (default
+        +bindings
+        +smartparens)
+       )
