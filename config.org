@@ -889,6 +889,13 @@ org todo checkboxes
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
+        ("wP" "Proxmox Backlog"
+         ((org-ql-block '(and (or (todo "PROJ")
+                                  (standalone-next))
+                              (tags "#work"))
+                        ((org-ql-block-header "Backlog")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-dim-blocked-tasks t)))))
         ("ws" "Stuck Projects"
          (org-ql-block ((and (stuck-proj)
                              (work))
