@@ -526,8 +526,8 @@ relevant again (Tickler)"
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
-        ("wa" "Work Agenda Today"
-         ((org-ql-block '(and (work)
+        ("ww" "Work Agenda Today Proxmox"
+         ((org-ql-block '(and (tags "proxmox" "@office" "@proxmox")
                              (not (done))
                              (or (habit)
                                  (deadline :to today)
@@ -541,14 +541,42 @@ relevant again (Tickler)"
                               (not (ancestors (deadline :to 0)))
                               (not (deadline :to 0))
                               (not (scheduled))
-                              (work))
+                              (tags "proxmox" "@office" "@proxmox"))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           ))
-        ("wb" "Backlog"
+        ("wa" "Work Agenda Today w/ Proxmox"
+         ((org-ql-block '(and (and (work)
+                                   (not (tags "proxmox")))
+                              (not (done))
+                              (or (habit)
+                                  (deadline :to today)
+                                  (scheduled :to today)
+                                  (ts-active :on today)))
+                        ((org-ql-block-header "Today")
+                         (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
+          (org-ql-block `(and (todo "NEXT" "WAIT")
+                              ,(prio-deadline>= stfl/agenda-max-prio-group)
+                              (not ,(someday-habit))
+                              (not (ancestors (deadline :to 0)))
+                              (not (deadline :to 0))
+                              (not (scheduled))
+                              (and (work)
+                                   (not (tags "proxmox"))))
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
+          ))
+        ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "#work"))
+                              (tags "proxmox" "@office" "@proxmox"))
+                        ((org-ql-block-header "Backlog")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-dim-blocked-tasks t)))))
+        ("wB" "Backlog #work w/ Proxmox"
+         ((org-ql-block '(and (or (todo "PROJ")
+                                  (standalone-next))
+                              (and (work) (not (tags "proxmox"))))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
@@ -1768,6 +1796,39 @@ Not added when either:
   (setq! lsp-inlay-hint-enable t)
   (custom-set-faces!
     '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)))
+
+(after! lsp-mode
+  (when (executable-find "emacs-lsp-booster")
+    (defun lsp-booster--advice-json-parse (old-fn &rest args)
+      "Try to parse bytecode instead of json."
+      (or
+       (when (equal (following-char) ?#)
+         (let ((bytecode (read (current-buffer))))
+           (when (byte-code-function-p bytecode)
+             (funcall bytecode))))
+       (apply old-fn args)))
+    (advice-add (if (progn (require 'json)
+                           (fboundp 'json-parse-buffer))
+                    'json-parse-buffer
+                  'json-read)
+                :around
+                #'lsp-booster--advice-json-parse)
+
+    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+      "Prepend emacs-lsp-booster command to lsp CMD."
+      (let ((orig-result (funcall old-fn cmd test?)))
+        (if (and (not test?)                             ;; for check lsp-server-present?
+                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                 lsp-use-plists
+                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
+                 (executable-find "emacs-lsp-booster"))
+            (progn
+              (message "Using emacs-lsp-booster for %s!" orig-result)
+              (cons "emacs-lsp-booster" orig-result))
+          orig-result)))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
+    ))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
