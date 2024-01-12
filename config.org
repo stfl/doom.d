@@ -846,6 +846,7 @@ org todo checkboxes
         ("w" . "Work")
         ("wp" "Work Agenda Today Proxmox"
          ((org-ql-block '(and (work)
+                              (tags "proxmox" "@office")
                              (not (done))
                              (or (habit)
                                  (deadline :to today)
