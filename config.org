@@ -844,7 +844,7 @@ org todo checkboxes
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
-        ("wa" "Work Agenda Today"
+        ("ww" "Work Agenda Today"
          ((org-ql-block '(and (work)
                              (not (done))
                              (or (habit)
