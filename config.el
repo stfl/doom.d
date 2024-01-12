@@ -14,7 +14,7 @@
             secret))
       nil)))
 
-(defun lookup-password (&rest keys)
+(defun get-password (&rest keys)
   (let ((result (apply #'auth-source-search keys)))
     (when result
       (funcall (plist-get (car result) :secret)))))
@@ -1414,18 +1414,19 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("@home" . ?h)
                         ("@office". ?o)
                         ("@sarah" . ?s)
-                        ("@robert" . ?r)
-                        ("@baudock_meeting" . ?b)
-                        ("@PC" . ?p)
-                        ("@phone" . ?f)
+                        ;; ("@robert" . ?r)
+                        ;; ("@baudock_meeting" . ?b)
+                        ;; ("@PC" . ?p)
+                        ;; ("@phone" . ?f)
                         (:endgrouptag)
                         (:startgrouptag)
                         ("Process" . nil)
                         (:grouptags)
                         ("SOMEDAY" . ?S)
-                        ("REFILE" . ?R)
+                        ;; ("REFILE" . ?R)
                         ("HABIT" . ?H)
                         ("LASTMILE" . ?L)
+                        ("DRAG" . ?D)
                         (:endgrouptag)
                         (:startgrouptag)
                         ("Areas" . nil)
@@ -1514,7 +1515,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (let ((org-startup-folded 'showeverything))
+  (let ((org-startup-folded 'showeverything)
+        (org-inhibit-startup t)
+        (org-hide-drawer-startup nil))
     (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
@@ -2228,8 +2231,9 @@ Not added when either:
                   (window-system . x))))
 
 (use-package! gptel
+  :after auth-source
   :config
   (setq! gptel-default-mode 'org-mode
-         gptel-api-key (lookup-password :host "OpenAI-gptel"))
+         gptel-api-key (get-password :host "OpenAI-gptel"))
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-hook 'gptel-end-of-response))

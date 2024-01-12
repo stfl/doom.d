@@ -32,16 +32,14 @@ function to load a secret from an auth-source. [[https://gist.github.com/letoh/5
       nil)))
 #+END_SRC
 
-lookup-password
+get-password
 
 #+begin_src elisp
-(defun lookup-password (&rest keys)
+(defun get-password (&rest keys)
   (let ((result (apply #'auth-source-search keys)))
     (when result
       (funcall (plist-get (car result) :secret)))))
 #+end_src
-
-
 
 ** literate config
 *** Don't auto-recompile literate-config
@@ -2133,7 +2131,9 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 #+begin_src elisp
 (defun stfl/resolve-orgzly-syncthing ()
   (interactive)
-  (let ((org-startup-folded 'showeverything))
+  (let ((org-startup-folded 'showeverything)
+        (org-inhibit-startup t)
+        (org-hide-drawer-startup nil))
     (ibizaman/syncthing-resolve-conflicts org-directory)))
 
 (defun ibizaman/syncthing-resolve-conflicts (directory)
@@ -2479,11 +2479,8 @@ map ielm to ~SPC :~
 
 ** Copilot
 
-Pinning copilot-mode due to: https://github.com/copilot-emacs/copilot.el/issues/228
-
 #+begin_src elisp :tangle packages.el
 (package! copilot
-  :pin "653fe7b12990b5b7a050971bed4579022ce4b4f8"
   :recipe (:host github
            :repo "zerolfx/copilot.el"
            :files ("*.el" "dist")))
@@ -3417,9 +3414,10 @@ forcing text comparison even if diff thinks files are binary
 
 #+begin_src elisp
 (use-package! gptel
+  :after auth-source
   :config
   (setq! gptel-default-mode 'org-mode
-         gptel-api-key (lookup-password :host "OpenAI-gptel"))
+         gptel-api-key (get-password :host "OpenAI-gptel"))
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
 #+end_src
