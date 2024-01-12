@@ -864,7 +864,7 @@ org todo checkboxes
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           ))
         ("wa" "Work Agenda Today (not proxmox)"
-         ((org-ql-block '(and (and (work) (not (tags "proxmox" "@office" "@proxmox")))
+         ((org-ql-block '(and (and (work) (not (tags "proxmox")))
                              (not (done))
                              (or (habit)
                                  (deadline :to today)
@@ -892,7 +892,7 @@ org todo checkboxes
         ("wB" "Backlog all #work"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (and (work) (not (tags "proxmox" "@proxmox"))))
+                              (and (work) (not (tags "proxmox"))))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
