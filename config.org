@@ -863,7 +863,7 @@ org todo checkboxes
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           ))
-        ("wa" "Work Agenda Today (not proxmox)"
+        ("wa" "Work Agenda Today w/ Proxmox"
          ((org-ql-block '(and (and (work) (not (tags "proxmox")))
                              (not (done))
                              (or (habit)
