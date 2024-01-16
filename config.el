@@ -1054,19 +1054,18 @@ relevant again (Tickler)"
        `((:name "Tickler"
           :and (:scheduled t
                 :tag "SOMEDAY")
-          :order ,(+ 1 org-priority-lowest))      ;; and order in the appropriate position
-         )
+          :order ,(+ 1 org-priority-lowest)))      ;; and order in the appropriate position
        `((:name "Someday"
           :tag "SOMEDAY"
-          :order ,(+ 2 org-priority-lowest))      ;; and order in the appropriate position
-         )
+          :order ,(+ 2 org-priority-lowest)))      ;; and order in the appropriate position
        `,(mapcar
           (lambda (prio)
             (let ((prio-str (char-to-string prio))
-                  (until-date-str (ts-format "%Y-%m-%d"
-                                             (ts-adjust 'day
-                                                        (fib (+ stfl/agenda-deadline-fib-offset (- prio 64)))
-                                                        (ts-now)))))
+                  (until-date-str
+                   (ts-format "%Y-%m-%d"
+                              (ts-adjust 'day
+                                         (fib (+ stfl/agenda-deadline-fib-offset (- prio 64)))
+                                         (ts-now)))))
               `(:name ,(format "[#%s] Priority %s" prio-str prio-str)
                 :deadline (before ,until-date-str)
                 :scheduled (before ,until-date-str)
@@ -1081,8 +1080,7 @@ relevant again (Tickler)"
           (number-sequence org-priority-highest org-priority-lowest))
        `((:name "Default Priority (Rest)"
           :anything t                                ;; catch the rest
-          :order ,(+ 0.5 org-priority-default))      ;; and order in the appropriate position
-         )
+          :order ,(+ 0.5 org-priority-default)))      ;; and order in the appropriate position
        ))
 
 (defun stfl/org-min-ancestor-priority-or-default ()
