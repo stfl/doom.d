@@ -859,6 +859,7 @@ org todo checkboxes
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)
                          ;; (stfl/agenda-max-prio-group org-priority-default)
+                         (stfl/agenda-max-prio-group org-priority-lowest)
                          ))
           (org-ql-block `(and (todo "NEXT" "WAIT")
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
