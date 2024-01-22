@@ -411,7 +411,7 @@ relevant again (Tickler)"
 
 (after! org
 
-  (setq stfl/agenda-backlog-prio-threshold (+ 2 org-priority))
+  (setq stfl/agenda-backlog-prio-threshold (+ 2 org-priority-default))
   (setq-default stfl/agenda-max-prio-group ?D)
   (setq stfl/agenda-deadline-fib-offset 3)
 
