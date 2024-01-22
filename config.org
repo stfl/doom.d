@@ -859,7 +859,6 @@ org todo checkboxes
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)
                          ;; (stfl/agenda-max-prio-group org-priority-default)
-                         (stfl/agenda-max-prio-group org-priority-lowest)
                          ))
           (org-ql-block `(and (todo "NEXT" "WAIT")
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
@@ -869,7 +868,9 @@ org todo checkboxes
                               (not (scheduled))
                               (tags "proxmox" "@office" "@proxmox"))
                         ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (stfl/agenda-max-prio-group org-priority-lowest)
+                         ))
           ))
         ("wa" "Work Agenda Today w/ Proxmox"
          ((org-ql-block '(and (and (work)
