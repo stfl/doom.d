@@ -808,8 +808,7 @@ org todo checkboxes
          ((org-ql-block '(tangling)
                         ((org-ql-block-header "Tangling TODOs")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
+                         (org-super-agenda-groups stfl/priority-groups)))))
         ("rS" "SOMEDAY"
          ((org-ql-block '(and (todo "PROJ")
                               (or (and (priority <= (char-to-string stfl/agenda-backlog-prio-threshold))
@@ -825,8 +824,7 @@ org todo checkboxes
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
                                                     (:auto-priority)
-                                                    ))))
-          ))
+                                                    ))))))
         ("p" . "Private")
         ("pb" "Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
