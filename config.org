@@ -803,8 +803,7 @@ org todo checkboxes
          ((org-ql-block '(stuck-proj)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
+                         (org-super-agenda-groups stfl/priority-groups)))))
         ("rt" "Tangling TODOs"
          ((org-ql-block '(tangling)
                         ((org-ql-block-header "Tangling TODOs")
