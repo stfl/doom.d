@@ -1127,7 +1127,7 @@ relevant again (Tickler)"
 (defun stfl/org-ql-min-ancestor-priority< (a b)
   "Return non-nil if A's minimum ancestor priority is higher than B's.
 A and B are Org headline elements.
-org-default-priority is treated as lower than the same set value"
+org-priority-default is treated as lower than the same set value"
   (cl-macrolet ((priority (item)
                           `(org-with-point-at (org-element-property :org-marker ,item)
                              (stfl/org-min-ancestor-priority))))
