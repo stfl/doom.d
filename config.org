@@ -729,7 +729,7 @@ org todo checkboxes
 #+end_src
 
 #+begin_src elisp
-(setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
+(setq stfl/agenda-backlog-prio-threshold (+ 2 org-priority-default))
 ;; TODO I really don't know what this is used for? this might be an old variable.
 ;; It's still used tho for a basiclly unused custom-command!
 
