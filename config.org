@@ -915,7 +915,7 @@ org todo checkboxes
 ) ;; (after! org
 #+end_src
 
-** org-ql Views
+** org-ql
 *** My Query helpers
 
 some helper functions
