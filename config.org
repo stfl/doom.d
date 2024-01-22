@@ -786,13 +786,11 @@ org todo checkboxes
                          (org-deadline-warning-days 30)
                          (stfl/agenda-max-prio-group org-priority-lowest)
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-ql-block-header "Something to do")
-                         ))
+                         (org-ql-block-header "Something to do")))
           (org-ql-block (stfl/agenda-query-stuck-projects)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))
-          ))
+                         (org-super-agenda-groups stfl/priority-groups)))))
         ("rl" "Agenda Weekly with Log"
          ((agenda ""
                   ((org-agenda-span 'week)
