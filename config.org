@@ -880,8 +880,7 @@ org todo checkboxes
                               (and (work)
                                    (not (tags "proxmox"))))
                         ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          ))
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
