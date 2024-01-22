@@ -730,6 +730,9 @@ org todo checkboxes
 
 #+begin_src elisp
 (setq stfl/agenda-backlog-prio-threshold (+ 2 org-default-priority))
+;; TODO I really don't know what this is used for? this might be an old variable.
+;; It's still used tho for a basiclly unused custom-command!
+
 (setq-default stfl/agenda-max-prio-group ?D)
 (setq stfl/agenda-deadline-fib-offset 3)
 
@@ -853,8 +856,7 @@ org todo checkboxes
                                  (ts-active :on today)))
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)
-                         (stfl/agenda-backlog-prio-threshold ?F)
-                         ))
+                         (stfl/agenda-backlog-prio-threshold ?F)))
           (org-ql-block `(and (todo "NEXT" "WAIT")
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
                               (not ,(someday-habit))
