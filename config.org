@@ -861,7 +861,7 @@ org todo checkboxes
                               (tags "proxmox" "@office" "@proxmox"))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (stfl/agenda-max-prio-group org-priority-lowest)
+                         ;; (stfl/agenda-max-prio-group org-priority-lowest)
                          ))
           ))
         ("wa" "Work Agenda Today w/ Proxmox"
