@@ -734,6 +734,8 @@ org todo checkboxes
 ;; It's still used tho for a basiclly unused custom-command!
 
 (setq-default stfl/agenda-max-prio-group ?D)
+;; Priority level until the backlog in today-agenda is shown!
+
 (setq stfl/agenda-deadline-fib-offset 3)
 
 (setq org-agenda-custom-commands
