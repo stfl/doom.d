@@ -853,7 +853,7 @@ org todo checkboxes
                                  (ts-active :on today)))
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)
-                         (stfl/agenda-backlog-prio-threshold ?E)
+                         (stfl/agenda-backlog-prio-threshold ?F)
                          ))
           (org-ql-block `(and (todo "NEXT" "WAIT")
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
