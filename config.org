@@ -3484,3 +3484,6 @@ forcing text comparison even if diff thinks files are binary
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
 #+end_src
+
+#+RESULTS:
+: t
