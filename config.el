@@ -150,6 +150,8 @@
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 
+(pixel-scroll-precision-mode)
+
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
