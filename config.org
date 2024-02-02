@@ -314,6 +314,13 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 #+end_src
+** Scrolling
+
+Since Emacs 29, pixel-scroll is built-in
+
+#+begin_src elisp
+(pixel-scroll-precision-mode)
+#+end_src
 
 * Motions
 :PROPERTIES:
