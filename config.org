@@ -326,11 +326,11 @@ Invalid indentation style is a common issue at my work.
          indentation
          space-after-tab
          ;; tabs
-         ;; tab-mark
+         tab-mark
          ;; spaces
          ;; space-mark
          newline
-         newline-mark
+         ;; newline-mark
          trailing
          lines-tail
          ))
