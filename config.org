@@ -3273,6 +3273,18 @@ Reset the default popup-rules defined by doom's module
     ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*subject:" :ignore t))))
 #+end_src
+
+#+begin_src elisp
+(after! notmuch
+  (defun stfl/notmuch-hello-update-background ()
+    "Update notmuch-hello buffer. If we are in another frame, allow switch to it so it will be formatted correctly."
+    (let ((no-display (eq (selected-frame)
+                          (window-frame (display-buffer "*notmuch-hello*")))))
+      (notmuch-hello no-display)))
+
+
+  )
+#+end_src
 *** mailscripts.el
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
 
