@@ -325,11 +325,11 @@ Invalid indentation style is a common issue at my work.
        '(face
          indentation
          space-after-tab
-         ;; tabs
+         tabs
          tab-mark
          ;; spaces
          ;; space-mark
-         newline
+         ;; newline
          ;; newline-mark
          trailing
          lines-tail
