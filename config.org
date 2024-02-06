@@ -314,6 +314,13 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 #+end_src
+** Display Whitespaces
+
+Invalid indentation style is a common issue at my work.
+
+#+begin_src elisp
+#+end_src
+
 ** Scrolling
 
 Since Emacs 29, pixel-scroll is built-in
