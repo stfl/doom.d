@@ -319,7 +319,7 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 Invalid indentation style is a common issue at my work.
 
 #+begin_src elisp
-(global-whitespace-mode)
+;; (global-whitespace-mode)
 
 (setq! whitespace-style
        '(face
