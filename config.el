@@ -152,24 +152,34 @@
 
 ;; (global-whitespace-mode)
 
-(setq! whitespace-style
-       '(face
-         indentation
-         space-after-tab
-         space-after-tab::space
-         space-after-tab::tab
-         space-before-tab
-         space-before-tab::tab
-         space-before-tab::space
-         tabs
-         tab-mark
-         ;; spaces
-         ;; space-mark
-         ;; newline
-         ;; newline-mark
-         trailing
-         ;; lines-tail
-         ))
+(after! doom-ui
+  (setq! whitespace-style
+         (append whitespace-style
+                 '(space-after-tab
+                   space-after-tab::space
+                   space-after-tab::tab
+                   space-before-tab
+                   space-before-tab::tab
+                   space-before-tab::space))))
+
+  ;; (setq! whitespace-style
+  ;;        '(face
+  ;;          indentation
+  ;;          space-after-tab
+  ;;          space-after-tab::space
+  ;;          space-after-tab::tab
+  ;;          space-before-tab
+  ;;          space-before-tab::tab
+  ;;          space-before-tab::space
+  ;;          tabs
+  ;;          tab-mark
+  ;;          ;; spaces
+  ;;          ;; space-mark
+  ;;          ;; newline
+  ;;          ;; newline-mark
+  ;;          trailing
+  ;;          ;; lines-tail
+  ;;          ))
 
 (custom-set-faces!
  ;; `(whitespace-tab :background ,(doom-color 'blue))
