@@ -325,7 +325,6 @@ Invalid indentation style is a common issue at my work.
  ;; `(whitespace-tab :background ,(doom-color 'blue))
  `(whitespace-indentation :background ,(doom-color 'base4))
  )
-
 #+end_src
 
 ** Scrolling
