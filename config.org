@@ -322,8 +322,20 @@ Invalid indentation style is a common issue at my work.
 (global-whitespace-mode)
 
 (setq! whitespace-style
-'(face indentation space-after-tab indentation::tab indentation::space tabs tab-mark spaces space-mark newline newline-mark trailing lines-tail)
-         ))
+       '(face
+         indentation
+         space-after-tab
+         indentation::tab
+         indentation::space
+         tabs
+         tab-mark
+         spaces
+         space-mark
+         newline
+         newline-mark
+         trailing
+         lines-tail)
+       )
 #+end_src
 
 Visually highlty if an indentation issue was discovered which emacs already does for us
