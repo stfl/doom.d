@@ -157,8 +157,10 @@
          indentation
          space-after-tab
          space-after-tab::space
+         space-after-tab::tab
          space-before-tab
          space-before-tab::tab
+         space-before-tab::space
          tabs
          tab-mark
          ;; spaces
@@ -172,7 +174,7 @@
 (custom-set-faces!
  ;; `(whitespace-tab :background ,(doom-color 'blue))
  `(whitespace-indentation :background ,(doom-color 'base4))
- `(whitespace-space-after-tab :background ,(doom-color 'base4))
+ ;; `(whitespace-space-after-tab :background ,(doom-color 'base4))
  ;; `(whitespace-line :foreground ,(doom-color 'red))
  ;; `(trailing-white :background ,(doom-color 'base4))
  )
