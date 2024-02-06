@@ -152,15 +152,15 @@
 
 ;; (global-whitespace-mode)
 
-(after! doom-ui
-  (setq! whitespace-style
-         (append whitespace-style
-                 '(space-after-tab
-                   space-after-tab::space
-                   space-after-tab::tab
-                   space-before-tab
-                   space-before-tab::tab
-                   space-before-tab::space))))
+;; (after! doom-ui
+;;   (setq whitespace-style
+;;         (append whitespace-style
+;;                 '(space-after-tab
+;;                   space-after-tab::space
+;;                   space-after-tab::tab
+;;                   space-before-tab
+;;                   space-before-tab::tab
+;;                   space-before-tab::space))))
 
   ;; (setq! whitespace-style
   ;;        '(face
