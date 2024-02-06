@@ -322,8 +322,8 @@ Invalid indentation style is a common issue at my work.
 (global-whitespace-mode)
 
 (custom-set-faces!
- `(whitespace-tab :background ,(doom-color 'blue))
- `(whitespace-indentation :background ,(doom-color 'blue))
+ ;; `(whitespace-tab :background ,(doom-color 'blue))
+ `(whitespace-indentation :background ,(doom-color 'base4))
  ;; '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
  ;; `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
  )
