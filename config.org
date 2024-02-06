@@ -325,10 +325,8 @@ Invalid indentation style is a common issue at my work.
        '(face
          indentation
          space-after-tab
-         indentation::tab
-         indentation::space
-         tabs
-         tab-mark
+         ;; tabs
+         ;; tab-mark
          spaces
          space-mark
          newline
