@@ -338,7 +338,7 @@ Since Emacs 29, pixel-scroll is built-in
 #+begin_src elisp
 (pixel-scroll-precision-mode)
 #+end_src
-** tab width
+** tab-width
 
 #+begin_src elisp
 (setq! tab-width 8)
