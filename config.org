@@ -3285,7 +3285,7 @@ Reset the default popup-rules defined by doom's module
                           (window-frame (display-buffer "*notmuch-hello*")))))
       (notmuch-hello no-display)))
 
-  (run-with-idle-timer 30 t #'stfl/notmuch-hello-update-background))
+  (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
 *** mailscripts.el
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
