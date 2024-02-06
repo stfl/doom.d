@@ -159,6 +159,8 @@
 
 (pixel-scroll-precision-mode)
 
+(setq! tab-width 8)
+
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
