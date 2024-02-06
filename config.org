@@ -3233,7 +3233,7 @@ Use the (almost) default keybindings in evil normal-mode
       :n "K" #'stfl/notmuch-search-kill-thread
       :map notmuch-message-mode-map
       :leader
-      :n "f s" #'
+      :n "f s" #'notmuch-draft-save
       )
 #+end_src
 
