@@ -322,7 +322,7 @@ Invalid indentation style is a common issue at my work.
 ;; (global-whitespace-mode)
 
 (after! doom-ui
-  (setq! whitespace-style
+  (setq whitespace-style
          (append whitespace-style
                  '(space-after-tab
                    space-after-tab::space
