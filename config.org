@@ -335,7 +335,7 @@ Invalid indentation style is a common issue at my work.
          ;; newline
          ;; newline-mark
          trailing
-         lines-tail
+         ;; lines-tail
          ))
 #+end_src
 
