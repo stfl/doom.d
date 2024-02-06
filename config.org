@@ -319,6 +319,15 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 Invalid indentation style is a common issue at my work.
 
 #+begin_src elisp
+(global-whitespace-mode)
+
+(custom-set-faces!
+ `(whitespace-tab :background ,(doom-color 'blue))
+ `(whitespace-indentation :background ,(doom-color 'blue))
+ ;; '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ ;; `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ )
+
 #+end_src
 
 ** Scrolling
