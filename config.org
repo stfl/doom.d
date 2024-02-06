@@ -326,8 +326,10 @@ Invalid indentation style is a common issue at my work.
          indentation
          space-after-tab
          space-after-tab::space
+         space-after-tab::tab
          space-before-tab
          space-before-tab::tab
+         space-before-tab::space
          tabs
          tab-mark
          ;; spaces
