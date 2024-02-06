@@ -339,7 +339,7 @@ Invalid indentation style is a common issue at my work.
          ))
 #+end_src
 
-Visually highlty if an indentation issue was discovered which emacs already does for us
+Visually highlight if an indentation issue was discovered which emacs already does for us
 
 #+begin_src elisp
 (custom-set-faces!
