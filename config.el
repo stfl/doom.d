@@ -2133,6 +2133,9 @@ Not added when either:
       :map notmuch-search-mode-map
       :n "A" #'stfl/notmuch-search-unwatch-thread
       :n "K" #'stfl/notmuch-search-kill-thread
+      :map notmuch-message-mode-map
+      :leader
+      :n "f s" #'notmuch-draft-save
       )
 
 ;; #848d94
@@ -2163,6 +2166,15 @@ Not added when either:
   (set-popup-rules!
     ;; '(("^\\*notmuch-hello" :ignore t))
     '(("^\\*subject:" :ignore t))))
+
+(after! notmuch
+  (defun stfl/notmuch-hello-update-background ()
+    "Update notmuch-hello buffer. If we are in another frame, allow switch to it so it will be formatted correctly."
+    (let ((no-display (eq (selected-frame)
+                          (window-frame (display-buffer "*notmuch-hello*")))))
+      (notmuch-hello no-display)))
+
+  (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 
 ;; (set-email-account! "gmail"
 ;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
