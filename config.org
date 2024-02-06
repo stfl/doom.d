@@ -3232,8 +3232,7 @@ Use the (almost) default keybindings in evil normal-mode
       :n "A" #'stfl/notmuch-search-unwatch-thread
       :n "K" #'stfl/notmuch-search-kill-thread
       :map notmuch-message-mode-map
-      :leader
-      :n "f s" #'notmuch-draft-save
+      :n "SPC f s" #'notmuch-draft-save
       )
 #+end_src
 
