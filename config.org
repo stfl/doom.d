@@ -344,7 +344,7 @@ Visually highlight if an indentation issue was discovered which emacs already do
 #+begin_src elisp
 (custom-set-faces!
  ;; `(whitespace-tab :background ,(doom-color 'blue))
- `(whitespace-indentation :priority -100 :background ,(doom-color 'base4))
+ `(whitespace-indentation :background ,(doom-color 'base4))
  `(whitespace-space-after-tab :background ,(doom-color 'base4))
  ;; `(whitespace-line :foreground ,(doom-color 'red))
  ;; `(trailing-white :background ,(doom-color 'base4))
