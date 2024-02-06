@@ -2133,9 +2133,8 @@ Not added when either:
       :map notmuch-search-mode-map
       :n "A" #'stfl/notmuch-search-unwatch-thread
       :n "K" #'stfl/notmuch-search-kill-thread
-      :map notmuch-message-mode-map
-      :leader
-      :n "f s" #'notmuch-draft-save
+      ;; :map notmuch-message-mode-map
+      ;; :n "SPC f s" #'notmuch-draft-save
       )
 
 ;; #848d94
