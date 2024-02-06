@@ -334,8 +334,8 @@ Invalid indentation style is a common issue at my work.
          newline
          newline-mark
          trailing
-         lines-tail)
-       )
+         lines-tail
+         ))
 #+end_src
 
 Visually highlty if an indentation issue was discovered which emacs already does for us
