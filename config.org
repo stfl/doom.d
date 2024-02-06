@@ -327,8 +327,8 @@ Invalid indentation style is a common issue at my work.
          space-after-tab
          ;; tabs
          ;; tab-mark
-         spaces
-         space-mark
+         ;; spaces
+         ;; space-mark
          newline
          newline-mark
          trailing
