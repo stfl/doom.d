@@ -150,6 +150,13 @@
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 
+(global-whitespace-mode)
+
+(custom-set-faces!
+ ;; `(whitespace-tab :background ,(doom-color 'blue))
+ `(whitespace-indentation :background ,(doom-color 'base4))
+ )
+
 (pixel-scroll-precision-mode)
 
 (after! evil-snipe
