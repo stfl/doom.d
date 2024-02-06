@@ -325,6 +325,8 @@ Invalid indentation style is a common issue at my work.
        '(face
          indentation
          space-after-tab
+         space-before-tab
+         space-before-tab::tab
          tabs
          tab-mark
          ;; spaces
