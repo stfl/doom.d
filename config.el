@@ -150,11 +150,31 @@
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 
-(global-whitespace-mode)
+;; (global-whitespace-mode)
+
+(setq! whitespace-style
+       '(face
+         indentation
+         space-after-tab
+         space-after-tab::space
+         space-before-tab
+         space-before-tab::tab
+         tabs
+         tab-mark
+         ;; spaces
+         ;; space-mark
+         ;; newline
+         ;; newline-mark
+         trailing
+         ;; lines-tail
+         ))
 
 (custom-set-faces!
  ;; `(whitespace-tab :background ,(doom-color 'blue))
  `(whitespace-indentation :background ,(doom-color 'base4))
+ `(whitespace-space-after-tab :background ,(doom-color 'base4))
+ ;; `(whitespace-line :foreground ,(doom-color 'red))
+ ;; `(trailing-white :background ,(doom-color 'base4))
  )
 
 (pixel-scroll-precision-mode)
