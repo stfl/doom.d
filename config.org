@@ -2963,7 +2963,14 @@ small exercises. The exercises can can be solved locally.
 #+begin_src emacs-lisp
 (setq-hook! 'rjsx-mode-hook
   indent-tabs-mode t)
+
+(setq-hook! 'js-mode-hook
+  indent-tabs-mode t)
+
+(setq-hook! 'js1-mode-hook
+  indent-tabs-mode t)
 #+end_src
+
 
 #+begin_src emacs-lisp
 (after! js
