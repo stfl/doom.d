@@ -3224,7 +3224,7 @@ activate magit-todo to display the TODOs section in magit buffer
           (:key ">" :name "󰗕 sent"    :query "tag:sent and not tag:archive")
           (:key "M" :name " my PRs" :query "tag:my-pr and not tag:killed and not tag:deleted")
           (:key "W" :name " watch" :query "tag:watch and not tag:killed and not tag:deleted")
-          (:key "s" :name " support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "s" :name " support" :query "tag:support and not tag:archive and not tag:killed")
           (:key "S" :name " support" :query "tag:support and not tag:archive and not tag:killed")
           (:key "P" :name " pkgs"    :query "tag:lists/pkgs and not tag:archive"))
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
