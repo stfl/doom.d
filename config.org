@@ -391,7 +391,9 @@ limit evil-snipe to the bufffer
 (map! :leader "f ." #'find-file-at-point)
 #+end_src
 
-Always indent the line when pressing tab regardles of the cursor position
+Always indent the line when pressing tab regardles of the cursor position.
+if the line is already correctly indented, try to complete.
+
 #+begin_src elisp
 (setq! tab-always-indent 'complete)
 #+end_src
