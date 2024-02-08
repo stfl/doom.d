@@ -2961,7 +2961,8 @@ small exercises. The exercises can can be solved locally.
 *** Proxmox specific code indentation style
 
 #+begin_src emacs-lisp
-(setq-hook! 'rjsx-mode-hook indent-tabs-mode t)
+(setq-hook! 'rjsx-mode-hook
+  indent-tabs-mode t)
 #+end_src
 
 #+begin_src emacs-lisp
