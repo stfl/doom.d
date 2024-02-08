@@ -391,6 +391,11 @@ limit evil-snipe to the bufffer
 (map! :leader "f ." #'find-file-at-point)
 #+end_src
 
+Always indent the line when pressing tab regardles of the cursor position
+#+begin_src elisp
+(setq! tab-always-indent t)
+#+end_src
+
 * Org mode settings
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
