@@ -2964,13 +2964,13 @@ small exercises. The exercises can can be solved locally.
 (setq-hook! 'rjsx-mode-hook
   tab-width 8
   indent-tabs-mode t
-  js-indent-level 4
-  js-jsx-indent-level 4)
+  )
 #+end_src
 
 #+begin_src emacs-lisp
 (after! js
-  (setq )
+  (setq js-indent-level 4
+        js-jsx-indent-level 4)
 #+end_src
 
 *** Jest Testing Framework
