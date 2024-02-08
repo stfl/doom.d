@@ -392,7 +392,7 @@ limit evil-snipe to the bufffer
 #+end_src
 
 Always indent the line when pressing tab regardles of the cursor position.
-if the line is already correctly indented, try to complete.
+If the line is already correctly indented, try to complete.
 
 #+begin_src elisp
 (setq! tab-always-indent 'complete)
