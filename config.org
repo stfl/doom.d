@@ -393,7 +393,7 @@ limit evil-snipe to the bufffer
 
 Always indent the line when pressing tab regardles of the cursor position
 #+begin_src elisp
-(setq! tab-always-indent t)
+(setq! tab-always-indent 'complete)
 #+end_src
 
 * Org mode settings
