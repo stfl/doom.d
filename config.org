@@ -2967,7 +2967,7 @@ small exercises. The exercises can can be solved locally.
 (setq-hook! 'js-mode-hook
   indent-tabs-mode t)
 
-(setq-hook! 'js1-mode-hook
+(setq-hook! 'js2-mode-hook
   indent-tabs-mode t)
 #+end_src
 
