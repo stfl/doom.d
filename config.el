@@ -199,6 +199,8 @@
 
 (map! :leader "f ." #'find-file-at-point)
 
+(setq! tab-always-indent 'complete)
+
 (after! org
   (custom-set-faces!
     `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
@@ -2003,7 +2005,12 @@ Not added when either:
   :custom (exercism-web-browser-function 'browse-url))
 
 (setq-hook! 'rjsx-mode-hook
-  tab-width 8
+  indent-tabs-mode t)
+
+(setq-hook! 'js-mode-hook
+  indent-tabs-mode t)
+
+(setq-hook! 'js2-mode-hook
   indent-tabs-mode t)
 
 (after! js
@@ -2114,16 +2121,19 @@ Not added when either:
         notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
         notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
         notmuch-saved-searches
-        '((:key "i" :name "inbox"   :query "tag:inbox and not tag:archive")
-          (:key "d" :name "drafts"  :query "tag:draft")
-          (:key "f" :name "flagged" :query "tag:flagged and not tag:archive")
-          (:key "w" :name "watch"   :query "tag:watch and not tag:archive and not tag:killed and not tag:deleted")
-          (:key "s" :name "support" :query "tag:support and not tag:archive and not tag:killed")
-          (:key "r" :name "review"  :query "tag:review and not tag:archive and not tag:killed")
-          (:key ">" :name "sent"    :query "tag:sent and not tag:archive")
-          (:key "m" :name "my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
-          (:key "M" :name "my PRs (open)"  :query "tag:my-pr and not tag:killed and not tag:deleted")
-          (:key "W" :name "watch (open)" :query "tag:watch and not tag:killed and not tag:deleted"))
+        '((:key "i" :name "󰇮 inbox"   :query "tag:inbox and not tag:archive")
+          (:key "f" :name " flagged" :query "tag:flagged")
+          (:key "m" :name "󰇮 my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "w" :name "󰇮 watch"   :query "tag:watch and not tag:my-pr and not tag:archive and not tag:killed and not tag:deleted")
+          (:key "t" :name "󰇮 team"    :query "tag:lists/team and not tag:archive")
+          (:key "s" :name " support (new)" :query "tag:support-new and not tag:archive and not tag:killed")
+          (:key "r" :name " review"  :query "tag:review and not tag:archive and not tag:killed")
+          (:key "d" :name " drafts"  :query "tag:draft")
+          (:key ">" :name "󰗕 sent"    :query "tag:sent and not tag:archive")
+          (:key "M" :name " my PRs" :query "tag:my-pr and not tag:killed and not tag:deleted")
+          (:key "W" :name " watch" :query "tag:watch and not tag:killed and not tag:deleted")
+          (:key "S" :name " support" :query "tag:support and not tag:archive and not tag:killed")
+          (:key "P" :name " pkgs"    :query "tag:lists/pkgs and not tag:archive"))
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
         +notmuch-spam-tags '("+spam" "-inbox" "-unread")
         +notmuch-delete-tags '("+trash" "-inbox" "-unread")
@@ -2342,6 +2352,7 @@ Not added when either:
 
 (use-package! gptel
   :after auth-source
+  :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
          gptel-api-key (get-password :host "OpenAI-gptel"))
