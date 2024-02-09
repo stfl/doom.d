@@ -3569,8 +3569,9 @@ forcing text comparison even if diff thinks files are binary
 (use-package! gptel
   :after auth-source
   :commands gptel
-  :config (setq! gptel-default-mode 'org-mode
-                 gptel-api-key (get-password :host "OpenAI-gptel"))
+  :config
+  (setq! gptel-default-mode 'org-mode
+         gptel-api-key (get-password :host "OpenAI-gptel"))
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
 #+end_src
