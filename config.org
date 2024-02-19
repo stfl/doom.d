@@ -2507,8 +2507,8 @@ https://github.com/doomemacs/doomemacs/issues/7058
 #+BEGIN_SRC elisp
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
-  (setq projectile-files-cache-expire 30)
-  )
+;  (setq projectile-files-cache-expire 30)
+)
 #+END_SRC
 
 ** ansi colors in plaintext files
@@ -3232,13 +3232,14 @@ activate magit-todo to display the TODOs section in magit buffer
           (:key "m" :name "󰇮 my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted and not tag:inbox")
           (:key "w" :name "󰇮 watch"   :query "tag:watch and not tag:my-pr and not tag:archive and not tag:killed and not tag:deleted and not tag:inbox")
           (:key "t" :name "󰇮 team"    :query "tag:lists/team and not tag:archive and not tag:inbox")
+          (:key "b" :name " My Bugs" :query "tag:bugs and tag:to-me and not tag:archive and not tag:inbox")
           (:key "s" :name " support (new)" :query "tag:support-new and not tag:archive and not tag:killed")
           (:key "r" :name " review"  :query "tag:review and not tag:archive and not tag:killed and not tag:inbox")
-          (:key "b" :name "🦖 Bugzilla" :query "tag:bugs and not tag:archive and not tag:inbox")
           (:key "d" :name " drafts"  :query "tag:draft and not tag:archive and not tag:deleted")
           ;; (:key ">" :name "󰗕 sent"    :query "tag:sent and not tag:archive")
           (:key "M" :name " my PRs" :query "tag:my-pr and not tag:killed and not tag:deleted and not tag:inbox")
           (:key "W" :name " watch" :query "tag:watch and not tag:killed and not tag:deleted and not tag:inbox")
+          (:key "B" :name " Bugzilla" :query "tag:bugs and not tag:archive and not tag:inbox")
           (:key "S" :name " support" :query "tag:support and not tag:archive and not tag:killed and not tag:inbox")
           (:key "P" :name " pkgs"    :query "tag:lists/pkgs and not tag:archive and not tag:inbox"))
         notmuch-archive-tags '("+archive" "-inbox" "-unread")
