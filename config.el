@@ -2044,7 +2044,10 @@ Not added when either:
 
 (use-package! logview
   :commands logview-mode
-  :config (setq truncate-lines t))
+  :config (setq truncate-lines t)
+  (map! :map logview-mode-map
+        "j" #'logview-next-entry
+        "k" #'logview-previous-entry))
 
 (use-package! adoc-mode
   :defer t
