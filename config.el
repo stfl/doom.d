@@ -444,14 +444,21 @@ relevant again (Tickler)"
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
-(setq stfl/proxmox-support-dir "~/Support/")
+(setq stfl/proxmox-support-dir "~/Support/"
+      stfl/org-gtd-inbox "inbox.org"
+      stfl/org-gtd-inbox-absolute (doom-path org-directory stfl/org-gtd-inbox)
+      stfl/org-gtd-todo "todo.org"
+      stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
+      ;; stfl/org-gtd-projects "gtd/projects/"
+      stfl/org-gtd-projects '("emacs.org" "freelance.org"
+                              "geschenke.org" "media.org" "projects.org"
+                              "proxmox.org" "pulswerk.org" "versicherung.org"))
 
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
-        org-agenda-files `(,(doom-path org-directory "gtd/inbox.org")
-                           ,(doom-path org-directory "gtd/todo.org")
-                           ,(doom-path org-directory "gtd/projects/")
-                           ,(doom-path org-directory "gcal/")
+        org-agenda-files `(,stfl/org-gtd-inbox
+                           ,stfl/org-gtd-todo
+                           ,@stfl/org-gtd-projects
                            ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
 
 (after! org
@@ -1199,34 +1206,34 @@ org-default-priority is treated as lower than the same set value"
   (setq org-capture-templates
         `(("n" "capture to inbox"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
           ("v" "Versicherung"
            entry
-           (file+headline ,(doom-path org-directory "gtd/projects/versicherung.org") "Einreichungen")
+           (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
           ("P" "Protocol"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline ,(doom-path org-directory "gtd/inbox.org") "Inbox")
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("x" "Proxmox")
@@ -1238,7 +1245,7 @@ org-default-priority is treated as lower than the same set value"
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
-           (file+headline ,(doom-path org-directory "gtd/todo.org") "Haushalt")
+           (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
            (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
   )
@@ -1290,11 +1297,7 @@ org-default-priority is treated as lower than the same set value"
 %%?" date title date directory)))
 )
 
-(after! org
-  (setq
-   ;; org-image-actual-width 400
-   org-archive-location (doom-path org-directory "gtd/archive/%s::datetree") ;; FIXME
-   ))
+(after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
 
 (use-package! org-habit
   :after org-agenda
@@ -2041,7 +2044,10 @@ Not added when either:
 
 (use-package! logview
   :commands logview-mode
-  :config (setq truncate-lines t))
+  :config (setq truncate-lines t)
+  (map! :map logview-mode-map
+        "j" #'logview-next-entry
+        "k" #'logview-previous-entry))
 
 (use-package! adoc-mode
   :defer t
