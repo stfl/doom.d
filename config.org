@@ -3550,6 +3550,7 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
 
 #+begin_src elisp
 (use-package! diffview
+  :command diffview
   :config
   (map!
    :after notmuch
