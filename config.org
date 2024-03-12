@@ -375,6 +375,19 @@ Since Emacs 29, pixel-scroll is built-in
 #+begin_src elisp
 (setq! tab-width 8)
 #+end_src
+** Resizing window with the mouse
+
+Resizing a window vertically with the mouse in emacs requires you to hit the 1px
+thick line between windows.
+This is less of a problem horizontally, because you can drag the modeline.
+
+To make this easier use, ~Meta + left mouse drag~ to activate the resizing.
+This only works if there is a window to the right. Window is resized, after
+passing the border with the mouse.
+
+#+begin_src elisp
+(global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
+#+end_src
 
 * Motions
 :PROPERTIES:
