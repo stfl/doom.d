@@ -401,8 +401,6 @@ START-EVENT is the starting mouse event of the drag action."
   (mouse-drag-line start-event 'left))
 
 (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
-;; (global-set-key [left-fringe drag-mouse-1]
-;;                 (λ! (mouse-drag-line 'left)))
 #+end_src
 
 * Motions
