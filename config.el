@@ -195,10 +195,13 @@
 
 (global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
 
-;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-line)
+;; (defun mouse-drag-left-line (start-event)
+;;   "Change the width of a window by dragging on a vertical line.
+;; START-EVENT is the starting mouse event of the drag action."
+;;   (interactive "e")
+;;   (mouse-drag-line start-event 'left))
 
-;; (global-set-key [left-fringe drag-mouse-1]
-;;                 (λ! (mouse-drag-line 'left)))
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
