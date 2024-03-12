@@ -2342,7 +2342,7 @@ Not added when either:
         ediff-split-window-function 'split-window-horizontally))
 
 (use-package! diffview
-  :command diffview-current
+  :commands diffview-current
   :config
   (map!
    :after notmuch

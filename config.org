@@ -3557,9 +3557,6 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
    :localleader "d" #'diffview-current))
 #+end_src
 
-#+begin_src elisp
-#+end_src
-
 
 ** Edit with Emacs (in the Browser)
 
