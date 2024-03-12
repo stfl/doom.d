@@ -392,7 +392,9 @@ passing the border with the mouse.
 It would be nice to do that on the left fringe!
 But this would active again resizing to the right...
 
+#+begin_src elisp
 (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-vertical-line)
+#+end_src
 
 * Motions
 :PROPERTIES:
