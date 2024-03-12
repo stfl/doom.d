@@ -2348,8 +2348,6 @@ Not added when either:
    :after notmuch
    :localleader "d" #'diffview-current))
 
-
-
 (use-package! edit-server
   :defer t
   :commands edit-server-start
