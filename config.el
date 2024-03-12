@@ -193,6 +193,8 @@
 
 (setq! tab-width 8)
 
+(global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
+
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
