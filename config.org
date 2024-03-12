@@ -393,6 +393,8 @@ It would be nice to do that on the left fringe!
 But this would active again resizing to the right...
 
 #+begin_src elisp
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-line)
+
 ;; (global-set-key [left-fringe drag-mouse-1]
 ;;                 (λ! (mouse-drag-line 'left)))
 #+end_src
