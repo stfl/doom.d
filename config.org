@@ -389,6 +389,11 @@ passing the border with the mouse.
 (global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
 #+end_src
 
+It would be nice to do that on the left fringe!
+But this would active again resizing to the right...
+
+(global-set-key [left-fringe drag-mouse-1] #'mouse-drag-vertical-line)
+
 * Motions
 :PROPERTIES:
 :ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
