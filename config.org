@@ -394,7 +394,7 @@ But this would active again resizing to the right...
 
 #+begin_src elisp
 (global-set-key [left-fringe drag-mouse-1]
-                (λ! (mouse-drag-line 'left)))
+                (λ! (mouse-drag-line 'vertical)))
 #+end_src
 
 * Motions
