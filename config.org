@@ -393,14 +393,13 @@ It would be nice to do that on the left fringe!
 But this would active again resizing to the right...
 
 #+begin_src elisp
+;; (defun mouse-drag-left-line (start-event)
+;;   "Change the width of a window by dragging on a vertical line.
+;; START-EVENT is the starting mouse event of the drag action."
+;;   (interactive "e")
+;;   (mouse-drag-line start-event 'left))
 
-(defun mouse-drag-left-line (start-event)
-  "Change the width of a window by dragging on a vertical line.
-START-EVENT is the starting mouse event of the drag action."
-  (interactive "e")
-  (mouse-drag-line start-event 'left))
-
-(global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 #+end_src
 
 * Motions
