@@ -195,6 +195,11 @@
 
 (global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
 
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-line)
+
+;; (global-set-key [left-fringe drag-mouse-1]
+;;                 (λ! (mouse-drag-line 'left)))
+
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
