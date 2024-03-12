@@ -2341,6 +2341,14 @@ Not added when either:
         ;; ediff-window-setup-function 'ediff-setup-windows-plain
         ediff-split-window-function 'split-window-horizontally))
 
+(use-package! diffview
+  :config
+  (map!
+   :after notmuch
+   :localleader "d" #'diffview-current))
+
+
+
 (use-package! edit-server
   :defer t
   :commands edit-server-start

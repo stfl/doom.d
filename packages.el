@@ -68,6 +68,8 @@
 ;; (package! mailscripts.el
 ;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
 
+(package! diffview)
+
 (package! edit-server)
 
 (package! gptel)
