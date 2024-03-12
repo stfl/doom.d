@@ -3540,6 +3540,26 @@ forcing text comparison even if diff thinks files are binary
         ediff-split-window-function 'split-window-horizontally))
 
 #+end_src
+** diffview
+
+Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format. This comes in handy for reading patches from mailing lists (or from whencever you might acquire them).
+
+#+begin_src elisp :tangle packages.el
+(package! diffview)
+#+end_src
+
+#+begin_src elisp
+(use-package! diffview
+
+
+)
+#+end_src
+
+#+begin_src elisp
+(after! notmuch
+)
+#+end_src
+
 
 ** Edit with Emacs (in the Browser)
 
