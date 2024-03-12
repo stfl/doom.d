@@ -3557,7 +3557,6 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
    :localleader "d" #'diffview-current))
 #+end_src
 
-
 ** Edit with Emacs (in the Browser)
 
 #+begin_src elisp :tangle packages.el
@@ -3584,6 +3583,9 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
 
 #+end_src
 ** AI Chat gptel
+:PROPERTIES:
+:ID:       6eda0ca2-71b7-43f9-bb3e-d0ad993d37b0
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! gptel)
