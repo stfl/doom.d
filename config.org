@@ -3553,8 +3553,8 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
   :config
   (map!
    :after notmuch
+   :localleader "d" #'diffview-current
    ))
-
 #+end_src
 
 #+begin_src elisp
