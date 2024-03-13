@@ -2382,4 +2382,5 @@ Not added when either:
   (setq! gptel-default-mode 'org-mode
          gptel-api-key (get-password :host "OpenAI-gptel"))
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-hook 'gptel-end-of-response))
+  (add-hook 'gptel-post-response-hook 'gptel-end-of-response)
+  (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
