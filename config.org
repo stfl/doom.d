@@ -386,7 +386,7 @@ This only works if there is a window to the right. Window is resized, after
 passing the border with the mouse.
 
 #+begin_src elisp
-(global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
+(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
 #+end_src
 
 It would be nice to do that on the left fringe!
