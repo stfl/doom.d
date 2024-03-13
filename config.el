@@ -1975,6 +1975,9 @@ Not added when either:
 (after! (nix-mode lsp-mode)
   (setq! lsp-nix-nil-formatter ["alejandra" "--quiet"]))
 
+(after! nix-mode
+  (setq! nix-nixfmt-bin "alejandra-the-quiet"))
+
 ;; (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 
 (after! nix-mode (set-formatter! 'alejandra '("alejandra --quiet") :modes '(nix-mode)))
