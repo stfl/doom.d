@@ -1972,7 +1972,10 @@ Not added when either:
                                      :target nil
                                      :cwd nil)))
 
-(setq-hook! 'nix-mode-hook +format-with-lsp nil)
+(after! (nix-mode lsp-mode)
+  (setq! (lsp-nix-nil-formatter ["alejandra" "--quiet"])))
+
+;; (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 
 (after! nix-mode (set-formatter! 'alejandra '("alejandra --quiet") :modes '(nix-mode)))
 
