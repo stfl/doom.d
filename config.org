@@ -2871,6 +2871,11 @@ configre dap-mode for rust
 this does not work...
 
 #+begin_src elisp
+(after! (nix-mode lsp-mode)
+  (setq! (lsp-nix-nil-formatter ["alejandra" "--quiet"])))
+#+end_src
+
+#+begin_src elisp
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 #+end_src
 
