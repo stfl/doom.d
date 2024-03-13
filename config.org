@@ -2866,6 +2866,10 @@ configre dap-mode for rust
                                      :cwd nil)))
 #+end_src
 
+** Nix
+#+begin_src elisp
+(set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
+#+end_src
 ** MQL
 :PROPERTIES:
 :ID:       c3da477e-b64b-4a50-af87-5fdec1fd62ab
@@ -3149,7 +3153,6 @@ manually add adoc-mode to the list.. I don't like that...
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 #+end_src
-
 * Collaboration and VCS
 ** Directory tree diff - ztree
 :PROPERTIES:
