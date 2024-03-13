@@ -1972,6 +1972,9 @@ Not added when either:
                                      :target nil
                                      :cwd nil)))
 
+;; (after! (nix lsp-mode)
+;;   (setq! lsp-nix-nil-formatter [alejandra --quiet]))
+
 (set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
