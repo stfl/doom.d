@@ -2868,7 +2868,7 @@ configre dap-mode for rust
 
 ** Nix
 
-set alejandra as the lsp formatter for nil
+set alejandra as the formatter for nil (lsp)
 
 #+begin_src elisp
 (after! (nix-mode lsp-mode)
