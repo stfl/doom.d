@@ -2867,9 +2867,11 @@ configre dap-mode for rust
 #+end_src
 
 ** Nix
+
 #+begin_src elisp
 (set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
 #+end_src
+
 ** MQL
 :PROPERTIES:
 :ID:       c3da477e-b64b-4a50-af87-5fdec1fd62ab
