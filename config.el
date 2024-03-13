@@ -2380,7 +2380,9 @@ Not added when either:
   :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
-         gptel-api-key (get-password :host "OpenAI-gptel"))
+;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
+         gptel-api-key (get-password :host "OpenAI-gptel")
+         gptel-model "gpt-4")
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-hook 'gptel-end-of-response)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
   (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
