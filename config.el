@@ -1972,7 +1972,7 @@ Not added when either:
                                      :target nil
                                      :cwd nil)))
 
-;; (set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
+(set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
