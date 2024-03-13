@@ -2873,7 +2873,6 @@ this does not work...
 #+begin_src elisp
 ;; (after! (nix lsp-mode)
 ;;   (setq! lsp-nix-nil-formatter [alejandra --quiet]))
-
 #+end_src
 
 #+begin_src elisp
