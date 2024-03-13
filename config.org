@@ -2876,6 +2876,11 @@ this does not work...
 #+end_src
 
 #+begin_src elisp
+(after! nix-mode
+  (setq! nix-nixfmt-bin "el"))
+#+end_src
+
+#+begin_src elisp
 ;; (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 #+end_src
 
