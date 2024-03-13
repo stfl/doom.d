@@ -2876,7 +2876,7 @@ set alejandra as the formatter for nil (lsp)
 #+end_src
 
 #+begin_src elisp
-(setq-hook! 'nix-mode-hook +format-with-lsp nil)
+;; (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 #+end_src
 
 #+begin_src elisp
