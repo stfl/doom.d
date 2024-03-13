@@ -2875,6 +2875,8 @@ set alejandra as the formatter for nil (lsp)
   (setq! lsp-nix-nil-formatter ["alejandra" "--quiet"]))
 #+end_src
 
+disable formatting with lsp
+
 #+begin_src elisp
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 #+end_src
