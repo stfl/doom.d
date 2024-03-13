@@ -1978,7 +1978,7 @@ Not added when either:
 ;; (after! (nix-mode lsp-mode)
 ;;   (setq! lsp-nix-nil-formatter ["alejandra" "--quiet"]))
 
-;; (setq-hook! 'nix-mode-hook +format-with-lsp nil)
+(setq-hook! 'nix-mode-hook +format-with-lsp nil)
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
