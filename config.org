@@ -3297,9 +3297,6 @@ activate magit-todo to display the TODOs section in magit buffer
     "mbsync -a && notmuch new && afew -n -t"))
 #+end_src
 
-#+RESULTS:
-: +notmuch-get-sync-command
-
 Additional functions to apply tags according to my workflow
 
 #+begin_src elisp
