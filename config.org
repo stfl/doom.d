@@ -2877,7 +2877,7 @@ this does not work...
 
 #+begin_src elisp
 (after! nix-mode
-  (setq! nix-nixfmt-bin "el"))
+  (setq! nix-nixfmt-bin "alejandra-the-quiet"))
 #+end_src
 
 #+begin_src elisp
