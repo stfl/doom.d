@@ -193,7 +193,7 @@
 
 (setq! tab-width 8)
 
-(global-set-key [M-drag-mouse-1] #'mouse-drag-vertical-line)
+(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
 
 ;; (defun mouse-drag-left-line (start-event)
 ;;   "Change the width of a window by dragging on a vertical line.
@@ -1971,6 +1971,8 @@ Not added when either:
                                      :gdbpath "rust-gdb"
                                      :target nil
                                      :cwd nil)))
+
+;; (set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
