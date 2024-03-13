@@ -2875,7 +2875,7 @@ this does not work...
 #+end_src
 
 #+begin_src elisp
-(after! nix (set-formatter! 'alejandra '("alejandra --quiet") :modes '(nix-mode)))
+(after! nix-mode (set-formatter! 'alejandra '("alejandra --quiet") :modes '(nix-mode)))
 #+end_src
 
 ** MQL
