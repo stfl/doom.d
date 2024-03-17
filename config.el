@@ -2392,7 +2392,7 @@ Not added when either:
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model "gpt-4-0125-preview"
          gptel-log-level 'info
-         gptel-use-curl nil
+         gptel-use-curl t
          gptel-stream t)
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
