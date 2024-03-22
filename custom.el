@@ -51,3 +51,4 @@
  '(notmuch-search-subject ((t (:foreground "#b1b8c4"))))
  '(org-ql-view-due-date ((t (:foreground "dark goldenrod"))))
  '(ts-fold-replacement-face ((t (:foreground nil :box nil :inherit font-lock-comment-face :weight light)))))
+(put 'secrets-mode 'disabled nil)
