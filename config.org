@@ -1857,8 +1857,8 @@ After much feedback and discussing with other users, I decided to simplify the k
 ;; (custom-set-faces '(+org-todo-cancel ((t (:inherit (bold org-todo error)))) ""))
 (custom-set-faces! `(+org-todo-cancel
                      ;; :foreground ,(doom-blend (doom-color 'red) (doom-color 'comments) 0.0)
-                     :foreground (doom-color 'comments)
-                     :inherit (bold org-todo)))
+                     ;; :foreground (doom-color 'comments)
+                     :inherit (bold org-headline-done)))
 ;; (custom-set-faces! '( :inherit error))
 #+end_src
 
