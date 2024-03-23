@@ -1858,7 +1858,8 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-set-faces! `(+org-todo-cancel
                      ;; :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.0)
                      :foreground (doom-color 'base5)
-                     :inherit (bold org-todo)))
+                     ;; :inherit (bold org-todo))
+  )
 ;; (custom-set-faces! '( :inherit error))
 #+end_src
 
