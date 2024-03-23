@@ -1856,7 +1856,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 
 (custom-set-faces! `(+org-todo-cancel
                      :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.4)
-                     :bold t))
+                     :inherit (bold org-done)))
 #+end_src
 
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
