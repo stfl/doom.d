@@ -1855,7 +1855,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 ;; (custom-set-faces '(+org-todo-cancel ((t (:inherit (bold org-todo error)))) ""))
-(custom-set-faces! '(+org-todo-cancel :inherit (bold org-todo error)))
+(custom-set-faces! '(+org-todo-cancel :inherit (bold error org-todo)))
 ;; (custom-set-faces! '( :inherit error))
 #+end_src
 
