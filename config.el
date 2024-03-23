@@ -1363,6 +1363,10 @@ org-default-priority is treated as lower than the same set value"
 (custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
+(custom-set-faces! `(+org-todo-cancel
+                     :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35)
+                     :inherit (bold org-done)))
+
 (after! org
   (setq org-todo-keywords
         '((sequence
