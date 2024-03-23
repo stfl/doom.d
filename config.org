@@ -1855,7 +1855,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (custom-set-faces!
-  `(+org-todo-cancel  :foreground ,(doom-color 'blue) :box t))
+  '(+org-todo-cancel :inherit (bold org-todo warning)))
 #+end_src
 
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
