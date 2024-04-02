@@ -1009,6 +1009,47 @@ relevant again (Tickler)"
                ))
   )
 
+(defun stfl/build-my-someday-files ()
+  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
+
+(after! org
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 4)
+                             (stfl/build-my-someday-files :maxlevel . 4))
+        org-refile-use-outline-path 'buffer-name
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm))
+
+(defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
+
+(defun stfl/refile-to-roam ()
+  (interactive)
+  (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
+    (call-interactively 'org-refile)))
+
+(defun org-roam-create-note-from-headline ()
+  "Create an Org-roam note from the current headline and jump to it.
+
+Normally, insert the headline’s title using the ’#title:’ file-level property
+and delete the Org-mode headline. However, if the current headline has a
+Org-mode properties drawer already, keep the headline and don’t insert
+‘#+title:'. Org-roam can extract the title from both kinds of notes, but using
+‘#+title:’ is a bit cleaner for a short note, which Org-roam encourages."
+  (interactive)
+  (let ((title (nth 4 (org-heading-components)))
+        (has-properties (org-get-property-block)))
+    (org-cut-subtree)
+    (org-roam-find-file title nil nil 'no-confirm)
+    (org-paste-subtree)
+    (unless has-properties
+      (kill-line)
+      (while (outline-next-heading)
+        (org-promote)))
+    (goto-char (point-min))
+    (when has-properties
+      (kill-line)
+      (kill-line))))
+
 (use-package! org-super-agenda
   :after (org-agenda evil-org-agenda)
   :config
@@ -1448,49 +1489,6 @@ org-default-priority is treated as lower than the same set value"
 
 ;; (add-hook 'org-mode-hook #'org-modern-mode)
 ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-
-(defun stfl/build-my-someday-files ()
-  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
-
-(after! org
-  (setq org-refile-targets '((nil :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 4)
-                             ;; ((doom-path org-directory "gtd/someday.org") :maxlevel . 4)  ;; TODO
-                             ("~/.org/gtd/someday.org" :maxlevel . 4)
-                             (stfl/build-my-someday-files :maxlevel . 4))
-        org-refile-use-outline-path 'buffer-name
-        org-outline-path-complete-in-steps nil
-        org-refile-allow-creating-parent-nodes 'confirm))
-
-(defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
-
-(defun stfl/refile-to-roam ()
-  (interactive)
-  (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
-    (call-interactively 'org-refile)))
-
-(defun org-roam-create-note-from-headline ()
-  "Create an Org-roam note from the current headline and jump to it.
-
-Normally, insert the headline’s title using the ’#title:’ file-level property
-and delete the Org-mode headline. However, if the current headline has a
-Org-mode properties drawer already, keep the headline and don’t insert
-‘#+title:'. Org-roam can extract the title from both kinds of notes, but using
-‘#+title:’ is a bit cleaner for a short note, which Org-roam encourages."
-  (interactive)
-  (let ((title (nth 4 (org-heading-components)))
-        (has-properties (org-get-property-block)))
-    (org-cut-subtree)
-    (org-roam-find-file title nil nil 'no-confirm)
-    (org-paste-subtree)
-    (unless has-properties
-      (kill-line)
-      (while (outline-next-heading)
-        (org-promote)))
-    (goto-char (point-min))
-    (when has-properties
-      (kill-line)
-      (kill-line))))
 
 (after! org
   (setq org-tag-alist '((:startgrouptag)
