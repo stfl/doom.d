@@ -1991,7 +1991,7 @@ refile target -> build list of someday files dynamically
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 4)
                              ;; ((doom-path org-directory "gtd/someday.org") :maxlevel . 4)  ;; TODO
-                             ("~/.org/gtd/someday.org" :maxlevel . 4)
+                             ;; ("~/.org/gtd/someday.org" :maxlevel . 4)
                              (stfl/build-my-someday-files :maxlevel . 4))
         org-refile-use-outline-path 'buffer-name
         org-outline-path-complete-in-steps nil
