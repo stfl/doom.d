@@ -3014,13 +3014,16 @@ small exercises. The exercises can can be solved locally.
 
 #+begin_src emacs-lisp
 (setq-hook! 'rjsx-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 
 (setq-hook! 'js-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 
 (setq-hook! 'js2-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 #+end_src
 
 
