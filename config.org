@@ -3030,7 +3030,8 @@ small exercises. The exercises can can be solved locally.
 #+begin_src emacs-lisp
 (after! js
   (setq js-indent-level 4
-        js-jsx-indent-level 4))
+        js-jsx-indent-level 4
+        tab-width 8))
 #+end_src
 
 *** Jest Testing Framework
