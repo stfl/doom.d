@@ -2028,17 +2028,21 @@ Not added when either:
   :custom (exercism-web-browser-function 'browse-url))
 
 (setq-hook! 'rjsx-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 
 (setq-hook! 'js-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 
 (setq-hook! 'js2-mode-hook
-  indent-tabs-mode t)
+  indent-tabs-mode t
+  tab-width 8)
 
 (after! js
   (setq js-indent-level 4
-        js-jsx-indent-level 4))
+        js-jsx-indent-level 4
+        tab-width 8))
 
 (map! :after rjsx-mode
       :map rjsx-mode-map
