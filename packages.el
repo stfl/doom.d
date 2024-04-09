@@ -1,8 +1,6 @@
 (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
 
-(package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59")
-
 (package! org-super-agenda)
 
 (package! org-ql)
@@ -54,14 +52,12 @@
 
 (package! logview)
 
-;; bbatsov/adoc-mode
-(package! adoc-mode)
-
-;; (package! jinx)
-
 (package! lsp-ltex
   :disable t
   )
+
+;; bbatsov/adoc-mode
+(package! adoc-mode)
 
 (package! ztree)
 
@@ -69,7 +65,5 @@
 ;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
 
 (package! diffview)
-
-(package! edit-server)
 
 (package! gptel)

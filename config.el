@@ -38,66 +38,108 @@
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; (setq doom-theme 'zaiste)
 (setq doom-theme 'doom-one)
-;; (setq doom-theme 'doom-one-light)
-;; (setq doom-theme 'doom-molokai)
-;; (setq doom-theme 'doom-solarized-dark)
-
-;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-;; (use-package! fira-code-mode
-;;   :after prog-mode
-;;   :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
-;;   )
 
 (setq! display-line-numbers-type t)
 (setq! which-key-idle-delay 0.3)
 
-;; (setq doom-font (font-spec :family "Fira Code" :size 13)
-;;       doom-variable-pitch-font (font-spec :family "Fira Code")
-;;       doom-unicode-font (font-spec :family "Fira Code")
-;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
+(let ((font "JetBrains Mono"))
+  (if (string= (system-name) "manjaro.stfl.sh")
+      (setq doom-font (font-spec :family font :size 20)
+            doom-variable-pitch-font (font-spec :family font)
+            doom-big-font (font-spec :family font :size 30))
+    (setq doom-font (font-spec :family font :size 13)
+          doom-variable-pitch-font (font-spec :family font)
+          doom-big-font (font-spec :family font :size 20))))
 
-(if (string= (system-name) "manjaro.stfl.sh")
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 20)
-        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-        doom-big-font (font-spec :family "JetBrains Mono" :size 30))
-  ;; (setq doom-font (font-spec :family "Noto Sans" :size 20)
-  ;;       doom-variable-pitch-font (font-spec :family "Noto Sans")
-  ;;       doom-big-font (font-spec :family "Noto Sans" :size 30))
-  ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
-  ;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-  ;;       doom-unicode-font (font-spec :family "JetBrains Mono")
-  ;;       doom-big-font (font-spec :family "JetBrains Mono" :size 40))
-                                        ; set a smaller font all non-hidpi workstations
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
-        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-        doom-big-font (font-spec :family "JetBrains Mono" :size 20))
-  )
-
-;; (setq doom-unicode-font doom-font)
+(custom-declare-face '+org-priority-a  '((t)) "")
+(custom-declare-face '+org-priority-b  '((t)) "")
+(custom-declare-face '+org-priority-c  '((t)) "")
+(custom-declare-face '+org-priority-d  '((t)) "")
+(custom-declare-face '+org-priority-e  '((t)) "")
+(custom-declare-face '+org-priority-f  '((t)) "")
+(custom-declare-face '+org-priority-g  '((t)) "")
+(custom-declare-face '+org-priority-h  '((t)) "")
+(custom-declare-face '+org-priority-i  '((t)) "")
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (custom-set-faces!
- '(org-date :foreground "dark goldenrod" :height 0.85)
- '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
- '(org-drawer :foreground "dark gray" :height 0.8)
- '(org-property-value :height 0.85)
- '(org-ql-view-due-date :foreground "dark goldenrod")
- '(org-special-keyword :foreground "#83898d" :height 0.8)
- '(org-tag :foreground "#83898d" :weight light :height 0.7)
- '(outline-1 :height 1.5)
- '(outline-2 :height 1.25)
- '(outline-3 :height 1.15)
- )
+  '(org-date :foreground "dark goldenrod" :height 0.85)
+  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  '(org-drawer :foreground "dark gray" :height 0.8)
+  '(org-property-value :height 0.85)
+  '(org-ql-view-due-date :foreground "dark goldenrod")
+  '(org-special-keyword :foreground "#83898d" :height 0.8)
+  '(org-tag :foreground "#83898d" :weight light :height 0.7)
+  `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
+  '(outline-1 :height 1.5)
+  '(outline-2 :height 1.25)
+  '(outline-3 :height 1.15)
+  `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
+  '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+  '(+org-priority-d  :foreground "gold3" :weight bold)
+  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+  '(+org-priority-g  :foreground "cyan4" :weight bold)
+  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
+)
 
-(after! org-ql
-  (set-popup-rule!
-    "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
-    ))
+(after! org
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
+
+(after! org
+  (auto-fill-mode))
+
+(custom-set-faces!
+  '(adoc-code-face :inherit org-block)
+  '(adoc-complex-replacement-face :inherit org-code :bold t)
+  '(adoc-meta-face :inherit org-meta-line)
+  '(adoc-typewriter-face :inherit org-code)
+  '(adoc-verbatim-face :inherit org-verbatim)
+  '(adoc-internal-reference-face :inherit org-link)
+  '(adoc-reference-face :inherit org-link)
+  `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+  '(adoc-bold-face :bold t)
+  `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+  '(adoc-warning-face :inherit org-warning))
+
+(custom-set-faces!
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face :weight bold :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
+
+(set-popup-rules!
+  '(("^\\*subject:" :ignore t))  ; notmuch list view
+  '(("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil))
+  '(("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
@@ -143,55 +185,24 @@
    :desc "Minimap" "m" #'demap-toggle)
   )
 
-(when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
-
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
-
-;; (global-whitespace-mode)
-
-;; (after! doom-ui
-;;   (setq whitespace-style
-;;         (append whitespace-style
-;;                 '(space-after-tab
-;;                   space-after-tab::space
-;;                   space-after-tab::tab
-;;                   space-before-tab
-;;                   space-before-tab::tab
-;;                   space-before-tab::space))))
-
-  ;; (setq! whitespace-style
-  ;;        '(face
-  ;;          indentation
-  ;;          space-after-tab
-  ;;          space-after-tab::space
-  ;;          space-after-tab::tab
-  ;;          space-before-tab
-  ;;          space-before-tab::tab
-  ;;          space-before-tab::space
-  ;;          tabs
-  ;;          tab-mark
-  ;;          ;; spaces
-  ;;          ;; space-mark
-  ;;          ;; newline
-  ;;          ;; newline-mark
-  ;;          trailing
-  ;;          ;; lines-tail
-  ;;          ))
-
-(custom-set-faces!
- ;; `(whitespace-tab :background ,(doom-color 'blue))
- `(whitespace-indentation :background ,(doom-color 'base4))
- ;; `(whitespace-space-after-tab :background ,(doom-color 'base4))
- ;; `(whitespace-line :foreground ,(doom-color 'red))
- ;; `(trailing-white :background ,(doom-color 'base4))
- )
 
 (pixel-scroll-precision-mode)
 
 (setq! tab-width 8)
+
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
+
+(map! :leader "f ." #'find-file-at-point)
+
+(setq! tab-always-indent 'complete)
 
 (global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
 
@@ -202,58 +213,6 @@
 ;;   (mouse-drag-line start-event 'left))
 
 ;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
-
-(after! evil-snipe
-  (setq evil-snipe-scope 'visible
-        evil-snipe-repeat-scope 'visible))
-
-(map! :leader "f ." #'find-file-at-point)
-
-(setq! tab-always-indent 'complete)
-
-(after! org
-  (custom-set-faces!
-    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
-
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-
-(after! org
-  (auto-fill-mode))
-;; (add-hook! 'org-mode-hook
-;;   (setq-local ;; +word-wrap-extra-indent 'single
-;;               +word-wrap-fill-style 'hard)
-;;   (+word-wrap-mode +1))
 
 (setq org-directory "~/.org")
 
@@ -1397,17 +1356,6 @@ org-default-priority is treated as lower than the same set value"
       :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
       )
 
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-
-(custom-set-faces! `(+org-todo-cancel
-                     :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35)
-                     :inherit (bold org-done)))
-
 (after! org
   (setq org-todo-keywords
         '((sequence
@@ -1848,9 +1796,8 @@ Not added when either:
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 
 (after! lsp-mode
-  (setq! lsp-inlay-hint-enable t)
-  (custom-set-faces!
-    '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)))
+  (setq! lsp-inlay-hint-enable t
+         lsp-headerline-breadcrumb-enable t))
 
 (after! lsp-mode
   (when (executable-find "emacs-lsp-booster")
@@ -1894,14 +1841,14 @@ Not added when either:
         :desc "Format Buffer" "f" #'+format/buffer)))
 
 (after! (lsp-mode php-mode)
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
-  (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
-  (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
+        lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
+        lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
                                          "**/node_modules/**" "**/bower_components/**"
-                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
-  (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8))
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"]
+        lsp-auto-guess-root nil
+        lsp-idle-delay 0.8))
 
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 
@@ -2027,23 +1974,6 @@ Not added when either:
   :config (exercism-mode +1)
   :custom (exercism-web-browser-function 'browse-url))
 
-(setq-hook! 'rjsx-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-
-(setq-hook! 'js-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-
-(setq-hook! 'js2-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-
-(after! js
-  (setq js-indent-level 4
-        js-jsx-indent-level 4
-        tab-width 8))
-
 (map! :after rjsx-mode
       :map rjsx-mode-map
       :localleader
@@ -2056,48 +1986,12 @@ Not added when either:
 
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
-;; (after! cperl
-(setq! cperl-indent-level 4
-       cperl-close-paren-offset -4
-       cperl-continued-statement-offset 4
-       cperl-indent-parens-as-block t)
-
-(setq-hook! 'cperl-mode-hook
-  tab-width 8
-  indent-tabs-mode t)
-
 (use-package! logview
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
         "j" #'logview-next-entry
         "k" #'logview-previous-entry))
-
-(use-package! adoc-mode
-  :defer t
-  :config
-  (map! :map adoc-mode-map
-        :localleader
-        :desc "consult headers in this file" "." #'consult-imenu
-        :desc "consult headers in project" "/" #'consult-imenu-multi
-        "p" #'treemacs-find-tag)
-  (custom-set-faces!
-    '(adoc-code-face :inherit org-block)
-    '(adoc-complex-replacement-face :inherit org-code :bold t)
-    '(adoc-meta-face :inherit org-meta-line)
-    '(adoc-typewriter-face :inherit org-code)
-    '(adoc-verbatim-face :inherit org-verbatim)
-    '(adoc-internal-reference-face :inherit org-link)
-    '(adoc-reference-face :inherit org-link)
-    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-    '(adoc-bold-face :bold t)
-    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
-    '(adoc-warning-face :inherit org-warning)))
-
-(after! lsp-mode
-  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
-
-;; (use-package! jinx)
 
 ;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
 (setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
@@ -2133,12 +2027,6 @@ Not added when either:
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
-
-(custom-set-faces!
-  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
-
-(after! magit
-  (setq transient-values  '((magit-commit "--signoff"))))
 
 (after! notmuch
   (setq +notmuch-sync-backend 'mbsync
@@ -2219,35 +2107,6 @@ Not added when either:
       ;; :map notmuch-message-mode-map
       ;; :n "SPC f s" #'notmuch-draft-save
       )
-
-;; #848d94
-(custom-set-faces!
- ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
- ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
- ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
-
- ;; '(notmuch-message-summary-face :foreground "#aa8d94")
- '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
- ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
-
- ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
- ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
- `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face :weight bold :slant italic)
- `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
- `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
- `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
- `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
- `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
-)
-
-(after! notmuch
-  (set-popup-rules!
-    ;; '(("^\\*notmuch-hello" :ignore t))
-    '(("^\\*subject:" :ignore t))))
 
 (after! notmuch
   (defun stfl/notmuch-hello-update-background ()
@@ -2371,23 +2230,6 @@ Not added when either:
   (map!
    :after notmuch
    :localleader "d" #'diffview-current))
-
-(use-package! edit-server
-  :defer t
-  :commands edit-server-start
-  :init (if after-init-time
-              (edit-server-start)
-            (add-hook 'after-init-hook
-                      #'(lambda() (edit-server-start))))
-  :config (setq edit-server-new-frame-alist
-                '((name . "Edit with Emacs FRAME")
-                  (top . 200)
-                  (left . 200)
-                  (width . 80)
-                  (height . 25)
-                  (minibuffer . t)
-                  (menu-bar-lines . t)
-                  (window-system . x))))
 
 (use-package! gptel
   :after auth-source

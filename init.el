@@ -102,10 +102,11 @@
        :checkers
        (syntax              ; tasing you for every semicolon you forget
         +childframe)
-       (spell             ; tasing you for misspelling mispelling
-        +aspell
-        ;; +everywhere
-        )
+       ;; (spell             ; tasing you for misspelling mispelling
+       ;;  +aspell
+       ;;  +enchant
+       ;;  +everywhere
+       ;; )
        ;; grammar           ; tasing grammar mistake every you make
 
        :tools

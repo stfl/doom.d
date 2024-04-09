@@ -1,5 +1,5 @@
 #+title: doom-emacs config
-#+startup: content
+#+startup: overview
 
 * General
 ** User Information
@@ -88,37 +88,18 @@ bind it to ~SPC h d c~
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 #+END_SRC
 
-* UI
+* Theme
 :PROPERTIES:
 :ID:       00776006-97ad-487f-a34e-510b7df5d5a3
 :END:
-start maximized
 
-#+begin_src elisp
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-#+end_src
-
-** Theme
+** doom-theme
 :PROPERTIES:
 :ID:       d7635d76-1c4b-49de-a68d-be6dd0467919
 :END:
 
 #+BEGIN_SRC elisp
-;; (setq doom-theme 'zaiste)
 (setq doom-theme 'doom-one)
-;; (setq doom-theme 'doom-one-light)
-;; (setq doom-theme 'doom-molokai)
-;; (setq doom-theme 'doom-solarized-dark)
-
-;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
-#+END_SRC
-
-#+BEGIN_SRC elisp
-;; (use-package! fira-code-mode
-;;   :after prog-mode
-;;   :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "*" "+" ":")) ;; List of ligatures to turn off
-;;   )
 #+END_SRC
 
 #+BEGIN_SRC elisp
@@ -142,29 +123,14 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 
 #+BEGIN_SRC elisp
-;; (setq doom-font (font-spec :family "Fira Code" :size 13)
-;;       doom-variable-pitch-font (font-spec :family "Fira Code")
-;;       doom-unicode-font (font-spec :family "Fira Code")
-;;       doom-big-font (font-spec :family "Fira Code Medium" :size 20))
-
-(if (string= (system-name) "manjaro.stfl.sh")
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 20)
-        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-        doom-big-font (font-spec :family "JetBrains Mono" :size 30))
-  ;; (setq doom-font (font-spec :family "Noto Sans" :size 20)
-  ;;       doom-variable-pitch-font (font-spec :family "Noto Sans")
-  ;;       doom-big-font (font-spec :family "Noto Sans" :size 30))
-  ;; (setq doom-font (font-spec :family "JetBrains Mono" :size (round (/ display-pixels-per-inch 2.7)))  ; 27
-  ;;       doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-  ;;       doom-unicode-font (font-spec :family "JetBrains Mono")
-  ;;       doom-big-font (font-spec :family "JetBrains Mono" :size 40))
-                                        ; set a smaller font all non-hidpi workstations
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 13)
-        doom-variable-pitch-font (font-spec :family "JetBrains Mono")
-        doom-big-font (font-spec :family "JetBrains Mono" :size 20))
-  )
-
-;; (setq doom-unicode-font doom-font)
+(let ((font "JetBrains Mono"))
+  (if (string= (system-name) "manjaro.stfl.sh")
+      (setq doom-font (font-spec :family font :size 20)
+            doom-variable-pitch-font (font-spec :family font)
+            doom-big-font (font-spec :family font :size 30))
+    (setq doom-font (font-spec :family font :size 13)
+          doom-variable-pitch-font (font-spec :family font)
+          doom-big-font (font-spec :family font :size 20))))
 #+END_SRC
 
 font detection taken from tecosaur https://tecosaur.github.io/emacs-config/config.html#font-face
@@ -215,35 +181,121 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 :END:
 
 #+begin_src elisp
-(custom-set-faces!
- '(org-date :foreground "dark goldenrod" :height 0.85)
- '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
- '(org-drawer :foreground "dark gray" :height 0.8)
- '(org-property-value :height 0.85)
- '(org-ql-view-due-date :foreground "dark goldenrod")
- '(org-special-keyword :foreground "#83898d" :height 0.8)
- '(org-tag :foreground "#83898d" :weight light :height 0.7)
- '(outline-1 :height 1.5)
- '(outline-2 :height 1.25)
- '(outline-3 :height 1.15)
- )
+(custom-declare-face '+org-priority-a  '((t)) "")
+(custom-declare-face '+org-priority-b  '((t)) "")
+(custom-declare-face '+org-priority-c  '((t)) "")
+(custom-declare-face '+org-priority-d  '((t)) "")
+(custom-declare-face '+org-priority-e  '((t)) "")
+(custom-declare-face '+org-priority-f  '((t)) "")
+(custom-declare-face '+org-priority-g  '((t)) "")
+(custom-declare-face '+org-priority-h  '((t)) "")
+(custom-declare-face '+org-priority-i  '((t)) "")
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 #+end_src
+
+#+begin_src elisp
+(custom-set-faces!
+  '(org-date :foreground "dark goldenrod" :height 0.85)
+  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  '(org-drawer :foreground "dark gray" :height 0.8)
+  '(org-property-value :height 0.85)
+  '(org-ql-view-due-date :foreground "dark goldenrod")
+  '(org-special-keyword :foreground "#83898d" :height 0.8)
+  '(org-tag :foreground "#83898d" :weight light :height 0.7)
+  `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
+  '(outline-1 :height 1.5)
+  '(outline-2 :height 1.25)
+  '(outline-3 :height 1.15)
+  `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
+  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
+  '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
+
+  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+  '(+org-priority-d  :foreground "gold3" :weight bold)
+  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+  '(+org-priority-g  :foreground "cyan4" :weight bold)
+  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
+)
+#+end_src
+
+** org-mode Theme :theme:
+
+Priority specific faces
+
+#+begin_src elisp
+(after! org
+
+  (setq org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
+#+end_src
+
+#+begin_src elisp
+(after! org
+  (auto-fill-mode))
+#+end_src
+
+** adoc-mode theme
+
+
+#+begin_src elisp
+(custom-set-faces!
+  '(adoc-code-face :inherit org-block)
+  '(adoc-complex-replacement-face :inherit org-code :bold t)
+  '(adoc-meta-face :inherit org-meta-line)
+  '(adoc-typewriter-face :inherit org-code)
+  '(adoc-verbatim-face :inherit org-verbatim)
+  '(adoc-internal-reference-face :inherit org-link)
+  '(adoc-reference-face :inherit org-link)
+  `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
+  '(adoc-bold-face :bold t)
+  `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
+  '(adoc-warning-face :inherit org-warning))
+#+end_src
+** notmuch theme
+
+#+begin_src elisp
+(custom-set-faces!
+ '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
+ `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face :weight bold :slant italic)
+ `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+ `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+ `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+ `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+ `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
+#+end_src
+
+There is more fine grained face control for search based on tags :
 
 ** popup rules
 :PROPERTIES:
 :ID:       1f322103-dc44-4293-b354-a8f5301b89e4
 :END:
 #+BEGIN_SRC elisp
-(set-popup-rule! "^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
-
-(after! org-ql
-  (set-popup-rule!
-    "^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil
-    ))
+(set-popup-rules!
+  '(("^\\*subject:" :ignore t))  ; notmuch list view
+  '(("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil))
+  '(("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 #+END_SRC
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
 
 ** Minimap (demap.el)
 
@@ -297,15 +349,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
    :desc "Minimap" "m" #'demap-toggle)
   )
 #+end_src
-** Open External Browser
-
-Use Brave browser if availible. The default should actually respect the $BROWSER env
-
-#+begin_src elisp
-(when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
-#+end_src
 ** Indent Guides
 
 Make the indent guides a little brighter to be more visible in doom-one dark theme.
@@ -313,54 +356,6 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 #+begin_src elisp
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
-#+end_src
-** Display Whitespaces
-
-Invalid indentation style is a common issue at my work.
-
-#+begin_src elisp
-;; (global-whitespace-mode)
-
-;; (after! doom-ui
-;;   (setq whitespace-style
-;;         (append whitespace-style
-;;                 '(space-after-tab
-;;                   space-after-tab::space
-;;                   space-after-tab::tab
-;;                   space-before-tab
-;;                   space-before-tab::tab
-;;                   space-before-tab::space))))
-
-  ;; (setq! whitespace-style
-  ;;        '(face
-  ;;          indentation
-  ;;          space-after-tab
-  ;;          space-after-tab::space
-  ;;          space-after-tab::tab
-  ;;          space-before-tab
-  ;;          space-before-tab::tab
-  ;;          space-before-tab::space
-  ;;          tabs
-  ;;          tab-mark
-  ;;          ;; spaces
-  ;;          ;; space-mark
-  ;;          ;; newline
-  ;;          ;; newline-mark
-  ;;          trailing
-  ;;          ;; lines-tail
-  ;;          ))
-#+end_src
-
-Visually highlight if an indentation issue was discovered which emacs already does for us
-
-#+begin_src elisp
-(custom-set-faces!
- ;; `(whitespace-tab :background ,(doom-color 'blue))
- `(whitespace-indentation :background ,(doom-color 'base4))
- ;; `(whitespace-space-after-tab :background ,(doom-color 'base4))
- ;; `(whitespace-line :foreground ,(doom-color 'red))
- ;; `(trailing-white :background ,(doom-color 'base4))
- )
 #+end_src
 
 ** Scrolling
@@ -370,11 +365,44 @@ Since Emacs 29, pixel-scroll is built-in
 #+begin_src elisp
 (pixel-scroll-precision-mode)
 #+end_src
+
 ** tab-width
 
 #+begin_src elisp
 (setq! tab-width 8)
 #+end_src
+
+** Open External Browser
+
+Use Brave browser if availible. The default should actually respect the $BROWSER env
+
+#+begin_src elisp
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+#+end_src
+* Motions
+:PROPERTIES:
+:ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
+:END:
+limit evil-snipe to the bufffer
+#+BEGIN_SRC elisp
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
+#+END_SRC
+
+#+begin_src elisp
+(map! :leader "f ." #'find-file-at-point)
+#+end_src
+
+Always indent the line when pressing tab regardles of the cursor position.
+If the line is already correctly indented, try to complete.
+
+#+begin_src elisp
+(setq! tab-always-indent 'complete)
+#+end_src
+
 ** Resizing window with the mouse
 
 Resizing a window vertically with the mouse in emacs requires you to hit the 1px
@@ -402,94 +430,10 @@ But this would active again resizing to the right...
 ;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 #+end_src
 
-* Motions
-:PROPERTIES:
-:ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
-:END:
-limit evil-snipe to the bufffer
-#+BEGIN_SRC elisp
-(after! evil-snipe
-  (setq evil-snipe-scope 'visible
-        evil-snipe-repeat-scope 'visible))
-#+END_SRC
-
-#+begin_src elisp
-(map! :leader "f ." #'find-file-at-point)
-#+end_src
-
-Always indent the line when pressing tab regardles of the cursor position.
-If the line is already correctly indented, try to complete.
-
-#+begin_src elisp
-(setq! tab-always-indent 'complete)
-#+end_src
-
 * Org mode settings
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
 :END:
-** Pinning Org due to API changes causing problems in org-ql
-
-https://github.com/alphapapa/org-ql/issues/364
-
-#+begin_src elisp :tangle packages.el
-(package! org :pin "806abc5a2bbcb5f884467a0145547221ba09eb59")
-#+end_src
-
-** Theme :theme:
-
-#+begin_src elisp
-(after! org
-  (custom-set-faces!
-    `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)))
-#+end_src
-
-Priority specific faces
-
-#+begin_src elisp
-(after! org
-  (custom-declare-face '+org-priority-a  '((t)) "")
-  (custom-declare-face '+org-priority-b  '((t)) "")
-  (custom-declare-face '+org-priority-c  '((t)) "")
-  (custom-declare-face '+org-priority-d  '((t)) "")
-  (custom-declare-face '+org-priority-e  '((t)) "")
-  (custom-declare-face '+org-priority-f  '((t)) "")
-  (custom-declare-face '+org-priority-g  '((t)) "")
-  (custom-declare-face '+org-priority-h  '((t)) "")
-  (custom-declare-face '+org-priority-i  '((t)) "")
-
-  (custom-set-faces!
-    '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-    '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-    '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-    '(+org-priority-d  :foreground "gold3" :weight bold)
-    '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-    '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-    '(+org-priority-g  :foreground "cyan4" :weight bold)
-    '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-    '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold))
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-#+end_src
-
-#+begin_src elisp
-(after! org
-  (auto-fill-mode))
-;; (add-hook! 'org-mode-hook
-;;   (setq-local ;; +word-wrap-extra-indent 'single
-;;               +word-wrap-fill-style 'hard)
-;;   (+word-wrap-mode +1))
-#+end_src
-
 ** General
 :PROPERTIES:
 :ID:       90a92aaa-d50a-4524-9a97-bad904b60939
@@ -1901,19 +1845,6 @@ After much feedback and discussing with other users, I decided to simplify the k
 | DONE    | Task is completed and closed.                                |
 | KILL    | Abandoned or terminated.                                     |
 
-#+BEGIN_SRC elisp
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-
-(custom-set-faces! `(+org-todo-cancel
-                     :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35)
-                     :inherit (bold org-done)))
-#+end_src
-
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
 
 #+begin_src elisp
@@ -2068,27 +1999,6 @@ REVIEW should we define any additional tags?
                         ("#emacs" . ?-)
                         )))
 #+END_SRC
-
-# ** Prompt for headline when creating ID links
-# :PROPERTIES:
-# :ID:       e15a800b-991a-456d-bbf9-523789d6d259
-# :END:
-# #+BEGIN_SRC emacs-lisp
-# (defun nm/org-id-prompt-id ()
-#   "Prompt for the id during completion of id: link."
-#   (let ((dest (org-refile-get-location))
-#         (name nil)
-#         (id nil))
-#     (save-excursion
-#       (find-file (cadr dest))
-#       (goto-char (nth 3 dest))
-#       (setq id (org-id-get (point) t)
-#             name (org-get-heading t t t t)))
-#     (org-insert-link nil (concat "id:" id) name)))
-
-# (after! org
-#   (org-link-set-parameters "id" :complete #'nm/org-id-prompt-id))
-# #+END_SRC
 
 ** org-roam
 :PROPERTIES:
@@ -2434,7 +2344,7 @@ Not added when either:
 
 https://emacs.stackexchange.com/a/44923/30180
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC elisp
 (after! org
   (defun individual-visibility-source-blocks ()
     "Fold some blocks in the current buffer with property :hidden"
@@ -2646,7 +2556,7 @@ Do not watch cache directories
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 #+end_src
-*** Inlay Hints
+*** Options
 
 [[https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable][lsp-mode settings]]
 
@@ -2654,10 +2564,10 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 #+begin_src elisp
 (after! lsp-mode
-  (setq! lsp-inlay-hint-enable t)
-  (custom-set-faces!
-    '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)))
+  (setq! lsp-inlay-hint-enable t
+         lsp-headerline-breadcrumb-enable t))
 #+end_src
+
 *** emacs-lsp-booster
 
 #+begin_src elisp
@@ -2715,14 +2625,14 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 :END:
 #+BEGIN_SRC elisp
 (after! (lsp-mode php-mode)
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com"))
-  (setq lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"])
-  (setq lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
+        lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
+        lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
                                          "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
                                          "**/node_modules/**" "**/bower_components/**"
-                                         "**/vendor/**/{Test,test,Tests,tests}/**"])
-  (setq lsp-auto-guess-root nil)
-  (setq lsp-idle-delay 0.8))
+                                         "**/vendor/**/{Test,test,Tests,tests}/**"]
+        lsp-auto-guess-root nil
+        lsp-idle-delay 0.8))
 #+END_SRC
 
 ** Python
@@ -2888,7 +2798,6 @@ Disable formatting with lsp
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 #+end_src
 
-
 ** MQL
 :PROPERTIES:
 :ID:       c3da477e-b64b-4a50-af87-5fdec1fd62ab
@@ -3010,30 +2919,6 @@ small exercises. The exercises can can be solved locally.
   :custom (exercism-web-browser-function 'browse-url))
 #+end_src
 ** Javascript | Typescript
-*** Proxmox specific code indentation style
-
-#+begin_src emacs-lisp
-(setq-hook! 'rjsx-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-
-(setq-hook! 'js-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-
-(setq-hook! 'js2-mode-hook
-  indent-tabs-mode t
-  tab-width 8)
-#+end_src
-
-
-#+begin_src emacs-lisp
-(after! js
-  (setq js-indent-level 4
-        js-jsx-indent-level 4
-        tab-width 8))
-#+end_src
-
 *** Jest Testing Framework
 
 #+begin_src elisp :tangle packages.el
@@ -3054,32 +2939,11 @@ small exercises. The exercises can can be solved locally.
 
 ** Perl
 
-always use the better cperl-mode instead of perl-mode
+always use the better cperl-mode instead of perl-mode.
+This will be the default in Emacs 30 (if I remember correctly)
 
 #+begin_src elisp
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
-#+end_src
-
-#+begin_src elisp
-;; (after! cperl
-(setq! cperl-indent-level 4
-       cperl-close-paren-offset -4
-       cperl-continued-statement-offset 4
-       cperl-indent-parens-as-block t)
-#+end_src
-
-Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
-
-#+begin_src elisp
-(setq-hook! 'cperl-mode-hook
-  tab-width 8
-  indent-tabs-mode t)
-#+end_src
-
-*** Perl LSP
-
-#+begin_src bash :dir /sudo:: :tangle nil
-apt install -y libperl-languageserver-perl
 #+end_src
 
 ** Logview
@@ -3100,54 +2964,7 @@ apt install -y libperl-languageserver-perl
 The default keymap binds directly to ~f t T a A ...~
 switch to evil-emacs-mode ~C-z~ to use the keybindings.
 
-** AsciiDoc (adoc)
-
-#+begin_src elisp :tangle packages.el
-;; bbatsov/adoc-mode
-(package! adoc-mode)
-#+end_src
-
-~TODO~ adoc-mode requires org due to inhereting the theme
-
-#+begin_src emacs-lisp
-(use-package! adoc-mode
-  :defer t
-  :config
-  (map! :map adoc-mode-map
-        :localleader
-        :desc "consult headers in this file" "." #'consult-imenu
-        :desc "consult headers in project" "/" #'consult-imenu-multi
-        "p" #'treemacs-find-tag)
-  (custom-set-faces!
-    '(adoc-code-face :inherit org-block)
-    '(adoc-complex-replacement-face :inherit org-code :bold t)
-    '(adoc-meta-face :inherit org-meta-line)
-    '(adoc-typewriter-face :inherit org-code)
-    '(adoc-verbatim-face :inherit org-verbatim)
-    '(adoc-internal-reference-face :inherit org-link)
-    '(adoc-reference-face :inherit org-link)
-    `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-    '(adoc-bold-face :bold t)
-    `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
-    '(adoc-warning-face :inherit org-warning)))
-#+end_src
-
-#+begin_src elisp
-(after! lsp-mode
-  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
-#+end_src
-
 ** Spell- Grammer Checking
-*** TODO Jinx
-
-#+begin_src elisp :tangle packages.el
-;; (package! jinx)
-#+end_src
-
-#+begin_src elisp
-;; (use-package! jinx)
-#+end_src
-
 *** LTEX
 
 #+begin_src elisp :tangle packages.el
@@ -3176,6 +2993,85 @@ manually add adoc-mode to the list.. I don't like that...
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 #+end_src
+** Proxmox development
+:PROPERTIES:
+:header-args:elisp: :tangle no
+:END:
+
+_tangle is disabled for the entire section_ and is only kept as a reference!
+
+*** AsciiDoc (adoc)
+
+#+begin_src elisp :tangle packages.el
+;; bbatsov/adoc-mode
+(package! adoc-mode)
+#+end_src
+
+~TODO~ adoc-mode requires org due to inhereting the theme
+
+#+begin_src elisp
+(use-package! adoc-mode
+  :defer t
+  :config
+  (map! :map adoc-mode-map
+        :localleader
+        :desc "consult headers in this file" "." #'consult-imenu
+        :desc "consult headers in project" "/" #'consult-imenu-multi
+        "p" #'treemacs-find-tag))
+#+end_src
+
+#+begin_src elisp
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+#+end_src
+
+*** Magit Default Sign-Off commits
+
+#+begin_src elisp
+(after! magit
+  (setq transient-values  '((magit-commit "--signoff"))))
+#+end_src
+
+*** Javascript indentation style
+
+This is still broken...
+
+#+begin_src elisp
+(setq-hook! 'rjsx-mode-hook
+  indent-tabs-mode t
+  tab-width 8)
+
+(setq-hook! 'js-mode-hook
+  indent-tabs-mode t
+  tab-width 8)
+
+(setq-hook! 'js2-mode-hook
+  indent-tabs-mode t
+  tab-width 8)
+#+end_src
+
+#+begin_src elisp
+(after! js
+  (setq js-indent-level 4
+        js-jsx-indent-level 4
+        tab-width 8))
+#+end_src
+*** Perl intendation style
+
+#+begin_src elisp
+(setq! cperl-indent-level 4
+       cperl-close-paren-offset -4
+       cperl-continued-statement-offset 4
+       cperl-indent-parens-as-block t)
+#+end_src
+
+Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
+
+#+begin_src elisp
+(setq-hook! 'cperl-mode-hook
+  tab-width 8
+  indent-tabs-mode t)
+#+end_src
 * Collaboration and VCS
 ** Directory tree diff - ztree
 :PROPERTIES:
@@ -3191,10 +3087,9 @@ manually add adoc-mode to the list.. I don't like that...
 #+END_SRC
 
 ** Magit
-
 *** Enable Gravatars
 This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC elisp
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 #+END_SRC
 
@@ -3204,7 +3099,7 @@ By default, changes are highlighted *line-wise* for all but the selected hunk. T
 has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
 visible hunks with:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC elisp
 (after! magit
   (setq magit-diff-refine-hunk 'all))
 #+END_SRC
@@ -3251,19 +3146,6 @@ activate magit-todo to display the TODOs section in magit buffer
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
-#+end_src
-
-*** Theme
-
-#+begin_src elisp
-(custom-set-faces!
-  `(magit-branch-current  :foreground ,(doom-color 'blue) :box t))
-#+end_src
-*** Default Sign-Off commits
-
-#+begin_src elisp
-(after! magit
-  (setq transient-values  '((magit-commit "--signoff"))))
 #+end_src
 
 ** E-Mail
@@ -3367,46 +3249,6 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
- ;; #848d94
-(custom-set-faces!
- ;; '(notmuch-tree-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; '(notmuch-tree-no-match-face :foreground "#848d94")   ;; TODO (doom-color "base3") oder so
- ;; `(notmuch-message-summary-face :foreground ,(doom-color 'outline-2))
- ;; `(notmuch-message-summary-face :extend ,(doom-color 'outline-2))
- ;; '(notmuch-message-summary-face ((t (:inherit outline-1 :extend t :height 1.5))))
-
- ;; '(notmuch-message-summary-face :foreground "#aa8d94")
- '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
- ;; '(notmuch-message-summary-face :inherit outline-3 :extend t :foreground nil)
-
- ;; '(notmuch-tree-no-match-subject-face :foreground "#848d94")   ;; TODO do I need to actually add this?
- ;; '((notmuch-tree-no-match-face notmuch-tree-no-match-subject-face) :foreground "#848d94")
- `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face :weight bold :slant italic)
- `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
- `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
- `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
- `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
- `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4))
-)
-#+end_src
-
-There is more fine grained face control for search based on tags :
-
-# ;; (setq notmuch-search-line-faces
-# ;;       '(("unread" . (:foreground "green"))
-# ;;         ("inbox" . (:foreground "red" :background "blue"))))
-
-Reset the default popup-rules defined by doom's module
-#+begin_src elisp
-(after! notmuch
-  (set-popup-rules!
-    ;; '(("^\\*notmuch-hello" :ignore t))
-    '(("^\\*subject:" :ignore t))))
-#+end_src
-
-#+begin_src elisp
 (after! notmuch
   (defun stfl/notmuch-hello-update-background ()
     "Update notmuch-hello buffer. If we are in another frame, allow switch to it so it will be formatted correctly."
@@ -3416,6 +3258,7 @@ Reset the default popup-rules defined by doom's module
 
   (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
+
 *** mailscripts.el
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
 
@@ -3606,31 +3449,6 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
    :localleader "d" #'diffview-current))
 #+end_src
 
-** Edit with Emacs (in the Browser)
-
-#+begin_src elisp :tangle packages.el
-(package! edit-server)
-#+end_src
-
-#+begin_src elisp
-(use-package! edit-server
-  :defer t
-  :commands edit-server-start
-  :init (if after-init-time
-              (edit-server-start)
-            (add-hook 'after-init-hook
-                      #'(lambda() (edit-server-start))))
-  :config (setq edit-server-new-frame-alist
-                '((name . "Edit with Emacs FRAME")
-                  (top . 200)
-                  (left . 200)
-                  (width . 80)
-                  (height . 25)
-                  (minibuffer . t)
-                  (menu-bar-lines . t)
-                  (window-system . x))))
-
-#+end_src
 ** AI Chat gptel
 :PROPERTIES:
 :ID:       6eda0ca2-71b7-43f9-bb3e-d0ad993d37b0
