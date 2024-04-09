@@ -1,5 +1,6 @@
 #+title: doom-emacs config
 #+startup: overview
+#+PROPERTY: header-args:elisp :noeval
 
 * General
 ** User Information
@@ -88,11 +89,65 @@ bind it to ~SPC h d c~
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 #+END_SRC
 
-* Theme
-:PROPERTIES:
-:ID:       00776006-97ad-487f-a34e-510b7df5d5a3
-:END:
+** Open External Browser
 
+Use Brave browser if availible. The default should actually respect the $BROWSER env
+
+#+begin_src elisp
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+#+end_src
+** Resizing window with the mouse
+
+Resizing a window vertically with the mouse in emacs requires you to hit the 1px
+thick line between windows.
+This is less of a problem horizontally, because you can drag the modeline.
+
+To make this easier use, ~Meta + left mouse drag~ to activate the resizing.
+This only works if there is a window to the right. Window is resized, after
+passing the border with the mouse.
+
+#+begin_src elisp
+(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
+#+end_src
+
+It would be nice to do that on the left fringe!
+But this would active again resizing to the right...
+
+#+begin_src elisp
+;; (defun mouse-drag-left-line (start-event)
+;;   "Change the width of a window by dragging on a vertical line.
+;; START-EVENT is the starting mouse event of the drag action."
+;;   (interactive "e")
+;;   (mouse-drag-line start-event 'left))
+
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
+#+end_src
+
+** Motions
+:PROPERTIES:
+:ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
+:END:
+limit evil-snipe to the bufffer
+#+BEGIN_SRC elisp
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
+#+END_SRC
+
+#+begin_src elisp
+(map! :leader "f ." #'find-file-at-point)
+#+end_src
+
+Always indent the line when pressing tab regardles of the cursor position.
+If the line is already correctly indented, try to complete.
+
+#+begin_src elisp
+(setq! tab-always-indent 'complete)
+#+end_src
+
+* Theme
 ** doom-theme
 :PROPERTIES:
 :ID:       d7635d76-1c4b-49de-a68d-be6dd0467919
@@ -292,9 +347,10 @@ There is more fine grained face control for search based on tags :
 :END:
 #+BEGIN_SRC elisp
 (set-popup-rules!
-  '(("^\\*subject:" :ignore t))  ; notmuch list view
-  '(("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil))
-  '(("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
+  '(("^\\*subject:" :ignore t)  ; notmuch list view
+    ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+    ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
+    ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 #+END_SRC
 
 ** Minimap (demap.el)
@@ -370,64 +426,6 @@ Since Emacs 29, pixel-scroll is built-in
 
 #+begin_src elisp
 (setq! tab-width 8)
-#+end_src
-
-** Open External Browser
-
-Use Brave browser if availible. The default should actually respect the $BROWSER env
-
-#+begin_src elisp
-(when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
-#+end_src
-* Motions
-:PROPERTIES:
-:ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
-:END:
-limit evil-snipe to the bufffer
-#+BEGIN_SRC elisp
-(after! evil-snipe
-  (setq evil-snipe-scope 'visible
-        evil-snipe-repeat-scope 'visible))
-#+END_SRC
-
-#+begin_src elisp
-(map! :leader "f ." #'find-file-at-point)
-#+end_src
-
-Always indent the line when pressing tab regardles of the cursor position.
-If the line is already correctly indented, try to complete.
-
-#+begin_src elisp
-(setq! tab-always-indent 'complete)
-#+end_src
-
-** Resizing window with the mouse
-
-Resizing a window vertically with the mouse in emacs requires you to hit the 1px
-thick line between windows.
-This is less of a problem horizontally, because you can drag the modeline.
-
-To make this easier use, ~Meta + left mouse drag~ to activate the resizing.
-This only works if there is a window to the right. Window is resized, after
-passing the border with the mouse.
-
-#+begin_src elisp
-(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
-#+end_src
-
-It would be nice to do that on the left fringe!
-But this would active again resizing to the right...
-
-#+begin_src elisp
-;; (defun mouse-drag-left-line (start-event)
-;;   "Change the width of a window by dragging on a vertical line.
-;; START-EVENT is the starting mouse event of the drag action."
-;;   (interactive "e")
-;;   (mouse-drag-line start-event 'left))
-
-;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 #+end_src
 
 * Org mode settings
@@ -3072,91 +3070,7 @@ Proxmox specific Perl indentation style using a tab where 8 spaces would be used
   tab-width 8
   indent-tabs-mode t)
 #+end_src
-* Collaboration and VCS
-** Directory tree diff - ztree
-:PROPERTIES:
-:ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
-:END:
-
-#+begin_src elisp :tangle packages.el
-(package! ztree)
-#+end_src
-
-#+BEGIN_SRC elisp
-(use-package! ztree)
-#+END_SRC
-
-** Magit
-*** Enable Gravatars
-This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
-#+BEGIN_SRC elisp
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-#+END_SRC
-
-*** Enable granular diff-highlights for all hunks
-
-By default, changes are highlighted *line-wise* for all but the selected hunk. This
-has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
-visible hunks with:
-
-#+BEGIN_SRC elisp
-(after! magit
-  (setq magit-diff-refine-hunk 'all))
-#+END_SRC
-
-*** Forge
-:PROPERTIES:
-:ID:       0ed4b14f-b9cd-4b13-b17e-633213db7418
-:END:
-display more columns in forge list topic
-#+BEGIN_SRC elisp
-(after! forge (setq forge-topic-list-columns
-                    '(("#" 5 t (:right-align t) number nil)
-                      ("Title" 60 t nil title  nil)
-                      ("State" 6 t nil state nil)
-                      ("Marks" 8 t nil marks nil)
-                      ("Labels" 8 t nil labels nil)
-                      ("Assignees" 10 t nil assignees nil)
-                      ("Updated" 10 t nill updated nil))))
-#+END_SRC
-
-*** with-editor
-
-# #+BEGIN_SRC elisp
-# (use-package! with-editor
-#   :after magit
-#   :config
-#   (define-key (current-global-map)
-#     [remap async-shell-command] 'with-editor-async-shell-command)
-#   (define-key (current-global-map)
-#     [remap shell-command] 'with-editor-shell-command)
-
-#   (add-hook 'shell-mode-hook  'with-editor-export-editor)
-#   (add-hook 'term-exec-hook   'with-editor-export-editor)
-#   (add-hook 'eshell-mode-hook 'with-editor-export-editor)
-
-#   (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
-# )
-# #+END_SRC
-*** magit-todos
-
-activate magit-todo to display the TODOs section in magit buffer
-
-#+begin_src elisp
-(setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
-
-(after! magit-todos (magit-todos-mode))
-#+end_src
-
-** E-Mail
-:PROPERTIES:
-:ID:       8e96aa1e-257e-4826-a0bb-6c3be8537fe9
-:END:
-
 *** notmuch
-:PROPERTIES:
-:ID:       ae688436-87cb-47b8-9a21-ac9f211d5fb9
-:END:
 
 #+begin_src elisp
 (after! notmuch
@@ -3258,6 +3172,86 @@ Use the (almost) default keybindings in evil normal-mode
 
   (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
+* Collaboration and VCS
+** Directory tree diff - ztree
+:PROPERTIES:
+:ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
+:END:
+
+#+begin_src elisp :tangle packages.el
+(package! ztree)
+#+end_src
+
+#+BEGIN_SRC elisp
+(use-package! ztree)
+#+END_SRC
+
+** Magit
+*** Enable Gravatars
+This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
+#+BEGIN_SRC elisp
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+END_SRC
+
+*** Enable granular diff-highlights for all hunks
+
+By default, changes are highlighted *line-wise* for all but the selected hunk. This
+has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
+visible hunks with:
+
+#+BEGIN_SRC elisp
+(after! magit
+  (setq magit-diff-refine-hunk 'all))
+#+END_SRC
+
+*** Forge
+:PROPERTIES:
+:ID:       0ed4b14f-b9cd-4b13-b17e-633213db7418
+:END:
+display more columns in forge list topic
+#+BEGIN_SRC elisp
+(after! forge (setq forge-topic-list-columns
+                    '(("#" 5 t (:right-align t) number nil)
+                      ("Title" 60 t nil title  nil)
+                      ("State" 6 t nil state nil)
+                      ("Marks" 8 t nil marks nil)
+                      ("Labels" 8 t nil labels nil)
+                      ("Assignees" 10 t nil assignees nil)
+                      ("Updated" 10 t nill updated nil))))
+#+END_SRC
+
+*** with-editor
+
+# #+BEGIN_SRC elisp
+# (use-package! with-editor
+#   :after magit
+#   :config
+#   (define-key (current-global-map)
+#     [remap async-shell-command] 'with-editor-async-shell-command)
+#   (define-key (current-global-map)
+#     [remap shell-command] 'with-editor-shell-command)
+
+#   (add-hook 'shell-mode-hook  'with-editor-export-editor)
+#   (add-hook 'term-exec-hook   'with-editor-export-editor)
+#   (add-hook 'eshell-mode-hook 'with-editor-export-editor)
+
+#   (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
+# )
+# #+END_SRC
+*** magit-todos
+
+activate magit-todo to display the TODOs section in magit buffer
+
+#+begin_src elisp
+(setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+
+(after! magit-todos (magit-todos-mode))
+#+end_src
+
+** E-Mail
+:PROPERTIES:
+:ID:       8e96aa1e-257e-4826-a0bb-6c3be8537fe9
+:END:
 
 *** mailscripts.el
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el

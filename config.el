@@ -36,7 +36,27 @@
 (setq auto-save-default t)
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(when (executable-find "brave")
+  (setq! browse-url-browser-function 'browse-url-chromium
+         browse-url-chromium-program "brave"))
+
+(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
+
+;; (defun mouse-drag-left-line (start-event)
+;;   "Change the width of a window by dragging on a vertical line.
+;; START-EVENT is the starting mouse event of the drag action."
+;;   (interactive "e")
+;;   (mouse-drag-line start-event 'left))
+
+;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
+
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible))
+
+(map! :leader "f ." #'find-file-at-point)
+
+(setq! tab-always-indent 'complete)
 
 (setq doom-theme 'doom-one)
 
@@ -137,9 +157,10 @@
  `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
 
 (set-popup-rules!
-  '(("^\\*subject:" :ignore t))  ; notmuch list view
-  '(("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil))
-  '(("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
+  '(("^\\*subject:" :ignore t)  ; notmuch list view
+    ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+    ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
+    ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
@@ -191,28 +212,6 @@
 (pixel-scroll-precision-mode)
 
 (setq! tab-width 8)
-
-(when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
-
-(after! evil-snipe
-  (setq evil-snipe-scope 'visible
-        evil-snipe-repeat-scope 'visible))
-
-(map! :leader "f ." #'find-file-at-point)
-
-(setq! tab-always-indent 'complete)
-
-(global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
-
-;; (defun mouse-drag-left-line (start-event)
-;;   "Change the width of a window by dragging on a vertical line.
-;; START-EVENT is the starting mouse event of the drag action."
-;;   (interactive "e")
-;;   (mouse-drag-line start-event 'left))
-
-;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 
 (setq org-directory "~/.org")
 
@@ -2027,95 +2026,6 @@ Not added when either:
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
 (after! magit-todos (magit-todos-mode))
-
-(after! notmuch
-  (setq +notmuch-sync-backend 'mbsync
-        +notmuch-mail-folder "~/Mail"
-        notmuch-draft-folder "proxmox/Entw&APw-rfe"
-        notmuch-fcc-dirs "proxmox/Sent"
-        notmuch-mua-cite-function 'message-cite-original-without-signature
-        notmuch-mua-compose-in 'current-window
-        notmuch-show-logo nil
-        notmuch-hello-indent 0  ;; do not indent because it works better with evil navigation
-        notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread)))
-        notmuch-saved-searches
-        '((:key "i" :name "󰇮 inbox"   :query "tag:inbox and not tag:archive")
-          (:key "f" :name " flagged" :query "tag:flagged")
-          (:key "m" :name "󰇮 my PRs"  :query "tag:my-pr and not tag:archive and not tag:killed and not tag:deleted and not tag:inbox")
-          (:key "w" :name "󰇮 watch"   :query "tag:watch and not tag:my-pr and not tag:archive and not tag:killed and not tag:deleted and not tag:inbox")
-          (:key "t" :name "󰇮 team"    :query "tag:lists/team and not tag:archive and not tag:inbox")
-          (:key "b" :name " My Bugs" :query "tag:bugs and tag:to-me and not tag:archive and not tag:inbox")
-          (:key "s" :name " support (new)" :query "tag:support-new and not tag:archive and not tag:killed")
-          (:key "r" :name " review"  :query "tag:review and not tag:archive and not tag:killed and not tag:inbox")
-          (:key "d" :name " drafts"  :query "tag:draft and not tag:archive and not tag:deleted")
-          ;; (:key ">" :name "󰗕 sent"    :query "tag:sent and not tag:archive")
-          (:key "M" :name " my PRs" :query "tag:my-pr and not tag:killed and not tag:deleted and not tag:inbox")
-          (:key "W" :name " watch" :query "tag:watch and not tag:killed and not tag:deleted and not tag:inbox")
-          (:key "B" :name " Bugzilla" :query "tag:bugs and not tag:archive and not tag:inbox")
-          (:key "S" :name " support" :query "tag:support and not tag:archive and not tag:killed and not tag:inbox")
-          (:key "P" :name " pkgs"    :query "tag:lists/pkgs and not tag:archive and not tag:inbox"))
-        notmuch-archive-tags '("+archive" "-inbox" "-unread")
-        +notmuch-spam-tags '("+spam" "-inbox" "-unread")
-        +notmuch-delete-tags '("+trash" "-inbox" "-unread")
-
-        stfl/notmuch-unwatch-tags (append notmuch-archive-tags '("-my-pr" "-watch" "-review"))
-        stfl/notmuch-kill-tags (cons "+killed" stfl/notmuch-unwatch-tags)
-
-        message-hidden-headers nil  ;; don't hide any headers to verify In-reply-to and Reference headers
-        notmuch-mua-hidden-headers nil
-
-        message-sendmail-f-is-evil 't
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp")
-  (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
-  (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
-  (defun +notmuch-get-sync-command ()
-    "mbsync -a && notmuch new && afew -n -t"))
-
-(after! notmuch
-  (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
-    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
-    (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
-      (notmuch-search-archive-thread unarchive beg end)))
-
-  (defun stfl/notmuch-search-kill-thread (&optional unarchive beg end)
-    (interactive (cons current-prefix-arg (notmuch-interactive-region)))
-    (let ((notmuch-archive-tags stfl/notmuch-kill-tags))
-      (notmuch-search-archive-thread unarchive beg end)))
-  )
-
-(map! :after notmuch
-      :map notmuch-common-keymap
-      :n "?" #'notmuch-help
-      :map notmuch-show-mode-map
-      ;; :g "<mouse-1>" #'notmuch-show-toggle-message
-      ;; :g "<mouse-2>" #'notmuch-show-toggle-message
-      ;; :desc "toggle show message" :n "<tab>" #'notmuch-show-toggle-message
-      ;; :desc "toggle show message" :n "C-<tab>" #'notmuch-show-open-or-close-all
-      :g "C-c C-e" #'notmuch-show-resume-message
-      :n "ge" #'notmuch-show-resume-message
-      ;; :n "A" '(λ! (notmuch-search-tag-all "-archive -my-pr -watch"))  ;; TODO need to tag ENTIRE thread oterhwise it will be tagged again with afew
-      :map notmuch-tree-mode-map
-      :g "C-c C-e" #'notmuch-tree-resume-message
-      :n "ge" #'notmuch-tree-resume-message
-      :n "A" (λ! (notmuch-tree-tag-thread stfl/notmuch-unwatch-tags))
-      :n "K" (λ! (notmuch-tree-tag-thread stfl/notmuch-kill-tags))
-      :map notmuch-search-mode-map
-      :n "A" #'stfl/notmuch-search-unwatch-thread
-      :n "K" #'stfl/notmuch-search-kill-thread
-      ;; :map notmuch-message-mode-map
-      ;; :n "SPC f s" #'notmuch-draft-save
-      )
-
-(after! notmuch
-  (defun stfl/notmuch-hello-update-background ()
-    "Update notmuch-hello buffer. If we are in another frame, allow switch to it so it will be formatted correctly."
-    (let ((no-display (eq (selected-frame)
-                          (window-frame (display-buffer "*notmuch-hello*")))))
-      (notmuch-hello no-display)))
-
-  (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 
 ;; (set-email-account! "gmail"
 ;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
