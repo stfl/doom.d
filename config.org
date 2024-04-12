@@ -1737,7 +1737,7 @@ org-default-priority is treated as lower than the same set value"
 :betrag: %%^{Betrag|0}
 :oegk: nil
 :generali: nil
-:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|}
+:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|Psychotherapie|Gesundheitsvorsorge"}
 :END:
 
 [[file:%s]]
