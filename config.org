@@ -1709,9 +1709,6 @@ org-default-priority is treated as lower than the same set value"
 #+end_src
 
 *** Capture Bills for Insurance Claims
-:PROPERTIES:
-:ID:       6ca55226-d955-4b3d-ac55-4962eec21326
-:END:
 
 #+BEGIN_SRC elisp
 (after! org
