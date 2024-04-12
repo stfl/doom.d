@@ -1296,9 +1296,9 @@ org-default-priority is treated as lower than the same set value"
 :CREATED: %%U
 :date: [%s]
 :betrag: %%^{Betrag|0}
-:oegk: 0
-:generali: 0
-:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|}
+:oegk: nil
+:generali: nil
+:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|Psychotherapie|Gesundheitsvorsorge}
 :END:
 
 [[file:%s]]
