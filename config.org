@@ -493,6 +493,7 @@ Automatically saving all org-buffers when emacs is idle for 30 seconds.
 #+BEGIN_SRC elisp
 (after! org (run-with-idle-timer 30 t #'org-save-all-org-buffers))
 #+END_SRC
+
 ** Completion backends in org-mode
 
 This is simply copied from discord.. Probably not that bad but don't know.. I
