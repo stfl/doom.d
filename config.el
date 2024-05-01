@@ -231,7 +231,7 @@
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
-(after! org (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+(after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 
 (after! org
   (set-company-backend! 'org-mode
