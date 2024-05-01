@@ -484,9 +484,6 @@ also rebuild that via org-roam
 #+end_src
 
 ** Auto-saving org-mode files
-:PROPERTIES:
-:ID:       d206a353-12c6-4d53-9f6f-97e24840c79e
-:END:
 
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
 
