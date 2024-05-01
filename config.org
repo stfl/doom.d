@@ -491,7 +491,7 @@ also rebuild that via org-roam
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
 
 #+BEGIN_SRC elisp
-(after! org (run-with-idle-timer 30 t #'org-save-all-org-buffers))
+(after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 #+END_SRC
 
 ** Completion backends in org-mode
