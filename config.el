@@ -156,11 +156,11 @@
  `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
  `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
 
-(set-popup-rules!
-  '(("^\\*subject:" :ignore t)  ; notmuch list view
-    ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
-    ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
-    ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
+;; (set-popup-rules!
+;;   '(("^\\*subject:" :ignore t)  ; notmuch list view
+;;     ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
+;;     ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
+;;     ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
@@ -1260,11 +1260,12 @@ org-default-priority is treated as lower than the same set value"
           ))
   )
 
-(("d" "default" plain "%?" :target
-  (file+head ,stfl/org-gtd-inbox-absolute
-             "%<%Y%m%d%H%M%S>-${slug}.org"
-             "#+title: ${title}\n")
-  :unnarrowed t))
+(after! org-roam
+  (setq! org-roam-capture-templates
+         `(("d" "default" plain "%?"
+            :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
+                               "#+title: ${title}\n")
+            :unnarrowed t))))
 
 (after! org
   (defun stfl/org-capture-versicherung-post ()
