@@ -420,7 +420,8 @@ relevant again (Tickler)"
       ;; stfl/org-gtd-projects "gtd/projects/"
       stfl/org-gtd-projects '("emacs.org" "freelance.org"
                               "geschenke.org" "media.org" "projects.org"
-                              "proxmox.org" "pulswerk.org" "versicherung.org"))
+                              "proxmox.org" "pulswerk.org" "versicherung.org")
+      stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
@@ -1259,21 +1260,11 @@ org-default-priority is treated as lower than the same set value"
           ))
   )
 
-(defun stfl/get-support-dir (support-root ticketid title)
-  (doom-path support-root (concat ticketid "-" title)))
-
-(defun stfl/capture-support-file ()
-  (interactive)
-  (let* ((ticketid (read-string "Ticket ID: "))
-         (title (read-string "Title: "))
-         (support-dir (stfl/get-support-dir stfl/proxmox-support-dir ticketid title)))
-    (when (file-exists-p support-dir)
-      (error (format "Support directory already exists %s" support-dir)))
-    (mkdir support-dir)
-    (write-region "" nil (doom-path support-dir ".projectile"))
-    (projectile-add-known-project support-dir)
-    ;; TODO update org-agenda-files
-    (doom-path support-dir "NOTES.org")))
+(("d" "default" plain "%?" :target
+  (file+head ,stfl/org-gtd-inbox-absolute
+             "%<%Y%m%d%H%M%S>-${slug}.org"
+             "#+title: ${title}\n")
+  :unnarrowed t))
 
 (after! org
   (defun stfl/org-capture-versicherung-post ()
@@ -2148,7 +2139,7 @@ Not added when either:
   (setq! gptel-default-mode 'org-mode
 ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         gptel-model "gpt-4-0125-preview"
+         gptel-model "gpt-4-turbo"
          gptel-log-level 'info
          gptel-use-curl t
          gptel-stream t)
