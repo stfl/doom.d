@@ -749,8 +749,7 @@ org todo checkboxes
       stfl/org-gtd-projects '("emacs.org" "freelance.org"
                               "geschenke.org" "media.org" "projects.org"
                               "proxmox.org" "pulswerk.org" "versicherung.org")
-      stfl/org-roam-absolute (doom-path org-directory "roam/")
-      )
+      stfl/org-roam-absolute (doom-path org-directory "roam/"))
 #+end_src
 
 #+begin_src elisp
