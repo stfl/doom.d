@@ -743,6 +743,7 @@ org todo checkboxes
 (setq stfl/proxmox-support-dir "~/Support/"
       stfl/org-gtd-inbox "inbox.org"
       stfl/org-gtd-inbox-absolute (doom-path org-directory stfl/org-gtd-inbox)
+      stfl/org--absolute (doom-path org-directory stfl/org-gtd-inbox)
       stfl/org-gtd-todo "todo.org"
       stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
       ;; stfl/org-gtd-projects "gtd/projects/"
