@@ -1692,9 +1692,9 @@ org-default-priority is treated as lower than the same set value"
 #+begin_src elisp
 (after! org-roam
   (setq! org-roam-capture-templates
-         `(("d" "default" plain "%?" :target
-            (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
-                       "#+title: ${title}\n")
+         `(("d" "default" plain "%?"
+            :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
+                               "#+title: ${title}\n")
             :unnarrowed t))))
 #+end_src
 
