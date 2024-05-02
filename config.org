@@ -930,6 +930,13 @@ org todo checkboxes
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
+        ("wp" "Pulswerk Backlog"
+         ((org-ql-block '(and (or (todo "PROJ")
+                                  (standalone-next))
+                              (tags "pulswerk" "@pulswerk" "@office"))
+                        ((org-ql-block-header "Backlog")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)
+                         (org-dim-blocked-tasks t)))))
         ("wB" "Backlog #work w/ Proxmox"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
