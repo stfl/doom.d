@@ -1691,8 +1691,7 @@ org-default-priority is treated as lower than the same set value"
 
 #+begin_src elisp
 (("d" "default" plain "%?" :target
-  (file+head ,stfl/org-gtd-inbox-absolute
-             "%<%Y%m%d%H%M%S>-${slug}.org"
+  (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
              "#+title: ${title}\n")
   :unnarrowed t))
 #+end_src
