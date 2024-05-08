@@ -3165,6 +3165,21 @@ Use the (almost) default keybindings in evil normal-mode
   (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
 ** ssh-config-mode
+
+#+begin_src elisp :tangle packages.el
+(package! emacsql-sqlite-builtin)
+
+(package! ssh-config-mode-el
+  :recipe (:host github
+           :repo "jhgorrell/ssh-config-mode-el"
+           :files ("*.el" "out")))
+#+end_src
+
+#+begin_src elisp
+(setq org-roam-database-connector 'sqlite-builtin
+      forge-database-connector 'sqlite-builtin
+      code-review-db-database-connector 'sqlite-builtin)
+#+end_src
 * Collaboration and VCS
 ** Directory tree diff - ztree
 :PROPERTIES:
