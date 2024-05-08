@@ -58,9 +58,7 @@
 ;; bbatsov/adoc-mode
 (package! adoc-mode)
 
-(package! emacsql-sqlite-builtin)
-
-(package! ssh-config-mode-el
+(package! ssh-config-mode
   ;; :recipe (:host github
            ;; :repo "jhgorrell/ssh-config-mode-el"
            ;; :files ("*.el" "out"))
