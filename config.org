@@ -3172,7 +3172,8 @@ Use the (almost) default keybindings in evil normal-mode
 (package! ssh-config-mode-el
   :recipe (:host github
            :repo "jhgorrell/ssh-config-mode-el"
-           :files ("*.el" "out")))
+           ;; :files ("*.el" "out"))
+  )
 #+end_src
 
 #+begin_src elisp
