@@ -3166,6 +3166,7 @@ Use the (almost) default keybindings in evil normal-mode
 
   (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
+** ssh-config-mode
 * Collaboration and VCS
 ** Directory tree diff - ztree
 :PROPERTIES:
