@@ -2005,7 +2005,8 @@ Not added when either:
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 
-(use-package! ssh-config-mode)
+(use-package! ssh-config-mode
+  :defer t)
 
 (use-package! ztree)
 
