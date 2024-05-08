@@ -3177,9 +3177,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(use-package! ssh-config-mode-el
-
-  )
+(use-package! ssh-config-mode-el)
 #+end_src
 * Collaboration and VCS
 ** Directory tree diff - ztree
