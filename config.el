@@ -1757,10 +1757,9 @@ Not added when either:
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
-(when (version<= "29" emacs-version)
-  (setq org-roam-database-connector 'sqlite-builtin
-        forge-database-connector 'sqlite-builtin
-        code-review-db-database-connector 'sqlite-builtin))
+(setq org-roam-database-connector 'sqlite-builtin
+      forge-database-connector 'sqlite-builtin
+      code-review-db-database-connector 'sqlite-builtin)
 
 (after! vterm
   (setq! vterm-max-scrollback 200000))
@@ -2005,6 +2004,8 @@ Not added when either:
         lsp-ltex-version "16.0.0"
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
+
+(use-package! ssh-config-mode-el)
 
 (use-package! ztree)
 

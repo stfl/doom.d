@@ -26,8 +26,7 @@
 ;;            :repo "tecosaur/org-pandoc-import"
 ;;            :files ("*.el" "filters" "preprocessors")))
 
-(when (version<= "29" emacs-version)
-  (package! emacsql-sqlite-builtin))
+(package! emacsql-sqlite-builtin)
 
 (package! copilot
   :recipe (:host github
@@ -58,6 +57,14 @@
 
 ;; bbatsov/adoc-mode
 (package! adoc-mode)
+
+(package! emacsql-sqlite-builtin)
+
+(package! ssh-config-mode-el
+  ;; :recipe (:host github
+           ;; :repo "jhgorrell/ssh-config-mode-el"
+           ;; :files ("*.el" "out"))
+  )
 
 (package! ztree)
 
