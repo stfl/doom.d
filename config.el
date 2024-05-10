@@ -420,7 +420,7 @@ relevant again (Tickler)"
       ;; stfl/org-gtd-projects "gtd/projects/"
       stfl/org-gtd-projects '("emacs.org" "freelance.org"
                               "geschenke.org" "media.org" "projects.org"
-                              "proxmox.org" "pulswerk.org" "versicherung.org")
+                              "3datax.org" "pulswerk.org" "versicherung.org")
       stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
 (after! org
