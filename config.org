@@ -3183,7 +3183,8 @@ Use the (almost) default keybindings in evil normal-mode
 (package! bitbake-modes
   :recipe (:host bitbucket
            :repo "olanilsson/bitbake-modes"
-           :files ("*.el"))
+           ;; :files ("*.el")
+           )
   )
 #+end_src
 

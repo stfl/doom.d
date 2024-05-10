@@ -66,7 +66,7 @@
 
 (package! bitbake-modes
   :recipe (:host bitbucket
-           :repo "jhgorrell/ssh-config-mode-el"
+           :repo "olanilsson/bitbake-modes"
            :files ("*.el"))
   )
 
