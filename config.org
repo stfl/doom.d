@@ -3183,7 +3183,7 @@ Use the (almost) default keybindings in evil normal-mode
 (package! bitbake-modes
   :recipe (:host bitbucket
            :repo "jhgorrell/ssh-config-mode-el"
-           :files ("*.el" "out"))
+           :files ("*.el"))
   )
 #+end_src
 
