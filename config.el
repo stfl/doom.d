@@ -2006,6 +2006,7 @@ Not added when either:
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 
 (use-package! ssh-config-mode
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
   :defer t)
 
 (use-package! bitbake-modes
