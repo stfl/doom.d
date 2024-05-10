@@ -68,8 +68,7 @@
   :recipe (:host bitbucket
            :repo "olanilsson/bitbake-modes"
            ;; :files ("*.el")
-           )
-  )
+           ))
 
 (package! ztree)
 
