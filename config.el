@@ -2008,6 +2008,9 @@ Not added when either:
 (use-package! ssh-config-mode
   :defer t)
 
+(use-package! bitbake-modes
+  :defer t)
+
 (use-package! ztree)
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))

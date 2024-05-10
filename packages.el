@@ -64,6 +64,12 @@
            ;; :files ("*.el" "out"))
   )
 
+(package! bitbake-modes
+  :recipe (:host bitbucket
+           :repo "jhgorrell/ssh-config-mode-el"
+           :files ("*.el"))
+  )
+
 (package! ztree)
 
 ;; (package! mailscripts.el
