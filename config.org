@@ -353,6 +353,8 @@ There is more fine grained face control for search based on tags :
 ;;     ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 #+END_SRC
 
+  # (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
+
 ** Minimap (demap.el)
 
 #+begin_src elisp :tangle packages.el
@@ -3491,5 +3493,4 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
          gptel-stream t)
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-  (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
 #+end_src
