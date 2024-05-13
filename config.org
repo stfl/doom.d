@@ -360,6 +360,9 @@ There is more fine grained face control for search based on tags :
 #+end_src
 
 
+
+  ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
+
 ** Minimap (demap.el)
 
 #+begin_src elisp :tangle packages.el
@@ -394,8 +397,6 @@ There is more fine grained face control for search based on tags :
     (face-spec-set 'demap-current-line-inactive-face
                    `((t :background ,gray1
                         :inherit    unspecified ))))
-
-  ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
 
 ;;   (defun my-track-window-update-p()
 ;;     "my minimap update predicate function.
