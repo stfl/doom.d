@@ -359,9 +359,7 @@ There is more fine grained face control for search based on tags :
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 #+end_src
 
-
-
-  ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
+  # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
 
 ** Minimap (demap.el)
 
