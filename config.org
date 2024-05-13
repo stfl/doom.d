@@ -355,6 +355,11 @@ There is more fine grained face control for search based on tags :
 
   # (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
 
+#+begin_src elisp
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
+#+end_src
+
+
 ** Minimap (demap.el)
 
 #+begin_src elisp :tangle packages.el
@@ -2693,10 +2698,6 @@ To enable this in the notebook, configure matplotlib to produce inline images.
 #+end_src
 
 don't kill the *ein: buffer with ~ESC~ which causes the buffer not to work properly
-
-#+begin_src elisp
-(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
-#+end_src
 
 org babel integration for ein
 
