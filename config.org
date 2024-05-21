@@ -909,7 +909,7 @@ org todo checkboxes
                               (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("wa" "Work Agenda Today w/ Proxmox"
+        ("wa" "Work Agenda Today w/ 3DataX"
          ((org-ql-block '(and (and (work)
                                    (not (tags "3datax")))
                               (not (done))
