@@ -3487,7 +3487,7 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
   (setq! gptel-default-mode 'org-mode
 ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         gptel-model "gpt-4-turbo"
+         gptel-model "gpt-4o"
          gptel-log-level 'info
          gptel-use-curl t
          gptel-stream t)
