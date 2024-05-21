@@ -932,7 +932,7 @@ org todo checkboxes
         ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "proxmox" "@office" "@proxmox"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
