@@ -939,7 +939,7 @@ org todo checkboxes
         ("wp" "Pulswerk Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "pulswerk" "@pulswerk" "@office"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
