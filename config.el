@@ -162,6 +162,8 @@
 ;;     ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
 ;;     ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
 
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
+
 ;; (after! (solaire-mode demap)
 (use-package! demap
   :commands demap-toggle
@@ -188,8 +190,6 @@
     (face-spec-set 'demap-current-line-inactive-face
                    `((t :background ,gray1
                         :inherit    unspecified ))))
-
-  ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
 
 ;;   (defun my-track-window-update-p()
 ;;     "my minimap update predicate function.
@@ -546,8 +546,8 @@ relevant again (Tickler)"
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
-        ("ww" "Work Agenda Today Proxmox"
-         ((org-ql-block '(and (tags "proxmox" "@office" "@proxmox")
+        ("ww" "Work Agenda 3DataX"
+         ((org-ql-block '(and (tags "3datax" "@3datax")
                              (not (done))
                              (or (habit)
                                  (deadline :to today)
@@ -561,12 +561,12 @@ relevant again (Tickler)"
                               (not (ancestors (deadline :to 0)))
                               (not (deadline :to 0))
                               (not (scheduled))
-                              (tags "proxmox" "@office" "@proxmox"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("wa" "Work Agenda Today w/ Proxmox"
+        ("wa" "Work Agenda Today w/ 3DataX"
          ((org-ql-block '(and (and (work)
-                                   (not (tags "proxmox")))
+                                   (not (tags "3datax")))
                               (not (done))
                               (or (habit)
                                   (deadline :to today)
@@ -581,27 +581,27 @@ relevant again (Tickler)"
                               (not (deadline :to 0))
                               (not (scheduled))
                               (and (work)
-                                   (not (tags "proxmox"))))
+                                   (not (tags "3datax"))))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "proxmox" "@office" "@proxmox"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
         ("wp" "Pulswerk Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (tags "pulswerk" "@pulswerk" "@office"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
-        ("wB" "Backlog #work w/ Proxmox"
+        ("wB" "Backlog #work w/ 3DataX"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (and (work) (not (tags "proxmox"))))
+                              (and (work) (not (tags "3datax"))))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
@@ -1873,8 +1873,6 @@ Not added when either:
   (setq! ein:output-area-inlined-images t
          ein:worksheet-warn-obsolesced-keybinding nil))
 
-(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
-
 (when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
@@ -2005,11 +2003,10 @@ Not added when either:
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 
-(use-package! ssh-config-mode
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
-  :defer t)
+(use-package! ssh-config-mode :defer t)
 
 (use-package! bitbake-modes
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
   :defer t)
 
 (use-package! ztree)
@@ -2159,4 +2156,3 @@ Not added when either:
          gptel-stream t)
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-  (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
