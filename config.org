@@ -926,7 +926,7 @@ org todo checkboxes
                               (not (deadline :to 0))
                               (not (scheduled))
                               (and (work)
-                                   (not (tags "proxmox"))))
+                                   (not (tags "3datax"))))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wb" "Proxmox Backlog"
