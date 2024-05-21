@@ -906,7 +906,7 @@ org todo checkboxes
                               (not (ancestors (deadline :to 0)))
                               (not (deadline :to 0))
                               (not (scheduled))
-                              (tags "proxmox" "@office" "@proxmox"))
+                              (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wa" "Work Agenda Today w/ Proxmox"
