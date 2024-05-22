@@ -3484,7 +3484,6 @@ git blame lenses
 (use-package! blamer
   ;; :bind (("s-i" . blamer-show-commit-info))
   ;; :defer 20
-  :
   :config (setq! blamer-idle-time 0.3
                  blamer-min-offset 70)
           (global-blamer-mode 1))
