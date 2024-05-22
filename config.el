@@ -165,7 +165,7 @@
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
 (custom-set-faces!
-  `(blamer-face :italic t :height 90 :foreground ,(doom-color 'base5)))
+  `(blamer-face :italic t :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
@@ -2150,14 +2150,16 @@ Not added when either:
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
-  (map! :leader "g i" #'blamer-show-commit-info)
+  (map! :leader "g i" #'blamer-show-posframe-commit-info)
   (setq! blamer-idle-time 0.3
          blamer-type 'visual
          blamer-max-commit-message-length 80
          ;; blamer-max-lines 100
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
-         blamer-min-offset 70))
+         blamer-min-offset 70)
+  ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
+  )
 
 (use-package! gptel
   :after auth-source
