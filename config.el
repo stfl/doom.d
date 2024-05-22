@@ -146,10 +146,10 @@
   '(adoc-warning-face :inherit org-warning))
 
 (custom-set-faces!
- '(notmuch-message-summary-face :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text :foreground ,(doom-color 'base6))
- `(notmuch-search-subject :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face :weight bold :slant italic)
+ '(notmuch-message-summary-face      :foreground "#848d94")  ;; between dooms base6 and base7
+ `(notmuch-wash-cited-text           :foreground ,(doom-color 'base6))
+ `(notmuch-search-subject            :foreground ,(doom-darken (doom-color 'fg) 0.05))
+ '(notmuch-search-unread-face        :weight bold :slant italic)
  `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
  `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
  `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
@@ -165,7 +165,7 @@
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
 (custom-set-faces!
-  '(blamer-face :foreground "#7a88cf" :background nil :height 140 :italic t))
+  `(blamer-face :italic t :foreground ,(doom-color 'base6)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
@@ -2147,14 +2147,13 @@ Not added when either:
    :localleader "d" #'diffview-current))
 
 (use-package! blamer
-  ;; :bind (("s-i" . blamer-show-commit-info))
-  ;; :defer 20
-  :commands blamer-show-commit-info
+  :commands global-blamer-mode
+  :init (map! :leader "t B" #'global-blamer-mode)
   :config
   (map! :leader "t B" #'blamer-show-commit-info)
   (setq! blamer-idle-time 0.3
-         blamer-min-offset 70)
-  (global-blamer-mode 1))
+         blamer-type 'visual
+         blamer-min-offset 70))
 
 (use-package! gptel
   :after auth-source
