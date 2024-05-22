@@ -3475,7 +3475,6 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
 (use-package! blamer
   ;; :bind (("s-i" . blamer-show-commit-info))
   ;; :defer 20
-  ;; :custom
   :custom-face
   (blamer-face ((t :foreground "#7a88cf"
                     :background nil
