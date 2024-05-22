@@ -360,6 +360,16 @@ There is more fine grained face control for search based on tags :
 #+end_src
 
   # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
+** Git blamer theme
+
+#+begin_src elisp
+(custom-set-faces!
+  '(blamer-face :foreground "#7a88cf"
+                    :background nil
+                    :height 140
+                    :italic t))
+
+#+end_src
 
 ** Minimap (demap.el)
 
@@ -3478,11 +3488,6 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
   :custom-face
   :config (setq! blamer-idle-time 0.3
                  blamer-min-offset 70)
-          (custom-set-face!)
-  (blamer-face ((t :foreground "#7a88cf"
-                    :background nil
-                    :height 140
-                    :italic t)))
           (global-blamer-mode 1))
 #+end_src
 
