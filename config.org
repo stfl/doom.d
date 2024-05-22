@@ -3482,8 +3482,6 @@ git blame lenses
 
 #+begin_src elisp
 (use-package! blamer
-  ;; :bind (("s-i" . blamer-show-commit-info))
-  ;; :defer 20
   :commands blamer-show-commit-info
   :config
   (map! :leader "t B" #'blamer-show-commit-info)
