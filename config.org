@@ -3489,7 +3489,7 @@ git blame lenses
 
 #+begin_src elisp
 (use-package! blamer
-  :commands blamer-show-commit-info global-blamer-mode
+  :commands '(blamer-show-commit-info global-blamer-mode)
   :init
   (global-blamer-mode 1)
   :config
