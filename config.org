@@ -3492,7 +3492,9 @@ git blame lenses
          ;; blamer-max-lines 100
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
-         blamer-min-offset 70))
+         blamer-min-offset 70)
+  (add-hook!)
+  )
 #+end_src
 
 ** AI Chat gptel
