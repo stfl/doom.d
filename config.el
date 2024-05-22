@@ -165,7 +165,7 @@
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
 (custom-set-faces!
-  `(blamer-face :italic t :foreground ,(doom-color 'base5)))
+  `(blamer-face :italic t :height 90 :foreground ,(doom-color 'base5)))
 
 ;; (after! (solaire-mode demap)
 (use-package! demap
