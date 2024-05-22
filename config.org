@@ -3489,7 +3489,7 @@ git blame lenses
   (setq! blamer-idle-time 0.3
          ;; blamer-type 'visual
          ;; blamer-type 'posframe-popup
-         blamer-type 'posframe-popup
+         blamer-type 'overlay-popup
          blamer-min-offset 70))
 #+end_src
 
