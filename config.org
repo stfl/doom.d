@@ -3489,13 +3489,15 @@ git blame lenses
 
 #+begin_src elisp
 (use-package! blamer
-  :commands blamer-show-commit-info
+  :commands blamer-show-commit-info global-blamer-mode
+  :init
+  (global-blamer-mode 1)
   :config
   (map! :leader "t B" #'blamer-show-commit-info)
   (setq! blamer-idle-time 0.3
          blamer-type 'visual
          blamer-min-offset 70)
-  (global-blamer-mode 1))
+  )
 #+end_src
 
 ** AI Chat gptel
