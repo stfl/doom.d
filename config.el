@@ -2149,10 +2149,12 @@ Not added when either:
 (use-package! blamer
   ;; :bind (("s-i" . blamer-show-commit-info))
   ;; :defer 20
-  :
-  :config (setq! blamer-idle-time 0.3
-                 blamer-min-offset 70)
-          (global-blamer-mode 1))
+  :commands blamer-show-commit-info
+  :config
+  (map! :leader "t B" #'blamer-show-commit-info)
+  (setq! blamer-idle-time 0.3
+         blamer-min-offset 70)
+  (global-blamer-mode 1))
 
 (use-package! gptel
   :after auth-source
