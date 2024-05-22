@@ -164,6 +164,9 @@
 
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
+(custom-set-faces!
+  '(blamer-face :foreground "#7a88cf" :background nil :height 140 :italic t))
+
 ;; (after! (solaire-mode demap)
 (use-package! demap
   :commands demap-toggle
@@ -2143,6 +2146,14 @@ Not added when either:
    :after notmuch
    :localleader "d" #'diffview-current))
 
+(use-package! blamer
+  ;; :bind (("s-i" . blamer-show-commit-info))
+  ;; :defer 20
+  :
+  :config (setq! blamer-idle-time 0.3
+                 blamer-min-offset 70)
+          (global-blamer-mode 1))
+
 (use-package! gptel
   :after auth-source
   :commands gptel
@@ -2150,7 +2161,7 @@ Not added when either:
   (setq! gptel-default-mode 'org-mode
 ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         gptel-model "gpt-4-turbo"
+         gptel-model "gpt-4o"
          gptel-log-level 'info
          gptel-use-curl t
          gptel-stream t)

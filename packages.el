@@ -77,4 +77,6 @@
 
 (package! diffview)
 
+(package! blamer)
+
 (package! gptel)
