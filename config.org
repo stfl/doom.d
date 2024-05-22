@@ -3485,9 +3485,11 @@ git blame lenses
   ;; :bind (("s-i" . blamer-show-commit-info))
   ;; :defer 20
   :commands blamer-show-commit-info
-  :config (setq! blamer-idle-time 0.3
-                 blamer-min-offset 70)
-          (global-blamer-mode 1))
+  :config
+  (map)
+  (setq! blamer-idle-time 0.3
+         blamer-min-offset 70)
+  (global-blamer-mode 1))
 #+end_src
 
 ** AI Chat gptel
