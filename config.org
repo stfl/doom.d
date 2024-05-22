@@ -363,7 +363,8 @@ There is more fine grained face control for search based on tags :
 ** Git blamer theme
 
 #+begin_src elisp
-(custom-set-faces! '(blamer-face :foreground "#7a88cf" :background nil :height 140 :italic t))
+(custom-set-faces!
+  '(blamer-face :foreground "#7a88cf" :background nil :height 140 :italic t))
 
 #+end_src
 
