@@ -364,7 +364,7 @@ There is more fine grained face control for search based on tags :
 
 #+begin_src elisp
 (custom-set-faces!
-  `(blamer-face :italic t :height 1l :foreground ,(doom-color 'base5)))
+  `(blamer-face :italic t :height 1.0 :foreground ,(doom-color 'base5)))
 #+end_src
 
 ** Minimap (demap.el)
