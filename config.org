@@ -3481,11 +3481,9 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
                     :background nil
                     :height 140
                     :italic t)))
-  :config
-
-  (setq! blamer-idle-time 0.3
-         blamer-min-offset 70)
-  (global-blamer-mode 1))
+  :config (setq! blamer-idle-time 0.3
+                 blamer-min-offset 70)
+          (global-blamer-mode 1))
 #+end_src
 
 ** AI Chat gptel
