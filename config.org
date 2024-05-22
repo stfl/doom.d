@@ -3490,8 +3490,9 @@ git blame lenses
 #+begin_src elisp
 (use-package! blamer
   :commands blamer-show-commit-info
-  :init (map! :leader "t B" #'blamer-show-commit-info)
+  :init
   :config
+  (map! :leader "t B" #'blamer-show-commit-info)
   (setq! blamer-idle-time 0.3
          blamer-type 'visual
          blamer-min-offset 70)
