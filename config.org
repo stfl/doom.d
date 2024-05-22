@@ -364,8 +364,10 @@ There is more fine grained face control for search based on tags :
 
 #+begin_src elisp
 (custom-set-faces!
-  `(blamer-face :inherit font-lock-comment-face :italic t
-    :foreground ,(doom-color 'base7)))
+  `(blamer-face
+    ;; :inherit font-lock-comment-face
+    :italic t
+    :foreground ,(doom-color 'base1)))
     ;; :foreground ,(doom-lighten (doom-color 'base7) 0.3)))
     ;; :background nil
     ;; :height 140
