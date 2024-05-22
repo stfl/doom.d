@@ -3493,7 +3493,7 @@ git blame lenses
   :init (map! :leader "t B" #'blamer-show-commit-info)
   :config
   (setq! blamer-idle-time 0.3
-         blamer-type ’selected
+         blamer-type 'selected
          blamer-min-offset 70)
   (global-blamer-mode 1))
 #+end_src
