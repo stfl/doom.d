@@ -3488,7 +3488,7 @@ git blame lenses
   (map! :leader "g i" #'blamer-show-commit-info)
   (setq! blamer-idle-time 0.3
          blamer-type 'visual
-         blamer-max-lines 100
+         ;; blamer-max-lines 100
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 70))
