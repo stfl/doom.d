@@ -3492,7 +3492,7 @@ git blame lenses
          ;; blamer-max-lines 100
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
-         blamer-min-offset 70)
+         blamer-min-offset 40)
   ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
 #+end_src
