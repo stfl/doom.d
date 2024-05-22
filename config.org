@@ -3491,7 +3491,7 @@ git blame lenses
 (use-package! blamer
   :commands '(blamer-show-commit-info global-blamer-mode)
   :init
-  (map! :leader "t B" #'blamer-show-commit-info)
+  (map! :leader "t B" #'global-blamer-mode)
   ;; (map! (global-blamer-mode 1)
   :config
   (map! :leader "t B" #'blamer-show-commit-info)
