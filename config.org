@@ -368,8 +368,11 @@ There is more fine grained face control for search based on tags :
 
 (custom-set-faces!
   `(blamer-face :inherit font-lock-comment-face
-    :height 90 :weight semi-light :foreground ,(doom-color 'base5))
-  )
+    :italic t
+    :height 90
+    :weight semi-light
+    :foreground ,(doom-color 'base5)
+    ))
 #+end_src
 
 ** Minimap (demap.el)
