@@ -369,7 +369,7 @@ There is more fine grained face control for search based on tags :
 (custom-set-faces!
   `(blamer-face :inherit font-lock-comment-face
     :italic t
-    :font "Fira Code 14"
+    :font "JetBrains Mono 14"
     :height 0.9
     ;; :weight semi-light
     ;; :foreground ,(doom-color 'base5)
