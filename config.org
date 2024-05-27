@@ -371,6 +371,7 @@ There is more fine grained face control for search based on tags :
     :italic t
     :font "JetBrains Mono"
     :height 0.9
+    :background unspecified
     ;; :weight semi-light
     ;; :foreground ,(doom-color 'base5)
     ))
