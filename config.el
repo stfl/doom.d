@@ -167,6 +167,16 @@
 (custom-set-faces!
   `(blamer-face :italic t :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
 
+(custom-set-faces!
+  `(blamer-face :inherit font-lock-comment-face
+    :italic t
+    :font "JetBrains Mono"
+    :height 0.9
+    :background unspecified
+    ;; :weight semi-light
+    ;; :foreground ,(doom-color 'base5)
+    ))
+
 ;; (after! (solaire-mode demap)
 (use-package! demap
   :commands demap-toggle
@@ -2157,7 +2167,7 @@ Not added when either:
          ;; blamer-max-lines 100
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
-         blamer-min-offset 70)
+         blamer-min-offset 40)
   ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
 
