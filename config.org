@@ -3277,6 +3277,7 @@ display more columns in forge list topic
 #   (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
 # )
 # #+END_SRC
+
 *** magit-todos
 
 activate magit-todo to display the TODOs section in magit buffer
