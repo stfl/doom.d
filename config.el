@@ -2040,7 +2040,7 @@ Not added when either:
 
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
-(after! magit-todos (magit-todos-mode))
+;; (after! magit-todos (magit-todos-mode))
 
 ;; (set-email-account! "gmail"
 ;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
