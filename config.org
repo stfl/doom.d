@@ -3284,7 +3284,7 @@ activate magit-todo to display the TODOs section in magit buffer
 #+begin_src elisp
 (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
 
-(after! magit-todos (magit-todos-mode))
+;; (after! magit-todos (magit-todos-mode))
 #+end_src
 
 ** E-Mail
