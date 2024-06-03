@@ -1067,6 +1067,10 @@ some helper functions
 *** [#D] org-ql custom predicates
 
 #+begin_src elisp
+(setq primary-work-tags '("#3datax" "@3datax") )
+#+end_src
+
+#+begin_src elisp
 (after! org-ql
   (org-ql-defpred tickler ()
     "match entries in the \"tickler\"."
