@@ -949,7 +949,13 @@ org todo checkboxes
                               (and (work)
                                    (not (tags "3datax"))))
                         ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups))))
+         (org-ql-block ((and (stuck-proj)
+                             (tags "3datax" "@3datax"))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
+
         ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
