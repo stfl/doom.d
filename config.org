@@ -963,13 +963,13 @@ org todo checkboxes
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
-        ("wp" "Backlog Primary Work"
-         ((org-ql-block '(and (or (todo "PROJ")
-                                  (standalone-next))
-                              (primary-work))
-                        ((org-ql-block-header "Backlog")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-dim-blocked-tasks t)))))
+        ;; ("wp" "Backlog Primary Work"
+        ;;  ((org-ql-block '(and (or (todo "PROJ")
+        ;;                           (standalone-next))
+        ;;                       (primary-work))
+        ;;                 ((org-ql-block-header "Backlog")
+        ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)
+        ;;                  (org-dim-blocked-tasks t)))))
         ("wB" "Backlog #work w/ 3DataX"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
