@@ -930,7 +930,7 @@ org todo checkboxes
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("wa" "Work Agenda Today w/ 3DataX"
+        ("wa" "Work Agenda Today w/ Non Primary Work"
          ((org-ql-block '(and (and (work)
                                    (not (primary-work)))
                               (not (done))
