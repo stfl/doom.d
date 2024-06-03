@@ -966,7 +966,7 @@ org todo checkboxes
                              (not (primary-work))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
+                         (org-super-agenda-groups stfl/ancestor-priority-groups))))))
 
         ;; ("wp" "Backlog Primary Work"
         ;;  ((org-ql-block '(and (or (todo "PROJ")
