@@ -893,7 +893,7 @@ org todo checkboxes
         ("pb" "Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
-                              (private)
+                              (not (primary-work))
                               (not (my-habit))
                               ;; (not (tags "HABIT"))
                               )
