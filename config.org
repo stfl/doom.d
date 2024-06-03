@@ -1100,7 +1100,7 @@ some helper functions
   (org-ql-defpred primary-work ()
     "work related entries."
     :normalizers ((`(,predicate-names)
-                   (rec '(tags "#work"))))
+                   (rec '(tags "#work" ,primary-work-tags))))
     :preambles ((`(,predicate-names)
                  (rec '(tags "#work")))))
 
