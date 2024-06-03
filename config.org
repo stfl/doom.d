@@ -1104,9 +1104,9 @@ some helper functions
   (org-ql-defpred primary-work ()
     "work related entries."
     :normalizers ((`(,predicate-names)
-                   (rec '(tags "#work" ,@primary-work-tags))))
+                   (rec '(tags ,@primary-work-tags))))
     :preambles ((`(,predicate-names)
-                 (rec '(tags "#work" ,@primary-work-tags)))))
+                 (rec '(tags ,@primary-work-tags)))))
 
   (org-ql-defpred private ()
     "Private entries."
