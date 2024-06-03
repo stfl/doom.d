@@ -708,7 +708,7 @@ To make the priorities mor visually appealing we add some nice symbols.
 
 and add change the color of the symbols to color range from red to blue
 
-** Agenda
+** [#D] Agenda
 :PROPERTIES:
 :ID:       b426d554-e01c-4792-8dfa-e0db617c4384
 :END:
@@ -924,6 +924,11 @@ org todo checkboxes
                               (not (scheduled))
                               (tags "3datax" "@3datax"))
                         ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups))))
+         (org-ql-block ((and (stuck-proj)
+                             (tags "3datax" "@3datax"))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wa" "Work Agenda Today w/ 3DataX"
          ((org-ql-block '(and (and (work)
