@@ -1106,7 +1106,7 @@ some helper functions
     :normalizers ((`(,predicate-names)
                    (rec '(tags "#work" ,@primary-work-tags))))
     :preambles ((`(,predicate-names)
-                 (rec '(tags "#work" ,primary-work-tags)))))
+                 (rec '(tags "#work" ,@primary-work-tags)))))
 
   (org-ql-defpred private ()
     "Private entries."
