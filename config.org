@@ -1064,7 +1064,7 @@ some helper functions
        (not (deadline :from ,from))))
 
 #+end_src
-*** org-ql custom predicates
+*** [#D] org-ql custom predicates
 
 #+begin_src elisp
 (after! org-ql
@@ -1091,6 +1091,13 @@ some helper functions
                                                          (not (tickler))))))))))))
 
   (org-ql-defpred work ()
+    "work related entries."
+    :normalizers ((`(,predicate-names)
+                   (rec '(tags "#work"))))
+    :preambles ((`(,predicate-names)
+                 (rec '(tags "#work")))))
+
+  (org-ql-defpred primary-work ()
     "work related entries."
     :normalizers ((`(,predicate-names)
                    (rec '(tags "#work"))))
