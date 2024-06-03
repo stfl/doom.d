@@ -907,8 +907,8 @@ org todo checkboxes
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("w" . "Work")
-        ("ww" "Work Agenda 3DataX"
-         ((org-ql-block '(and (tags "3datax" "@3datax")
+        ("ww" "Work Agenda Primary Work"
+         ((org-ql-block '(and (primary-work)
                              (not (done))
                              (or (habit)
                                  (deadline :to today)
