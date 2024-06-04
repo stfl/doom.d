@@ -2042,9 +2042,13 @@ Not added when either:
 
 (use-package! ssh-config-mode :defer t)
 
-(use-package! bitbake-modes
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
-  :defer t)
+;; (use-package! bitbake-modes
+;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
+;;   :defer t)
+
+(use-package! meson-mode
+  :config (add-hook! 'meson-mode-hook #'company-mode)
+  )
 
 (use-package! ztree)
 

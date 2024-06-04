@@ -64,11 +64,13 @@
            ;; :files ("*.el" "out"))
   )
 
-(package! bitbake-modes
-  :recipe (:host bitbucket
-           :repo "olanilsson/bitbake-modes"
-           ;; :files ("*.el")
-           ))
+;; (package! bitbake-modes
+;;   :recipe (:host bitbucket
+;;            :repo "olanilsson/bitbake-modes"
+;;            ;; :files ("*.el")
+;;            ))
+
+(package! meson-mode)
 
 (package! ztree)
 
