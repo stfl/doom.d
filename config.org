@@ -3221,17 +3221,17 @@ Use the (almost) default keybindings in evil normal-mode
 
 ** BitBake
 #+begin_src elisp :tangle packages.el
-(package! bitbake-modes
-  :recipe (:host bitbucket
-           :repo "olanilsson/bitbake-modes"
-           ;; :files ("*.el")
-           ))
+;; (package! bitbake-modes
+;;   :recipe (:host bitbucket
+;;            :repo "olanilsson/bitbake-modes"
+;;            ;; :files ("*.el")
+;;            ))
 #+end_src
 
 #+begin_src elisp
-(use-package! bitbake-modes
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
-  :defer t)
+;; (use-package! bitbake-modes
+;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
+;;   :defer t)
 #+end_src
 
 * Collaboration and VCS
