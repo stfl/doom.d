@@ -422,7 +422,8 @@ relevant again (Tickler)"
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 
 (after! org
-  (setq org-enforce-todo-checkbox-dependencies nil
+  (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax")
+        org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
 (setq stfl/proxmox-support-dir "~/Support/"
@@ -547,7 +548,6 @@ relevant again (Tickler)"
                                   (standalone-next))
                               (not (primary-work))
                               (not (my-habit))
-                              ;; (not (tags "HABIT"))
                               )
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
@@ -562,7 +562,7 @@ relevant again (Tickler)"
         ("ww" "Work Agenda Primary"
          ((org-ql-block '(and (primary-work)
                               (not (done))
-                              (or (habit)
+                              (or (my-habit)
                                   (deadline :to today)
                                   (scheduled :to today)
                                   (ts-active :on today)))
@@ -713,8 +713,6 @@ relevant again (Tickler)"
   `(and (not (scheduled :from today))
        (not (deadline :from ,from))))
 
-(setq primary-work-tags '("3datax" "@3datax" "#3datax"))
-
 (after! org-ql
   (org-ql-defpred tickler ()
     "match entries in the \"tickler\"."
@@ -748,9 +746,9 @@ relevant again (Tickler)"
   (org-ql-defpred primary-work ()
     "work related entries."
     :normalizers ((`(,predicate-names)
-                   (rec `(tags ,@primary-work-tags))))
+                   (rec `(tags ,@stfl/org-agenda-primary-work-tags))))
     :preambles ((`(,predicate-names)
-                 (rec `(tags ,@primary-work-tags)))))
+                 (rec `(tags ,@stfl/org-agenda-primary-work-tags)))))
 
   (org-ql-defpred private ()
     "Private entries."
