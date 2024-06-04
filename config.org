@@ -748,7 +748,8 @@ and add change the color of the symbols to color range from red to blue
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
+       primary-work-tags '("3datax" "@3datax" "#3datax"))
 #+end_src
 
 org todo checkboxes
@@ -1072,9 +1073,6 @@ some helper functions
 #+end_src
 *** [#D] org-ql custom predicates
 
-#+begin_src elisp
-(setq primary-work-tags '("3datax" "@3datax" "#3datax"))
-#+end_src
 
 #+begin_src elisp
 (after! org-ql
