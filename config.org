@@ -753,7 +753,6 @@ and add change the color of the symbols to color range from red to blue
 
 #+begin_src elisp
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
-
 #+end_src
 
 org todo checkboxes
