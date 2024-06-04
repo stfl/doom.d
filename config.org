@@ -3236,7 +3236,11 @@ Use the (almost) default keybindings in evil normal-mode
 ** Meson build system
 
 #+begin_src elisp :tangle packages.el
-(package! meson-mode
+(package! meson-mode)
+#+end_src
+
+#+begin_src elisp
+(use-package! meson)
 
 #+end_src
 
