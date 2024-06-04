@@ -749,7 +749,7 @@ and add change the color of the symbols to color range from red to blue
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
-       primary-work-tags '("3datax" "@3datax" "#3datax"))
+       stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
 #+end_src
 
 org todo checkboxes
@@ -1108,9 +1108,9 @@ some helper functions
   (org-ql-defpred primary-work ()
     "work related entries."
     :normalizers ((`(,predicate-names)
-                   (rec `(tags ,@primary-work-tags))))
+                   (rec `(tags ,@stfl/org-agenda-primary-work-tags))))
     :preambles ((`(,predicate-names)
-                 (rec `(tags ,@primary-work-tags)))))
+                 (rec `(tags ,@stfl/org-agenda-primary-work-tags)))))
 
   (org-ql-defpred private ()
     "Private entries."
