@@ -3233,6 +3233,7 @@ Use the (almost) default keybindings in evil normal-mode
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
 #+end_src
+** Meson build system
 
 * Collaboration and VCS
 ** Directory tree diff - ztree
