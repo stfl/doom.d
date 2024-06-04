@@ -908,7 +908,7 @@ and add change the color of the symbols to color range from red to blue
         ("ww" "Work Agenda Primary"
          ((org-ql-block '(and (primary-work)
                               (not (done))
-                              (or (habit)
+                              (or (my-habit)
                                   (deadline :to today)
                                   (scheduled :to today)
                                   (ts-active :on today)))
