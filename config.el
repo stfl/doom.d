@@ -2047,8 +2047,7 @@ Not added when either:
 ;;   :defer t)
 
 (use-package! meson-mode
-  :config (add-hook! 'meson-mode-hook #'company-mode)
-  )
+  :config (add-hook! 'meson-mode-hook #'company-mode))
 
 (use-package! ztree)
 
