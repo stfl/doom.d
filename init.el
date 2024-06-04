@@ -143,8 +143,9 @@
        :lang
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
-       ;; cc                 ; C/C++/Obj-C madness
-       (cc +lsp)                ; C/C++/Obj-C madness
+       (cc                 ; C/C++/Obj-C madness
+        +lsp
+        +tree-sitter)
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
