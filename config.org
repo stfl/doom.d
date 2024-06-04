@@ -748,8 +748,12 @@ and add change the color of the symbols to color range from red to blue
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
-       stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+#+end_src
+
+#+begin_src elisp
+(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
+
 #+end_src
 
 org todo checkboxes
