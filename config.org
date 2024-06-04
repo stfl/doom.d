@@ -894,7 +894,6 @@ and add change the color of the symbols to color range from red to blue
                                   (standalone-next))
                               (not (primary-work))
                               (not (my-habit))
-                              ;; (not (tags "HABIT"))
                               )
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
