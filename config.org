@@ -1629,9 +1629,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 #+begin_src elisp
 (setq stfl/org-super-agenda-today-groups
-      '(
-        ;; (:time-grid t
-        ;;  :order 0)
+      '((:time-grid t
+         :order 0)
         (:name "Tickler"
          :tag "SOMEDAY"
          :order 20)
