@@ -927,7 +927,7 @@ and add change the color of the symbols to color range from red to blue
                               (primary-work))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))))
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wa" "Work Agenda Today Non-Primary"
          ((org-ql-block '(and (and (work)
                                    (not (primary-work)))
