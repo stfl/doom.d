@@ -1634,9 +1634,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
         (:name "Tickler"
          :tag "SOMEDAY"
          :order 20)
-        (:discard (:name "Crypto Rotation"
-                   :tag "@crypto_rotation"
-                   :order 40))
         (:name "Habits"
          :tag "HABIT"
          :habit t
