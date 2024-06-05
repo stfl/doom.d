@@ -1630,14 +1630,17 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+begin_src elisp
 (setq stfl/org-super-agenda-today-groups
       '((:time-grid t
-         :order 0)
-        (:name "Tickler" :tag "SOMEDAY" :order 20) (:name "Habits"
-         :tag "HABIT"
-         :habit t
-         :order 90)
+                    :order 0)
+        (:name "Tickler"
+               :tag "SOMEDAY"
+               :order 20)
+        (:name "Habits"
+               :tag "HABIT"
+               :habit t
+               :order 90)
         (:name "Today"
-         :anything t
-         :order 10)))
+               :anything t
+               :order 10)))
 #+end_src
 
 ** org-ql
