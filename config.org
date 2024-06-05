@@ -1642,7 +1642,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                :anything t
                :order 10)))
 
-(setq stfl/org-super-agenda-today-groups
+(setq stfl/org-super-agenda-today-groups-primary-work
       '((:time-grid t
                :order 0)
         (:name "Tickler"
