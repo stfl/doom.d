@@ -1643,7 +1643,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                :order 10)))
 
 (:discard (:name "Primary Work"
-           :tag @
+           :tag @,stfl/org-agenda-primary-work-tags
            :order 40))
 (setq stfl/org-super-agenda-today-groups-no-primary-work
       (let ((discard-primary '())))
