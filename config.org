@@ -923,7 +923,7 @@ and add change the color of the symbols to color range from red to blue
                               (primary-work))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block (and (stuck-proj)
+          (org-ql-block '(and (stuck-proj)
                               (primary-work))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
