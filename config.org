@@ -1033,7 +1033,7 @@ some helper functions
            ((org-agenda-use-time-grid t)
             (org-deadline-warning-days 0)
             (org-agenda-span '1)
-            (org-super-agenda-groups stfl/org-super-agenda-today-groups)
+            (org-super-agenda-groups stfl/org-super-agenda-today-groups)  ;; TODO I can possible use (:discard stfl/primary-work-tags)
             (org-agenda-start-day (org-today)))))
 
 (defun prio-deadline>= (prio)
