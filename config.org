@@ -1641,6 +1641,20 @@ Org-mode properties drawer already, keep the headline and don’t insert
         (:name "Today"
                :anything t
                :order 10)))
+
+(setq stfl/org-super-agenda-today-groups
+      '((:time-grid t
+               :order 0)
+        (:name "Tickler"
+               :tag "SOMEDAY"
+               :order 20)
+        (:name "Habits"
+               :tag "HABIT"
+               :habit t
+               :order 90)
+        (:name "Today"
+               :anything t
+               :order 10)))
 #+end_src
 
 ** org-ql
