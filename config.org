@@ -1724,7 +1724,7 @@ org-default-priority is treated as lower than the same set value"
            :empty-lines-after 1)
           ("P" "Protocol"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
+           (file ,stfl/org-gtd-inbox-absolute)
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
