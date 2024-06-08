@@ -1732,12 +1732,6 @@ org-default-priority is treated as lower than the same set value"
            (file ,stfl/org-gtd-inbox-absolute)
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
-          ("x" "Proxmox")
-          ("xs" "Enterprise Support"
-           entry
-           (file stfl/capture-support-file)
-           (file ,(doom-path doom-private-dir "templates/template-proxmox-support.org"))
-           )
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
