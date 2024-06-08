@@ -1697,44 +1697,36 @@ org-default-priority is treated as lower than the same set value"
 #+begin_src elisp
 (after! org
   (setq org-capture-templates
-        `(("n" "capture to inbox"
-           entry
+        `(("n" "capture to inbox" entry
            (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-inbox.org"))
            :empty-lines-after 1)
-          ("p" "Project"
-           entry
+          ("p" "Project" entry
            (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
-          ("s" "scheduled"
-           entry
+          ("s" "scheduled" entry
            (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-scheduled.org"))
            :empty-lines-after 1)
-          ("v" "Versicherung"
-           entry
+          ("v" "Versicherung" entry
            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
            (function stfl/org-capture-template-versicherung)
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
-          ("S" "deadline"
-           entry
+          ("S" "deadline" entry
            (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-deadline.org"))
            :empty-lines-after 1)
-          ("P" "Protocol"
-           entry
+          ("P" "Protocol" entry
            (file ,stfl/org-gtd-inbox-absolute)
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
-          ("L" "Protocol Link"
-           entry
+          ("L" "Protocol Link" entry
            (file ,stfl/org-gtd-inbox-absolute)
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
           ("h" "Haushalt")
-          ("hw" "Wäsche"
-           entry
+          ("hw" "Wäsche" entry
            (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
            (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
           ))
