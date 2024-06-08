@@ -471,7 +471,7 @@ relevant again (Tickler)"
         ;;                   (org-super-agenda-groups stfl/priority-groups)
         ;;                   )))))
         ("a" "Private Agenda Today"
-         (,(stfl/agenda-day)  ;; FIXME still showing all
+         (,(stfl/agenda-day)
           (org-ql-block `(and (todo "NEXT" "WAIT")
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
                               (not ,(someday-habit))
@@ -577,11 +577,11 @@ relevant again (Tickler)"
                               (primary-work))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block ((and (stuck-proj)
+          (org-ql-block '(and (stuck-proj)
                               (primary-work))
-                         ((org-ql-block-header "Stuck Projects")
-                          (org-super-agenda-header-separator "")
-                          (org-super-agenda-groups stfl/ancestor-priority-groups))))))
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")
+                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
         ("wa" "Work Agenda Today Non-Primary"
          ((org-ql-block '(and (and (work)
                                    (not (primary-work)))
@@ -602,23 +602,23 @@ relevant again (Tickler)"
                                    (not (primary-work))))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block ((and (stuck-proj)
+          (org-ql-block '(and (stuck-proj)
                               (not (primary-work))
                               ((org-ql-block-header "Stuck Projects")
                                (org-super-agenda-header-separator "")
-                               (org-super-agenda-groups stfl/ancestor-priority-groups)))))))
+                               (org-super-agenda-groups stfl/ancestor-priority-groups))))))
         ("wb" "Proxmox Backlog"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
                               (primary-work))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-dim-blocked-tasks t))))
-         (org-ql-block ((and (stuck-proj)
-                             (not (primary-work))
-                             ((org-ql-block-header "Stuck Projects")
-                              (org-super-agenda-header-separator "")
-                              (org-super-agenda-groups stfl/ancestor-priority-groups))))))
+                         (org-dim-blocked-tasks t)))
+          (org-ql-block '(and (stuck-proj)
+                              (not (primary-work))
+                              ((org-ql-block-header "Stuck Projects")
+                               (org-super-agenda-header-separator "")
+                               (org-super-agenda-groups stfl/ancestor-priority-groups))))))
 
         ;; ("wp" "Backlog Primary Work"
         ;;  ((org-ql-block '(and (or (todo "PROJ")
@@ -679,7 +679,7 @@ relevant again (Tickler)"
            ((org-agenda-use-time-grid t)
             (org-deadline-warning-days 0)
             (org-agenda-span '1)
-            (org-super-agenda-groups stfl/org-super-agenda-today-groups)
+            (org-super-agenda-groups stfl/org-super-agenda-today-groups-no-primary-work)
             (org-agenda-start-day (org-today)))))
 
 (defun prio-deadline>= (prio)
@@ -1212,20 +1212,23 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (setq stfl/org-super-agenda-today-groups
       '((:time-grid t
-         :order 0)
+               :order 0)
         (:name "Tickler"
-         :tag "SOMEDAY"
-         :order 20)
-        (:discard (:name "Crypto Rotation"
-                   :tag "@crypto_rotation"
-                   :order 40))
+               :tag "SOMEDAY"
+               :order 20)
         (:name "Habits"
-         :tag "HABIT"
-         :habit t
-         :order 90)
+               :tag "HABIT"
+               :habit t
+               :order 90)
         (:name "Today"
-         :anything t
-         :order 10)))
+               :anything t
+               :order 10)))
+
+(setq stfl/org-super-agenda-today-groups-no-primary-work
+      (let ((discard-primary `(:discard (:name "Primary Work"
+                                         :tag ,stfl/org-agenda-primary-work-tags
+                                         :order 40))))
+        (cons discard-primary stfl/org-super-agenda-today-groups)))
 
 (defun stfl/org-ql-min-ancestor-priority< (a b)
   "Return non-nil if A's minimum ancestor priority is higher than B's.
@@ -1260,17 +1263,19 @@ org-default-priority is treated as lower than the same set value"
   (setq org-capture-templates
         `(("n" "capture to inbox"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
-           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
+           (file ,stfl/org-gtd-inbox-absolute)
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org"))
+           :empty-lines-after 1)
           ("p" "Project"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
+           (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
-           (file ,(doom-path doom-private-dir "templates/template-scheduled.org")))
+           (file ,stfl/org-gtd-inbox-absolute)
+           (file ,(doom-path doom-private-dir "templates/template-scheduled.org"))
+           :empty-lines-after 1)
           ("v" "Versicherung"
            entry
            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
@@ -1278,24 +1283,19 @@ org-default-priority is treated as lower than the same set value"
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
-           (file ,(doom-path doom-private-dir "templates/template-deadline.org")))
+           (file ,stfl/org-gtd-inbox-absolute)
+           (file ,(doom-path doom-private-dir "templates/template-deadline.org"))
+           :empty-lines-after 1)
           ("P" "Protocol"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
+           (file ,stfl/org-gtd-inbox-absolute)
            "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
            :empty-lines-after 1)
           ("L" "Protocol Link"
            entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
+           (file ,stfl/org-gtd-inbox-absolute)
            "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
            :empty-lines-after 1)
-          ("x" "Proxmox")
-          ("xs" "Enterprise Support"
-           entry
-           (file stfl/capture-support-file)
-           (file ,(doom-path doom-private-dir "templates/template-proxmox-support.org"))
-           )
           ("h" "Haushalt")
           ("hw" "Wäsche"
            entry
