@@ -1699,7 +1699,7 @@ org-default-priority is treated as lower than the same set value"
   (setq org-capture-templates
         `(("n" "capture to inbox"
            entry
-           (file ,stfl/org-gtd-inbox-absolute "Inbox")
+           (file ,stfl/org-gtd-inbox-absolute)
            (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
           ("p" "Project"
            entry
