@@ -1700,7 +1700,8 @@ org-default-priority is treated as lower than the same set value"
         `(("n" "capture to inbox"
            entry
            (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-private-dir "templates/template-inbox.org")))
+           (file ,(doom-path doom-private-dir "templates/template-inbox.org"))
+           :empty-lines-after 1)
           ("p" "Project"
            entry
            (file ,stfl/org-gtd-inbox-absolute)
