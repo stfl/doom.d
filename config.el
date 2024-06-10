@@ -421,8 +421,9 @@ relevant again (Tickler)"
        org-agenda-include-deadlines t
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 
+(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax")
 (after! org
-  (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax")
+  (setq 
         org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
