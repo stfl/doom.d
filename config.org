@@ -818,6 +818,7 @@ and add change the color of the symbols to color range from red to blue
         ;;                   )))))
         ("i" "Private Agenda Today"
          ((org-ql-block `(and (not (done))
+                              (tags "#inbox"))
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
                               (not ,(someday-habit))
                               (not (ancestors (deadline :to 0)))
@@ -851,7 +852,7 @@ and add change the color of the symbols to color range from red to blue
         ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT" "WAIT")
                               (not (tags "SOMEDAY" "HABIT" "org_jira"))
-                              (not (habit))
+                              (not (my-habit))
                               (or (not (deadline))
                                   (deadline :to "+30")
                                   (ancestors (deadline :to "+30")))
