@@ -818,7 +818,7 @@ and add change the color of the symbols to color range from red to blue
         ;;                   )))))
         ("i" "Private Agenda Today"
          ((org-ql-block `(and (not (done))
-                              (tags "#inbox"))
+                              (tags "#inbox" "inbox"))
                               ,(prio-deadline>= stfl/agenda-max-prio-group)
                               (not ,(someday-habit))
                               (not (ancestors (deadline :to 0)))
