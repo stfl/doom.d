@@ -83,4 +83,4 @@
 
 (package! gptel)
 
-(package! magit :pin "22fd8f8594202")
+;; (package! magit :pin "22fd8f8594202")
