@@ -817,9 +817,8 @@ and add change the color of the symbols to color range from red to blue
         ;;                   (org-super-agenda-groups stfl/priority-groups)
         ;;                   )))))
         ("i" "Private Agenda Today"
-         ((org-ql-block `(and (not (done))
+         ((org-ql-block '(and (not (done))
                               (tags "#inbox" "inbox"))
-
                         ((org-ql-block-header "Inbox")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
           (org-ql-block '(and (stuck-proj) (private))
