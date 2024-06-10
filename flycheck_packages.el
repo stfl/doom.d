@@ -3,6 +3,8 @@
 
 (package! org-super-agenda)
 
+(package! magit :ping "22fd8f8594202a0679ccc2f7d02bca44d48b8039")
+
 (package! org-ql)
 
 (package! org-edna)
