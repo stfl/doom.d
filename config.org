@@ -752,10 +752,9 @@ and add change the color of the symbols to color range from red to blue
 #+end_src
 
 #+begin_src elisp
-(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax")
+(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
 (after! org
-  (setq 
-        org-enforce-todo-checkbox-dependencies nil
+  (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 #+end_src
 
