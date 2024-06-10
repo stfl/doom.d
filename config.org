@@ -816,7 +816,7 @@ and add change the color of the symbols to color range from red to blue
         ;;                   ;; (org-super-agenda-header-separator "")
         ;;                   (org-super-agenda-groups stfl/priority-groups)
         ;;                   )))))
-        ("i" "Private Agenda Today"
+        ("i" "Inbox"
          ((org-ql-block '(and (not (done))
                               (tags "#inbox" "inbox"))
                         ((org-ql-block-header "Inbox")
