@@ -3564,5 +3564,5 @@ git blame lenses
 
 
 #+begin_src elisp :tangle packages.el
-(package! magit :pin "22fd8f8594202")
+;; (package! magit :pin "22fd8f8594202")
 #+end_src
