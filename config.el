@@ -470,6 +470,11 @@ relevant again (Tickler)"
         ;;                   ;; (org-super-agenda-header-separator "")
         ;;                   (org-super-agenda-groups stfl/priority-groups)
         ;;                   )))))
+        ("i" "Inbox"
+         ((org-ql-block '(and (not (done))
+                              (tags "#inbox" "inbox"))
+                        ((org-ql-block-header "Inbox")
+                         (org-super-agenda-groups '((:auto-property "CREATED")))))))
         ("a" "Private Agenda Today"
          (,(stfl/agenda-day)
           (org-ql-block `(and (todo "NEXT" "WAIT")
@@ -492,13 +497,12 @@ relevant again (Tickler)"
         ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT" "WAIT")
                               (not (tags "SOMEDAY" "HABIT" "org_jira"))
-                              (not (habit))
+                              (not (my-habit))
                               (or (not (deadline))
                                   (deadline :to "+30")
                                   (ancestors (deadline :to "+30")))
                               (or (not (scheduled))
-                                  (scheduled :to "+30"))
-                              )
+                                  (scheduled :to "+30")))
                         ((org-super-agenda-header-separator "")
                          (org-deadline-warning-days 30)
                          (stfl/agenda-max-prio-group org-priority-lowest)
@@ -547,8 +551,7 @@ relevant again (Tickler)"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
                               (not (primary-work))
-                              (not (my-habit))
-                              )
+                              (not (my-habit)))
                         ((org-ql-block-header "Backlog")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)
                          (org-dim-blocked-tasks t)))))
@@ -619,7 +622,6 @@ relevant again (Tickler)"
                               ((org-ql-block-header "Stuck Projects")
                                (org-super-agenda-header-separator "")
                                (org-super-agenda-groups stfl/ancestor-priority-groups))))))
-
         ;; ("wp" "Backlog Primary Work"
         ;;  ((org-ql-block '(and (or (todo "PROJ")
         ;;                           (standalone-next))
