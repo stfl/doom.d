@@ -968,7 +968,6 @@ and add change the color of the symbols to color range from red to blue
                               ((org-ql-block-header "Stuck Projects")
                                (org-super-agenda-header-separator "")
                                (org-super-agenda-groups stfl/ancestor-priority-groups))))))
-
         ;; ("wp" "Backlog Primary Work"
         ;;  ((org-ql-block '(and (or (todo "PROJ")
         ;;                           (standalone-next))
