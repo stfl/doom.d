@@ -422,12 +422,14 @@ relevant again (Tickler)"
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
+
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
 (setq stfl/proxmox-support-dir "~/Support/"
       stfl/org-gtd-inbox "inbox.org"
+      stfl/org-gtd-inbox-orgzly "inbox-orgzly.org"
       stfl/org-gtd-inbox-absolute (doom-path org-directory stfl/org-gtd-inbox)
       stfl/org-gtd-todo "todo.org"
       stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
@@ -440,6 +442,7 @@ relevant again (Tickler)"
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
         org-agenda-files `(,stfl/org-gtd-inbox
+                           ,stfl/org-gtd-inbox-orgzly
                            ,stfl/org-gtd-todo
                            ,@stfl/org-gtd-projects
                            ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
