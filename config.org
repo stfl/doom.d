@@ -796,8 +796,6 @@ and add change the color of the symbols to color range from red to blue
 
 #+begin_src elisp
 (setq stfl/agenda-backlog-prio-threshold (+ 2 org-priority-default))
-;; TODO I really don't know what this is used for? this might be an old variable.
-;; It's still used tho for a basiclly unused custom-command!
 
 (setq-default stfl/agenda-max-prio-group ?D)
 ;; Priority level until the backlog in today-agenda is shown!
