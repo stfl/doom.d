@@ -778,6 +778,7 @@ and add change the color of the symbols to color range from red to blue
 (after! org
   (setq org-agenda-diary-file (doom-path org-directory "diary.org")
         org-agenda-files `(,stfl/org-gtd-inbox
+                           ,stfl/org-gtd-inbox-orgzly
                            ,stfl/org-gtd-todo
                            ,@stfl/org-gtd-projects
                            ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
