@@ -820,7 +820,7 @@ and add change the color of the symbols to color range from red to blue
          ((org-ql-block '(and (not (done))
                               (tags "#inbox" "inbox"))
                         ((org-ql-block-header "Inbox")
-                         (org-super-agenda-groups '((:auto-date)))))))
+                         (org-super-agenda-groups '((:auto-planning)))))))
         ("a" "Private Agenda Today"
          (,(stfl/agenda-day)
           (org-ql-block `(and (todo "NEXT" "WAIT")
