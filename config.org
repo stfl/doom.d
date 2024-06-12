@@ -748,15 +748,14 @@ and add change the color of the symbols to color range from red to blue
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-enforce-todo-checkbox-dependencies nil
-       org-enforce-todo-dependencies nil
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 #+end_src
 
 #+begin_src elisp
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
 (after! org
-  (setq ))
+  (setq org-enforce-todo-checkbox-dependencies nil
+        org-enforce-todo-dependencies nil))
 #+end_src
 
 *** Agenda Files
