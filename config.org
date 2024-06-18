@@ -2450,7 +2450,8 @@ https://github.com/doomemacs/doomemacs/issues/7058
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
 #+end_src
-** Ens
+** Ensure blank lines between headings and before contents
+
 
 https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#ensure-blank-lines-between-headings-and-before-contents
 
