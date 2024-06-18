@@ -2505,7 +2505,7 @@ buffer. It also adds blank lines after drawers. Works well with
 
 #+begin_src elisp
 ;;;###autoload
-(defun alphapapa/org-fix-blank-lines (&optional prefix)
+(defun +org-fix-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
 With prefix, operate on whole buffer. Ensures that blank lines
 exist after each headings's drawers."
@@ -2541,7 +2541,7 @@ exist after each headings's drawers."
 
 #+begin_src elisp
 (add-hook! org-mode-hook
-  (add-hook! before-save-hook :local #'alphapapa/org-fix-blank-lines))
+  (add-hook! before-save-hook :local #'+org-fix-blank-lines))
 #+end_src
 
 * Module Settings
