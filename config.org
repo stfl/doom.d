@@ -2468,7 +2468,7 @@ buffer. It also adds blank lines after drawers. Works well with
 
 #+begin_src elisp
 ;;;###autoload
-(defun ++org-fix-blank-lines (&optional prefix)
+(defun +org-fix-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
 With prefix, operate on whole buffer. Ensures that blank lines
 exist after each headings's drawers."
