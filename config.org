@@ -2505,11 +2505,7 @@ exist after each headings's drawers."
 
 #+begin_src elisp
 (add-hook! org-mode-hook
-           (add-hook! before-save-hook :local
-                      (when )
-
-
-               ))
+  (add-hook! before-save-hook :local #'alphapapa/org-fix-blank-lines))
 #+end_src
 
 * Module Settings
