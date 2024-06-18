@@ -2504,11 +2504,12 @@ exist after each headings's drawers."
 #+end_src
 
 #+begin_src elisp
-(after! org
-  (add-hook! before-save-hook
-             (defun stfl/only-org-fix-blank-lines)
-             )
-  )
+(add-hook! org-mode-hook
+           (add-hook! before-save-hook :local
+                      (when )
+
+
+               )))
 #+end_src
 
 * Module Settings
