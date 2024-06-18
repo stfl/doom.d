@@ -3,10 +3,12 @@
 #+PROPERTY: header-args:elisp :noeval
 
 * General
+
 ** User Information
 :PROPERTIES:
 :ID:       47537e03-28e5-4adf-ac0b-ab8249ce01bf
 :END:
+
 Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 
@@ -43,13 +45,16 @@ get-password
 #+end_src
 
 ** literate config
+
 *** Don't auto-recompile literate-config
 :PROPERTIES:
 :ID:       7f52c1ee-6fff-4e04-96fa-8c5a2bf3ad14
 :END:
+
 #+BEGIN_SRC elisp
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 #+END_SRC
+
 *** private config file
 :PROPERTIES:
 :ID:       b1cd6206-b586-45d7-8b1f-e03823bde124
@@ -75,6 +80,7 @@ bind it to ~SPC h d c~
 :PROPERTIES:
 :ID:       508b2ffc-2dfd-49e1-b44e-af2994a59df0
 :END:
+
 #+BEGIN_SRC elisp
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
@@ -98,6 +104,7 @@ Use Brave browser if availible. The default should actually respect the $BROWSER
   (setq! browse-url-browser-function 'browse-url-chromium
          browse-url-chromium-program "brave"))
 #+end_src
+
 ** Resizing window with the mouse
 
 Resizing a window vertically with the mouse in emacs requires you to hit the 1px
@@ -129,6 +136,7 @@ But this would active again resizing to the right...
 :PROPERTIES:
 :ID:       1ff57529-42f3-4cb9-b974-70c0f0315b36
 :END:
+
 limit evil-snipe to the bufffer
 #+BEGIN_SRC elisp
 (after! evil-snipe
@@ -148,6 +156,7 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 * Theme
+
 ** doom-theme
 :PROPERTIES:
 :ID:       d7635d76-1c4b-49de-a68d-be6dd0467919
@@ -166,6 +175,7 @@ If the line is already correctly indented, try to complete.
 :PROPERTIES:
 :ID:       edf590c3-3d81-45b2-a180-fb46609bc099
 :END:
+
 Doom exposes five (optional) variables for controlling fonts in Doom. Here
 are the three important ones:
 
@@ -324,6 +334,7 @@ Priority specific faces
   `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
   '(adoc-warning-face :inherit org-warning))
 #+end_src
+
 ** notmuch theme
 
 #+begin_src elisp
@@ -345,6 +356,7 @@ There is more fine grained face control for search based on tags :
 :PROPERTIES:
 :ID:       1f322103-dc44-4293-b354-a8f5301b89e4
 :END:
+
 #+BEGIN_SRC elisp
 ;; (set-popup-rules!
 ;;   '(("^\\*subject:" :ignore t)  ; notmuch list view
@@ -360,6 +372,7 @@ There is more fine grained face control for search based on tags :
 #+end_src
 
   # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
+
 ** blamer theme
 
 #+begin_src elisp
@@ -427,6 +440,7 @@ There is more fine grained face control for search based on tags :
    :desc "Minimap" "m" #'demap-toggle)
   )
 #+end_src
+
 ** Indent Guides
 
 Make the indent guides a little brighter to be more visible in doom-one dark theme.
@@ -454,10 +468,12 @@ Since Emacs 29, pixel-scroll is built-in
 :PROPERTIES:
 :ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
 :END:
+
 ** General
 :PROPERTIES:
 :ID:       90a92aaa-d50a-4524-9a97-bad904b60939
 :END:
+
 Org directory
 
 #+BEGIN_SRC elisp
@@ -532,6 +548,7 @@ completion-at-point (capf)...
 :PROPERTIES:
 :ID:       fadd0d57-a6dd-4d17-ab0c-784b5159b7ed
 :END:
+
 #+BEGIN_SRC elisp
 (after! org
   (setq org-startup-indented 'indent
@@ -557,6 +574,7 @@ See https://github.com/hlissner/doom-emacs/issues/3185 - Invalid base64 data
 :PROPERTIES:
 :ID:       f98aed8d-22e1-401a-940a-09193f2ba5ef
 :END:
+
 From here we load some extra key bindings that I use often
 #+BEGIN_SRC elisp
 ;; (bind-key "<f6>" #'link-hint-copy-link)
@@ -627,6 +645,7 @@ From here we load some extra key bindings that I use often
 ;;       :map org-agenda-mode-map
 ;;       )
 #+END_SRC
+
 ** edit SOMEDAY entries
 
 To mark entries (mainly =PROJ=) as not relevant ~at the moment~ I mark them with the
@@ -718,6 +737,7 @@ and add change the color of the symbols to color range from red to blue
 :PROPERTIES:
 :ID:       5158cdfa-b98d-4fe9-9bad-13c965cca570
 :END:
+
 #+begin_src elisp
 ;; (after! org
 (setq!
@@ -1000,6 +1020,7 @@ and add change the color of the symbols to color range from red to blue
 #+end_src
 
 ** org-ql
+
 *** My Query helpers
 
 some helper functions
@@ -1073,6 +1094,7 @@ some helper functions
        (not (deadline :from ,from))))
 
 #+end_src
+
 *** [#D] org-ql custom predicates
 
 
@@ -1489,7 +1511,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 #+end_src
+
 *** Custom priority grouping
+
 #+begin_src elisp
 (after! org-super-agenda
   (setq stfl/priority-groups
@@ -1526,6 +1550,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
            :priority
            ))))
 #+end_src
+
 *** grouping based on my ancestor priorities
 :PROPERTIES:
 :ID:       313eebaf-9e5c-4d4a-b84e-07192b2e19f8
@@ -1630,6 +1655,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+begin_src elisp
 )
 #+end_src
+
 *** Grouping habits and Tickler in today agenda
 
 #+begin_src elisp
@@ -1786,6 +1812,7 @@ org-default-priority is treated as lower than the same set value"
 :PROPERTIES:
 :ID:       8d07f343-cde2-4a1c-9700-d0ae563823d3
 :END:
+
 #+BEGIN_SRC elisp
 (after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
 #+END_SRC
@@ -1808,6 +1835,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
         ;; org-habit-graph-column 31 ;; Length of the habit graph
         ))
 #+END_SRC
+
 ** org-clock
 
 #+begin_src elisp
@@ -1868,6 +1896,7 @@ Some functions to quickly add TRIGGER and BLOCKER properties
 :PROPERTIES:
 :ID:       c7d94cf2-b4f1-4d87-8887-cf477260b432
 :END:
+
 After much feedback and discussing with other users, I decided to simplify the keyword list to make it simple. Defining a project will now focus on the tag word *:project:* so that all child task are treated as part of the project.
 | Keyword | Description                                                  |
 |---------+--------------------------------------------------------------|
@@ -1951,6 +1980,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 :PROPERTIES:
 :ID:       6ed1956f-d162-4dd0-a755-8d684cebc681
 :END:
+
 #+BEGIN_SRC elisp
 (after! org
   (setq org-use-property-inheritance t ; We like to inherit properties from their parents
@@ -2159,6 +2189,7 @@ do not automatically open the roam side-pane
 :PROPERTIES:
 :ID:       819cb74f-3d27-4a76-bb81-06b9d1b714b5
 :END:
+
 Org babel to generate mermaid diagrams from org src blocks
 
 
@@ -2350,6 +2381,7 @@ ORDER BY priority, created DESC
 :PROPERTIES:
 :ID:       d41d54d8-bf68-42be-8004-f67c49cf950a
 :END:
+
 https://tecosaur.github.io/emacs-config/config.html#babel
 
 #+begin_src elisp
@@ -2374,6 +2406,7 @@ Not added when either:
       (push '(:async) (caddr result)))
     result))
 #+end_src
+
 *** Individual startup visibility with :hidden
 
 https://emacs.stackexchange.com/a/44923/30180
@@ -2413,6 +2446,7 @@ Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
 ;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 ;;   )
 #+end_src
+
 ** Org Pandoc Import
 
 https://github.com/tecosaur/org-pandoc-import
@@ -2427,6 +2461,7 @@ https://github.com/tecosaur/org-pandoc-import
 #+begin_src elisp
 ;; (use-package! org-pandoc-import :after org)
 #+end_src
+
 ** Org Tree Slide (+present)
 
 Don't emphasize the heading -> it's way too big
@@ -2595,6 +2630,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 )
 
 * Coding
+
 ** ielm REPL
 
 map ielm to ~SPC :~
@@ -2631,6 +2667,7 @@ map ielm to ~SPC :~
 #+end_src
 
 *** ignore directories
+
 https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 
 Do not watch cache directories
@@ -2643,6 +2680,7 @@ Do not watch cache directories
 #+end_src
 
 *** Key Mappings
+
 #+begin_src elisp
 (map! (:after lsp
        :map lsp-mode-map
@@ -2650,6 +2688,7 @@ Do not watch cache directories
        :prefix ("c" . "+code")
        :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
 #+end_src
+
 *** Options
 
 [[https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable][lsp-mode settings]]
@@ -2717,6 +2756,7 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 :PROPERTIES:
 :ID:       1a38710f-565e-4680-bc53-b39f3d955b71
 :END:
+
 #+BEGIN_SRC elisp
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
@@ -2733,6 +2773,7 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 :PROPERTIES:
 :ID:       294592b7-60fa-4fd5-ab2a-1d2eeadbd623
 :END:
+
 *** poetry
 
 Poetry needs to scan for a project whenever a new file is opened. Tracking via
@@ -2741,6 +2782,7 @@ projectile speeds this up significantly.
 #+begin_src elisp
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 #+end_src
+
 *** conda
 
 automatically activate a conda environment if present in a project
@@ -2778,6 +2820,7 @@ projectile does not recognize conda projects
         :prefix ("d" . "docstring")
         :desc "Generate Docstring" "d" #'numpydoc-generate))
 #+end_src
+
 *** emacs ipython notebook (ein)
 
 ein displays images in a separate window by default. Use inline images instead
@@ -2892,6 +2935,7 @@ Disable formatting with lsp
 :PROPERTIES:
 :ID:       c3da477e-b64b-4a50-af87-5fdec1fd62ab
 :END:
+
 #+BEGIN_SRC elisp
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 #+END_SRC
@@ -2911,6 +2955,7 @@ Disable formatting with lsp
 ;;   :init
 ;;   (gitlab-ci-mode-flycheck-enable))
 #+END_SRC
+
 ** Kubernetes
 :PROPERTIES:
 :ID:       fd4fae8c-3a70-449f-b3d5-52c25f76ec0a
@@ -2989,6 +3034,7 @@ EDBI has some dependencies has some dependencies
   )
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 #+end_src
+
 ** Practice coding with Exercism
 
 [[https://exercism.org][Exercism]] is a platform for learning various programing languages by solving
@@ -3008,7 +3054,9 @@ small exercises. The exercises can can be solved locally.
   :config (exercism-mode +1)
   :custom (exercism-web-browser-function 'browse-url))
 #+end_src
+
 ** Javascript | Typescript
+
 *** Jest Testing Framework
 
 #+begin_src elisp :tangle packages.el
@@ -3055,6 +3103,7 @@ The default keymap binds directly to ~f t T a A ...~
 switch to evil-emacs-mode ~C-z~ to use the keybindings.
 
 ** Spell- Grammer Checking
+
 *** LTEX
 
 #+begin_src elisp :tangle packages.el
@@ -3083,6 +3132,7 @@ manually add adoc-mode to the list.. I don't like that...
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
 #+end_src
+
 ** Proxmox development
 :PROPERTIES:
 :header-args:elisp: :tangle no
@@ -3146,6 +3196,7 @@ This is still broken...
         js-jsx-indent-level 4
         tab-width 8))
 #+end_src
+
 *** Perl intendation style
 
 #+begin_src elisp
@@ -3162,6 +3213,7 @@ Proxmox specific Perl indentation style using a tab where 8 spaces would be used
   tab-width 8
   indent-tabs-mode t)
 #+end_src
+
 *** notmuch
 
 #+begin_src elisp
@@ -3264,6 +3316,7 @@ Use the (almost) default keybindings in evil normal-mode
 
   (run-with-idle-timer 60 t #'stfl/notmuch-hello-update-background))
 #+end_src
+
 ** ssh-config-mode
 
 #+begin_src elisp :tangle packages.el
@@ -3279,6 +3332,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 ** BitBake
+
 #+begin_src elisp :tangle packages.el
 ;; (package! bitbake-modes
 ;;   :recipe (:host bitbucket
@@ -3292,6 +3346,7 @@ Use the (almost) default keybindings in evil normal-mode
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
 #+end_src
+
 ** Meson build system
 
 #+begin_src elisp :tangle packages.el
@@ -3304,6 +3359,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 * Collaboration and VCS
+
 ** Directory tree diff - ztree
 :PROPERTIES:
 :ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
@@ -3318,7 +3374,9 @@ Use the (almost) default keybindings in evil normal-mode
 #+END_SRC
 
 ** Magit
+
 *** Enable Gravatars
+
 This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+BEGIN_SRC elisp
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
@@ -3339,6 +3397,7 @@ visible hunks with:
 :PROPERTIES:
 :ID:       0ed4b14f-b9cd-4b13-b17e-633213db7418
 :END:
+
 display more columns in forge list topic
 #+BEGIN_SRC elisp
 (after! forge (setq forge-topic-list-columns
@@ -3386,6 +3445,7 @@ activate magit-todo to display the TODOs section in magit buffer
 :END:
 
 *** mailscripts.el
+
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
 
 The original purpose of this package was to make it easy to use the small
@@ -3517,6 +3577,7 @@ set up the query for mu4e-alert to also limit the search range
 :PROPERTIES:
 :ID:       e8c11673-f1fa-47c8-894b-57f1becb3a2e
 :END:
+
 requies emacs compiled with ~xwidgets~
 
 it can still use the browser view.
@@ -3547,6 +3608,7 @@ select via ~mu4e-views-mu4e-select-view-msg-method~
 :PROPERTIES:
 :ID:       c186f137-d99f-45ab-930b-297091895183
 :END:
+
 forcing text comparison even if diff thinks files are binary
 #+begin_src elisp
 (after! ediff
@@ -3558,6 +3620,7 @@ forcing text comparison even if diff thinks files are binary
         ediff-split-window-function 'split-window-horizontally))
 
 #+end_src
+
 ** diffview
 
 Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format. This comes in handy for reading patches from mailing lists (or from whencever you might acquire them).
@@ -3574,6 +3637,7 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
    :after notmuch
    :localleader "d" #'diffview-current))
 #+end_src
+
 ** blamer.el
 
 https://github.com/Artawower/blamer.el
