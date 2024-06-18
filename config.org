@@ -2502,7 +2502,6 @@ exist after each headings's drawers."
                          nil
                        'tree)))
 #+end_src
-
 * Module Settings
 ** Define Word
 :PROPERTIES:
