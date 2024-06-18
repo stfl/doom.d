@@ -2502,11 +2502,14 @@ exist after each headings's drawers."
                          nil
                        'tree)))
 #+end_src
+
 * Module Settings
+
 ** Define Word
 :PROPERTIES:
 :ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
 :END:
+
 #+BEGIN_SRC elisp
 (use-package! define-word
   :after org
@@ -2521,6 +2524,7 @@ exist after each headings's drawers."
 :PROPERTIES:
 :ID:       535b2018-8890-4e62-a293-a92df0734c07
 :END:
+
 #+BEGIN_SRC elisp
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 #+END_SRC
@@ -2529,6 +2533,7 @@ exist after each headings's drawers."
 :PROPERTIES:
 :ID:       d4a31927-ff21-42a5-98e1-ed487a84a618
 :END:
+
 #+BEGIN_SRC elisp
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
@@ -2564,6 +2569,7 @@ Use the builtin sqlite in emacs >=29
       forge-database-connector 'sqlite-builtin
       code-review-db-database-connector 'sqlite-builtin)
 #+end_src
+
 ** vterm
 
 #+begin_src elisp
