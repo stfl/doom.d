@@ -2537,8 +2537,7 @@ exist after each headings's drawers."
                    t (if prefix
                          nil
                        'tree))
-  (message "fixed blank lines in org buffer")
-  )
+  (message "fixed blank lines in org buffer"))
 #+end_src
 
 #+begin_src elisp
