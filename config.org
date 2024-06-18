@@ -2450,8 +2450,21 @@ https://github.com/doomemacs/doomemacs/issues/7058
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
 #+end_src
-*** Ens
+** Ens
 
+https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#ensure-blank-lines-between-headings-and-before-contents
+
+#+begin_quote
+Ensure blank lines between headings and before contents
+Ensure that blank lines exist between headings and between headings and their
+contents. With prefix, operate on whole buffer. Ensures that blank lines exist
+after each headings’s drawers.
+
+For those who prefer to maintain blank lines between headings, this makes it
+easy to automatically add them where necessary, to a subtree or the whole
+buffer. It also adds blank lines after drawers. Works well with
+*~org-return-dwim~.
+#+end_quote
 
 #+begin_src elisp
 ;;;###autoload
