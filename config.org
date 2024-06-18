@@ -2503,6 +2503,10 @@ exist after each headings's drawers."
                        'tree)))
 #+end_src
 
+#+begin_src elisp
+(after! org)
+#+end_src
+
 * Module Settings
 
 ** Define Word
