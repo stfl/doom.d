@@ -2455,7 +2455,7 @@ https://github.com/doomemacs/doomemacs/issues/7058
 
 #+begin_src elisp
 ;;;###autoload
-(defun unpackaged/org-fix-blank-lines (&optional prefix)
+(defun alphapapa-unpackaged/org-fix-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
 With prefix, operate on whole buffer. Ensures that blank lines
 exist after each headings's drawers."
