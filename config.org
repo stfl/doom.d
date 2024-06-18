@@ -2506,7 +2506,7 @@ exist after each headings's drawers."
 #+begin_src elisp
 (after! org
   (add-hook! before-save-hook
-             (defun +org-fix-blank-lines)
+             (defun stfl/only-org-fix-blank-lines)
              )
   )
 #+end_src
