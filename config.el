@@ -1805,8 +1805,19 @@ exist after each headings's drawers."
                        'tree))
   (message "fixed blank lines in org buffer"))
 
+;; (add-hook! org-mode-hook
+  ;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
+
+(after! org
+  (add-hook! org-mode-hook
+             (message "hook loaded after!")))
+
 (add-hook! org-mode-hook
-  (add-hook! before-save-hook :local #'+org-fix-blank-lines))
+  (message "hook loaded")
+
+(add-hook 'org-mode-hook     ;remove folds when changing major mode
+          (lambda () (add-hook 'before-save-hook
+                               '+org-fix-blank-lines 'local)))
 
 (use-package! define-word
   :after org
