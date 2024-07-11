@@ -1808,48 +1808,47 @@ exist after each headings's drawers."
 ;; (add-hook! org-mode-hook
 ;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
 
-(after! org
-  (add-hook! org-mode-hook
-    (message "after! hook! loaded")))
+;; (after! org
+;;   (add-hook! org-mode-hook
+;;     (message "after! hook! loaded")))
 
-(after! org
-  (add-hook 'org-mode-hook
-            (lambda () (message "after! hook loaded"))))
+;; (after! org
+;;   (add-hook 'org-mode-hook
+;;             (lambda () (message "after! hook loaded"))))
 
 (after! org
   (add-hook 'org-mode-hook
             (lambda ()
               (add-hook 'before-save-hook
-                        (lambda () (message "after! hook hook before-save loaded "))
-                        'local))))
+                        '+org-fix-blank-lines 'local))))
 
-(add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook
-                        (lambda () (message "hook hook before-save loaded "))
-                        'local)))
+;; (add-hook 'org-mode-hook
+;;             (lambda ()
+;;               (add-hook 'before-save-hook
+;;                         (lambda () (message "hook hook before-save loaded "))
+;;                         'local)))
 
-(add-hook 'org-mode-hook
-          (lambda () (message "hook loaded")))
+;; (add-hook 'org-mode-hook
+;;           (lambda () (message "hook loaded")))
 
-(add-hook 'org-mode-hook     ;remove folds when changing major mode
-          (lambda () (add-hook 'before-save-hook '+org-fix-blank-lines 'local)))
+;; (add-hook 'org-mode-hook     ;remove folds when changing major mode
+;;           (lambda () (add-hook 'before-save-hook '+org-fix-blank-lines 'local)))
 
-(add-hook! org-mode-hook (message "hook! loaded"))
+;; (add-hook! org-mode-hook (message "hook! loaded"))
 
-(after! org
-  (add-hook! org-mode-hook (message "after! hook! loaded")))
+;; (after! org
+;;   (add-hook! org-mode-hook (message "after! hook! loaded")))
 
-(after! org
-  (add-hook! org-mode-hook
-    (add-hook! 'before-save-hook
-      (message "after! hook! hook! before-save loaded"))))
+;; (after! org
+;;   (add-hook! org-mode-hook
+;;     (add-hook! 'before-save-hook
+;;       (message "after! hook! hook! before-save loaded"))))
 
-(after! org
-  (add-hook! org-mode-hook
-    (add-hook 'before-save-hook
-              (lambda ()
-                (message "after! hook! hook before-save loaded ")) 'local)))
+;; (after! org
+;;   (add-hook! org-mode-hook
+;;     (add-hook 'before-save-hook
+;;               (lambda ()
+;;                 (message "after! hook! hook before-save loaded ")) 'local)))
 
 (use-package! define-word
   :after org
