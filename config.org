@@ -2541,8 +2541,8 @@ exist after each headings's drawers."
 #+end_src
 
 #+begin_src elisp
-(add-hook! org-mode-hook
-  (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
+;; (add-hook! org-mode-hook
+  ;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
 
 (add-hook 'org-mode-hook     ;remove folds when changing major mode
           (lambda () (add-hook 'before-save-hook
