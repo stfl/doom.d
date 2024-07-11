@@ -2542,15 +2542,15 @@ exist after each headings's drawers."
 
 #+begin_src elisp
 ;; (add-hook! org-mode-hook
-  ;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
+;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
 
 (after! org
   (add-hook! org-mode-hook
-             (message "hook loaded after! hook!")))
+    (message "hook loaded after! hook!")))
 
 (after! org
   (add-hook 'org-mode-hook
-          (lambda () (message "hook loaded after!"))))
+            (lambda () (message "hook loaded after!"))))
 
 (after! org
   (add-hook 'org-mode-hook
