@@ -2577,6 +2577,11 @@ exist after each headings's drawers."
   (add-hook! org-mode-hook
     (add-hook! 'before-save-hook
       (message "after! hook! hook! before-save loaded"))))
+
+(after! org
+  (add-hook! org-mode-hook
+    (add-hook! 'before-save-hook
+      (message "after! hook! hook! before-save loaded"))))
 #+end_src
 
 * Module Settings
