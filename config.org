@@ -2556,8 +2556,7 @@ exist after each headings's drawers."
   (add-hook 'org-mode-hook
             (lambda ()
               (add-hook 'before-save-hook
-                        (lambda ()
-                          (message "after! hook hook before-save loaded "))
+                        (lambda () (message "after! hook hook before-save loaded "))
                         'local
                         ))))
 
