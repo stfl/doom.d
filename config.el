@@ -1812,8 +1812,8 @@ exist after each headings's drawers."
   (add-hook! org-mode-hook
              (message "hook loaded after!")))
 
-(add-hook! org-mode-hook
-  (message "hook loaded"))
+(add-hook org-mode-hook
+          (lambda () (message "hook loaded")))
 
 (add-hook 'org-mode-hook     ;remove folds when changing major mode
           (lambda () (add-hook 'before-save-hook
