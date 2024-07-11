@@ -2580,7 +2580,10 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook! org-mode-hook
-    (add-hook! 'before-save-hook
+    (add-hook 'before-save-hook
+              (lambda ()
+                (message "after! hook! hook before-save loaded "))
+                        'local
       (message "after! hook! hook! before-save loaded"))))
 #+end_src
 
