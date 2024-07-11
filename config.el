@@ -1818,9 +1818,10 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook
-                      (lambda () (message "hook loaded after! before-save")))))
+            (lambda ()
+              (add-hook 'before-save-hook
+                        (lambda ()
+                          (message "hook loaded after! before-save"))))))
 
 
 (add-hook 'org-mode-hook
