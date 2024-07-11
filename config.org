@@ -2571,7 +2571,7 @@ exist after each headings's drawers."
 (add-hook! org-mode-hook (message "hook! loaded"))
 
 (after! org
-  (add-hook! org-mode-hook (message "hook! loaded")))
+  (add-hook! org-mode-hook (message "after! hook! loaded")))
 #+end_src
 
 * Module Settings
