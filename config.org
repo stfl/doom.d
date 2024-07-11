@@ -2546,7 +2546,7 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook! org-mode-hook
-    (message "hook loaded after! hook!")))
+    (message "hook! loaded after!")))
 
 (after! org
   (add-hook 'org-mode-hook
