@@ -2540,6 +2540,8 @@ exist after each headings's drawers."
   (message "Fixed blank lines in org buffer"))
 #+end_src
 
+Now adding this to a before-save-hook for all org-mode buffers.
+
 #+begin_src elisp
 (after! org
   (add-hook 'org-mode-hook
