@@ -2550,7 +2550,7 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook 'org-mode-hook
-            (lambda () (message "hook loaded after!"))))
+            (lambda () (message "after! hook loaded"))))
 
 (after! org
   (add-hook 'org-mode-hook
