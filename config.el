@@ -1810,9 +1810,20 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook! org-mode-hook
-             (message "hook loaded after!")))
+             (message "hook loaded after! hook!")))
 
-(add-hook org-mode-hook
+(after! org
+  (add-hook 'org-mode-hook
+          (lambda () (message "hook loaded after!"))))
+
+(after! org
+  (add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook
+                      (lambda () (message "hook loaded after! before-save")))))
+
+
+(add-hook 'org-mode-hook
           (lambda () (message "hook loaded")))
 
 (add-hook 'org-mode-hook     ;remove folds when changing major mode
