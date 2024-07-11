@@ -2542,7 +2542,7 @@ exist after each headings's drawers."
 
 #+begin_src elisp
 (add-hook! org-mode-hook
-  (add-hook! before-save-hook :local #'+org-fix-blank-lines))
+  (add-hook 'before-save-hook :local #'+org-fix-blank-lines))
 #+end_src
 
 * Module Settings
