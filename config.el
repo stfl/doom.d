@@ -1806,15 +1806,15 @@ exist after each headings's drawers."
   (message "fixed blank lines in org buffer"))
 
 ;; (add-hook! org-mode-hook
-  ;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
+;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
 
 (after! org
   (add-hook! org-mode-hook
-             (message "hook loaded after! hook!")))
+    (message "hook loaded after! hook!")))
 
 (after! org
   (add-hook 'org-mode-hook
-          (lambda () (message "hook loaded after!"))))
+            (lambda () (message "hook loaded after!"))))
 
 (after! org
   (add-hook 'org-mode-hook
@@ -1824,7 +1824,6 @@ exist after each headings's drawers."
                           (message "hook loaded after! before-save"))
                         'local
                         ))))
-
 
 (add-hook 'org-mode-hook
           (lambda () (message "hook loaded")))
