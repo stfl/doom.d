@@ -2561,7 +2561,6 @@ exist after each headings's drawers."
                         'local
                         ))))
 
-
 (add-hook 'org-mode-hook
           (lambda () (message "hook loaded")))
 
