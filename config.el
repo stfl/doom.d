@@ -1810,18 +1810,18 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook! org-mode-hook
-    (message "hook loaded after! hook!")))
+    (message "after! hook! loaded")))
 
 (after! org
   (add-hook 'org-mode-hook
-            (lambda () (message "hook loaded after!"))))
+            (lambda () (message "after! hook loaded"))))
 
 (after! org
   (add-hook 'org-mode-hook
             (lambda ()
               (add-hook 'before-save-hook
                         (lambda ()
-                          (message "hook loaded after! before-save"))
+                          (message "after! hook hook before-save loaded "))
                         'local
                         ))))
 
@@ -1831,6 +1831,22 @@ exist after each headings's drawers."
 (add-hook 'org-mode-hook     ;remove folds when changing major mode
           (lambda () (add-hook 'before-save-hook
                                '+org-fix-blank-lines 'local)))
+
+(add-hook! org-mode-hook (message "hook! loaded"))
+
+(after! org
+  (add-hook! org-mode-hook (message "after! hook! loaded")))
+
+(after! org
+  (add-hook! org-mode-hook
+    (add-hook! 'before-save-hook
+      (message "after! hook! hook! before-save loaded"))))
+
+(after! org
+  (add-hook! org-mode-hook
+    (add-hook 'before-save-hook
+              (lambda ()
+                (message "after! hook! hook before-save loaded ")) 'local)))
 
 (use-package! define-word
   :after org
