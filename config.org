@@ -3689,7 +3689,7 @@ git blame lenses
   :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
-;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
+                                        ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model "gpt-4o"
          gptel-log-level 'info
