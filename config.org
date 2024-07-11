@@ -2552,6 +2552,13 @@ exist after each headings's drawers."
   (add-hook 'org-mode-hook
           (lambda () (message "hook loaded after!"))))
 
+(after! org
+  (add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook
+                      (lambda () (message "hook loaded after! before-save")))))
+
+
 (add-hook 'org-mode-hook
           (lambda () (message "hook loaded")))
 
