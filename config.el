@@ -1821,7 +1821,9 @@ exist after each headings's drawers."
             (lambda ()
               (add-hook 'before-save-hook
                         (lambda ()
-                          (message "hook loaded after! before-save"))))))
+                          (message "hook loaded after! before-save"))
+                        'local
+                        ))))
 
 
 (add-hook 'org-mode-hook
