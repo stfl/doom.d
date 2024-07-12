@@ -1803,52 +1803,13 @@ exist after each headings's drawers."
                    t (if prefix
                          nil
                        'tree))
-  (message "fixed blank lines in org buffer"))
-
-;; (add-hook! org-mode-hook
-;; (add-hook 'before-save-hook '+org-fix-blank-lines 'local))
-
-;; (after! org
-;;   (add-hook! org-mode-hook
-;;     (message "after! hook! loaded")))
-
-;; (after! org
-;;   (add-hook 'org-mode-hook
-;;             (lambda () (message "after! hook loaded"))))
+  (message "Fixed blank lines in org buffer"))
 
 (after! org
   (add-hook 'org-mode-hook
             (lambda ()
               (add-hook 'before-save-hook
                         '+org-fix-blank-lines 'local))))
-
-;; (add-hook 'org-mode-hook
-;;             (lambda ()
-;;               (add-hook 'before-save-hook
-;;                         (lambda () (message "hook hook before-save loaded "))
-;;                         'local)))
-
-;; (add-hook 'org-mode-hook
-;;           (lambda () (message "hook loaded")))
-
-;; (add-hook 'org-mode-hook     ;remove folds when changing major mode
-;;           (lambda () (add-hook 'before-save-hook '+org-fix-blank-lines 'local)))
-
-;; (add-hook! org-mode-hook (message "hook! loaded"))
-
-;; (after! org
-;;   (add-hook! org-mode-hook (message "after! hook! loaded")))
-
-;; (after! org
-;;   (add-hook! org-mode-hook
-;;     (add-hook! 'before-save-hook
-;;       (message "after! hook! hook! before-save loaded"))))
-
-;; (after! org
-;;   (add-hook! org-mode-hook
-;;     (add-hook 'before-save-hook
-;;               (lambda ()
-;;                 (message "after! hook! hook before-save loaded ")) 'local)))
 
 (use-package! define-word
   :after org
@@ -2280,7 +2241,7 @@ exist after each headings's drawers."
   :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
-;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
+                                        ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model "gpt-4o"
          gptel-log-level 'info
