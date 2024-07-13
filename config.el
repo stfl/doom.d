@@ -1805,11 +1805,11 @@ exist after each headings's drawers."
                        'tree))
   (message "Fixed blank lines in org buffer"))
 
-(after! org
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook
-                        '+org-fix-blank-lines 'local))))
+;; (after! org
+;;   (add-hook 'org-mode-hook
+;;             (lambda ()
+;;               (add-hook 'before-save-hook
+;;                         '+org-fix-blank-lines 'local))))
 
 (use-package! define-word
   :after org
