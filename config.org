@@ -2547,7 +2547,7 @@ Now adding this to a before-save-hook for all org-mode buffers.
   (add-hook 'org-mode-hook
             (lambda ()
               (add-hook 'before-save-hook
-                        '+org-fix-blank-lines nil t))))
+                        '+org-fix-blank-lines 'local))))
 #+end_src
 
 * Module Settings
