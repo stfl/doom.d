@@ -2543,11 +2543,11 @@ exist after each headings's drawers."
 Now adding this to a before-save-hook for all org-mode buffers.
 
 #+begin_src elisp
-(after! org
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook
-                        '+org-fix-blank-lines 'local))))
+;; (after! org
+;;   (add-hook 'org-mode-hook
+;;             (lambda ()
+;;               (add-hook 'before-save-hook
+;;                         '+org-fix-blank-lines 'local))))
 #+end_src
 
 * Module Settings
