@@ -2552,6 +2552,65 @@ org-default-priority is treated as lower than the same set value"
     prio))
 #+end_src
 
+** edit SOMEDAY entries
+
+To mark entries (mainly =PROJ=) as not relevant ~at the moment~ I mark them with the
+tag =SOMEDAY=. If the enty has a =SCHEDULED= date assigned it's considered a =TICKLER=
+entry. A TICKLER entry is not relevant right now but will be relevant at some
+point in the future. For the time beeing I want it to disapear from the todo
+backlog. On the scheduling date it will be added back into the system by
+removing the SOMEDAY tag and the schduling date.
+
+Mark an agenda entry
+
+#+begin_src elisp
+(defun stfl/org-agenda-set-someday (&optional do-schedule)
+  "Marks the current agenda entry as SOMEDAY
+
+When called with the universial prefix `C-u` asks for a date on which it will be
+relevant again"
+  (interactive "P")
+  (org-agenda-set-tags "SOMEDAY" 'on)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule (unless do-schedule '(4))))
+
+(defun stfl/org-agenda-set-tickler ()
+  "Marks the current agenda entry as SOMEDAY and assign a scheduled date"
+  (interactive)
+  (stfl/org-agenda-set-someday '(4)))
+
+(defun stfl/org-agenda-remove-someday ()
+  "Remove SOMEDAY tag and scheduling from the current element and reintegrate into the Agenda"
+  (interactive)
+  (unless (stfl/org-agenda-someday?)
+    (error "Element has no SOMEDAY tag"))
+  (org-agenda-set-tags "SOMEDAY" 'off)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule '(4)))
+
+(defun stfl/org-agenda-someday? ()
+  (-find (-partial 'string= "SOMEDAY") (org-get-at-bol 'tags)))
+
+(defun stfl/org-agenda-toggle-someday (&optional do-schedule)
+  "Toggle the SOMEDAY status
+
+When called with the universial prefix `C-u` asks for a date on which it will be
+relevant again (Tickler)"
+  (interactive "P")
+  (if (stfl/org-agenda-someday?)
+      (stfl/org-agenda-remove-someday)
+    (stfl/org-agenda-set-someday (when do-schedule '(4)))))
+
+(defun stfl/org-agenda-toggle-tickler ()
+  "Toggle SOMEDAY status and ask for a date when to put on the tickler"
+  (interactive)
+  (stfl/org-agenda-toggle-someday '(4)))
+#+end_src
+
 * Module Settings
 
 ** Define Word
