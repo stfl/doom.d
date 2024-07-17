@@ -638,14 +638,7 @@ To make the priorities mor visually appealing we add some nice symbols.
 
 and add change the color of the symbols to color range from red to blue
 
-** org-ql
-
-*** org-ql Keymap
-
-#+begin_src elisp
-#+end_src
-
-*** org-ql Views
+** org-ql Views
 :PROPERTIES:
 :ID:       75c9b250-285c-48e9-9911-fbd6f8b522c7
 :END:
