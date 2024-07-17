@@ -610,9 +610,9 @@ From here we load some extra key bindings that I use often
       :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
       )
 
-;; (map! ;;:after org-agenda
-;;       :map org-agenda-mode-map
-;;       )
+(map! :after org-ql
+      :map org-ql-view-map
+      "z" #'org-ql-view-dispatch)
 #+END_SRC
 
 ** Priorities
@@ -640,216 +640,9 @@ and add change the color of the symbols to color range from red to blue
 
 ** org-ql
 
-*** My Query helpers
-
-some helper functions
-#+begin_src elisp
-(defun stfl/agenda-query-stuck-projects()
-  '(stuck-proj))
-
-(defun stfl/org-agenda-show-priorities (&optional priority)
-  (interactive "P")
-  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
-                        (priority)
-                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
-  (when (or (< new org-priority-highest) (> new org-priority-highest))
-    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
-  (setq stfl/agenda-max-prio-group new)
-  (message "Showing up to priority %c" new)
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-reset-show-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-more-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-less-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
-  (org-agenda-redo-all))
-
-(defun stfl/agenda-day ()
-  '(agenda "Agenda"
-           ((org-agenda-use-time-grid t)
-            (org-deadline-warning-days 0)
-            (org-agenda-span '1)
-            (org-super-agenda-groups stfl/org-super-agenda-today-groups-no-primary-work)
-            (org-agenda-start-day (org-today)))))
-
-(defun prio-deadline>= (prio)
-  `(and (or (priority >= (char-to-string ,prio))
-            (and ,(> stfl/agenda-max-prio-group org-priority-default)
-                 (not (priority)))  ;; default priority is treated as nil in org-ql
-            (ancestors (priority >= (char-to-string ,prio)))
-            (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-                            (fib        ;; increase the date range of interest with a fibonacci sequance
-                             (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-                                (- prio 64))))) ;; use the priority value
-            (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
-                                                   (- prio 64)))))))))
-
-(defun stfl/agenda-query-actions-prio-higher (prio)
-  `(and (todo "NEXT" "WAIT")
-        ,(prio-deadline>= prio)
-        (not ,(someday-habit))
-        (not (ancestors (deadline :to 0)))
-        (not (deadline :to 0))
-        (not (scheduled))))
-
-(defun someday-habit()
-  '(or (tags "SOMEDAY" "HABIT")
-        (habit)))
-
-(defun not-someday-habit()
-  `(not ,(someday-habit)))
-
-(defun not-sched-or-dead(from)
-  `(and (not (scheduled :from today))
-       (not (deadline :from ,from))))
-
-#+end_src
-
-*** [#D] org-ql custom predicates
-
+*** org-ql Keymap
 
 #+begin_src elisp
-(after! org-ql
-  (org-ql-defpred tickler ()
-    "match entries in the \"tickler\"."
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo) (tags-local "SOMEDAY") (scheduled)))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
-
-  (org-ql-defpred tickler-proj ()
-    "match PROJ in the \"tickler\" or all children in \"tickler\"."
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "PROJ")
-                              (or (tickler)
-                                  (and (children (tickler))
-                                       (not (children (and (todo "NEXT" "WAIT")
-                                                           (not (tickler)))))))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "PROJ")
-                            (or (tickler)
-                                (and (children (tickler))
-                                     (not (children (and (todo "NEXT" "WAIT")
-                                                         (not (tickler))))))))))))
-
-  (org-ql-defpred work ()
-    "work related entries."
-    :normalizers ((`(,predicate-names)
-                   (rec '(tags "#work"))))
-    :preambles ((`(,predicate-names)
-                 (rec '(tags "#work")))))
-
-  (org-ql-defpred primary-work ()
-    "work related entries."
-    :normalizers ((`(,predicate-names)
-                   (rec `(tags ,@stfl/org-agenda-primary-work-tags))))
-    :preambles ((`(,predicate-names)
-                 (rec `(tags ,@stfl/org-agenda-primary-work-tags)))))
-
-  (org-ql-defpred private ()
-    "Private entries."
-    :normalizers ((`(,predicate-names)
-                   (rec '(not (tags "#work")))))
-    :preambles ((`(,predicate-names)
-                   (rec '(not (tags "#work"))))))
-
-  (org-ql-defpred (stuck-proj stuck) ()
-    "Stuck Project"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "PROJ")
-                              (not (tags "SOMEDAY"))
-                              (not (children (todo "NEXT" "WAIT")))
-                              (not (tickler-proj))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "PROJ")
-                            (not (tags "SOMEDAY"))
-                            (not (children (todo "NEXT" "WAIT")))
-                            (not (tickler-proj)))))))
-
-
-  (org-ql-defpred standalone-next ()
-    "Standalone NEXT Action (or WAIT)"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "NEXT" "WAIT")
-                              (not (ancestors (or (todo "PROJ")
-                                                  (done))))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "NEXT" "WAIT")
-                              (not (ancestors (or (todo "PROJ")
-                                                  (done)))))))))
-
-  (org-ql-defpred tangling ()
-    "Tangling Actions (Ancestors Done)"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo) (ancestors (done))))))
-    :preambles ((`(,predicate-names)
-                   (rec '(and (todo) (ancestors (done)))))))
-
-  (org-ql-defpred someday ()
-    "tagged SOMEDAY"
-    :normalizers ((`(,predicate-names)
-                   (rec '(tags "SOMEDAY"))))
-    :preambles ((`(,predicate-names)
-                 (rec '(tags "SOMEDAY")))))
-
-  (org-ql-defpred my-habit ()
-    "style habit or tag HABIT"
-    :normalizers ((`(,predicate-names)
-                   (rec '(or (tags "HABIT") (habit)))))
-    :preambles ((`(,predicate-names)
-                 (rec '(or (tags "HABIT") (habit))))))
-
-;; (defun prio-deadline>= (prio)
-;;   `(and (or (priority >= (char-to-string ,prio))
-;;             (and ,(> stfl/agenda-max-prio-group org-priority-default)
-;;                  (not (priority)))  ;; default priority is treated as nil in org-ql
-;;             (ancestors (priority >= (char-to-string ,prio)))
-;;             (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
-;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-;;                                 (- prio 64)))) ;; use the priority value
-;;                       )
-;;             (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
-;;                                                    (- prio 64)))))))))
-
-
-
-;;   (org-ql-defpred prio-deadline ()
-;;     "Priority defined by priority, deadline of entry or ancestors."
-;;     (let ((deadline-limit
-;;            (1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
-;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-;;                                 (- prio 64)))) ;; use the priority value
-;;            ))
-;;     :normalizers ((`(,predicate-names)
-;;                    (rec '
-
-;;                     (and (todo) (tags-local "SOMEDAY") (scheduled))
-
-
-;;                 )))
-;;     :preambles ((`(,predicate-names)
-;;                  (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
-
-)
-#+end_src
-
-*** Keymap
-
-#+begin_src elisp
-(map! :after org-ql
-      :map org-ql-view-map
-      "z" #'org-ql-view-dispatch)
 #+end_src
 
 *** org-ql Views
@@ -2624,6 +2417,136 @@ some helper functions
   `(and (not (scheduled :from today))
        (not (deadline :from ,from))))
 
+#+end_src
+
+** [#D] org-ql custom predicates
+
+
+#+begin_src elisp
+(after! org-ql
+  (org-ql-defpred tickler ()
+    "match entries in the \"tickler\"."
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo) (tags-local "SOMEDAY") (scheduled)))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
+
+  (org-ql-defpred tickler-proj ()
+    "match PROJ in the \"tickler\" or all children in \"tickler\"."
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "PROJ")
+                              (or (tickler)
+                                  (and (children (tickler))
+                                       (not (children (and (todo "NEXT" "WAIT")
+                                                           (not (tickler)))))))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "PROJ")
+                            (or (tickler)
+                                (and (children (tickler))
+                                     (not (children (and (todo "NEXT" "WAIT")
+                                                         (not (tickler))))))))))))
+
+  (org-ql-defpred work ()
+    "work related entries."
+    :normalizers ((`(,predicate-names)
+                   (rec '(tags "#work"))))
+    :preambles ((`(,predicate-names)
+                 (rec '(tags "#work")))))
+
+  (org-ql-defpred primary-work ()
+    "work related entries."
+    :normalizers ((`(,predicate-names)
+                   (rec `(tags ,@stfl/org-agenda-primary-work-tags))))
+    :preambles ((`(,predicate-names)
+                 (rec `(tags ,@stfl/org-agenda-primary-work-tags)))))
+
+  (org-ql-defpred private ()
+    "Private entries."
+    :normalizers ((`(,predicate-names)
+                   (rec '(not (tags "#work")))))
+    :preambles ((`(,predicate-names)
+                   (rec '(not (tags "#work"))))))
+
+  (org-ql-defpred (stuck-proj stuck) ()
+    "Stuck Project"
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "PROJ")
+                              (not (tags "SOMEDAY"))
+                              (not (children (todo "NEXT" "WAIT")))
+                              (not (tickler-proj))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "PROJ")
+                            (not (tags "SOMEDAY"))
+                            (not (children (todo "NEXT" "WAIT")))
+                            (not (tickler-proj)))))))
+
+
+  (org-ql-defpred standalone-next ()
+    "Standalone NEXT Action (or WAIT)"
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo "NEXT" "WAIT")
+                              (not (ancestors (or (todo "PROJ")
+                                                  (done))))))))
+    :preambles ((`(,predicate-names)
+                 (rec '(and (todo "NEXT" "WAIT")
+                              (not (ancestors (or (todo "PROJ")
+                                                  (done)))))))))
+
+  (org-ql-defpred tangling ()
+    "Tangling Actions (Ancestors Done)"
+    :normalizers ((`(,predicate-names)
+                   (rec '(and (todo) (ancestors (done))))))
+    :preambles ((`(,predicate-names)
+                   (rec '(and (todo) (ancestors (done)))))))
+
+  (org-ql-defpred someday ()
+    "tagged SOMEDAY"
+    :normalizers ((`(,predicate-names)
+                   (rec '(tags "SOMEDAY"))))
+    :preambles ((`(,predicate-names)
+                 (rec '(tags "SOMEDAY")))))
+
+  (org-ql-defpred my-habit ()
+    "style habit or tag HABIT"
+    :normalizers ((`(,predicate-names)
+                   (rec '(or (tags "HABIT") (habit)))))
+    :preambles ((`(,predicate-names)
+                 (rec '(or (tags "HABIT") (habit))))))
+
+;; (defun prio-deadline>= (prio)
+;;   `(and (or (priority >= (char-to-string ,prio))
+;;             (and ,(> stfl/agenda-max-prio-group org-priority-default)
+;;                  (not (priority)))  ;; default priority is treated as nil in org-ql
+;;             (ancestors (priority >= (char-to-string ,prio)))
+;;             (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
+;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
+;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
+;;                                 (- prio 64)))) ;; use the priority value
+;;                       )
+;;             (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
+;;                                                    (- prio 64)))))))))
+
+
+
+;;   (org-ql-defpred prio-deadline ()
+;;     "Priority defined by priority, deadline of entry or ancestors."
+;;     (let ((deadline-limit
+;;            (1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
+;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
+;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
+;;                                 (- prio 64)))) ;; use the priority value
+;;            ))
+;;     :normalizers ((`(,predicate-names)
+;;                    (rec '
+
+;;                     (and (todo) (tags-local "SOMEDAY") (scheduled))
+
+
+;;                 )))
+;;     :preambles ((`(,predicate-names)
+;;                  (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
+
+)
 #+end_src
 
 * Module Settings
