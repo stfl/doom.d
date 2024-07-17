@@ -521,10 +521,6 @@ also rebuild that via org-roam
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 #+end_src
 
-#+begin_src elisp
-(setcdr (assq 'heading org-blank-before-new-entry) t)
-#+end_src
-
 ** Auto-saving org-mode files
 
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
@@ -2492,6 +2488,13 @@ https://github.com/doomemacs/doomemacs/issues/7058
 #+end_src
 
 ** Ensure blank lines between headings and before contents
+
+Always add a blank line when adding a new heading
+
+#+begin_src elisp
+(setcdr (assq 'heading org-blank-before-new-entry) t)
+#+end_src
+
 
 https://github.com/alphapapa/unpackaged.el?tab=readme-ov-file#ensure-blank-lines-between-headings-and-before-contents
 
