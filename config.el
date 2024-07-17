@@ -1810,7 +1810,7 @@ exist after each headings's drawers."
             (lambda () (add-hook 'before-save-hook
                                  (lambda ()
                                    (when (eq major-mode 'org-mode)
-                                     (+org-fix-blank-lines 4)))
+                                     (+org-fix-blank-lines)))
                                  'local))))
 
 (use-package! define-word
