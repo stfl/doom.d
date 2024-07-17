@@ -613,34 +613,6 @@ From here we load some extra key bindings that I use often
       :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
       )
 
-(map! :after org-agenda
-      :map org-agenda-mode-map
-      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
-      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
-
-      :localleader
-      "N" #'org-agenda-add-note
-      :desc "Filter" "f" #'org-agenda-filter
-      :desc "Follow" "F" #'org-agenda-follow-mode
-      "o" #'org-agenda-set-property
-
-      :prefix ("p" . "priorities")
-      :desc "Prioity" "p" #'org-agenda-priority
-      :desc "Prioity up" "u" #'org-agenda-priority-up
-      :desc "Prioity down" "d" #'org-agenda-priority-down
-      :desc "Someday/Maybe toggle" "s" #'stfl/org-agenda-toggle-someday
-      :desc "Add to Someday/Maybe" "S" #'stfl/org-agenda-set-someday
-      :desc "Tickler toggle" "t" #'stfl/org-agenda-toggle-tickler
-      :desc "Add to Tickler" "T" #'stfl/org-agenda-set-tickler
-      :desc "Remove Someday/Maybe" "r" #'stfl/org-agenda-remove-someday
-
-      :prefix ("v" . "View up to priority")
-      "v" #'stfl/org-agenda-show-priorities
-      "l" #'stfl/org-agenda-show-less-priorities
-      "m" #'stfl/org-agenda-show-more-priorities
-      "r" #'stfl/org-agenda-reset-show-priorities
-      )
-
 ;; (map! ;;:after org-agenda
 ;;       :map org-agenda-mode-map
 ;;       )
@@ -1180,46 +1152,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line))))
 #+end_src
 
-** org-ql
-:PROPERTIES:
-:ID:       617698c9-8d19-4dd5-a13f-541fa6a8c343
-:END:
-
-#+begin_src elisp :tangle packages.el
-(package! org-ql)
-#+end_src
-
-#+begin_src elisp
-(defun stfl/org-ql-min-ancestor-priority< (a b)
-  "Return non-nil if A's minimum ancestor priority is higher than B's.
-A and B are Org headline elements.
-org-default-priority is treated as lower than the same set value"
-  (cl-macrolet ((priority (item)
-                          `(org-with-point-at (org-element-property :org-marker ,item)
-                             (stfl/org-min-ancestor-priority))))
-    ;; NOTE: Priorities are numbers in Org elements.
-    ;; This might differ from the priority selector logic.
-    (let ((a-priority (priority a))
-          (b-priority (priority b)))
-      (cond ((and a-priority b-priority)
-             (< a-priority b-priority))
-            (a-priority t)
-            (b-priority nil)))))
-
-
-(defun stfl/org-min-ancestor-priority ()
-  (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
-           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                      (org-up-heading-safe))))
-
-
-(defun stfl/org-priority-or-default ()
-  (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
-         (prio (cond (prio-raw prio-raw)
-                     (t (+ 0.5 org-priority-default))))) ;; display empty prio below default
-    prio))
-#+end_src
-
 ** Capture Templates
 :PROPERTIES:
 :ID:       6a1cd4f6-e2a2-4838-b451-61589e3cdbef
@@ -1707,100 +1639,6 @@ Org babel to generate mermaid diagrams from org src blocks
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 #+end_src
 
-** Resolve syncthing conflicts
-:PROPERTIES:
-:ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
-:END:
-
-From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/
-/In termux, you also need to pkg install diffutils./
-
-#+begin_src elisp
-(map! :after org
-      :map org-mode-map
-      :leader
-      (:prefix ("n" . "notes")
-       (:prefix ("j" . "sync")
-        :desc "resolve syncthing conflicts" "c" #'stfl/resolve-orgzly-syncthing
-        )))
-#+end_src
-
-#+begin_src elisp
-(defun stfl/resolve-orgzly-syncthing ()
-  (interactive)
-  (let ((org-startup-folded 'showeverything)
-        (org-inhibit-startup t)
-        (org-hide-drawer-startup nil))
-    (ibizaman/syncthing-resolve-conflicts org-directory)))
-
-(defun ibizaman/syncthing-resolve-conflicts (directory)
-  "Resolve all conflicts under given DIRECTORY."
-  (interactive "D")
-  (let* ((all (ibizaman/syncthing--get-sync-conflicts directory))
-         (chosen (ibizaman/syncthing--pick-a-conflict all)))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-
-(defun ibizaman/syncthing-show-conflicts-dired (directory)
-  "Open dired buffer at DIRECTORY showing all syncthing conflicts."
-  (interactive "D")
-  (find-name-dired directory "*.sync-conflict-*"))
-
-(defun ibizaman/syncthing-resolve-conflict-dired (&optional arg)
-  "Resolve conflict of first marked file in dired or close to point with ARG."
-  (interactive "P")
-  (let ((chosen (car (dired-get-marked-files nil arg))))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-(defun ibizaman/syncthing-resolve-conflict (conflict)
-  "Resolve CONFLICT file using ediff."
-  (let* ((normal (ibizaman/syncthing--get-normal-filename conflict)))
-    (ibizaman/ediff-files
-     (list conflict normal)
-     `(lambda ()
-        (when (y-or-n-p "Delete conflict file? ")
-          (kill-buffer (get-file-buffer ,conflict))
-          (delete-file ,conflict))))))
-
-(defun ibizaman/syncthing--get-sync-conflicts (directory)
-  "Return a list of all sync conflict files in a DIRECTORY."
-  (seq-filter (lambda (o) (not (string-match "\\.stversions" o))) (directory-files-recursively directory "\\.sync-conflict-")))
-
-(defvar ibizaman/syncthing--conflict-history nil
-  "Completion conflict history")
-
-(defun ibizaman/syncthing--pick-a-conflict (conflicts)
-  "Let user choose the next conflict from CONFLICTS to investigate."
-  (completing-read "Choose the conflict to investigate: " conflicts
-                   nil t nil ibizaman/syncthing--conflict-history))
-
-(defun ibizaman/syncthing--get-normal-filename (conflict)
-  "Get non-conflict filename matching the given CONFLICT."
-  (replace-regexp-in-string "\\.sync-conflict-.*\\(\\..*\\)$" "\\1" conflict))
-
-(defun ibizaman/ediff-files (&optional files quit-hook)
-  (interactive)
-  (lexical-let ((files (or files (dired-get-marked-files)))
-                (quit-hook quit-hook)
-                (wnd (current-window-configuration)))
-    (if (<= (length files) 2)
-        (let ((file1 (car files))
-              (file2 (if (cdr files)
-                         (cadr files)
-                       (read-file-name
-                        "file: "
-                        (dired-dwim-target-directory)))))
-          (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (when quit-hook (funcall quit-hook))
-                      (set-window-configuration wnd))))
-      (error "no more than 2 files should be marked"))))
-#+end_src
-
 ** org-jira
 
 :PROPERTIES:
@@ -1987,6 +1825,100 @@ https://github.com/doomemacs/doomemacs/issues/7058
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
 #+end_src
 
+** Resolve syncthing conflicts
+:PROPERTIES:
+:ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
+:END:
+
+From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/
+/In termux, you also need to pkg install diffutils./
+
+#+begin_src elisp
+(map! :after org
+      :map org-mode-map
+      :leader
+      (:prefix ("n" . "notes")
+       (:prefix ("j" . "sync")
+        :desc "resolve syncthing conflicts" "c" #'stfl/resolve-orgzly-syncthing
+        )))
+#+end_src
+
+#+begin_src elisp
+(defun stfl/resolve-orgzly-syncthing ()
+  (interactive)
+  (let ((org-startup-folded 'showeverything)
+        (org-inhibit-startup t)
+        (org-hide-drawer-startup nil))
+    (ibizaman/syncthing-resolve-conflicts org-directory)))
+
+(defun ibizaman/syncthing-resolve-conflicts (directory)
+  "Resolve all conflicts under given DIRECTORY."
+  (interactive "D")
+  (let* ((all (ibizaman/syncthing--get-sync-conflicts directory))
+         (chosen (ibizaman/syncthing--pick-a-conflict all)))
+    (ibizaman/syncthing-resolve-conflict chosen)))
+
+
+(defun ibizaman/syncthing-show-conflicts-dired (directory)
+  "Open dired buffer at DIRECTORY showing all syncthing conflicts."
+  (interactive "D")
+  (find-name-dired directory "*.sync-conflict-*"))
+
+(defun ibizaman/syncthing-resolve-conflict-dired (&optional arg)
+  "Resolve conflict of first marked file in dired or close to point with ARG."
+  (interactive "P")
+  (let ((chosen (car (dired-get-marked-files nil arg))))
+    (ibizaman/syncthing-resolve-conflict chosen)))
+
+(defun ibizaman/syncthing-resolve-conflict (conflict)
+  "Resolve CONFLICT file using ediff."
+  (let* ((normal (ibizaman/syncthing--get-normal-filename conflict)))
+    (ibizaman/ediff-files
+     (list conflict normal)
+     `(lambda ()
+        (when (y-or-n-p "Delete conflict file? ")
+          (kill-buffer (get-file-buffer ,conflict))
+          (delete-file ,conflict))))))
+
+(defun ibizaman/syncthing--get-sync-conflicts (directory)
+  "Return a list of all sync conflict files in a DIRECTORY."
+  (seq-filter (lambda (o) (not (string-match "\\.stversions" o))) (directory-files-recursively directory "\\.sync-conflict-")))
+
+(defvar ibizaman/syncthing--conflict-history nil
+  "Completion conflict history")
+
+(defun ibizaman/syncthing--pick-a-conflict (conflicts)
+  "Let user choose the next conflict from CONFLICTS to investigate."
+  (completing-read "Choose the conflict to investigate: " conflicts
+                   nil t nil ibizaman/syncthing--conflict-history))
+
+(defun ibizaman/syncthing--get-normal-filename (conflict)
+  "Get non-conflict filename matching the given CONFLICT."
+  (replace-regexp-in-string "\\.sync-conflict-.*\\(\\..*\\)$" "\\1" conflict))
+
+(defun ibizaman/ediff-files (&optional files quit-hook)
+  (interactive)
+  (lexical-let ((files (or files (dired-get-marked-files)))
+                (quit-hook quit-hook)
+                (wnd (current-window-configuration)))
+    (if (<= (length files) 2)
+        (let ((file1 (car files))
+              (file2 (if (cdr files)
+                         (cadr files)
+                       (read-file-name
+                        "file: "
+                        (dired-dwim-target-directory)))))
+          (if (file-newer-than-file-p file1 file2)
+              (ediff-files file2 file1)
+            (ediff-files file1 file2))
+          (add-hook 'ediff-after-quit-hook-internal
+                    (lambda ()
+                      (setq ediff-after-quit-hook-internal nil)
+                      (when quit-hook (funcall quit-hook))
+                      (set-window-configuration wnd))))
+      (error "no more than 2 files should be marked"))))
+#+end_src
+
 ** Ensure blank lines between headings and before contents
 
 Always add a blank line when adding a new heading.
@@ -2059,6 +1991,37 @@ Now adding this to a before-save-hook for all org-mode buffers.
 :ID:       b426d554-e01c-4792-8dfa-e0db617c4384
 :END:
 
+** Key bindings
+
+#+begin_src elisp
+(map! :after org-agenda
+      :map org-agenda-mode-map
+      :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
+      :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
+
+      :localleader
+      "N" #'org-agenda-add-note
+      :desc "Filter" "f" #'org-agenda-filter
+      :desc "Follow" "F" #'org-agenda-follow-mode
+      "o" #'org-agenda-set-property
+
+      :prefix ("p" . "priorities")
+      :desc "Prioity" "p" #'org-agenda-priority
+      :desc "Prioity up" "u" #'org-agenda-priority-up
+      :desc "Prioity down" "d" #'org-agenda-priority-down
+      :desc "Someday/Maybe toggle" "s" #'stfl/org-agenda-toggle-someday
+      :desc "Add to Someday/Maybe" "S" #'stfl/org-agenda-set-someday
+      :desc "Tickler toggle" "t" #'stfl/org-agenda-toggle-tickler
+      :desc "Add to Tickler" "T" #'stfl/org-agenda-set-tickler
+      :desc "Remove Someday/Maybe" "r" #'stfl/org-agenda-remove-someday
+
+      :prefix ("v" . "View up to priority")
+      "v" #'stfl/org-agenda-show-priorities
+      "l" #'stfl/org-agenda-show-less-priorities
+      "m" #'stfl/org-agenda-show-more-priorities
+      "r" #'stfl/org-agenda-reset-show-priorities
+      )
+#+end_src
 ** Agenda options
 :PROPERTIES:
 :ID:       5158cdfa-b98d-4fe9-9bad-13c965cca570
