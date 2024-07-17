@@ -1,10 +1,6 @@
 (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
 
-(package! org-super-agenda)
-
-(package! org-ql)
-
 (package! org-edna)
 
 ;; (package! org-modern)
@@ -25,6 +21,10 @@
 ;;   :recipe (:host github
 ;;            :repo "tecosaur/org-pandoc-import"
 ;;            :files ("*.el" "filters" "preprocessors")))
+
+(package! org-super-agenda)
+
+(package! org-ql)
 
 (package! emacsql-sqlite-builtin)
 
