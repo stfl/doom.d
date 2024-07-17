@@ -465,9 +465,6 @@ Since Emacs 29, pixel-scroll is built-in
 #+end_src
 
 * Org mode settings
-:PROPERTIES:
-:ID:       21db6be7-63e5-4034-b766-f5221efdd0ca
-:END:
 
 ** General
 :PROPERTIES:
