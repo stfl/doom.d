@@ -1032,7 +1032,8 @@ exist after each headings's drawers."
                               (not (primary-work)))
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block '(and (stuck-proj) (private))
+          (org-ql-block '(and (stuck-proj)
+                              (not (primary-work)))
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-groups stfl/priority-groups)))))
         ("A" "Agenda Weekly"
