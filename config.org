@@ -1987,9 +1987,6 @@ Now adding this to a before-save-hook for all org-mode buffers.
 #+end_src
 
 * [#D] Org Agenda
-:PROPERTIES:
-:ID:       b426d554-e01c-4792-8dfa-e0db617c4384
-:END:
 
 ** Key bindings
 
