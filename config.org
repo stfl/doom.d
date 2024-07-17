@@ -521,6 +521,10 @@ also rebuild that via org-roam
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 #+end_src
 
+#+begin_src elisp
+(setcdr (assq 'heading org-blank-before-new-entry) t)
+#+end_src
+
 ** Auto-saving org-mode files
 
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
