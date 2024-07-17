@@ -1807,15 +1807,11 @@ exist after each headings's drawers."
 
 (after! org
   (add-hook 'org-mode-hook
-            (lambda ()
-              (message "org-mode-hook")
-              (add-hook 'before-save-hook
-                        (lambda ()
-                          (message "org-mode-hook")
-                          (and (string= major-mode "org-mode")
-                               (+org-fix-blank-lines 4)))
-                        'local))
-            'local))
+            (lambda () (add-hook 'before-save-hook
+                                 (lambda ()
+                                   (when (eq major-mode 'org-mode)
+                                     (+org-fix-blank-lines 4)))
+                                 'local))))
 
 (use-package! define-word
   :after org
