@@ -2551,7 +2551,7 @@ Now adding this to a before-save-hook for all org-mode buffers.
               (message "org-mode-hook")
               (add-hook 'before-save-hook
                         (lambda ()
-                          (message "org-mode-hook")
+                          (message "before-save-hook")
                           (and (string= major-mode "org-mode")
                                (+org-fix-blank-lines 4)))
                         'local))
