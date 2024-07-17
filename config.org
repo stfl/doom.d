@@ -2022,6 +2022,7 @@ Now adding this to a before-save-hook for all org-mode buffers.
       "r" #'stfl/org-agenda-reset-show-priorities
       )
 #+end_src
+
 ** Agenda options
 :PROPERTIES:
 :ID:       5158cdfa-b98d-4fe9-9bad-13c965cca570
