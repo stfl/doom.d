@@ -615,65 +615,6 @@ From here we load some extra key bindings that I use often
 ;;       )
 #+END_SRC
 
-** edit SOMEDAY entries
-
-To mark entries (mainly =PROJ=) as not relevant ~at the moment~ I mark them with the
-tag =SOMEDAY=. If the enty has a =SCHEDULED= date assigned it's considered a =TICKLER=
-entry. A TICKLER entry is not relevant right now but will be relevant at some
-point in the future. For the time beeing I want it to disapear from the todo
-backlog. On the scheduling date it will be added back into the system by
-removing the SOMEDAY tag and the schduling date.
-
-Mark an agenda entry
-
-#+begin_src elisp
-(defun stfl/org-agenda-set-someday (&optional do-schedule)
-  "Marks the current agenda entry as SOMEDAY
-
-When called with the universial prefix `C-u` asks for a date on which it will be
-relevant again"
-  (interactive "P")
-  (org-agenda-set-tags "SOMEDAY" 'on)
-  (ignore-error user-error
-    (org-agenda-priority 'remove))
-  (org-agenda-deadline '(4))
-  (org-agenda-schedule (unless do-schedule '(4))))
-
-(defun stfl/org-agenda-set-tickler ()
-  "Marks the current agenda entry as SOMEDAY and assign a scheduled date"
-  (interactive)
-  (stfl/org-agenda-set-someday '(4)))
-
-(defun stfl/org-agenda-remove-someday ()
-  "Remove SOMEDAY tag and scheduling from the current element and reintegrate into the Agenda"
-  (interactive)
-  (unless (stfl/org-agenda-someday?)
-    (error "Element has no SOMEDAY tag"))
-  (org-agenda-set-tags "SOMEDAY" 'off)
-  (ignore-error user-error
-    (org-agenda-priority 'remove))
-  (org-agenda-deadline '(4))
-  (org-agenda-schedule '(4)))
-
-(defun stfl/org-agenda-someday? ()
-  (-find (-partial 'string= "SOMEDAY") (org-get-at-bol 'tags)))
-
-(defun stfl/org-agenda-toggle-someday (&optional do-schedule)
-  "Toggle the SOMEDAY status
-
-When called with the universial prefix `C-u` asks for a date on which it will be
-relevant again (Tickler)"
-  (interactive "P")
-  (if (stfl/org-agenda-someday?)
-      (stfl/org-agenda-remove-someday)
-    (stfl/org-agenda-set-someday (when do-schedule '(4)))))
-
-(defun stfl/org-agenda-toggle-tickler ()
-  "Toggle SOMEDAY status and ask for a date when to put on the tickler"
-  (interactive)
-  (stfl/org-agenda-toggle-someday '(4)))
-#+end_src
-
 ** Priorities
 :PROPERTIES:
 :ID:       f5c0a2a6-070e-480e-8c72-888da9416f25
@@ -2609,6 +2550,80 @@ relevant again (Tickler)"
   "Toggle SOMEDAY status and ask for a date when to put on the tickler"
   (interactive)
   (stfl/org-agenda-toggle-someday '(4)))
+#+end_src
+
+** My Query helpers
+
+some helper functions
+#+begin_src elisp
+(defun stfl/agenda-query-stuck-projects()
+  '(stuck-proj))
+
+(defun stfl/org-agenda-show-priorities (&optional priority)
+  (interactive "P")
+  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
+                        (priority)
+                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
+  (when (or (< new org-priority-highest) (> new org-priority-highest))
+    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
+  (setq stfl/agenda-max-prio-group new)
+  (message "Showing up to priority %c" new)
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-reset-show-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-more-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
+  (org-agenda-redo-all))
+
+(defun stfl/org-agenda-show-less-priorities ()
+  (interactive)
+  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
+  (org-agenda-redo-all))
+
+(defun stfl/agenda-day ()
+  '(agenda "Agenda"
+           ((org-agenda-use-time-grid t)
+            (org-deadline-warning-days 0)
+            (org-agenda-span '1)
+            (org-super-agenda-groups stfl/org-super-agenda-today-groups-no-primary-work)
+            (org-agenda-start-day (org-today)))))
+
+(defun prio-deadline>= (prio)
+  `(and (or (priority >= (char-to-string ,prio))
+            (and ,(> stfl/agenda-max-prio-group org-priority-default)
+                 (not (priority)))  ;; default priority is treated as nil in org-ql
+            (ancestors (priority >= (char-to-string ,prio)))
+            (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
+                            (fib        ;; increase the date range of interest with a fibonacci sequance
+                             (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
+                                (- prio 64))))) ;; use the priority value
+            (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
+                                                   (- prio 64)))))))))
+
+(defun stfl/agenda-query-actions-prio-higher (prio)
+  `(and (todo "NEXT" "WAIT")
+        ,(prio-deadline>= prio)
+        (not ,(someday-habit))
+        (not (ancestors (deadline :to 0)))
+        (not (deadline :to 0))
+        (not (scheduled))))
+
+(defun someday-habit()
+  '(or (tags "SOMEDAY" "HABIT")
+        (habit)))
+
+(defun not-someday-habit()
+  `(not ,(someday-habit)))
+
+(defun not-sched-or-dead(from)
+  `(and (not (scheduled :from today))
+       (not (deadline :from ,from))))
+
 #+end_src
 
 * Module Settings
