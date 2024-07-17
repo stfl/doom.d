@@ -610,9 +610,6 @@ From here we load some extra key bindings that I use often
       :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
       )
 
-(map! :after org-ql
-      :map org-ql-view-map
-      "z" #'org-ql-view-dispatch)
 #+END_SRC
 
 ** Priorities
@@ -637,189 +634,6 @@ To make the priorities mor visually appealing we add some nice symbols.
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
-
-** org-ql Views
-:PROPERTIES:
-:ID:       75c9b250-285c-48e9-9911-fbd6f8b522c7
-:END:
-
-~:LASTMILE:~ represents a task that is =allmost= finished and only a single or very
-few actions are open. I use this to mark tasks that are sitting around in my
-agenda for too long even though they are allmost completed.
-
-With the following view I list all open NEXT Actions with the :LASTMILE: tag.
-
-#+begin_src elisp
-(after! org-ql
-  (setq org-ql-views
-         (list (cons "LASTMILE"
-                     (list :title "LASTMILE"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and
-                                    (todo "NEXT")
-                                    (tags "LASTMILE")
-                                    ,(not-someday-habit)
-                                    ,(not-sched-or-dead 14))
-                           :narrow nil))
-               (cons "PROJ Backlock Active"
-                     (list :title "PROJ Backlog"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (todo "PROJ")
-                                        ,(not-someday-habit)
-                                        (not (tickler-proj)))
-                           :narrow nil))
-               (cons "PROJ Backlock #work"
-                     (list :title "#work backlog with tickler"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (or (todo "PROJ")
-                                            (standalone-next))
-                                        (tags "#work")
-                                        ,(not-someday-habit)
-                                        (not (tickler-proj)))
-                           :narrow nil))
-               (cons "PROJ Backlock #work (full)"
-                     (list :title "#work backlog with tickler"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (or (todo "PROJ")
-                                            (standalone-next))
-                                        (tags "#work"))
-                           :narrow nil))
-
-               ;;     ("Home and Sarah"
-               ;;     :title "Home and Sarah"
-               ;;     :buffers-files org-agenda-files
-               ;;     :sort priority
-               ;;     :super-groups stfl/ancestor-priority-groups
-               ;;     :query `(and
-               ;;             (todo "NEXT" "NEXT")
-               ;;             (tags "@sarah" "@home")
-               ;;             ,(not-someday-habit)
-               ;;             ,(not-sched-or-dead 14))
-               ;;     :narrow nil)
-               ;; ("Standalong NEXT"
-               ;;     :title "Standalone NEXT"
-               ;;     :buffers-files org-agenda-files
-               ;;     :sort priority
-               ;;     :super-groups stfl/ancestor-priority-groups
-               ;;     :query `(and
-               ;;             (todo "NEXT" "NEXT")
-               ;;             (not (ancestors (todo "PROJ")))
-               ;;             ,(not-someday-habit)
-               ;;             ,(prio-deadline>= org-priority-lowest)
-               ;;     :narrow nil))
-               ;; ("Open Loops"
-               ;;     :title "Open Loops"
-               ;;     :buffers-files org-agenda-files
-               ;;     :sort priority
-               ;;     :super-groups stfl/ancestor-priority-groups
-               ;;     :query `(and
-               ;;             (todo "NEXT" "NEXT")
-               ;;             ;; (not (ancestors (todo "PROJ")))
-               ;;             ,(not-someday-habit)
-               ;;             ,(prio-deadline>= org-priority-lowest)
-               ;;     :narrow nil))
-               ;; ("Stuck Standalone NEXT and WAIT"
-               ;;     :title "Stuck Standalong NEXT"
-               ;;     :buffers-files org-agenda-files
-               ;;     :sort priority
-               ;;     :super-groups stfl/ancestor-priority-groups
-               ;;     :query `(and
-               ;;             (todo "NEXT" "WAIT")
-               ;;             (not (ancestors (todo "PROJ")))
-               ;;             (not (scheduled))
-               ;;             (not (deadline))
-               ;;             (not (tags "@crypto_rotation" "inbox"))
-               ;;             ,(not-someday-habit)
-               ;;             (not ,(stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group))
-               ;;     :narrow nil))
-               ;; ("Crypo Rotation"
-               ;;     :title "Crypto Rotation"
-               ;;     :buffers-files org-agenda-files
-               ;;     :sort date
-               ;;     :super-groups stfl/ancestor-priority-groups
-               ;;     :query `(and
-               ;;             (todo "NEXT" "TODO")
-               ;;             (ts-active :to today)
-               ;;             (tags "@crypto_rotation")
-               ;;             ,(not-someday-habit)
-               ;;             (not ,(stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group))
-               ;;     :narrow nil))
-
-               ;; ("Calendar: This week"
-               ;;       (lambda ()
-               ;;         "Show items with an active timestamp during this calendar week."
-               ;;         (interactive)
-               ;;         (let* ((ts (ts-now))
-               ;;                (beg-of-week (->> ts
-               ;;                               (ts-adjust 'day (- (ts-dow (ts-now))))
-               ;;                               (ts-apply :hour 0 :minute 0 :second 0)))
-               ;;                (end-of-week (->> ts
-               ;;                               (ts-adjust 'day (- 6 (ts-dow (ts-now))))
-               ;;                               (ts-apply :hour 23 :minute 59 :second 59))))
-               ;;           (org-ql-search (org-agenda-files)
-               ;;             `(ts-active :from ,beg-of-week
-               ;;                         :to ,end-of-week)
-               ;;             :title "This week"
-               ;;             :super-groups 'org-super-agenda-groups
-               ;;             :sort '(priority)))))
-               ;; ("Calendar: Next week"
-               ;;       (lambda ()
-               ;;         "Show items with an active timestamp during the next calendar week."
-               ;;         (interactive)
-               ;;         (let* ((ts (ts-adjust 'day 7 (ts-now)))
-               ;;                (beg-of-week (->> ts
-               ;;                               (ts-adjust 'day (- (ts-dow (ts-now))))
-               ;;                               (ts-apply :hour 0 :minute 0 :second 0)))
-               ;;                (end-of-week (->> ts
-               ;;                               (ts-adjust 'day (- 6 (ts-dow (ts-now))))
-               ;;                               (ts-apply :hour 23 :minute 59 :second 59))))
-               ;;           (org-ql-search (org-agenda-files)
-               ;;             `(ts-active :from ,beg-of-week
-               ;;                         :to ,end-of-week)
-               ;;             :title "Next week"
-               ;;             :super-groups 'org-super-agenda-groups
-               ;;             :sort '(priority)))))
-
-               ;; ("Review: Recently timestamped" 'org-ql-view-recent-items)
-               ;; ((propertize "Review: Dangling tasks"
-               ;;                   'help-echo "Tasks whose ancestor is done")
-               ;;       (list :buffers-files #'org-agenda-files
-               ;;             :query '(and (todo)
-               ;;                          (ancestors (done)))
-               ;;             :title (propertize "Review: Dangling tasks"
-               ;;                                'help-echo "Tasks whose ancestor is done")
-               ;;             :sort '(todo priority date)
-               ;;             :super-groups '((:auto-parent t))))
-               ;; ((propertize "Review: Stale tasks"
-               ;;                   'help-echo "Tasks without a timestamp in the past 2 weeks")
-               ;;       (list :buffers-files #'org-agenda-files
-               ;;             :query '(and (todo)
-               ;;                          (not (ts :from -14)))
-               ;;             :title (propertize "Review: Stale tasks"
-               ;;                                'help-echo "Tasks without a timestamp in the past 2 weeks")
-               ;;             :sort '(todo priority date)
-               ;;             :super-groups '((:auto-parent t))))
-               ;; (,(propertize "Review: Stuck projects"
-               ;;                   'help-echo "Tasks with sub-tasks but no NEXT sub-tasks")
-               ;;       (list :buffers-files #'org-agenda-files
-               ;;             :query (and (todo)
-               ;;                          (descendants (todo))
-               ;;                          (not (descendants (todo "NEXT"))))
-               ;;             :title (propertize "Review: Stuck projects"
-               ;;                                'help-echo "Tasks with sub-tasks but no NEXT sub-tasks")
-               ;;             :sort (date priority)
-               ;;             :super-groups 'org-super-agenda-groups))
-               ))
-  )
-#+end_src
 
 ** Refiling
 :PROPERTIES:
@@ -1742,6 +1556,10 @@ Now adding this to a before-save-hook for all org-mode buffers.
       "m" #'stfl/org-agenda-show-more-priorities
       "r" #'stfl/org-agenda-reset-show-priorities
       )
+
+(map! :after org-ql
+      :map org-ql-view-map
+      "z" #'org-ql-view-dispatch)
 #+end_src
 
 ** Agenda options
