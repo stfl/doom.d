@@ -1,7 +1,7 @@
 * NEXT %^{Task}
 DEADLINE: %^{Deadline}t
 :PROPERTIES:
-:CREATED: %U
+:CREATED:  %U
 :END:
 
 %?

@@ -1,13 +1,14 @@
 * PROJ %^{PRIORITY||[#A] |[#B] |[#C] |[#D] |[#E] }%^{Title}
 :PROPERTIES:
-:ID:     %(org-id-new)
-:CREATED: %U
+:ID:      %(org-id-new)
+:CREATED:  %U
 :END:
+
 ~Goal:~ %^{Goal}
 
 ** NEXT %^{Next Action}
 :PROPERTIES:
-:CREATED: %U
+:CREATED:  %U
 :END:
 
 %?
