@@ -2684,6 +2684,8 @@ A free alternative to Github Copilot
   ;; use globally
   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
   (add-to-list 'company-frontends #'company-preview-frontend)
+        (setq company-minimum-prefix-length 0)
+
   ;; or on a hook
   ;; (add-hook 'python-mode-hook
   ;;     (lambda ()
