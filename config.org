@@ -2736,8 +2736,7 @@ A free alternative to Github Copilot
     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
 
     ;; (let ((codeium-nix-exe )))
-    ;; (when (
-    ;;        codeium-command-executable)
+    ;; (when (;;        codeium-command-executable)
     )
 #+end_src
 
