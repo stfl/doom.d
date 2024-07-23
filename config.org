@@ -2674,6 +2674,8 @@ A free alternative to Github Copilot
 #+begin_src elisp
 ;; we recommend using use-package to organize your init.el
 (use-package! codeium
+    :defer t ;; lazy loading
+
     ;; if you use straight
     ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
     ;; otherwise, make sure that the codeium.el file is on load-path
@@ -2699,12 +2701,11 @@ A free alternative to Github Copilot
     ;; (add-hook 'emacs-startup-hook
     ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
 
-    :defer t ;; lazy loading, if you want
     :config
     (setq use-dialog-box nil) ;; do not use popup boxes
 
     ;; if you don't want to use customize to save the api-key
-    ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+    (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
 
     ;; get codeium status in the modeline
     (setq codeium-mode-line-enable
