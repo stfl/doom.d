@@ -2737,10 +2737,8 @@ A free alternative to Github Copilot
 
   (let ((codeium-exe (executable-find "codeium_language_server")))
     (when codeium-exe
-      (setq codeium-command-executable codeium-exe)))
+      (setq! codeium-command-executable codeium-exe)))
   )
-;; (let ((codeium-nix-exe )))
-;; (when (;;        codeium-command-executable)
 #+end_src
 
 ** LSP
