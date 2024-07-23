@@ -3,7 +3,6 @@
 #+PROPERTY: header-args:elisp :noeval
 
 * General
-
 ** User Information
 :PROPERTIES:
 :ID:       47537e03-28e5-4adf-ac0b-ab8249ce01bf
@@ -45,7 +44,6 @@ get-password
 #+end_src
 
 ** literate config
-
 *** Don't auto-recompile literate-config
 :PROPERTIES:
 :ID:       7f52c1ee-6fff-4e04-96fa-8c5a2bf3ad14
@@ -156,7 +154,6 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 * Theme
-
 ** doom-theme
 :PROPERTIES:
 :ID:       d7635d76-1c4b-49de-a68d-be6dd0467919
@@ -1251,7 +1248,6 @@ ORDER BY priority, created DESC
 #+END_SRC
 
 ** org-babel
-
 *** Auto :async if possible
 :PROPERTIES:
 :ID:       d41d54d8-bf68-42be-8004-f67c49cf950a
@@ -1483,7 +1479,7 @@ exist after each headings's drawers."
   (interactive "P")
   (org-map-entries (lambda ()
                      (let ((heading (org-get-heading t t t t)))
-                       (message "Heading: %s" heading)
+                       ;; (message "Heading: %s" heading)
                        (org-with-wide-buffer
                         ;; `org-map-entries' narrows the buffer, which prevents us from seeing
                         ;; newlines before the current heading, so we do this part widened.
@@ -1503,10 +1499,11 @@ exist after each headings's drawers."
                        (let ((end (org-entry-end-position)))
                          ;; (message "Insert blank lines before entry content")
                          (forward-line)
-                         (while (and (org-at-planning-p)
-                                     (< (point) (point-max)))
+                         (if (and (org-at-planning-p)
+                                  (< (point) (point-max)))
                            ;; Skip planning lines
                            (forward-line))
+                         ;; FIXME if there are ONLY planning lines, and now drawer, no \n is inserted
                          (while (re-search-forward org-drawer-regexp end t)
                            ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
                            ;; for some reason it doesn't work correctly when operating on hidden text.
@@ -2553,7 +2550,6 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 #+end_src
 
 * Module Settings
-
 ** Define Word
 :PROPERTIES:
 :ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
@@ -2638,7 +2634,6 @@ vterm-tramp-shells (("docker" "/bin/sh")
 )
 
 * Coding
-
 ** ielm REPL
 
 map ielm to ~SPC :~
@@ -3064,7 +3059,6 @@ small exercises. The exercises can can be solved locally.
 #+end_src
 
 ** Javascript | Typescript
-
 *** Jest Testing Framework
 
 #+begin_src elisp :tangle packages.el
@@ -3111,7 +3105,6 @@ The default keymap binds directly to ~f t T a A ...~
 switch to evil-emacs-mode ~C-z~ to use the keybindings.
 
 ** Spell- Grammer Checking
-
 *** LTEX
 
 #+begin_src elisp :tangle packages.el
@@ -3367,7 +3360,6 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 * Collaboration and VCS
-
 ** Directory tree diff - ztree
 :PROPERTIES:
 :ID:       74eab92f-af80-47ab-b6ac-0712d7e87699
@@ -3382,7 +3374,6 @@ Use the (almost) default keybindings in evil normal-mode
 #+END_SRC
 
 ** Magit
-
 *** Enable Gravatars
 
 This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
