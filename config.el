@@ -867,7 +867,7 @@ exist after each headings's drawers."
   (interactive "P")
   (org-map-entries (lambda ()
                      (let ((heading (org-get-heading t t t t)))
-                       (message "Heading: %s" heading)
+                       ;; (message "Heading: %s" heading)
                        (org-with-wide-buffer
                         ;; `org-map-entries' narrows the buffer, which prevents us from seeing
                         ;; newlines before the current heading, so we do this part widened.
@@ -887,10 +887,11 @@ exist after each headings's drawers."
                        (let ((end (org-entry-end-position)))
                          ;; (message "Insert blank lines before entry content")
                          (forward-line)
-                         (while (and (org-at-planning-p)
-                                     (< (point) (point-max)))
+                         (if (and (org-at-planning-p)
+                                  (< (point) (point-max)))
                            ;; Skip planning lines
                            (forward-line))
+                         ;; FIXME if there are ONLY planning lines, and now drawer, no \n is inserted
                          (while (re-search-forward org-drawer-regexp end t)
                            ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
                            ;; for some reason it doesn't work correctly when operating on hidden text.
@@ -908,10 +909,10 @@ exist after each headings's drawers."
   (message "Fixed blank lines in org buffer"))
 
 (after! org
-  (add-hook! before-save-hook
-    (when (and (eq major-mode 'org-mode)
-               (not current-prefix-arg))
-      (+org-fix-blank-lines 4))))
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when (and (eq major-mode 'org-mode))
+                (+org-fix-blank-lines 4)))))
 
 (map! :after org-agenda
       :map org-agenda-mode-map
