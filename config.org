@@ -2661,6 +2661,10 @@ map ielm to ~SPC :~
 ;;               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 #+end_src
 
+** Codeium
+
+A free alternative to Github Copilor
+
 ** LSP
 
 #+begin_src elisp
