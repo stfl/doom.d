@@ -1922,7 +1922,12 @@ org-default-priority is treated as lower than the same set value"
         (codeium-utf8-byte-length
             (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
     (setq codeium/document/text 'my-codeium/document/text)
-    (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+    (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
+
+    ;; (let ((codeium-nix-exe )))
+    ;; (when (
+    ;;        codeium-command-executable)
+    ;; )
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs

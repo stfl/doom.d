@@ -2738,7 +2738,7 @@ A free alternative to Github Copilot
     ;; (let ((codeium-nix-exe )))
     ;; (when (
     ;;        codeium-command-executable)
-    ;; )
+    )
 #+end_src
 
 ** LSP
