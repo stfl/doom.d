@@ -1525,9 +1525,10 @@ Now adding this to a before-save-hook for all org-mode buffers.
 
 #+begin_src elisp
 (after! org
-  (add-hook! before-save-hook
-    (when (and (eq major-mode 'org-mode))
-      (+org-fix-blank-lines 4))))
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when (and (eq major-mode 'org-mode))
+                (+org-fix-blank-lines 4)))))
 #+end_src
 
 * [#D] Org Agenda
