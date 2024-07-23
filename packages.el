@@ -33,6 +33,10 @@
 ;;            :repo "zerolfx/copilot.el"
 ;;            :files ("*.el" "dist")))
 
+(package! codeium
+  :recipe (:host github
+           :repo "Exafunction/codeium.el"))
+
 (package! numpydoc)
 
 (package! kubernetes)
