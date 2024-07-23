@@ -2735,6 +2735,9 @@ A free alternative to Github Copilot
     (setq codeium/document/text 'my-codeium/document/text)
     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
 
+    (let ((codeium-exe (executable-find "codeium_language_server")))
+      (when codeium-exe
+        (setq codeium-command-executable codeium-exe))))
     ;; (let ((codeium-nix-exe )))
     ;; (when (;;        codeium-command-executable)
     )
