@@ -1894,7 +1894,7 @@ org-default-priority is treated as lower than the same set value"
   (setq use-dialog-box nil) ;; do not use popup boxes
 
   ;; if you don't want to use customize to save the api-key
-  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+  (setq codeium/metadata/api_key (get-password :host "Codeium"))
 
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable
