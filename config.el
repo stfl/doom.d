@@ -1926,7 +1926,7 @@ org-default-priority is treated as lower than the same set value"
 
   (let ((codeium-exe (executable-find "codeium_language_server")))
     (when codeium-exe
-      (setq! codeium-command-executable codeium-exe)))
+      (setq codeium-command-executable codeium-exe)))
   )
 
 (use-package! lsp-treemacs
