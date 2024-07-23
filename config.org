@@ -1526,8 +1526,7 @@ Now adding this to a before-save-hook for all org-mode buffers.
 #+begin_src elisp
 (after! org
   (add-hook! before-save-hook
-    (when (and (eq major-mode 'org-mode)
-               (not current-prefix-arg))
+    (when (and (eq major-mode 'org-mode))
       (+org-fix-blank-lines 4))))
 #+end_src
 
