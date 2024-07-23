@@ -1925,9 +1925,8 @@ org-default-priority is treated as lower than the same set value"
     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
 
     ;; (let ((codeium-nix-exe )))
-    ;; (when (
-    ;;        codeium-command-executable)
-    ;; )
+    ;; (when (;;        codeium-command-executable)
+    )
 
 (use-package! lsp-treemacs
   :after lsp-mode  ;; and treemacs
