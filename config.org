@@ -2806,9 +2806,7 @@ Enable hinlay hints and make the font a little smaller than the rest
               (message "Using emacs-lsp-booster for %s!" orig-result)
               (cons "emacs-lsp-booster" orig-result))
           orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-
-    ))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 #+end_src
 
 ** Code Formatting
