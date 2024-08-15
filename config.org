@@ -2878,18 +2878,18 @@ projectile does not recognize conda projects
 *** numpydoc.el
 
 #+begin_src elisp :tangle packages.el
-(package! numpydoc)
+;; (package! numpydoc)
 #+end_src
 
 #+begin_src elisp
-(use-package! numpydoc
-  :after python-mode
-  :commands numpydoc-generate
-  :config
-  (map! :map python-mode-map
-        :localleader
-        :prefix ("d" . "docstring")
-        :desc "Generate Docstring" "d" #'numpydoc-generate))
+;; (use-package! numpydoc
+;;   :after python-mode
+;;   :commands numpydoc-generate
+;;   :config
+;;   (map! :map python-mode-map
+;;         :localleader
+;;         :prefix ("d" . "docstring")
+;;         :desc "Generate Docstring" "d" #'numpydoc-generate))
 #+end_src
 
 *** emacs ipython notebook (ein)
