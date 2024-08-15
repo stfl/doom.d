@@ -3414,12 +3414,12 @@ Use the (almost) default keybindings in evil normal-mode
 ** Meson build system
 
 #+begin_src elisp :tangle packages.el
-(package! meson-mode)
+;; (package! meson-mode)
 #+end_src
 
 #+begin_src elisp
-(use-package! meson-mode
-  :config (add-hook! 'meson-mode-hook #'company-mode))
+;; (use-package! meson-mode
+;;   :config (add-hook! 'meson-mode-hook #'company-mode))
 #+end_src
 
 * Collaboration and VCS
