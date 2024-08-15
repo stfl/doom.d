@@ -2694,10 +2694,10 @@ A free alternative to Github Copilot
   ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
 
   ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-  (add-hook 'python-mode-hook
-      (lambda ()
-          (setq-local completion-at-point-functions
-              (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
+  ;; (add-hook 'python-mode-hook
+  ;;     (lambda ()
+  ;;         (setq-local completion-at-point-functions
+  ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
   ;; an async company-backend is coming soon!
 
   ;; codeium-completion-at-point is autoloaded, but you can
