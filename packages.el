@@ -37,7 +37,7 @@
   :recipe (:host github
            :repo "Exafunction/codeium.el"))
 
-(package! numpydoc)
+;; (package! numpydoc)
 
 (package! kubernetes)
 (package! kubernetes-evil)

@@ -1936,12 +1936,6 @@ org-default-priority is treated as lower than the same set value"
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
-;; (after! lsp-mode
-;;   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
-;;                  "[/\\\\]__pycache__\\'"
-;;                  "[/\\\\]uploads\\'"))
-;;     (add-to-list 'lsp-file-watch-ignored-directories dir)))
-
 (map! (:after lsp
        :map lsp-mode-map
        :leader
@@ -1981,9 +1975,7 @@ org-default-priority is treated as lower than the same set value"
               (message "Using emacs-lsp-booster for %s!" orig-result)
               (cons "emacs-lsp-booster" orig-result))
           orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-
-    ))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
@@ -2016,14 +2008,14 @@ org-default-priority is treated as lower than the same set value"
                                     :test-prefix "test_"
                                     :test-suffix"_test"))
 
-(use-package! numpydoc
-  :after python-mode
-  :commands numpydoc-generate
-  :config
-  (map! :map python-mode-map
-        :localleader
-        :prefix ("d" . "docstring")
-        :desc "Generate Docstring" "d" #'numpydoc-generate))
+;; (use-package! numpydoc
+;;   :after python-mode
+;;   :commands numpydoc-generate
+;;   :config
+;;   (map! :map python-mode-map
+;;         :localleader
+;;         :prefix ("d" . "docstring")
+;;         :desc "Generate Docstring" "d" #'numpydoc-generate))
 
 (after! ein
   (setq! ein:output-area-inlined-images t
@@ -2074,9 +2066,6 @@ org-default-priority is treated as lower than the same set value"
 
 (after! nix-mode
   (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode)))
-
-;; (after! (nix-mode lsp-mode)
-;;   (setq! lsp-nix-nil-formatter ["alejandra" "--quiet"]))
 
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 
@@ -2166,6 +2155,7 @@ org-default-priority is treated as lower than the same set value"
 ;;   :defer t)
 
 (use-package! meson-mode
+  :if nil
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
 (use-package! ztree)
