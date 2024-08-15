@@ -2645,20 +2645,21 @@ map ielm to ~SPC :~
 ** Copilot
 
 #+begin_src elisp :tangle packages.el
-;; (package! copilot
-;;   :recipe (:host github
-;;            :repo "zerolfx/copilot.el"
-;;            :files ("*.el" "dist")))
+(package! copilot
+  :recipe (:host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
 #+end_src
 
 #+begin_src elisp
-;; (use-package! copilot
-;;   :hook (prog-mode . copilot-mode)
-;;   :bind (:map copilot-completion-map
-;;               ("<tab>" . 'copilot-accept-completion)
-;;               ("TAB" . 'copilot-accept-completion)
-;;               ("C-TAB" . 'copilot-accept-completion-by-word)
-;;               ("C-<tab>" . 'copilot-accept-completion-by-word)))
+(use-package! copilot
+  :disabled
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 #+end_src
 
 ** Codeium
