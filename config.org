@@ -3419,7 +3419,7 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (use-package! meson-mode
-  :if nil
+  :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 #+end_src
 
