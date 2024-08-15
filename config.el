@@ -1863,7 +1863,7 @@ org-default-priority is treated as lower than the same set value"
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
 (use-package! codeium
-  :defer t ;; lazy loading
+  ;; :defer t ;; lazy loading
 
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
