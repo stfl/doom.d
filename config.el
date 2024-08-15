@@ -1862,7 +1862,6 @@ org-default-priority is treated as lower than the same set value"
               ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
-we recommend using use-package to organize your init.el
 (use-package! codeium
   :defer t ;; lazy loading
 
