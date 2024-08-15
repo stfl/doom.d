@@ -2674,7 +2674,7 @@ A free alternative to Github Copilot
 
 #+begin_src elisp
 (use-package! codeium
-  ;; :disabled
+  :disabled
 
   :defer t
 
