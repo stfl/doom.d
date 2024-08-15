@@ -2699,10 +2699,9 @@ A free alternative to Github Copilot
   ;;         (setq-local completion-at-point-functions
   ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
 
-  ;; TODO for completion at point to work need to add codeium-completion-at-point to completion-at-point-functions
+  ;; TODO for completion at point to work need to add codeium-completion-at-point to completion-at-point-an
 
-
-  ;; an async company-backend is coming soon!
+  ;; functions async company-backend is coming soon!
 
   ;; codeium-completion-at-point is autoloaded, but you can
   ;; optionally set a timer, which might speed up things as the
