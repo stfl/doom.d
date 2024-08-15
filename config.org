@@ -2674,7 +2674,7 @@ A free alternative to Github Copilot
 
 #+begin_src elisp
 (use-package! codeium
-  :defer t ;; lazy loading
+  ;; :defer t ;; lazy loading
 
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
