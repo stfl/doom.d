@@ -1936,11 +1936,11 @@ org-default-priority is treated as lower than the same set value"
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
-(after! lsp-mode
-  (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
-                 "[/\\\\]__pycache__\\'"
-                 "[/\\\\]uploads\\"))
-    (add-to-list 'lsp-file-watch-ignored-directories dir)))
+;; (after! lsp-mode
+;;   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
+;;                  "[/\\\\]__pycache__\\'"
+;;                  "[/\\\\]uploads\\'"))
+;;     (add-to-list 'lsp-file-watch-ignored-directories dir)))
 
 (map! (:after lsp
        :map lsp-mode-map
