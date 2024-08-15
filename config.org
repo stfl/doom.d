@@ -2676,7 +2676,7 @@ A free alternative to Github Copilot
 (use-package! codeium
   :disabled
 
-  :defer t
+  :defer t  ;; TODO to start it, manually call codeium-init
 
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
