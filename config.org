@@ -2761,7 +2761,7 @@ Do not watch cache directories
 (after! lsp-mode
   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
                  "[/\\\\]__pycache__\\'"
-                 "[/\\\\]uploads\\"))
+                 "[/\\\\]uploads\\'"))
     (add-to-list 'lsp-file-watch-ignored-directories dir)))
 #+end_src
 
