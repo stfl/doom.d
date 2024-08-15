@@ -2758,11 +2758,11 @@ https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 
 Do not watch cache directories
 #+begin_src elisp
-(after! lsp-mode
-  (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
-                 "[/\\\\]__pycache__\\'"
-                 "[/\\\\]uploads\\'"))
-    (add-to-list 'lsp-file-watch-ignored-directories dir)))
+;; (after! lsp-mode
+;;   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
+;;                  "[/\\\\]__pycache__\\'"
+;;                  "[/\\\\]uploads\\'"))
+;;     (add-to-list 'lsp-file-watch-ignored-directories dir)))
 #+end_src
 
 *** Key Mappings
