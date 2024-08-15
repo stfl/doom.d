@@ -2859,20 +2859,20 @@ projectile speeds this up significantly.
 automatically activate a conda environment if present in a project
 
 #+begin_src elisp
-;; (after! conda (conda-env-autoactivate-mode))
+(after! conda (conda-env-autoactivate-mode))
 #+end_src
 
 projectile does not recognize conda projects
 
 #+begin_src elisp
-;; (after! projectile
-;;   (projectile-register-project-type 'python-conda '("environment.yml")
-;;                                     :project-file "environment.yml"
-;;                                     :compile "conda build"  ;; does not exist
-;;                                     :test "conda run pytest"
-;;                                     :test-dir "tests"
-;;                                     :test-prefix "test_"
-;;                                     :test-suffix"_test"))
+(after! projectile
+  (projectile-register-project-type 'python-conda '("environment.yml")
+                                    :project-file "environment.yml"
+                                    :compile "conda build"  ;; does not exist
+                                    :test "conda run pytest"
+                                    :test-dir "tests"
+                                    :test-prefix "test_"
+                                    :test-suffix"_test"))
 #+end_src
 
 *** numpydoc.el
