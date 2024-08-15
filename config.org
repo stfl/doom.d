@@ -2752,19 +2752,6 @@ A free alternative to Github Copilot
   :config (lsp-treemacs-sync-mode 1))
 #+end_src
 
-*** ignore directories
-
-https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
-
-Do not watch cache directories
-#+begin_src elisp
-;; (after! lsp-mode
-;;   (dolist (dir '("[/\\\\]\\.pytest_cache\\'"
-;;                  "[/\\\\]__pycache__\\'"
-;;                  "[/\\\\]uploads\\'"))
-;;     (add-to-list 'lsp-file-watch-ignored-directories dir)))
-#+end_src
-
 *** Key Mappings
 
 #+begin_src elisp
