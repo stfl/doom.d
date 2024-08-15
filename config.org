@@ -2653,7 +2653,6 @@ map ielm to ~SPC :~
 
 #+begin_src elisp
 (use-package! copilot
-  :disabled
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
