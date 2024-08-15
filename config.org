@@ -2674,7 +2674,7 @@ A free alternative to Github Copilot
 
 #+begin_src elisp
 (use-package! codeium
-  :disabled
+  ;; :disabled
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
   ;; otherwise, make sure that the codeium.el file is on load-path
@@ -2691,10 +2691,10 @@ A free alternative to Github Copilot
   ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
 
   ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local completion-at-point-functions
-  ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
+  (add-hook 'python-mode-hook
+      (lambda ()
+          (setq-local completion-at-point-functions
+              (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
   ;; an async company-backend is coming soon!
 
   ;; codeium-completion-at-point is autoloaded, but you can
