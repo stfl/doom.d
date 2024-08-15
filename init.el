@@ -21,8 +21,7 @@
        :completion
        ;; (company          ; the ultimate code completion backend
        ;;  +auto            ; as-you-type code completion
-       ;;  +childframe   ; a nicer company UI (Emacs 26+ only)
-       ;;  )
+       ;;  +childframe)   ; a nicer company UI (Emacs 26+ only)
        (corfu
         +icons
         +orderless
