@@ -2675,7 +2675,7 @@ A free alternative to Github Copilot
 #+begin_src elisp
 we recommend using use-package to organize your init.el
 (use-package! codeium
-  ;; :defer t ;; lazy loading
+  :defer t ;; lazy loading
 
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
