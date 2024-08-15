@@ -1863,7 +1863,9 @@ org-default-priority is treated as lower than the same set value"
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
 (use-package! codeium
-  ;; :defer t ;; lazy loading
+  :disabled
+
+  :defer t  ;; TODO to start it, manually call codeium-init
 
   ;; if you use straight
   ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
@@ -1885,7 +1887,10 @@ org-default-priority is treated as lower than the same set value"
   ;;     (lambda ()
   ;;         (setq-local completion-at-point-functions
   ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
-  ;; an async company-backend is coming soon!
+
+  ;; TODO for completion at point to work need to add codeium-completion-at-point to completion-at-point-an
+
+  ;; functions async company-backend is coming soon!
 
   ;; codeium-completion-at-point is autoloaded, but you can
   ;; optionally set a timer, which might speed up things as the
