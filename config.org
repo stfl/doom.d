@@ -2673,7 +2673,6 @@ A free alternative to Github Copilot
 #+end_src
 
 #+begin_src elisp
-we recommend using use-package to organize your init.el
 (use-package! codeium
   :defer t ;; lazy loading
 
