@@ -2610,9 +2610,9 @@ Use the builtin sqlite in emacs >=29
 #+end_src
 
 #+begin_src elisp
-(setq org-roam-database-connector 'sqlite-builtin
-      forge-database-connector 'sqlite-builtin
-      code-review-db-database-connector 'sqlite-builtin)
+;; (setq org-roam-database-connector 'sqlite-builtin
+;;       forge-database-connector 'sqlite-builtin
+;;       code-review-db-database-connector 'sqlite-builtin)
 #+end_src
 
 ** vterm
