@@ -26,7 +26,7 @@
 
 (package! org-ql)
 
-(package! emacsql-sqlite-builtin)
+;; (package! emacsql-sqlite-builtin)
 
 (package! copilot
   :recipe (:host github
