@@ -2782,6 +2782,7 @@ Enable hinlay hints and make the font a little smaller than the rest
 *** emacs-lsp-booster
 
 #+begin_src elisp
+(when (< emacs-major-version 30)
 (after! lsp-mode
   (when (executable-find "emacs-lsp-booster")
     (defun lsp-booster--advice-json-parse (old-fn &rest args)
@@ -2812,6 +2813,7 @@ Enable hinlay hints and make the font a little smaller than the rest
               (cons "emacs-lsp-booster" orig-result))
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
+)
 #+end_src
 
 ** Code Formatting
