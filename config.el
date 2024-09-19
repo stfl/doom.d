@@ -1842,9 +1842,9 @@ org-default-priority is treated as lower than the same set value"
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
-(setq org-roam-database-connector 'sqlite-builtin
-      forge-database-connector 'sqlite-builtin
-      code-review-db-database-connector 'sqlite-builtin)
+;; (setq org-roam-database-connector 'sqlite-builtin
+;;       forge-database-connector 'sqlite-builtin
+;;       code-review-db-database-connector 'sqlite-builtin)
 
 (after! vterm
   (setq! vterm-max-scrollback 200000))
