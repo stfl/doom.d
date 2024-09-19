@@ -26,8 +26,6 @@
 
 (package! org-ql)
 
-;; (package! emacsql-sqlite-builtin)
-
 (package! copilot
   :recipe (:host github
            :repo "zerolfx/copilot.el"
