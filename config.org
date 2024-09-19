@@ -2606,7 +2606,7 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 Use the builtin sqlite in emacs >=29
 
 #+begin_src elisp :tangle packages.el
-(package! emacsql-sqlite-builtin)
+;; (package! emacsql-sqlite-builtin)
 #+end_src
 
 #+begin_src elisp
