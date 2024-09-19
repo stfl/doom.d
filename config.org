@@ -2601,20 +2601,6 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
                (ansi-color-apply-on-region (point-min) (point-max)))))
 #+end_src
 
-** sqlite-builtin on emacs >=29
-
-Use the builtin sqlite in emacs >=29
-
-#+begin_src elisp :tangle packages.el
-;; (package! emacsql-sqlite-builtin)
-#+end_src
-
-#+begin_src elisp
-;; (setq org-roam-database-connector 'sqlite-builtin
-;;       forge-database-connector 'sqlite-builtin
-;;       code-review-db-database-connector 'sqlite-builtin)
-#+end_src
-
 ** vterm
 
 #+begin_src elisp
