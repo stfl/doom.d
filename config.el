@@ -2028,6 +2028,11 @@ org-default-priority is treated as lower than the same set value"
   (after! org
     (require 'ob-ein)))
 
+
+(setq org-roam-database-connector 'sqlite-builtin
+      forge-database-connector 'sqlite-builtin
+      code-review-db-database-connector 'sqlite-builtin)
+
 (after! org
   (setq org-babel-default-header-args:jupyter-python
         '((:results . "value")
