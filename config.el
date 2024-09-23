@@ -290,8 +290,9 @@
       "F" #'+org-fix-blank-lines
       "N" #'org-add-note
 
-      :prefix ("s" . "Tree/Subtree")
-      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+      ;; :prefix ("s" . "Tree/Subtree")
+      ;; TODO re-add?
+      ;; :desc "Match sparse tree" "M" #'org-match-sparse-tree
 
       :prefix ("l" . "links")
       "o" #'org-open-at-point
@@ -299,10 +300,6 @@
 
       :prefix ("d" . "dates/deadlines")
       "c" #'org-cancel-repeater
-
-      :prefix ("r" . "refile")
-      :desc "Refile to reference" "R" #'stfl/refile-to-roam
-      :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
       )
 
 (after! org
