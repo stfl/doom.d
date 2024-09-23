@@ -592,7 +592,7 @@ From here we load some extra key bindings that I use often
       "N" #'org-add-note
 
       ;; :prefix ("s" . "Tree/Subtree")
-      :desc "Match sparse tree" "M" #'org-match-sparse-tree
+      ;; :desc "Match sparse tree" "M" #'org-match-sparse-tree
 
       :prefix ("l" . "links")
       "o" #'org-open-at-point
