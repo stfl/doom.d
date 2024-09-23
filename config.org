@@ -600,10 +600,6 @@ From here we load some extra key bindings that I use often
 
       :prefix ("d" . "dates/deadlines")
       "c" #'org-cancel-repeater
-
-      :prefix ("r" . "refile")
-      :desc "Refile to reference" "R" #'stfl/refile-to-roam
-      :desc "create org-roam note from headline" "h" #'org-roam-create-note-from-headline
       )
 
 #+END_SRC
