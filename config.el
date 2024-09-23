@@ -290,10 +290,6 @@
       "F" #'+org-fix-blank-lines
       "N" #'org-add-note
 
-      ;; :prefix ("s" . "Tree/Subtree")
-      ;; TODO re-add?
-      ;; :desc "Match sparse tree" "M" #'org-match-sparse-tree
-
       :prefix ("l" . "links")
       "o" #'org-open-at-point
       "g" #'eos/org-add-ids-to-headlines-in-file
