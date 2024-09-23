@@ -598,7 +598,6 @@ From here we load some extra key bindings that I use often
       :prefix ("d" . "dates/deadlines")
       "c" #'org-cancel-repeater
       )
-
 #+END_SRC
 
 ** Priorities
