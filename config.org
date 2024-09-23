@@ -563,7 +563,7 @@ See https://github.com/hlissner/doom-emacs/issues/3185 - Invalid base64 data
     (base64-decode-string link)))
 #+END_SRC
 
-** Key Bindings
+** [#C] Key Bindings
 :PROPERTIES:
 :ID:       f98aed8d-22e1-401a-940a-09193f2ba5ef
 :END:
