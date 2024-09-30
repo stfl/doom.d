@@ -1514,8 +1514,7 @@ exist after each headings's drawers."
     (goto-char (point-max))  ; Move to end of buffer
     (unless (looking-back "\n\n" nil)
       (message "Inserting blank line at the end of the buffer")
-      (insert "\n"))
-    )
+      (insert "\n")))
   (message "Fixed blank lines in org buffer"))
 #+end_src
 
