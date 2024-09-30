@@ -1539,9 +1539,7 @@ Because we need to keep a specific number of newlines at the end of the file,
 I need to disable ws-butler for org-mode buffers.
 
 #+begin_src elisp
-(after! ws-butler
-  (pushnew! ws-butler-global-exempt-modes
-            'org-mode))
+(after! ws-butler (pushnew! ws-butler-global-exempt-modes 'org-mode))
 
 #+end_src
 
