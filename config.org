@@ -1512,11 +1512,11 @@ exist after each headings's drawers."
                          'tree)))
   (save-excursion
     (goto-char (point-max))  ; Move to end of buffer
-    (looking-back "\n\n" nil)
+    (unless (looking-back "\n\n" nil)
+      (insert "\n"))          ; Insert a blank line
     ;; (unless (bolp)           ; Check if we are not already at the beginning of a line
     ;;   (insert "\n"))         ; Insert a newline
-    (unless (looking-at "^$") ; Check if there's no blank line
-      (insert "\n"))          ; Insert a blank line
+    ;; (unless (looking-at "^$") ; Check if there's no blank line
     )
   (message "Fixed blank lines in org buffer"))
 #+end_src
