@@ -1530,6 +1530,12 @@ Now adding this to a before-save-hook for all org-mode buffers.
                 (+org-fix-blank-lines 4)))))
 #+end_src
 
+#+begin_src elisp
+(after! ws-butler
+  (add-to-list ws-butler-global-exempt-modes))
+
+#+end_src
+
 * [#D] Org Agenda
 ** Key bindings
 
