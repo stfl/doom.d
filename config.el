@@ -919,7 +919,6 @@ exist after each headings's drawers."
               (when (and (eq major-mode 'org-mode))
                 (+org-fix-blank-lines 4)))))
 
-;; (setq! delete-trailing-lines nil)
 (after! ws-butler
   (pushnew! ws-butler-global-exempt-modes
             'org-mode))
