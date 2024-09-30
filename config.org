@@ -461,7 +461,7 @@ Since Emacs 29, pixel-scroll is built-in
 (setq! tab-width 8)
 #+end_src
 
-* Org mode settings
+* [#D] Org mode settings
 ** General
 :PROPERTIES:
 :ID:       90a92aaa-d50a-4524-9a97-bad904b60939
@@ -1444,7 +1444,7 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
       (error "no more than 2 files should be marked"))))
 #+end_src
 
-** Ensure blank lines between headings and before contents
+** Formatting Ensure blank lines between headings and before contents
 
 Always add a blank line when adding a new heading.
 
