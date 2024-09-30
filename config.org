@@ -3743,7 +3743,6 @@ git blame lenses
   (setq! gptel-default-mode 'org-mode
                                         ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         ;; gptel-model "o1-preview"
          gptel-model "gpt-4o"
          gptel-log-level 'info
          gptel-use-curl t
