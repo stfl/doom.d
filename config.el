@@ -901,9 +901,16 @@ exist after each headings's drawers."
                          'tree)))
   (save-excursion
     (goto-char (point-max))  ; Move to end of buffer
-    (unless (looking-back "\n\n" nil)
-      (message "Inserting blank line at the end of the buffer")
-      (insert "\n")))
+    (cond ((looking-back "^\\*+[^\n]*\n+" nil)
+           (while (looking-back "\n\n" nil)
+             (backward-char 1)
+             (delete-char 1)))
+          ((looking-back "\n\n\n+" nil)
+           (while (looking-back "\n\n\n" nil)
+             (backward-char 1)
+             (delete-char 1)))
+          ((not (looking-back "\n\n" nil))
+           (insert "\n"))))
   (message "Fixed blank lines in org buffer"))
 
 (after! org
