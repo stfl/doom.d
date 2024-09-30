@@ -1532,7 +1532,8 @@ Now adding this to a before-save-hook for all org-mode buffers.
 
 #+begin_src elisp
 (after! ws-butler
-  (add-to-list ws-butler-global-exempt-modes))
+  (pushnew! ws-butler-global-exempt-modes
+            'org))
 
 #+end_src
 
