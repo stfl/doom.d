@@ -1510,7 +1510,7 @@ exist after each headings's drawers."
                      t (if prefix
                            nil
                          'tree)))
-  (insert "\n")
+  (insert "\n")  ;; insert final newline at end of the file
   (message "Fixed blank lines in org buffer"))
 #+end_src
 
