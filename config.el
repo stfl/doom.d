@@ -882,8 +882,8 @@ exist after each headings's drawers."
                          (forward-line)
                          (if (and (org-at-planning-p)
                                   (< (point) (point-max)))
-                           ;; Skip planning lines
-                           (forward-line))
+                             ;; Skip planning lines
+                             (forward-line))
                          ;; FIXME if there are ONLY planning lines, and now drawer, no \n is inserted
                          (while (re-search-forward org-drawer-regexp end t)
                            ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
@@ -899,6 +899,11 @@ exist after each headings's drawers."
                      t (if prefix
                            nil
                          'tree)))
+  (save-excursion
+    (goto-char (point-max))  ; Move to end of buffer
+    (unless (looking-back "\n\n" nil)
+      (message "Inserting blank line at the end of the buffer")
+      (insert "\n")))
   (message "Fixed blank lines in org buffer"))
 
 (after! org
@@ -906,6 +911,10 @@ exist after each headings's drawers."
             (lambda ()
               (when (and (eq major-mode 'org-mode))
                 (+org-fix-blank-lines 4)))))
+
+(after! ws-butler
+  (pushnew! ws-butler-global-exempt-modes
+            'org))
 
 (map! :after org-agenda
       :map org-agenda-mode-map
