@@ -1514,6 +1514,21 @@ exist after each headings's drawers."
                          'tree)))
   (save-excursion
     (goto-char (point-max))  ; Move to end of buffer
+    
+                        (cond ((looking-back "^\\*+[^\n]*\n+" nil)
+                               (while (looking-back "\n\n" nil)
+                                 ;; (message "deleting all empty line in empty subtree")
+                                 (backward-char 1)
+                                 (delete-char 1)))
+                              ((looking-back "\n\n\n+" nil)
+                               (while (looking-back "\n\n\n" nil)
+                                 ;; (message "deleting double empty lines")
+                                 (backward-char 1)
+                                 (delete-char 1)))
+                              ((not (looking-back "\n\n" nil))
+                               ;; (message "inserting newline before heading")
+                               (insert "\n"))))
+    
     (unless (looking-back "\n\n" nil)
       (message "Inserting blank line at the end of the buffer")
       (insert "\n")))
