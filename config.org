@@ -1462,6 +1462,8 @@ buffer. It also adds blank lines after drawers. Works well with
 *~org-return-dwim~.
 #+end_quote
 
+ws-butler-keep-whitespace-before-point
+
 #+begin_src elisp
 ;;;###autoload
 (defun +org-fix-blank-lines (&optional prefix)
@@ -3745,3 +3747,4 @@ git blame lenses
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
 #+end_src
+
