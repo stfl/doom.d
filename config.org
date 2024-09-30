@@ -1529,9 +1529,9 @@ exist after each headings's drawers."
                                ;; (message "inserting newline before heading")
                                (insert "\n"))))
     
-    (unless (looking-back "\n\n" nil)
-      (message "Inserting blank line at the end of the buffer")
-      (insert "\n")))
+    ;; (unless (looking-back "\n\n" nil)
+    ;;   (message "Inserting blank line at the end of the buffer")
+    ;;   (insert "\n")))
   (message "Fixed blank lines in org buffer"))
 #+end_src
 
