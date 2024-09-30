@@ -1535,6 +1535,9 @@ Now adding this to a before-save-hook for all org-mode buffers.
                 (+org-fix-blank-lines 4)))))
 #+end_src
 
+Because we need to keep a specific number of newlines at the end of the file,
+I need to disable ws-butler for org-mode buffers.
+
 #+begin_src elisp
 (after! ws-butler
   (pushnew! ws-butler-global-exempt-modes
