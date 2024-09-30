@@ -1513,7 +1513,9 @@ exist after each headings's drawers."
   (save-excursion
     (goto-char (point-max))  ; Move to end of buffer
     (unless (looking-back "\n\n" nil)
-      (insert "\n"))          ; Insert a blank line
+      (message "Inserting blank line at the end of the buffer")
+      (insert "\n")
+      )          ; Insert a blank line
     ;; (unless (bolp)           ; Check if we are not already at the beginning of a line
     ;;   (insert "\n"))         ; Insert a newline
     ;; (unless (looking-at "^$") ; Check if there's no blank line
