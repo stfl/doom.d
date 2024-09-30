@@ -1462,8 +1462,6 @@ buffer. It also adds blank lines after drawers. Works well with
 *~org-return-dwim~.
 #+end_quote
 
-ws-butler-keep-whitespace-before-point
-
 #+begin_src elisp
 ;;;###autoload
 (defun +org-fix-blank-lines (&optional prefix)
