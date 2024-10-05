@@ -2673,7 +2673,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
    'org-babel-load-languages
    '((typst . t)))
 
-  ;; Optional: Configure babel execution for Typst
+  ;; Configure babel execution for Typst
   (defun org-babel-execute:typst (body params)
     "Execute a block of Typst code with org-babel."
     (message "Executing Typst code block")
