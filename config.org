@@ -2688,6 +2688,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
       nil))) ; Return nil as we're not inserting results into the org buffer
 
 ;; If you want to add a structure template for Typst blocks
+;; TODO working? expansion not working?
 (after! org-tempo
   (add-to-list 'org-structure-template-alist '("ty" . "src typst")))
 #+end_src
