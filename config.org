@@ -2652,6 +2652,12 @@ vterm-tramp-shells (("docker" "/bin/sh")
         "C-c C-c" #'typst-ts-tmenu))
 #+end_src
 
+
+#+begin_src emacs-lisp
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
+#+end_src
+
 * Coding
 ** ielm REPL
 
