@@ -1856,6 +1856,15 @@ org-default-priority is treated as lower than the same set value"
 
 (map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
 
+(use-package! typst-ts-mode
+  :init
+  (setq! typst-ts-watch-options "--open"
+         ;; typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
+         typst-ts-mode-enable-raw-blocks-highlight t)
+  :config
+  (map! :map typst-ts-mode-map
+        "C-c C-c" #'typst-ts-tmenu))
+
 (map! :leader ":" #'ielm)
 
 (use-package! copilot

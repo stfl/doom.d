@@ -26,6 +26,11 @@
 
 (package! org-ql)
 
+(package! typst-ts-mode
+  :recipe (:type git :host codeberg
+           :repo "meow_king/typst-ts-mode"
+           :files (:defaults "*.el"))
+
 (package! copilot
   :recipe (:host github
            :repo "zerolfx/copilot.el"
