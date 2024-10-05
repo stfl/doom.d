@@ -2638,7 +2638,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
-           :files (:defaults "*.el"))
+           :files (:defaults "*.el")))
 #+end_src
 
 #+begin_src emacs-lisp
