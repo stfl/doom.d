@@ -2668,7 +2668,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 (after! org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts-mode))
   
-  ;; Optional: Set up babel support for Typst
+  ;; Set up babel support for Typst
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((typst . t)))
