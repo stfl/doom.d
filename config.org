@@ -2690,7 +2690,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 ;; If you want to add a structure template for Typst blocks
 ;; TODO working? expansion not working?
 (after! org-tempo
-  (add-to-list 'org-structure-template-alist '("ty" . "src typst")))
+  (add-to-list 'org-structure-template-alist '("y" . "src typst")))
 #+end_src
 
 * Coding
