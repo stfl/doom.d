@@ -2632,6 +2632,15 @@ vterm-tramp-shells (("docker" "/bin/sh")
 ("ssh" "/bin/bash")
 )
 
+** typst
+
+#+begin_src elisp :tangle packages.el
+(package! typst-ts-
+  :recipe (:host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
+#+end_src
+
 * Coding
 ** ielm REPL
 
