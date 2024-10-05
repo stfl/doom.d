@@ -2650,7 +2650,8 @@ vterm-tramp-shells (("docker" "/bin/sh")
   :hook (lsp-deferred)
   :config
   (map! :map typst-ts-mode-map
-        "C-c C-c" #'typst-ts-tmenu))
+        "C-c C-c" #'typst-ts-tmenu)
+  (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
 #+end_src
 
 
