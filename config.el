@@ -2377,3 +2377,4 @@ org-default-priority is treated as lower than the same set value"
          gptel-stream t)
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
+  (set-popup-rule! "^\\*ChatGPT\\*$" :select t :quit nil)
