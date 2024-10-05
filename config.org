@@ -2661,10 +2661,6 @@ vterm-tramp-shells (("docker" "/bin/sh")
    (make-lsp-client :new-connection (lsp-stdio-connection "typst-lsp")
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'typst-lsp)))
-  
-  
-
-
 #+end_src
 
 * Coding
