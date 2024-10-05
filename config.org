@@ -2664,6 +2664,34 @@ vterm-tramp-shells (("docker" "/bin/sh")
                     :server-id 'typst-lsp)))
 #+end_src
 
+#+begin_src emacs-lisp
+(after! org
+  (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
+  
+  ;; Optional: Set up babel support for Typst
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((typst . t)))
+
+  ;; Optional: Configure babel execution for Typst
+  (defun org-babel-execute:typst (body params)
+    "Execute a block of Typst code with org-babel."
+    (message "Executing Typst code block")
+    (let* ((in-file (org-babel-temp-file "typst-" ".typ"))
+           (out-file (or (cdr (assq :file params))
+                         (org-babel-temp-file "typst-" ".pdf"))))
+      (with-temp-file in-file
+        (insert body))
+      (org-babel-eval
+       (format "typst compile %s %s" in-file out-file)
+       "")
+      nil))) ; Return nil as we're not inserting results into the org buffer
+
+;; If you want to add a structure template for Typst blocks
+(after! org-tempo
+  (add-to-list 'org-structure-template-alist '("ty" . "src typst")))
+#+end_src
+
 * Coding
 ** ielm REPL
 
