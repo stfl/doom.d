@@ -1863,7 +1863,43 @@ org-default-priority is treated as lower than the same set value"
          typst-ts-mode-enable-raw-blocks-highlight t)
   :config
   (map! :map typst-ts-mode-map
-        "C-c C-c" #'typst-ts-tmenu))
+        "C-c C-c" #'typst-ts-tmenu)
+  (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
+
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
+
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "typst-lsp")
+                    :activation-fn (lsp-activate-on "typst")
+                    :server-id 'typst-lsp)))
+
+(after! org
+  (add-to-list 'org-src-lang-modes '("typst" . typst-ts-mode))
+  
+  ;; Set up babel support for Typst
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((typst . t)))
+
+  ;; Configure babel execution for Typst
+  (defun org-babel-execute:typst (body params)
+    "Execute a block of Typst code with org-babel."
+    (message "Executing Typst code block")
+    (let* ((in-file (org-babel-temp-file "typst-" ".typ"))
+           (out-file (or (cdr (assq :file params))
+                         (org-babel-temp-file "typst-" ".pdf"))))
+      (with-temp-file in-file
+        (insert body))
+      (org-babel-eval
+       (format "typst compile %s %s" in-file out-file)
+       "")
+      nil))) ; Return nil as we're not inserting results into the org buffer
+
+;; If you want to add a structure template for Typst blocks
+;; TODO working? expansion not working?
+(after! org-tempo
+  (add-to-list 'org-structure-template-alist '("y" . "src typst")))
 
 (map! :leader ":" #'ielm)
 
