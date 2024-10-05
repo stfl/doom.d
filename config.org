@@ -2655,7 +2655,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 
 #+begin_src emacs-lisp
 (after! lsp-mode
-  (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "org") t))
+  (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t))
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration
