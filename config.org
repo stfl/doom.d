@@ -2641,6 +2641,18 @@ vterm-tramp-shells (("docker" "/bin/sh")
            :files (:defaults "*.el"))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package! typst-ts-mode
+  :init
+  (setq! typst-ts-watch-options "--open"
+         ;; typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
+         )
+  (typst-ts-mode-enable-raw-blocks-highlight t)
+  :config
+  (keymap-set typst-ts-mode-map "C-c C-c" #'typst-ts-tmenu))
+
+#+end_src
+
 * Coding
 ** ielm REPL
 
