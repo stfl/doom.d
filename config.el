@@ -1859,7 +1859,7 @@ org-default-priority is treated as lower than the same set value"
 (use-package! typst-ts-mode
   :init
   (setq! typst-ts-watch-options "--open"
-         ;; typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
+         typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
          typst-ts-mode-enable-raw-blocks-highlight t)
   :config
   (map! :map typst-ts-mode-map
