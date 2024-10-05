@@ -2666,7 +2666,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 
 #+begin_src emacs-lisp
 (after! org
-  (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
+  (add-to-list 'org-src-lang-modes '("typst" . typst-ts-mode))
   
   ;; Optional: Set up babel support for Typst
   (org-babel-do-load-languages
