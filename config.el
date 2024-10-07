@@ -1875,7 +1875,7 @@ org-default-priority is treated as lower than the same set value"
                     :server-id 'typst-lsp)))
 
 (after! org
-  (add-to-list 'org-src-lang-modes '("typst" . typst-ts-mode))
+  (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
   
   ;; Set up babel support for Typst
   (org-babel-do-load-languages
@@ -2376,5 +2376,13 @@ org-default-priority is treated as lower than the same set value"
          gptel-use-curl t
          gptel-stream t)
   (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
-  (set-popup-rule! "^\\*ChatGPT\\*$" :select t :quit nil)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  ;; TODO add org-babel reload or sth to the reponse hook
+  ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+
+  (set-popup-rule! "^\\*ChatGPT\\*$" :select t
+    :quit nil :ttl nil :modeline t :persist t)
+  
+  (gptel-make-anthropic "Claude"          ;Any name you want
+    :stream t                             ;Streaming responses
+    :key (get-password :host "Claude-gptel")))
