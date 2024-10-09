@@ -3503,7 +3503,11 @@ Use the (almost) default keybindings in evil normal-mode
 (use-package! gtest-mode
   :after c++-mode
   :config
-  (map! gtest-mode-map)
+  (map! :map gtest-mode-map
+        :localleader 
+        :prefix "t"
+        "t"
+        )
   )
 #+end_src
 
