@@ -2717,10 +2717,10 @@ map ielm to ~SPC :~
   :after prog-mode
   :config
   (map! :map copilot-completion-map
-        ("<tab>" . 'copilot-accept-completion)
-        ("TAB" . 'copilot-accept-completion)
-        ("C-TAB" . 'copilot-accept-completion-by-word)
-        ("C-<tab>" . 'copilot-accept-completion-by-word)))
+        :i "<tab>" #'copilot-accept-completion)
+        :i "TAB" #'copilot-accept-completion)
+        :i "C-TAB" #'copilot-accept-completion-by-word)
+        :i "C-<tab>" #'copilot-accept-completion-by-word)))
 #+end_src
 
 ** Codeium
