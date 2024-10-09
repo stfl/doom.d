@@ -2217,9 +2217,13 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! gtest-mode
   :after c++-mode
-  ;; :config
-  ;; (map! gtest-mode-map)
-  )
+  :config
+  (map! :map gtest-mode-map
+        :localleader 
+        :prefix ("t" "test")
+        :n "t" #'gtest-run-at-point
+        :n "T" #'gtest-run
+        :n "l" #'gtest-list))
 
 (use-package! ztree)
 
