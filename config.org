@@ -3495,7 +3495,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src elisp
 (defun run-ctest ()
   (interactive)
-  (compile "ctest --test-dir build --rerun-failed"))
+  (projectile-test-project "ctest --test-dir build --rerun-failed"))
 
 (map! ;; :after c++-mode
       :map c++-mode-map
