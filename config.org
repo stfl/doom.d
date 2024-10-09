@@ -3553,7 +3553,6 @@ Use the (almost) default keybindings in evil normal-mode
   :config
   (setq turbo-log-msg-format-template "\"🚀: %s\"")
   (setq turbo-log-allow-insert-without-tree-sitter-p t))
-
 #+end_src
 
 * Collaboration and VCS
