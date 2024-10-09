@@ -2719,8 +2719,8 @@ map ielm to ~SPC :~
   (map! :map copilot-completion-map
         :i "<tab>" #'copilot-accept-completion
         :i "TAB" #'copilot-accept-completion
-        :i "C-TAB" #'copilot-accept-completion-by-word
-        :i "C-<tab>" #'copilot-accept-completion-by-word))
+        :i "S-TAB" #'copilot-accept-completion-by-word
+        :i "<backtab>" #'copilot-accept-completion-by-word))
 #+end_src
 
 ** Codeium
