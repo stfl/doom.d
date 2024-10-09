@@ -3493,23 +3493,22 @@ Use the (almost) default keybindings in evil normal-mode
 ** C++
 
 #+begin_src elisp :tangle packages.el
-(package! gtest-mode
-  :recipe (:host github
-           :repo "ppatoria/elisp"
-           :files ("gtest-mode/*.el")))
+;; (package! gtest-mode
+;;   :recipe (:host github
+;;            :repo "ppatoria/elisp"
+;;            :files ("gtest-mode/*.el")))
 #+end_src
 
 #+begin_src elisp
-(use-package! gtest-mode
-  ;; :after c++-mode
-  :config
-  (map! :map gtest-mode-map
-        :localleader 
-        :prefix ("t" "test")
-        :n "t" #'gtest-run-at-point
-        :n "T" #'gtest-run
-        :n "l" #'gtest-list))
-
+;; (use-package! gtest-mode
+;;   ;; :after c++-mode
+;;   :config
+;;   (map! :map gtest-mode-map
+;;         :localleader 
+;;         :prefix ("t" "test")
+;;         :n "t" #'gtest-run-at-point
+;;         :n "T" #'gtest-run
+;;         :n "l" #'gtest-list))
 #+end_src
 
 * Collaboration and VCS
