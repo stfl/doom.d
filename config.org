@@ -3502,13 +3502,12 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src elisp
 (use-package! gtest-mode
   :after c++-mode
-  :config
-  (map! :map gtest-mode-map
-        :localleader 
-        :prefix ("t" "test")
-        :n "t" #'gtest-run-at-point
-        :n "T" #'gtest-run
-        :n "l" #'gtest-list))
+  :config (map! :map gtest-mode-map
+                :localleader 
+                :prefix ("t" "test")
+                :n "t" #'gtest-run-at-point
+                :n "T" #'gtest-run
+                :n "l" #'gtest-list))
 #+end_src
 
 * Collaboration and VCS
