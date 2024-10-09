@@ -2720,6 +2720,7 @@ map ielm to ~SPC :~
         :i "<tab>" #'copilot-accept-completion
         :i "TAB" #'copilot-accept-completion
         :i "C-n" #'copilot-next-completion
+        :i "C-p" #'copilot-previous-completion
         ;; :i "C-TAB" #'copilot-accept-completion-by-word
         ;; :i "C-<tab>" #'copilot-accept-completion-by-word)))
 #+end_src
