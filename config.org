@@ -3497,7 +3497,7 @@ Use the (almost) default keybindings in evil normal-mode
   (interactive)
   (compile "ctest --test-dir build --rerun-failed"))
 
-(map! :after c++-mode
+(map! ;; :after c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
@@ -3505,7 +3505,7 @@ Use the (almost) default keybindings in evil normal-mode
       ;; :n "t" #'gtest-run-at-point
       ;; :n "T" #'gtest-run
       ;; :n "l" #'gtest-list
-      ))
+      )
 
 #+end_src
 
