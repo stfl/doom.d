@@ -1904,12 +1904,19 @@ org-default-priority is treated as lower than the same set value"
 (map! :leader ":" #'ielm)
 
 (use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+  ;; :hook (prog-mode . copilot-mode)
+  :after prog-mode
+  :config
+  (map! :map copilot-completion-map
+        :i "<tab>" #'copilot-accept-completion
+        :i "TAB" #'copilot-accept-completion
+        ;; :i "C-TAB" #'copilot-accept-completion-by-word
+        ;; :i "C-<tab>" #'copilot-accept-completion-by-word
+        :i "C-TAB" #'copilot-next-completion
+        :i "C-<tab>" #'copilot-next-completion
+        :i "C-S-TAB" #'copilot-previouse-completion
+        :i "C-<iso-lefttab>" #'copilot-previouse-completion
+        ))
 
 (use-package! codeium
   :disabled
@@ -2238,6 +2245,27 @@ org-default-priority is treated as lower than the same set value"
 ;;         :n "t" #'gtest-run-at-point
 ;;         :n "T" #'gtest-run
 ;;         :n "l" #'gtest-list))
+
+(use-package! turbo-log
+  :after prog-mode
+  ;; :bind (("C-s-l" . turbo-log-print)
+  ;;        ("C-s-i" . turbo-log-print-immediately)
+  ;;        ("C-s-h" . turbo-log-comment-all-logs)
+  ;;        ("C-s-s" . turbo-log-uncomment-all-logs)
+  ;;        ("C-s-[" . turbo-log-paste-as-logger)
+  ;;        ("C-s-]" . turbo-log-paste-as-logger-immediately)
+  ;;        ("C-s-x" . turbo-log-delete-all-logs))
+  :config
+  (map! :leader
+        "l l" #'turbo-log-print
+        "l i" #'turbo-log-print-immediately
+        "l h" #'turbo-log-comment-all-logs
+        "l s" #'turbo-log-uncomment-all-logs
+        "l [" #'turbo-log-paste-as-logger
+        "l ]" #'turbo-log-paste-as-logger-immediately
+        "l x" #'turbo-log-delete-all-logs)
+  (setq turbo-log-msg-format-template "\"🚀: %s\""
+        turbo-log-allow-insert-without-tree-sitter-p t))
 
 (use-package! ztree)
 

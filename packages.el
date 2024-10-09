@@ -84,6 +84,8 @@
 ;;            :repo "ppatoria/elisp"
 ;;            :files ("gtest-mode/*.el")))
 
+(package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
+
 (package! ztree)
 
 ;; (package! mailscripts.el
