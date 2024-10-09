@@ -3545,14 +3545,21 @@ Use the (almost) default keybindings in evil normal-mode
 (use-package! turbo-log
   :after prog-mode
   :config
-  (map! 
-  :bind (("C-s-l" . turbo-log-print)
+  (map! :leader
+        :n "l l" :bind (("C-s-l" . turbo-log-print)
          ("C-s-i" . turbo-log-print-immediately)
          ("C-s-h" . turbo-log-comment-all-logs)
          ("C-s-s" . turbo-log-uncomment-all-logs)
          ("C-s-[" . turbo-log-paste-as-logger)
          ("C-s-]" . turbo-log-paste-as-logger-immediately)
          ("C-s-x" . turbo-log-delete-all-logs))
+  ;; :bind (("C-s-l" . turbo-log-print)
+  ;;        ("C-s-i" . turbo-log-print-immediately)
+  ;;        ("C-s-h" . turbo-log-comment-all-logs)
+  ;;        ("C-s-s" . turbo-log-uncomment-all-logs)
+  ;;        ("C-s-[" . turbo-log-paste-as-logger)
+  ;;        ("C-s-]" . turbo-log-paste-as-logger-immediately)
+  ;;        ("C-s-x" . turbo-log-delete-all-logs))
   :config
   (setq turbo-log-msg-format-template "\"🚀: %s\""
         turbo-log-allow-insert-without-tree-sitter-p t))
