@@ -3493,7 +3493,7 @@ Use the (almost) default keybindings in evil normal-mode
 ** C++
 
 #+begin_src elisp
-(defun run-ctest ()
+(defun run-ctest (arg)
   (interactive "P")
   (let ((projectile-project-test-cmd "ctest --test-dir build --rerun-failed"))
     (projectile-test-project )))
