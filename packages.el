@@ -79,6 +79,11 @@
 
 (package! meson-mode)
 
+(package! gtest-mode
+  :recipe (:host github
+           :repo "ppatoria/elisp"
+           :files ("gtest-mode/*.el")))
+
 (package! ztree)
 
 ;; (package! mailscripts.el

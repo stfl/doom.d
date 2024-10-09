@@ -2215,6 +2215,12 @@ org-default-priority is treated as lower than the same set value"
   :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
+(use-package! gtest-mode
+  :after c++-mode
+  ;; :config
+  ;; (map! gtest-mode-map)
+  )
+
 (use-package! ztree)
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
