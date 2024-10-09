@@ -3543,6 +3543,7 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (use-package! turbo-log
+  :after prog-mode
   :bind (("C-s-l" . turbo-log-print)
          ("C-s-i" . turbo-log-print-immediately)
          ("C-s-h" . turbo-log-comment-all-logs)
