@@ -3492,6 +3492,19 @@ Use the (almost) default keybindings in evil normal-mode
 
 ** C++
 
+#+begin_src elisp
+(map! :after c++-mode
+      :map c++-mode-map
+        :localleader 
+        :prefix ("t" "test")
+        :n "t" #'gtest-run-at-point
+        :n "T" #'gtest-run
+        :n "l" #'gtest-list))
+  
+  )
+
+#+end_src
+
 #+begin_src elisp :tangle packages.el
 ;; (package! gtest-mode
 ;;   :recipe (:host github
