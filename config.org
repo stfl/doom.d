@@ -3496,7 +3496,7 @@ Use the (almost) default keybindings in evil normal-mode
 (defun run-ctest ()
   (interactive)
   (let ((projectile-project-test-cmd "ctest --test-dir build --rerun-failed"))
-    (projectile-test-project nil)))
+    (projectile-test-project )))
 
 (map! ;; :after c++-mode
       :map c++-mode-map
