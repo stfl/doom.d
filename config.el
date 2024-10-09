@@ -1904,7 +1904,6 @@ org-default-priority is treated as lower than the same set value"
 (map! :leader ":" #'ielm)
 
 (use-package! copilot
-  :disabled
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
@@ -2215,15 +2214,30 @@ org-default-priority is treated as lower than the same set value"
   :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
-(use-package! gtest-mode
-  :after c++-mode
-  :config
-  (map! :map gtest-mode-map
-        :localleader 
-        :prefix ("t" "test")
-        :n "t" #'gtest-run-at-point
-        :n "T" #'gtest-run
-        :n "l" #'gtest-list))
+(defun run-ctest (arg)
+  (interactive "P")
+  (let ((projectile-project-test-cmd "ctest --test-dir build --rerun-failed"))
+    (projectile-test-project arg)))
+
+(map! ;; :after c++-mode
+      :map c++-mode-map
+      :localleader 
+      :prefix ("t" "test")
+      :n "t" #'run-ctest
+      ;; :n "t" #'gtest-run-at-point
+      ;; :n "T" #'gtest-run
+      ;; :n "l" #'gtest-list
+      )
+
+;; (use-package! gtest-mode
+;;   ;; :after c++-mode
+;;   :config
+;;   (map! :map gtest-mode-map
+;;         :localleader 
+;;         :prefix ("t" "test")
+;;         :n "t" #'gtest-run-at-point
+;;         :n "T" #'gtest-run
+;;         :n "l" #'gtest-list))
 
 (use-package! ztree)
 
