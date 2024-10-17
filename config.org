@@ -2732,8 +2732,8 @@ map ielm to ~SPC :~
       (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
 
   (map! :map copilot-completion-map
-        :i "<tab>" #'copilot-accept-completion
-        :i "TAB" #'copilot-accept-completion
+        :i "<tab>" #'+copilot-tab-or-default
+        :i "TAB" #'+copilot-tab-or-default
         ;; :i "C-TAB" #'copilot-accept-completion-by-word
         ;; :i "C-<tab>" #'copilot-accept-completion-by-word
         :i "C-S-n" #'copilot-next-completion
@@ -2741,7 +2741,7 @@ map ielm to ~SPC :~
         :i "C-S-p" #'copilot-previouse-completion
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         )
-efine-key 'insert 'global (kbd "<tab>") 'my/copilot-tab-or-default))
+efine-key 'insert 'global (kbd "<tab>") '+copilot-tab-or-default))
 #+end_src
 
 ** Codeium
