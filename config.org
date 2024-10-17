@@ -2729,6 +2729,9 @@ map ielm to ~SPC :~
              )
         (copilot-accept-completion)
       (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
+  
+  ;; Bind the custom function to <tab> in Evil's insert state
+  (evil-define-key 'insert 'global (kbd "<tab>") 'my/copilot-tab-or-default)
 
   (map! :map copilot-completion-map
         :i "<tab>" #'+copilot-tab-or-default
