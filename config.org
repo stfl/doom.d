@@ -2712,6 +2712,15 @@ map ielm to ~SPC :~
 #+end_src
 
 #+begin_src elisp
+#+end_src
+
+#+begin_src elisp
+(use-package! copilot
+  ;; :hook (prog-mode . copilot-mode)
+  :after prog-mode
+  :config
+  )
+
 (after! (evil copilot)
   ;; Define the custom function that either accepts the completion or does the default behavior
   (defun my/copilot-tab-or-default ()
@@ -2722,15 +2731,6 @@ map ielm to ~SPC :~
         (copilot-accept-completion)
       (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
 
-  ;; Bind the custom function to <tab> in Evil's insert state
-  (evil-define-key 'insert 'global (kbd "<tab>") 'my/copilot-tab-or-default))
-#+end_src
-
-#+begin_src elisp
-(use-package! copilot
-  ;; :hook (prog-mode . copilot-mode)
-  :after prog-mode
-  :config
   (map! :map copilot-completion-map
         :i "<tab>" #'copilot-accept-completion
         :i "TAB" #'copilot-accept-completion
