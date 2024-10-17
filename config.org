@@ -2721,10 +2721,10 @@ map ielm to ~SPC :~
         :i "TAB" #'copilot-accept-completion
         ;; :i "C-TAB" #'copilot-accept-completion-by-word
         ;; :i "C-<tab>" #'copilot-accept-completion-by-word
-        :i "C-TAB" #'copilot-next-completion
-        :i "C-<tab>" #'copilot-next-completion
-        :i "C-S-TAB" #'copilot-previouse-completion
-        :i "C-<iso-lefttab>" #'copilot-previouse-completion
+        :i "C-S-n" #'copilot-next-completion
+        ;; :i "C-<tab>" #'copilot-next-completion
+        :i "C-S-p" #'copilot-previouse-completion
+        ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         ))
 #+end_src
 
