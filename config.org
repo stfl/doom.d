@@ -2718,7 +2718,6 @@ map ielm to ~SPC :~
 (use-package! copilot
   ;; :hook (prog-mode . copilot-mode)
   :after prog-mode
-  :config
   )
 
 (after! (evil copilot)
