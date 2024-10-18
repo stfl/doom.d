@@ -2719,7 +2719,7 @@ map ielm to ~SPC :~
   :hook (prog-mode . copilot-mode)
   :after prog-mode)
 
-(after! (evil copilot)
+(after! copilot
   ;; Define the custom function that either accepts the completion or does the default behavior
   (defun +copilot-tab-or-default ()
     (interactive)
