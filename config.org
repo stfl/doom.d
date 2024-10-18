@@ -2717,9 +2717,8 @@ map ielm to ~SPC :~
 #+begin_src elisp
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
-  :after prog-mode)
-
-(after! copilot
+  :after prog-mode
+  :config
   ;; Define the custom function that either accepts the completion or does the default behavior
   (defun +copilot-tab-or-default ()
     (interactive)
