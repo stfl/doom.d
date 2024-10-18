@@ -1903,19 +1903,35 @@ org-default-priority is treated as lower than the same set value"
 
 (map! :leader ":" #'ielm)
 
+
+
 (use-package! copilot
-  ;; :hook (prog-mode . copilot-mode)
+  :hook (prog-mode . copilot-mode)
   :after prog-mode
-  :config
+  )
+
+(after! (evil copilot)
+  ;; Define the custom function that either accepts the completion or does the default behavior
+  (defun +copilot-tab-or-default ()
+    (interactive)
+    (if (and (bound-and-true-p copilot-mode)
+             ;; Add any other conditions to check for active copilot suggestions if necessary
+             )
+        (copilot-accept-completion)
+      (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
+  
+  ;; Bind the custom function to <tab> in Evil's insert state
+  (evil-define-key 'insert 'global (kbd "<tab>") #'+copilot-tab-or-default)
+
   (map! :map copilot-completion-map
-        :i "<tab>" #'copilot-accept-completion
-        :i "TAB" #'copilot-accept-completion
+        :i "<tab>" #'+copilot-tab-or-default
+        :i "TAB" #'+copilot-tab-or-default
         ;; :i "C-TAB" #'copilot-accept-completion-by-word
         ;; :i "C-<tab>" #'copilot-accept-completion-by-word
-        :i "C-TAB" #'copilot-next-completion
-        :i "C-<tab>" #'copilot-next-completion
-        :i "C-S-TAB" #'copilot-previouse-completion
-        :i "C-<iso-lefttab>" #'copilot-previouse-completion
+        :i "C-S-n" #'copilot-next-completion
+        ;; :i "C-<tab>" #'copilot-next-completion
+        :i "C-S-p" #'copilot-previouse-completion
+        ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         ))
 
 (use-package! codeium
@@ -2223,10 +2239,10 @@ org-default-priority is treated as lower than the same set value"
 
 (defun run-ctest (arg)
   (interactive "P")
-  (let ((projectile-project-test-cmd "ctest --test-dir build --rerun-failed"))
+  (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
     (projectile-test-project arg)))
 
-(map! ;; :after c++-mode
+(map! :after c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
@@ -2235,6 +2251,9 @@ org-default-priority is treated as lower than the same set value"
       ;; :n "T" #'gtest-run
       ;; :n "l" #'gtest-list
       )
+
+(after! lsp-mode
+  (set-lsp-priority! 'ccls 2))
 
 ;; (use-package! gtest-mode
 ;;   ;; :after c++-mode
