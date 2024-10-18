@@ -1907,8 +1907,7 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
-  :after prog-mode
-  )
+  :after prog-mode)
 
 (after! (evil copilot)
   ;; Define the custom function that either accepts the completion or does the default behavior
