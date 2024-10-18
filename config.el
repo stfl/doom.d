@@ -1907,9 +1907,8 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
-  :after prog-mode)
-
-(after! (evil copilot)
+  :after prog-mode
+  :config
   ;; Define the custom function that either accepts the completion or does the default behavior
   (defun +copilot-tab-or-default ()
     (interactive)
@@ -1923,13 +1922,13 @@ org-default-priority is treated as lower than the same set value"
   (evil-define-key 'insert 'global (kbd "<tab>") #'+copilot-tab-or-default)
 
   (map! :map copilot-completion-map
-        :i "<tab>" #'+copilot-tab-or-default
-        :i "TAB" #'+copilot-tab-or-default
+        "<tab>" #'+copilot-tab-or-default
+        "TAB" #'+copilot-tab-or-default
         ;; :i "C-TAB" #'copilot-accept-completion-by-word
         ;; :i "C-<tab>" #'copilot-accept-completion-by-word
-        :i "C-S-n" #'copilot-next-completion
+        "C-S-n" #'copilot-next-completion
         ;; :i "C-<tab>" #'copilot-next-completion
-        :i "C-S-p" #'copilot-previouse-completion
+        "C-S-p" #'copilot-previouse-completion
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         ))
 
