@@ -3513,7 +3513,7 @@ Use the (almost) default keybindings in evil normal-mode
   :config (add-hook! 'meson-mode-hook #'company-mode))
 #+end_src
 
-** C++
+** C/C++
 
 #+begin_src elisp
 (defun run-ctest (arg)
@@ -3521,7 +3521,7 @@ Use the (almost) default keybindings in evil normal-mode
   (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
     (projectile-test-project arg)))
 
-(map! ;; :after c++-mode
+(map! :after c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
@@ -3531,6 +3531,12 @@ Use the (almost) default keybindings in evil normal-mode
       ;; :n "l" #'gtest-list
       )
 
+#+end_src
+
+#+begin_src elisp
+(after! lsp-mode
+  (set-lsp-priority! 'ccls 2))
+ 
 #+end_src
 
 #+begin_src elisp :tangle packages.el
