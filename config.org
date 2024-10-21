@@ -2841,7 +2841,7 @@ A free alternative to Github Copilot
 *** Key Mappings
 
 #+begin_src elisp
-(map! (:after lsp
+(map! (:after lsp-mode
        :map lsp-mode-map
        :leader
        :prefix ("c" . "+code")
