@@ -2011,7 +2011,7 @@ org-default-priority is treated as lower than the same set value"
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
-(map! (:after lsp
+(map! (:after lsp-mode
        :map lsp-mode-map
        :leader
        :prefix ("c" . "+code")
@@ -2250,8 +2250,8 @@ org-default-priority is treated as lower than the same set value"
       ;; :n "l" #'gtest-list
       )
 
-(after! lsp-mode
-  (set-lsp-priority! 'ccls 2))
+;; (after! lsp-mode
+;;   (set-lsp-priority! 'ccls 2))
 
 ;; (use-package! gtest-mode
 ;;   ;; :after c++-mode
