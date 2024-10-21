@@ -3519,7 +3519,9 @@ Use the (almost) default keybindings in evil normal-mode
   (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
     (projectile-test-project arg)))
 
-(map! :after cc-mode
+
+(map! ;;:after cc-mode
+      :mode c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
