@@ -3518,7 +3518,6 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src elisp
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
-
 #+end_src
 
 #+begin_src elisp
