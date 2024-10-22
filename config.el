@@ -1000,9 +1000,8 @@ exist after each headings's drawers."
       stfl/org-gtd-todo "todo.org"
       stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
       ;; stfl/org-gtd-projects "gtd/projects/"
-      stfl/org-gtd-projects '("emacs.org" "freelance.org"
-                              "geschenke.org" "media.org" "projects.org"
-                              "3datax.org" "pulswerk.org" "versicherung.org")
+      stfl/org-gtd-projects '("emacs.org" "freelance.org" "geschenke.org" "media.org" "projects.org"
+                              "3datax.org" "pulswerk.org" "versicherung.org" "ikea.org" "oebb.org")
       stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
 (after! org
@@ -1011,7 +1010,8 @@ exist after each headings's drawers."
                            ,stfl/org-gtd-inbox-orgzly
                            ,stfl/org-gtd-todo
                            ,@stfl/org-gtd-projects
-                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
+                           ;; ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org"))i
+                           )))
 
 (after! org
 
@@ -2240,7 +2240,9 @@ org-default-priority is treated as lower than the same set value"
   (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
     (projectile-test-project arg)))
 
-(map! :after c++-mode
+
+(map! ;;:after cc-mode
+      :mode c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
