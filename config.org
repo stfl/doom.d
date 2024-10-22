@@ -2599,10 +2599,6 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 :END:
 
 #+BEGIN_SRC elisp
-(after! projectile
-  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
-;  (setq projectile-files-cache-expire 30)
-)
 #+END_SRC
 
 ** ansi colors in plaintext files
@@ -3518,6 +3514,11 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 ** C/C++
+
+#+begin_src elisp
+(after! projectile (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
+
+#+end_src
 
 #+begin_src elisp
 (defun run-ctest (arg)
