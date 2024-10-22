@@ -2564,8 +2564,15 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 
 ** org-clock export to csv
 
-#+begin_src 
+#+begin_src elisp :tangle packages.el
+(package! org-clock-csv)
+#+end_src
 
+#+begin_src elisp
+(use-package!
+    :after org
+    :
+    )
 #+end_src
 
 * Module Settings
