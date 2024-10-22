@@ -2569,9 +2569,7 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 #+end_src
 
 #+begin_src elisp
-(use-package!
-    :after org
-    )
+(use-package! :after org)
 #+end_src
 
 * Module Settings
