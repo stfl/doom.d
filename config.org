@@ -2562,6 +2562,12 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
   )
 #+end_src
 
+** org-clock export to csv
+
+#+begin_src 
+
+#+end_src
+
 * Module Settings
 ** Define Word
 :PROPERTIES:
@@ -2569,13 +2575,13 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 :END:
 
 #+BEGIN_SRC elisp
-(use-package! define-word
-  :after org
-  :config
-  (map! :after org
-        :map org-mode-map
-        :leader
-        :desc "Define word at point" "@" #'define-word-at-point))
+;; (use-package! define-word
+;;   :after org
+;;   :config
+;;   (map! :after org
+;;         :map org-mode-map
+;;         :leader
+;;         :desc "Define word at point" "@" #'define-word-at-point))
 #+END_SRC
 
 ** Pandoc
