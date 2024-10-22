@@ -1830,7 +1830,8 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
-(use-package! :after org)
+(use-package! org-clock-csv
+  :after org)
 
 ;; (use-package! define-word
 ;;   :after org
