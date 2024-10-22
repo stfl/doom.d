@@ -2593,14 +2593,6 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
 #+END_SRC
 
-** Projectile
-:PROPERTIES:
-:ID:       d4a31927-ff21-42a5-98e1-ed487a84a618
-:END:
-
-#+BEGIN_SRC elisp
-#+END_SRC
-
 ** ansi colors in plaintext files
 :PROPERTIES:
 :ID:       2e1dec14-e6d4-4a74-9643-b8ce695ecec8
