@@ -1650,7 +1650,8 @@ I need to disable ws-butler for org-mode buffers.
                            ,stfl/org-gtd-inbox-orgzly
                            ,stfl/org-gtd-todo
                            ,@stfl/org-gtd-projects
-                           ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org")))))
+                           ;; ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org"))i
+                           )))
 #+end_src
 
 ** Agenda Custom Commands
