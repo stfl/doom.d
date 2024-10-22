@@ -1830,20 +1830,17 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
-(use-package! define-word
-  :after org
-  :config
-  (map! :after org
-        :map org-mode-map
-        :leader
-        :desc "Define word at point" "@" #'define-word-at-point))
+(use-package! :after org)
+
+;; (use-package! define-word
+;;   :after org
+;;   :config
+;;   (map! :after org
+;;         :map org-mode-map
+;;         :leader
+;;         :desc "Define word at point" "@" #'define-word-at-point))
 
 (setq org-pandoc-options '((standalone . t) (self-contained . t)))
-
-(after! projectile
-  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache")
-;  (setq projectile-files-cache-expire 30)
-)
 
 (after! text-mode
   (add-hook! 'text-mode-hook
@@ -2234,6 +2231,9 @@ org-default-priority is treated as lower than the same set value"
 (use-package! meson-mode
   :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
+
+(after! projectile
+  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
 (defun run-ctest (arg)
   (interactive "P")

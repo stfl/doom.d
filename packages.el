@@ -26,6 +26,8 @@
 
 (package! org-ql)
 
+(package! org-clock-csv)
+
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
