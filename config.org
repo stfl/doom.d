@@ -3661,6 +3661,8 @@ display more columns in forge list topic
 
 *** magit-todos
 
+
+
 activate magit-todo to display the TODOs section in magit buffer
 
 #+begin_src elisp
