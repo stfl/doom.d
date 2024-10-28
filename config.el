@@ -2441,20 +2441,32 @@ org-default-priority is treated as lower than the same set value"
   :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
-                                        ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
+         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         gptel-model "gpt-4o"
+         gptel-model 'gpt-4o
          gptel-log-level 'info
          gptel-use-curl t
          gptel-stream t)
-  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-  ;; TODO add org-babel reload or sth to the reponse hook
-  ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-
-  (set-popup-rule! "^\\*ChatGPT\\*$" :select t
-    :quit nil :ttl nil :modeline t :persist t)
+  ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+  ;; update font-lock to fix syntax highlighting of org-babel src blocks
+  ;; (add-hook 'gptel-post-response-functions 'font-lock-update)
+  (setq! 'gptel-post-response-functions '(font-lock-update))
+  
+  (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (get-password :host "Claude-gptel")))
+
+  (set-popup-rules!
+    '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
+
+(use-package! elysium
+  ;; :config
+  ;; (setq! 
+  ;; Below are the default values
+   ;; elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
+   ;; elysium-window-style 'vertical) ; Can be customized to horizontal
+   )

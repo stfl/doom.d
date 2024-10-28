@@ -98,3 +98,5 @@
 (package! blamer)
 
 (package! gptel)
+
+(package! elysium)
