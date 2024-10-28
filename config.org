@@ -3930,7 +3930,6 @@ git blame lenses
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   ;; (add-hook 'gptel-post-response-functions 'font-lock-update)
-  ;; (setq! 'gptel-post-response-functions '(font-lock-update))
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
