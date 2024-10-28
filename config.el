@@ -2309,9 +2309,6 @@ org-default-priority is treated as lower than the same set value"
   (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
   (magit-todos-mode 1))
 
-
-;; (after! magit-todos (magit-todos-mode))
-
 ;; (set-email-account! "gmail"
 ;;   '((mu4e-sent-folder       . "/gmail/[Google Mail]/Gesendet")
 ;;     (mu4e-drafts-folder     . "/gmail/[Google Mail]/Entw&APw-rfe")
