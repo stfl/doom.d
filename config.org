@@ -3922,9 +3922,9 @@ git blame lenses
          gptel-use-curl t
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
   ;; TODO add org-babel reload or sth to the reponse hook
-  ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  (add-hook 'gptel-post-response-functions #'font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
