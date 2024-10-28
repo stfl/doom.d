@@ -3931,7 +3931,7 @@ git blame lenses
   
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
-    font-lock-update)
+    (font-lock-update))
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
