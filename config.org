@@ -3923,7 +3923,7 @@ git blame lenses
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
-  ;; TODO add org-babel reload or sth to the reponse hook
+  ;; update font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions #'font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
