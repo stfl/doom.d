@@ -3927,7 +3927,9 @@ git blame lenses
   ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
 
   (set-popup-rules!
-    '(("^\\*ChatGPT\\*$" :select t :quit nil :ttl nil :modeline t :persist t)))
+    '(("^\\*ChatGPT\\*$" :select t :quit nil :ttl nil :modeline t :persist t)
+      ("^\\*Claude\\*$" :select t :quit nil :ttl nil :modeline t :persist t))
+    )
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
