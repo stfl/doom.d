@@ -2303,7 +2303,12 @@ org-default-priority is treated as lower than the same set value"
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+(use-package! magit-todos
+  :after magit
+  :config
+  (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+  (magit-todos-mode 1))
+
 
 ;; (after! magit-todos (magit-todos-mode))
 
