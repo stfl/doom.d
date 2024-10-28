@@ -3937,7 +3937,7 @@ git blame lenses
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t))
+      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
     
   (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
 )
