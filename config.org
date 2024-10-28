@@ -3923,7 +3923,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model 'gpt-4o
-         gptel-log-level 
+         gptel-log-level 'info
          ;; gptel-use-curl nil
          gptel-use-curl t
          gptel-stream t)
