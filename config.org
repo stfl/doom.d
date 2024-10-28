@@ -3928,12 +3928,12 @@ git blame lenses
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
   
-  (defun +gptel-update-font-lock (pos pos-end)
+  (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     font-lock-update)
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
-  (add-hook 'gptel-post-response-functions 'font-lock-update)
+  (add-hook 'gptel-post-response-functions #'+gptel-font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
