@@ -2445,10 +2445,10 @@ org-default-priority is treated as lower than the same set value"
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
-         ;; gptel-model 'gpt-4o
-         gptel-model "gpt-4o"
-         gptel-log-level 'info
-         gptel-use-curl t
+         gptel-model 'gpt-4o
+         gptel-log-level 'debug
+         gptel-use-curl nil
+         ;; gptel-use-curl t
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
