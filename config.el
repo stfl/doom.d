@@ -2452,8 +2452,8 @@ org-default-priority is treated as lower than the same set value"
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
   ;; update font-lock to fix syntax highlighting of org-babel src blocks
-  ;; (add-hook 'gptel-post-response-functions 'font-lock-update)
-  (setq! 'gptel-post-response-functions '(font-lock-update))
+  (add-hook 'gptel-post-response-functions 'font-lock-update)
+  ;; (setq! 'gptel-post-response-functions '(font-lock-update))
   
   (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   
