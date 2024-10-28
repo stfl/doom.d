@@ -3915,7 +3915,7 @@ git blame lenses
   :commands gptel
   :config
   (setq! gptel-default-mode 'org-mode
-                                        ;         gptel-response-prefix-alist '((org-mode . "**** Answer"))
+         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model "gpt-4o"
          gptel-log-level 'info
@@ -3925,14 +3925,13 @@ git blame lenses
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
   ;; TODO add org-babel reload or sth to the reponse hook
   ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-
-  (set-popup-rules!
-    '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t))
-    )
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (get-password :host "Claude-gptel")))
+
+  (set-popup-rules!
+    '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
 #+end_src
 
