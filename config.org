@@ -3910,7 +3910,7 @@ git blame lenses
 #+end_src
 
 #+begin_src elisp :tangle no :results silent
-;; (auth-source-forget-all-cached)
+(auth-source-forget-all-cached)
 #+end_src
 
 #+begin_src elisp
