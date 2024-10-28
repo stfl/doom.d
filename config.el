@@ -2446,9 +2446,9 @@ org-default-priority is treated as lower than the same set value"
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (get-password :host "OpenAI-gptel")
          gptel-model 'gpt-4o
-         gptel-log-level 'debug
-         gptel-use-curl nil
-         ;; gptel-use-curl t
+         gptel-log-level 'info
+         ;; gptel-use-curl nil
+         gptel-use-curl t
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
@@ -2458,7 +2458,7 @@ org-default-priority is treated as lower than the same set value"
     (font-lock-update))
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
-  ;; (add-hook 'gptel-post-response-functionsb '+gptel-font-lock-update)
+  (add-hook 'gptel-post-response-functionsb '+gptel-font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
