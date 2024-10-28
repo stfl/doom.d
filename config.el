@@ -2451,9 +2451,13 @@ org-default-priority is treated as lower than the same set value"
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
-  ;; update font-lock to fix syntax highlighting of org-babel src blocks
-  ;; (add-hook 'gptel-post-response-functions 'font-lock-update)
-  ;; (setq! 'gptel-post-response-functions '(font-lock-update))
+  
+  (defun +gptel-font-lock-update (pos pos-end)
+    ;; used with the gptel-post-response-functions hook but swollows the arguments
+    font-lock-update)
+  
+  ;; reload font-lock to fix syntax highlighting of org-babel src blocks
+  (add-hook 'gptel-post-response-functions #'+gptel-font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
