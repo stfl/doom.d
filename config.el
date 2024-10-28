@@ -2463,7 +2463,7 @@ org-default-priority is treated as lower than the same set value"
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
     
-  (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
+  ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
 )
 
 (use-package! elysium
