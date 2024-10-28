@@ -3669,8 +3669,8 @@ activate magit-todo to display the TODOs section in magit buffer
 (use-package! magit-todos
   :after magit
   :config
-    (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
-    (magit-todos-mode 1))
+  (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+  (magit-todos-mode 1))
 
 
 ;; (after! magit-todos (magit-todos-mode))
