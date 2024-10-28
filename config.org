@@ -3909,7 +3909,7 @@ git blame lenses
 (package! gptel)
 #+end_src
 
-If get-password does not reply a proper key.. clear the auth-source cache
+If get-password does not reply a proper key.. manually clear the auth-source cache
 #+begin_src elisp :tangle no :results silent
 (auth-source-forget-all-cached)
 #+end_src
