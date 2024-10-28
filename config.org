@@ -3926,8 +3926,8 @@ git blame lenses
   ;; TODO add org-babel reload or sth to the reponse hook
   ;; (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
 
-  (set-popup-rule! "^\\*ChatGPT\\*$" :select t
-    :quit nil :ttl nil :modeline t :persist t)
+  (set-popup-rules!
+    '(("^\\*ChatGPT\\*$" :select t :quit nil :ttl nil :modeline t :persist t)))
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
