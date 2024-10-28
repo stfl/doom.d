@@ -3940,8 +3940,7 @@ git blame lenses
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t))
     
   (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
-  
-    )
+)
 #+end_src
 
 ** Elysium
