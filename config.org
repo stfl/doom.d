@@ -3933,7 +3933,7 @@ git blame lenses
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (get-password :host "Claude-gptel")))
+    :key (get-password :host "Claude-gptel"))
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
