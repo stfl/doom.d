@@ -3927,6 +3927,8 @@ git blame lenses
   ;; (add-hook 'gptel-post-response-functions 'font-lock-update)
   (setq! 'gptel-post-response-functions '(font-lock-update))
   
+  (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
+  
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (get-password :host "Claude-gptel")))
