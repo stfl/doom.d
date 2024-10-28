@@ -3940,6 +3940,7 @@ git blame lenses
 
 ** Elysium
 
+
 Automatically apply AI-generated code changes.
 
 (use-package elysium
