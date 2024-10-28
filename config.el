@@ -2455,15 +2455,16 @@ org-default-priority is treated as lower than the same set value"
   (add-hook 'gptel-post-response-functions 'font-lock-update)
   ;; (setq! 'gptel-post-response-functions '(font-lock-update))
   
-  (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
-  
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (get-password :host "Claude-gptel")))
+    :key (get-password :host "Claude-gptel"))
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
+    
+  (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
+)
 
 (use-package! elysium
   ;; :config
