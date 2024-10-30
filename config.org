@@ -3935,7 +3935,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     (font-lock-update))
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
-  (add-hook 'gptel-post-response-functionsb '+gptel-font-lock-update)
+  (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
