@@ -999,6 +999,8 @@ REVIEW should we define any additional tags?
                         ("@home" . ?h)
                         ("@office". ?o)
                         ("@sarah" . ?s)
+                        ("@kg" . ?k)
+                        ("@kg" . ?k)
                         ;; ("@robert" . ?r)
                         ;; ("@baudock_meeting" . ?b)
                         ;; ("@PC" . ?p)
