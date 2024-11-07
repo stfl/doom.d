@@ -1000,7 +1000,7 @@ REVIEW should we define any additional tags?
                         ("@office". ?o)
                         ("@sarah" . ?s)
                         ("@kg" . ?k)
-                        ("@kg" . ?k)
+                        ("@jg" . ?j)
                         ;; ("@robert" . ?r)
                         ;; ("@baudock_meeting" . ?b)
                         ;; ("@PC" . ?p)
