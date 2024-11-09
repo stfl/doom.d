@@ -559,6 +559,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("@home" . ?h)
                         ("@office". ?o)
                         ("@sarah" . ?s)
+                        ("@kg" . ?k)
+                        ("@jg" . ?j)
                         ;; ("@robert" . ?r)
                         ;; ("@baudock_meeting" . ?b)
                         ;; ("@PC" . ?p)
@@ -2458,7 +2460,7 @@ org-default-priority is treated as lower than the same set value"
     (font-lock-update))
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
-  (add-hook 'gptel-post-response-functionsb '+gptel-font-lock-update)
+  (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
