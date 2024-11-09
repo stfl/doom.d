@@ -2694,6 +2694,11 @@ vterm-tramp-shells (("docker" "/bin/sh")
   (add-to-list 'org-structure-template-alist '("y" . "src typst")))
 #+end_src
 
+** pdf-tools
+
+#+begin_src 
+#+end_src
+
 * Coding
 ** ielm REPL
 
