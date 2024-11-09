@@ -2696,7 +2696,7 @@ vterm-tramp-shells (("docker" "/bin/sh")
 
 ** pdf-tools
 
-#+begin_src 
+#+begin_src elisp :tangle packages.el
 (package! pdf-tools :built-in 'prefer)
 #+end_src
 
