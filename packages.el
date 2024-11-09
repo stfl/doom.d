@@ -33,6 +33,8 @@
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 
+(package! pdf-tools :built-in 'prefer)
+
 (package! copilot
   :recipe (:host github
            :repo "zerolfx/copilot.el"
