@@ -2627,6 +2627,8 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 
 Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
 
+Send some keys directly to vterm to trigger zsh functions!
+
 #+begin_src elisp
 (map!
  :after vterm
