@@ -2635,8 +2635,7 @@ Send C-j directly as configured above which then triggers history-substring-sear
       "C-c C-x" #'vterm--self-insert
       :n "C-r" #'vterm--self-insert  ;; 
       :n "C-j" #'vterm--self-insert
-      :i "C-j" #'vterm--self-insert
-      )
+      :i "C-j" #'vterm--self-insert)
 #+end_src
 
 
