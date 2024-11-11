@@ -2616,6 +2616,9 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 #+end_src
 
 ** vterm
+:PROPERTIES:
+:ID:       ac7ce678-a39e-4e3e-8911-c5155e79a620
+:END:
 
 #+begin_src elisp
 (after! vterm
