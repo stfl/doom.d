@@ -1854,7 +1854,10 @@ org-default-priority is treated as lower than the same set value"
 (after! vterm
   (setq! vterm-max-scrollback 200000))
 
-(map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
+(map! :after vterm
+      :map vterm-mode-map
+      "C-c C-x" #'vterm--self-insert
+      "C-j" #'vterm--self-insert)
 
 (after! vterm
   (defun vterm-send-return ()
