@@ -2630,6 +2630,17 @@ Allow to insert C-x. otherwise it's not possible to leave nano if exidently open
 (map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
 #+end_src
 
+#+begin_src elisp
+(after! vterm
+(defun vterm-send-return ()
+  "Send `C-m' to the libvterm."
+  (interactive)
+  (deactivate-mark)
+  (when vterm--term
+    (process-send-string vterm--process "\C-m")))
+
+#+end_src
+
 *** TODO vterm tramp shell
 
 vterm-tramp-shells (("docker" "/bin/sh")
