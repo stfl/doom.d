@@ -2632,12 +2632,12 @@ Allow to insert C-x. otherwise it's not possible to leave nano if exidently open
 
 #+begin_src elisp
 (after! vterm
-(defun vterm-send-return ()
-  "Send `C-m' to the libvterm."
-  (interactive)
-  (deactivate-mark)
-  (when vterm--term
-    (process-send-string vterm--process "\C-m"))))
+  (defun vterm-send-return ()
+    "Send `C-m' to the libvterm."
+    (interactive)
+    (deactivate-mark)
+    (when vterm--term
+      (process-send-string vterm--process "\C-m"))))
 
 #+end_src
 
