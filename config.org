@@ -2625,14 +2625,6 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
   (setq! vterm-max-scrollback 200000))
 #+end_src
 
-Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
-#+begin_src elisp
-(map! :after vterm
-      :map vterm-mode-map
-      "C-c C-x" #'vterm--self-insert
-      "C-j" #'vterm--self-insert)
-#+end_src
-
 For some reason, emacs-vterm tries to send C-j as return to the terminal instead
 of C-m.
 This breaks my zsh config, so I am forcing it to send C-m.
@@ -2645,6 +2637,15 @@ This breaks my zsh config, so I am forcing it to send C-m.
     (deactivate-mark)
     (when vterm--term
       (process-send-string vterm--process "\C-m"))))
+#+end_src
+
+Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
+
+#+begin_src elisp
+(map! :after vterm
+      :map vterm-mode-map
+      "C-c C-x" #'vterm--self-insert
+      "C-j" #'vterm--self-insert)
 #+end_src
 
 *** TODO vterm tramp shell
