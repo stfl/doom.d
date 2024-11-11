@@ -2636,8 +2636,7 @@ Send C-j directly as configured above which then triggers history-substring-sear
 #+end_src
 
 
-For some reason, emacs-vterm tries to send C-j as return to the terminal instead
-of C-m.
+For some reason, emacs-vterm tries to send C-j as return to the terminal instead of C-m.
 This breaks my zsh config, so I am forcing it to send C-m.
 
 #+begin_src elisp
