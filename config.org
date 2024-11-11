@@ -2637,7 +2637,7 @@ Allow to insert C-x. otherwise it's not possible to leave nano if exidently open
   (interactive)
   (deactivate-mark)
   (when vterm--term
-    (process-send-string vterm--process "\C-m")))
+    (process-send-string vterm--process "\C-m"))))
 
 #+end_src
 
