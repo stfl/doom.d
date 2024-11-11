@@ -2626,7 +2626,6 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 #+end_src
 
 Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
-Send C-j directly as configured above which then triggers history-substring-search-down
 
 #+begin_src elisp
 (map!
@@ -2641,6 +2640,8 @@ Send C-j directly as configured above which then triggers history-substring-sear
 
 For some reason, emacs-vterm tries to send C-j as return to the terminal instead of C-m.
 This breaks my zsh config, so I am forcing it to send C-m.
+
+Send C-j directly as configured above which then triggers history-substring-search-down
 
 #+begin_src elisp
 (after! vterm
