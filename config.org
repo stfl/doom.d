@@ -2629,8 +2629,8 @@ Allow to insert C-x. otherwise it's not possible to leave nano if exidently open
 Send C-j directly as configured above which then triggers history-substring-search-down
 
 #+begin_src elisp
-(map! :after vterm
-      :map vterm-mode-map
+(map! :map vterm-mode-map
+      :after vterm
       "C-c C-x" #'vterm--self-insert
       :n "C-r" #'vterm--self-insert
       :n "C-j" #'vterm--self-insert
