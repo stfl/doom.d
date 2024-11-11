@@ -1856,6 +1856,14 @@ org-default-priority is treated as lower than the same set value"
 
 (map! :after vterm :map vterm-mode-map "C-c C-x" #'vterm--self-insert)
 
+(after! vterm
+  (defun vterm-send-return ()
+    "Send `C-m' to the libvterm."
+    (interactive)
+    (deactivate-mark)
+    (when vterm--term
+      (process-send-string vterm--process "\C-m"))))
+
 (use-package! typst-ts-mode
   :init
   (setq! typst-ts-watch-options "--open"
