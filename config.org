@@ -2659,9 +2659,12 @@ Send C-j directly as configured above which then triggers history-substring-sear
 
 *** TODO vterm tramp shell
 
-vterm-tramp-shells (("docker" "/bin/sh")
-("ssh" "/bin/bash")
-)
+#+begin_src elisp
+(after! vterm
+  (setq! vterm-tramp-shells '(("docker" "/bin/sh")
+                             ("ssh" "/bin/bash"))))
+
+#+end_src
 
 ** typst
 
