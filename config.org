@@ -2636,7 +2636,9 @@ Send some keys directly to vterm to trigger zsh functions!
  "C-c C-x" #'vterm--self-insert
  :n "C-r" #'vterm--self-insert
  :n "C-j" #'vterm--self-insert
- :i "C-j" #'vterm--self-insert)
+ :i "C-j" #'vterm--self-insert
+ :i "TAB" #'vterm-send-tab)
+ )
 #+end_src
 
 
