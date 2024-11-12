@@ -2657,7 +2657,7 @@ Send C-j directly as configured above which then triggers history-substring-sear
       (process-send-string vterm--process "\C-m"))))
 #+end_src
 
-*** TODO vterm tramp shell
+*** vterm tramp shell
 
 #+begin_src elisp
 (after! vterm
