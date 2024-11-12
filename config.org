@@ -1791,7 +1791,7 @@ I need to disable ws-butler for org-mode buffers.
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
           (org-ql-block `(and (todo "NEXT" "WAIT")
-                              ,(prio-deadline>= org-priority-default)
+                              ;; ,(prio-deadline>= org-priority-default)
                               (not ,(someday-habit))
                               (not (ancestors (deadline :to 0)))
                               (not (deadline :to 0))
