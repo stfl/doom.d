@@ -1855,7 +1855,7 @@ org-default-priority is treated as lower than the same set value"
   (setq! vterm-max-scrollback 200000))
 
 (map!
- ;; :after vterm
+ :after vterm
  :map vterm-mode-map
  "C-c C-x" #'vterm--self-insert
  :n "C-r" #'vterm--self-insert
@@ -1871,6 +1871,10 @@ org-default-priority is treated as lower than the same set value"
     (deactivate-mark)
     (when vterm--term
       (process-send-string vterm--process "\C-m"))))
+
+(after! vterm
+  (setq! vterm-tramp-shells '(("docker" "/bin/sh")
+                              ("ssh" "/bin/bash"))))
 
 (use-package! typst-ts-mode
   :init
