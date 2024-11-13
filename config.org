@@ -1032,7 +1032,7 @@ REVIEW should we define any additional tags?
 (after! org
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
                          ("HABIT" . (:foreground ,(doom-color 'orange)))
-                         ("SOMEDAY" . (:foreground ,(doom-color 'orange)))
+                         ("SOMEDAY" . (:foreground ,(doom-color 'orange) :italic t))
                          ;; ("finance" . (:foreground "goldenrod"))
                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
                          ("#inbox" . (:strike-through t))
