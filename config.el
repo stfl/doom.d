@@ -415,7 +415,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :betrag: %%^{Betrag|0}
 :oegk: nil
 :generali: nil
-:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|Psychotherapie|Gesundheitsvorsorge}
+:category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
 
 [[file:%s]]
@@ -582,12 +582,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         (:grouptags)
                         ("#work" . ?$)
                         ("#personal" . ?_)
-                        ("#emacs" . ?-)
+                        ("emacs" . ?-)
                         )))
 
 (after! org
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
-                         ("HABIT" . (:foreground ,(doom-color 'orange)))
+                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                         ("SOMEDAY" . (:slant italic :bold t))
                          ;; ("finance" . (:foreground "goldenrod"))
                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
                          ("#inbox" . (:strike-through t))
