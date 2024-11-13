@@ -1033,7 +1033,7 @@ REVIEW should we define any additional tags?
                          ("#work" . (:foreground ,(doom-color 'blue)))
                          ("@ikea" . (:foreground ,(doom-color 'yellow)))
                          ("@amazon" . (:foreground ,(doom-color 'yellow)))
-                         ;; ("emacs" . (:foreground "#c678dd"))
+                         ("emacs" . (:foreground "#c678dd"))
                          ))
   )
 #+end_src
