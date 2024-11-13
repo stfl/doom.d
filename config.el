@@ -26,7 +26,9 @@
   (interactive)
   (find-file (expand-file-name "config.org" doom-private-dir)))
 
-(define-key! help-map "dc" #'stfl/goto-private-config-file)
+(define-key! help-map
+      "dc" #'stfl/goto-private-config-file
+      "dC" #'doom/open-private-config)
 
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
