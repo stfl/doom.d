@@ -72,9 +72,8 @@ bind it to ~SPC h d c~
 
 #+begin_src elisp
 (define-key! help-map
-      :n "dc" #'stfl/goto-private-config-file
-      :n "dC" #'doom/open-private-config
-      )
+      "dc" #'stfl/goto-private-config-file
+      "dC" #'doom/open-private-config)
 #+end_src
 
 ** Buffer Settings
