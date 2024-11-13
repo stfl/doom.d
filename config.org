@@ -1029,7 +1029,9 @@ REVIEW should we define any additional tags?
 #+begin_src elisp
 (after! org
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red)))
-                         ;; ("#inbox" . (:foreground ,(doom-color 'blue)))
+                         ("HABIT" . (:foreground ,(doom-color 'orange)))
+                         ("finance" . (:foreground ,(doom-color 'gold)))
+                         ("#inbox" . (:foreground ,(doom-color 'yellow)))
                          ("3datax" . (:foreground ,(doom-color 'green)))
                          ("oebb" . (:foreground ,(doom-color 'green)))
                          ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
