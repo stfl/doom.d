@@ -71,7 +71,7 @@ Opening ~config.org~ makes much more sense.
 bind it to ~SPC h d c~
 
 #+begin_src elisp
-(define-key! help-map "dc" #'stfl/goto-private-config-file)
+(map! help-map "dc" #'stfl/goto-private-config-file)
 #+end_src
 
 ** Buffer Settings
