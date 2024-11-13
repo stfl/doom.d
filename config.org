@@ -1034,6 +1034,7 @@ REVIEW should we define any additional tags?
                          ("@ikea" . (:foreground ,(doom-color 'yellow)))
                          ("@amazon" . (:foreground ,(doom-color 'yellow)))
                          ("emacs" . (:foreground "#c678dd"))
+                         ("#emacs" . (:foreground "#c678dd"))
                          ))
   )
 #+end_src
