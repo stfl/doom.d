@@ -1034,7 +1034,7 @@ REVIEW should we define any additional tags?
                          ("HABIT" . (:foreground ,(doom-color 'orange)))
                          ("SOMEDAY" . (:distant-background ,(doom-color 'red) :underline t))
                          ;; ("finance" . (:foreground "goldenrod"))
-                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                         ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
                          ("#inbox" . (:strike-through t))
                          ("3datax" . (:foreground ,(doom-color 'green)))
                          ("oebb" . (:foreground ,(doom-color 'green)))
