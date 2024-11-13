@@ -584,10 +584,19 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         )))
 
 (after! org
-  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))
-                         ;; ("#inbox" . (:foreground ,(doom-color 'blue)))
+  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
+                         ("HABIT" . (:foreground ,(doom-color 'orange)))
+                         ;; ("finance" . (:foreground "goldenrod"))
+                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                         ("#inbox" . (:strike-through t))
+                         ("3datax" . (:foreground ,(doom-color 'green)))
+                         ("oebb" . (:foreground ,(doom-color 'green)))
+                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
                          ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("emacs" . (:foreground "#c678dd"))
+                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
+                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
+                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
+                         ;; ("emacs" . (:foreground "#c678dd"))
                          ))
   )
 
