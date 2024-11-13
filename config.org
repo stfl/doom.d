@@ -734,6 +734,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+end_src
 
 *** Capture Bills for Insurance Claims
+:PROPERTIES:
+:ID:       39316116-941b-4e26-93c6-6269d4775348
+:END:
 
 #+BEGIN_SRC elisp
 (after! org
@@ -759,7 +762,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :betrag: %%^{Betrag|0}
 :oegk: nil
 :generali: nil
-:category: %%^{Kategorie|nil|Arzt|Apotheke|Physio|Psychotherapie|Gesundheitsvorsorge}
+:category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
 
 [[file:%s]]
