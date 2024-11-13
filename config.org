@@ -1027,7 +1027,6 @@ REVIEW should we define any additional tags?
 ** Tag colors
 
 #+begin_src elisp
-
 (after! org
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))
                          ;; ("#inbox" . (:foreground ,(doom-color 'blue)))
