@@ -71,7 +71,7 @@ Opening ~config.org~ makes much more sense.
 bind it to ~SPC h d c~
 
 #+begin_src elisp
-(define-key help-map
+(define-key! help-map
       :n "dc" #'stfl/goto-private-config-file
       :n "dC" #'doom/open-private-config
       )
