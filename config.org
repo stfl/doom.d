@@ -1032,7 +1032,7 @@ REVIEW should we define any additional tags?
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))
                          ;; ("#inbox" . (:foreground ,(doom-color 'blue)))
                          ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("#*emacs" . (:foreground "#c678dd"))
+                         ("#emacs" . (:foreground "#c678dd"))
                          ))
   )
 #+end_src
