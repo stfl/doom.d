@@ -1024,7 +1024,7 @@ REVIEW should we define any additional tags?
                         )))
 #+END_SRC
 
-** Tag colors
+** Tag colors :#emacs:
 
 #+begin_src elisp
 
