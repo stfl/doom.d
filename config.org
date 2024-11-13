@@ -1031,7 +1031,7 @@ REVIEW should we define any additional tags?
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red)))
                          ("HABIT" . (:foreground ,(doom-color 'orange)))
                          ("finance" . (:foreground "goldenrod"))
-                         ("#inbox" . (:background ,(doom-color 'yellow) :foregorund ,(doom-color 'base9)))
+                         ("#inbox" . (:background ,(doom-color 'base0) :foregorund ,(doom-color 'base8)))
                          ("3datax" . (:foreground ,(doom-color 'green)))
                          ("oebb" . (:foreground ,(doom-color 'green)))
                          ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
