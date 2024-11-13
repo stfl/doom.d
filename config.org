@@ -1029,8 +1029,7 @@ REVIEW should we define any additional tags?
 #+begin_src elisp
 
 (after! org
-  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))
-                         ))
+  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))))
   )
 #+end_src
 
