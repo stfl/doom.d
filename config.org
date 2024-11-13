@@ -1024,6 +1024,14 @@ REVIEW should we define any additional tags?
                         )))
 #+END_SRC
 
+** Tag colors
+
+#+begin_src elisp
+(after! org
+  (setq! '(("LASTMILE" . ()))
+  ))
+#+end_src
+
 ** org-roam
 :PROPERTIES:
 :ID:       812f2cef-61c0-4299-907d-a601e577f59d
