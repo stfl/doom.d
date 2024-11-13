@@ -1022,7 +1022,7 @@ REVIEW should we define any additional tags?
                         (:grouptags)
                         ("#work" . ?$)
                         ("#personal" . ?_)
-                        ("#emacs" . ?-)
+                        ("emacs" . ?-)
                         )))
 #+END_SRC
 
