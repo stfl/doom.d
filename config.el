@@ -583,6 +583,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#emacs" . ?-)
                         )))
 
+(after! org
+  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'warning)))
+                         ;; ("#inbox" . (:foreground ,(doom-color 'blue)))
+                         ("#work" . (:foreground ,(doom-color 'blue)))
+                         ("emacs" . (:foreground "#c678dd"))
+                         ))
+  )
+
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
         org-roam-directory org-directory
@@ -1142,7 +1150,7 @@ exist after each headings's drawers."
                         ((org-ql-block-header "Today")
                          (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
           (org-ql-block `(and (todo "NEXT" "WAIT")
-                              ,(prio-deadline>= org-priority-default)
+                              ;; ,(prio-deadline>= org-priority-default)
                               (not ,(someday-habit))
                               (not (ancestors (deadline :to 0)))
                               (not (deadline :to 0))
