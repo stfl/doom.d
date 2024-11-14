@@ -4096,8 +4096,8 @@ Automatically apply AI-generated code changes.
 #+begin_src elisp
 (use-package aider
   :config
-  (setq aider-args '("--model" "gpt-4o-mini")))
-    (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+  (setq aider-args '("--model" "claude-3-5-sonnet-20241022")))
+    (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
     (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
     ;; Optional: Set a key binding for the transient menu
     (global-set-key (kbd "C-c a") 'aider-transient-menu))
