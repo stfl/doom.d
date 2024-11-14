@@ -3995,7 +3995,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
   (map! :leader
-        :prefix ("j" "+gptel")
+        :prefix ("j" "+AI")
         :n "j" #'gptel-menu
         "C-g" #'gptel-abort
         "C-c" #'gptel-abort
@@ -4070,11 +4070,15 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! elysium
-  ;; :config
+  :config
   ;; (setq! 
   ;; Below are the default values
    ;; elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
    ;; elysium-window-style 'vertical) ; Can be customized to horizontal
+  (map! :leader
+        :prefix ("j" "+AI")
+        :n "e" #'gptel-org-set-properties
+        )
    )
 #+end_src
 
