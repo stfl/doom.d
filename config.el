@@ -2486,6 +2486,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package! gptel
+  ;; FIXME this is not correct
   :after auth-source
   :commands gptel
   :config
@@ -2567,6 +2568,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
   )
 
 (use-package! elysium
+  :after gptel
+  :commands elysium
   :config
   (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
          elysium-window-style 'vertical) ; Can be customized to horizontal
@@ -2575,13 +2578,14 @@ Reply concisely. Wrap source code in a ```cpp block.")
         :n "e" #'elysium-query)
    )
 
-(use-package aider
+(use-package! aider
+  :after auth-source
+  :commands aider
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
   (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
-    ;; Optional: Set a key binding for the transient menu
   (map! :leader
-        :prefix ("l" "+AI")
+        :prefix ("j" "+AI")
         :n "a" #'aider-transient-menu)
    )
