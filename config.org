@@ -4010,7 +4010,8 @@ or 'Paris is the capital of France[1][4][5].'
 - If you don't know the answer or the premise is incorrect, explain why. If the search results are empty or unhelpful, answer the query as well as you can with existing knowledge.
 - ALWAYS include a References section at the end of your answer. in the format
   #### References
-  [n] <Title>\n<link>\n
+  [1] <Title> <link>
+  [2] <Title> <link>
 
 Use markdown to format paragraphs, lists, tables, and quotes whenever possible.
 
