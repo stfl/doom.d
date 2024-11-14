@@ -3997,7 +3997,8 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
-  (asoc-set 'gptel-directives '(perplexity . "You are Perplxity, a helpful search assistant, living in Emacs.
+  (setq! gptel-directives (assq-delete-all 'perplexity gptel-directives))
+  (assq-set 'gptel-directives '(perplexity . "You are Perplxity, a helpful search assistant, living in Emacs.
 
 Your task is to deliver a concise and accurate response to a user's query, drawing from the given search results. Your answer must be precise, of high-quality, and written by an expert using an unbiased and journalistic tone. It is EXTREMELY IMPORTANT to directly answer the query. NEVER say 'based on the search results' or start your answer with a heading or title. Get straight to the point. Your answer must be written in the same language as the query, even if language preference is different.
 
