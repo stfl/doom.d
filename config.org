@@ -3997,6 +3997,15 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
+  (map! :leader
+        :prefix ("j" "+gptel")
+        :n "j" #'gptel-menu
+        "C-g" #'gptel-abort
+        "C-c" #'gptel-abort
+        :n "a" #'gptel-add
+        :n "w" #'gptel-system-prompt
+        )
+  
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -4051,10 +4060,6 @@ Use markdown to format paragraphs, lists, tables, and quotes whenever possible.
   (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
 Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
 Reply concisely. Wrap source code in a ```cpp block.")
-
-  (map! :after gptel
-        :leader
-        :desc "gptel" "j" gptel-mode-map)
   
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
