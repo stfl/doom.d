@@ -4076,14 +4076,11 @@ Automatically apply AI-generated code changes.
 #+begin_src elisp
 (use-package! elysium
   :config
-  ;; (setq! 
-  ;; Below are the default values
-   ;; elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
-   ;; elysium-window-style 'vertical) ; Can be customized to horizontal
+  (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
+         elysium-window-style 'vertical) ; Can be customized to horizontal
   (map! :leader
         :prefix ("j" "+AI")
-        :n "e" #'elysium-query
-        )
+        :n "e" #'elysium-query)
    )
 #+end_src
 
