@@ -4011,7 +4011,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
-    :key "your-api-key"                   ;can be a function that returns the key
+    :key (get-password :host "Perplexity-gptel")                   ;can be a function that returns the key
     :endpoint "/chat/completions"
     :stream t
     :models '(;; has many more, check perplexity.ai
