@@ -4097,7 +4097,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aider
-  :cmd "aider-*"
+  :commands "aider-*"
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
   (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
