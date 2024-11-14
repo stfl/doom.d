@@ -4001,14 +4001,15 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 
   (map! :leader
         :prefix ("j" "+AI")
-        :n "j" #'gptel-menu
+        :n "m" #'gptel-menu
+        :n "j" #'gptel
         "C-g" #'gptel-abort
         "C-c" #'gptel-abort
         :desc "Toggle context" :n "c" #'gptel-context-add
         :n "s" #'gptel-system-prompt
         :n "w" #'gptel-rewrite-menu
         :n "t" #'gptel-org-set-topic
-        :n "a" #'gptel-org-set-properties
+        :n "A" #'gptel-org-set-properties
         )
   
   (defun +gptel-font-lock-update (pos pos-end)
