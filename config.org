@@ -4054,8 +4054,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
 
   (map! :after gptel
         :leader
-        :desc "gptel" "j" gptel-mode-map
-        )
+        :desc "gptel" "j" gptel-mode-map)
   
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
