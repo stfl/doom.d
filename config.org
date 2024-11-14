@@ -3996,6 +3996,11 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+
+  (add-to-list gptel-directives '(perplexity . "You are a LLM living in Emacs
+Any sections in your answer shall be formatted '#### Section'
+In your answer, include a 'References' section at the bottom. For every source used, add its link to the reference section.
+"))
   
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
