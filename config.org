@@ -4104,7 +4104,7 @@ Automatically apply AI-generated code changes.
     ;; Optional: Set a key binding for the transient menu
   (map! :leader
         :prefix ("j" "+AI")
-        :desc "Aider" "a" aider-minor-mode-map
+        :desc "Aider" "a" aider-minor-mode-map)
         ;; :n "a" #'aider-transient-menu)
    )
 #+end_src
