@@ -4024,8 +4024,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :key (get-password :host "Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
-    :models '(
-              llama-3.1-sonar-huge-128k-online ;; 405B model
+    :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
               )
     )
 
