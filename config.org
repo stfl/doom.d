@@ -4077,6 +4077,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! elysium
+  :after gptel
   :commands elysium
   :config
   (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
@@ -4098,7 +4099,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aider
-  :defer t
+  :after auth-source
   :commands "aider-*"
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
