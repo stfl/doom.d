@@ -4014,13 +4014,14 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :key (get-password :host "Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
-    :models '(;; has many more, check perplexity.ai
-              llama-3.1-sonar-huge-128k-online ;; 405B model
-              ;; pplx-7b-chat
-              ;; pplx-70b-chat
-              ;; pplx-7b-online
-              ;; pplx-70b-online
-              ))
+    ;; :models '(;; has many more, check perplexity.ai
+    ;;           llama-3.1-sonar-huge-128k-online ;; 405B model
+    ;;           ;; pplx-7b-chat
+    ;;           ;; pplx-70b-chat
+    ;;           ;; pplx-7b-online
+    ;;           ;; pplx-70b-online
+    ;;           )
+    )
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
