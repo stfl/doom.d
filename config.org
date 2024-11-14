@@ -4025,8 +4025,8 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :endpoint "/chat/completions"
     :stream t
     :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
-              )
-    )
+              ))
+  ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
