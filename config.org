@@ -4103,8 +4103,9 @@ Automatically apply AI-generated code changes.
   (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
     ;; Optional: Set a key binding for the transient menu
   (map! :leader
-        :prefix ("j" "+AI")
-        :n "a" #'aider-transient-menu)
+        :desc "Aider" "j a" aider-minor-mode-map
+        ;; :prefix ("j" "+AI")
+        ;; :n "a" #'aider-transient-menu)
    )
 #+end_src
 
