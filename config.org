@@ -1952,8 +1952,13 @@ I need to disable ws-butler for org-mode buffers.
            :priority "B"
            :and (:tag "org_jira"
                  :property ("status" "Planned")))
+<<<<<<< HEAD
           (:name "[#C] Optional or consider for next week (<=5)"
            :priority "C")
+=======
+(after auth-source
+  (setq auth-sources '((:source "~/.authinfo.gpg"))))
+>>>>>>> Claude
           (:name "[#D] I care a bit more (~8)"
            :priority "D")
           (:name "[#E] (~8)"
@@ -4077,7 +4082,7 @@ Automatically apply AI-generated code changes.
    ;; elysium-window-style 'vertical) ; Can be customized to horizontal
   (map! :leader
         :prefix ("j" "+AI")
-        :n "e" #'gptel-org-set-properties
+        :n "e" #'elysium-query
         )
    )
 #+end_src
