@@ -1279,8 +1279,13 @@ exist after each headings's drawers."
            :priority "B"
            :and (:tag "org_jira"
                  :property ("status" "Planned")))
+<<<<<<< HEAD
           (:name "[#C] Optional or consider for next week (<=5)"
            :priority "C")
+=======
+(after auth-source
+  (setq auth-sources '((:source "~/.authinfo.gpg"))))
+>>>>>>> Claude
           (:name "[#D] I care a bit more (~8)"
            :priority "D")
           (:name "[#E] (~8)"
@@ -2494,6 +2499,19 @@ org-default-priority is treated as lower than the same set value"
          gptel-stream t)
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+
+  (map! :leader
+        :prefix ("j" "+AI")
+        :n "m" #'gptel-menu
+        :n "j" #'gptel
+        "C-g" #'gptel-abort
+        "C-c" #'gptel-abort
+        :desc "Toggle context" :n "c" #'gptel-context-add
+        :n "s" #'gptel-system-prompt
+        :n "w" #'gptel-rewrite-menu
+        :n "t" #'gptel-org-set-topic
+        :n "P" #'gptel-org-set-properties
+        )
   
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
@@ -2505,18 +2523,65 @@ org-default-priority is treated as lower than the same set value"
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (get-password :host "Claude-gptel"))
+  
+  ;; Perplexity offers an OpenAI compatible API
+  (gptel-make-openai "Perplexity"         ;Any name you want
+    :host "api.perplexity.ai"
+    :key (get-password :host "Perplexity-gptel")
+    :endpoint "/chat/completions"
+    :stream t
+    :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
+              ))
+  ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
-    
+  
+  (setf (alist-get 'perplexity gptel-directives) "You are Perplxity, a helpful search assistant, living in Emacs.
+
+Your task is to deliver a concise and accurate response to a user's query, drawing from the given search results. Your answer must be precise, of high-quality, and written by an expert using an unbiased and journalistic tone. It is EXTREMELY IMPORTANT to directly answer the query. NEVER say 'based on the search results' or start your answer with a heading or title. Get straight to the point. Your answer must be written in the same language as the query, even if language preference is different.
+
+You MUST cite the most relevant search results that answer the query. Do not mention any irrelevant results. You MUST ADHERE to the following instructions for citing search results:
+
+- To cite a search result, enclose its index located above the summary with brackets at the end of the corresponding sentence, for example 'Ice is less dense than water[1][2].'
+or 'Paris is the capital of France[1][4][5].'
+- NO SPACE between the last word and the citation, and ALWAYS use brackets. Only use this format to cite search results. 
+- If you don't know the answer or the premise is incorrect, explain why. If the search results are empty or unhelpful, answer the query as well as you can with existing knowledge.
+- ALWAYS include a References section at the end of your answer. in the format
+  #### References
+  [1] <Title> <link>
+  [2] <Title> <link>
+
+Use markdown to format paragraphs, lists, tables, and quotes whenever possible.
+
+- Use headings level 4 to separate sections of your response, like '#### Header'.
+- Use single new lines for lists and double new lines for paragraphs.
+- Use markdown to render images given in the search results.")
+  
+  (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
+Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
+Reply concisely. Wrap source code in a ```cpp block.")
+  
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
-)
+  )
 
 (use-package! elysium
-  ;; :config
-  ;; (setq! 
-  ;; Below are the default values
-   ;; elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
-   ;; elysium-window-style 'vertical) ; Can be customized to horizontal
+  :config
+  (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
+         elysium-window-style 'vertical) ; Can be customized to horizontal
+  (map! :leader
+        :prefix ("l" "+AI")
+        :n "e" #'elysium-query)
+   )
+
+(use-package aider
+  :config
+  (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
+  (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
+  (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
+    ;; Optional: Set a key binding for the transient menu
+  (map! :leader
+        :prefix ("l" "+AI")
+        :n "a" #'aider-transient-menu)
    )

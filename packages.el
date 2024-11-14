@@ -104,3 +104,8 @@
 (package! gptel)
 
 (package! elysium)
+
+(package! aider
+  :recipe (:host github
+           :repo "tninja/aider.el"
+           :files ("*.el")))
