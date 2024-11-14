@@ -4002,7 +4002,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
         :n "j" #'gptel-menu
         "C-g" #'gptel-abort
         "C-c" #'gptel-abort
-        :n "a" #'gptel-add
+        :n "a" #'gptel-add ;; toggle
         :n "s" #'gptel-system-prompt
         :n "w" #'gptel-rewrite-menu
         )
