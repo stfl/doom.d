@@ -4051,6 +4051,11 @@ Use markdown to format paragraphs, lists, tables, and quotes whenever possible.
   (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
 Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
 Reply concisely. Wrap source code in a ```cpp block.")
+
+  (map! :after gptel
+        :leader
+        :desc "gptel" "j" gptel-mode-map
+        )
   
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
