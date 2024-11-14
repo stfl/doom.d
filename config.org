@@ -3968,9 +3968,6 @@ git blame lenses
 #+end_src
 
 ** AI Chat gptel
-:PROPERTIES:
-:ID:       6eda0ca2-71b7-43f9-bb3e-d0ad993d37b0
-:END:
 
 #+begin_src elisp :tangle packages.el
 (package! gptel)
