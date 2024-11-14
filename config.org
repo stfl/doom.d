@@ -4087,7 +4087,7 @@ Automatically apply AI-generated code changes.
 ** Aider
 
 #+begin_src elisp :tangle packages.el
-(package! :host github :repo "tninja/aider.el" :files ("aider.el"))
+(package! :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
 #+end_src
 
 #+begin_src elisp
