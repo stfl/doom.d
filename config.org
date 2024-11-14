@@ -4009,23 +4009,23 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :key (get-password :host "Claude-gptel"))
   
   ;; Perplexity offers an OpenAI compatible API
-(gptel-make-openai "Perplexity"         ;Any name you want
-  :host "api.perplexity.ai"
-  :key "your-api-key"                   ;can be a function that returns the key
-  :endpoint "/chat/completions"
-  :stream t
-  :models '(;; has many more, check perplexity.ai
-            pplx-7b-chat
-            pplx-70b-chat
-            pplx-7b-online
-            pplx-70b-online))
+  (gptel-make-openai "Perplexity"         ;Any name you want
+    :host "api.perplexity.ai"
+    :key "your-api-key"                   ;can be a function that returns the key
+    :endpoint "/chat/completions"
+    :stream t
+    :models '(;; has many more, check perplexity.ai
+              pplx-7b-chat
+              pplx-70b-chat
+              pplx-7b-online
+              pplx-70b-online))
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
-    
+  
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
-)
+  )
 #+end_src
 
 ** Elysium
