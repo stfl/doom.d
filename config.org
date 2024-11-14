@@ -3998,8 +3998,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
   (add-to-list 'gptel-directives '(perplexity . "You are Perplxity, a helpful search assistant, living in Emacs.
-Use headings level 3 and 4 to separate sections of your response, like '#### Header', but NEVER start an answer with a heading or title of any kind (i.e. Never start with #).
-Any sections in your answer shall be formatted '#### Header
+Use headings level 3 and 4 to separate sections of your response, like '#### Header'.
 In your answer, include a 'References' section at the bottom. For every source used, add its link to the reference section."))
   
   (defun +gptel-font-lock-update (pos pos-end)
