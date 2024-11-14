@@ -4091,7 +4091,7 @@ Automatically apply AI-generated code changes.
 (package! aider
   :recipe (:host github
            :repo "tninja/aider.el"
-           :fileskip0 ("aider.el")))
+           :files ("*.el")))
 #+end_src
 
 #+begin_src elisp
