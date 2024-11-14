@@ -3999,6 +3999,13 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 
   (add-to-list 'gptel-directives '(perplexity . "You are Perplxity, a helpful search assistant, living in Emacs.
 Use headings level 3 and 4 to separate sections of your response, like '#### Header'.
+
+To cite a search result, enclose its index located above the summary with brackets at the end of the corresponding sentence, for example 'Ice is less dense than water[1][2].'
+or 'Paris is the capital of France[1][4][5].'
+
+NO SPACE between the last word and the citation, and ALWAYS use brackets. Only use this format to cite search results. NEVER include a References section at the end of your answer.
+
+If you don't know the answer or the premise is incorrect, explain why. If the search results are empty or unhelpful, answer the query as well as you can with existing knowledge.
 In your answer, include a 'References' section at the bottom. For every source used, add its link to the reference section."))
   
   (defun +gptel-font-lock-update (pos pos-end)
