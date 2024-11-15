@@ -1279,13 +1279,8 @@ exist after each headings's drawers."
            :priority "B"
            :and (:tag "org_jira"
                  :property ("status" "Planned")))
-<<<<<<< HEAD
           (:name "[#C] Optional or consider for next week (<=5)"
            :priority "C")
-=======
-(after auth-source
-  (setq auth-sources '((:source "~/.authinfo.gpg"))))
->>>>>>> Claude
           (:name "[#D] I care a bit more (~8)"
            :priority "D")
           (:name "[#E] (~8)"
@@ -2486,7 +2481,6 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package! gptel
-  ;; FIXME this is not correct
   :after auth-source
   :commands gptel
   :config
@@ -2507,7 +2501,7 @@ org-default-priority is treated as lower than the same set value"
         :n "j" #'gptel
         "C-g" #'gptel-abort
         "C-c" #'gptel-abort
-        :desc "Toggle context" :n "c" #'gptel-context-add
+        :desc "Toggle context" :n "c" #'gptel-add
         :n "s" #'gptel-system-prompt
         :n "w" #'gptel-rewrite-menu
         :n "t" #'gptel-org-set-topic
