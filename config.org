@@ -3844,17 +3844,17 @@ git blame lenses
 #+begin_src elisp
 (map! :leader
       (:prefix ("j" . "AI")
-       :n "m" #'gptel-menu
-       :n "j" #'gptel
+       "m" #'gptel-menu
+       "j" #'gptel
        "C-g" #'gptel-abort
        "C-c" #'gptel-abort
-       :desc "Toggle context" :n "C" #'gptel-add
-       :n "s" #'gptel-system-prompt
-       :n "w" #'gptel-rewrite-menu
-       :n "t" #'gptel-org-set-topic
-       :n "P" #'gptel-org-set-properties
+       :desc "Toggle context" "C" #'gptel-add
+       "s" #'gptel-system-prompt
+       "w" #'gptel-rewrite-menu
+       "t" #'gptel-org-set-topic
+       "P" #'gptel-org-set-properties
        
-       :n "a" #'aider-transient-menu
+       "a" #'aider-transient-menu
        
        "e" #'elysium-query)
        
