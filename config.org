@@ -3854,9 +3854,10 @@ git blame lenses
       :n "t" #'gptel-org-set-topic
       :n "P" #'gptel-org-set-properties
       
-      :n "c" #'copilot-chat-insert-commit-message
-      
       :n "a" #'aider-transient-menu
+      
+      :prefix ("c" "+Copilot Chat")
+      :n "c" #'copilot-chat-insert-commit-message
       )
 #+end_src
 
