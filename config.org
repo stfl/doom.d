@@ -3883,6 +3883,7 @@ git blame lenses
 
 ** Copilot Chat
 
+
 #+begin_src elisp :tangle packages.el
 (package! copilot-chat
   :recipe (:host github
