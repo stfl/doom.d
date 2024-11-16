@@ -4125,9 +4125,10 @@ Automatically apply AI-generated code changes.
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
   (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
-  (map! :leader
-        :prefix ("j" "+AI")
-        :n "a" #'aider-transient-menu)
-   )
+  )
+
+(map! :leader
+      :prefix ("j" "+AI")
+      :n "a" #'aider-transient-menu)
 #+end_src
 
