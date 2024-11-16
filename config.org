@@ -4007,7 +4007,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 #+begin_src elisp
 (use-package! gptel
   :after auth-source
-  :commands gptel
+  :commands (gptel gptel-menu)
   :config
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
