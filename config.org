@@ -3857,7 +3857,7 @@ git blame lenses
       :n "a" #'aider-transient-menu
       
       :prefix ("c" "+Copilot Chat")
-      :n "c" #'copilot-chat-insert-commit-message
+      :n "f" #'copilot-chat-fix
       )
 #+end_src
 
