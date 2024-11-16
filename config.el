@@ -2377,20 +2377,22 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (map! :leader
-      (:prefix ("j" . "+AI")
-       :n "m" #'gptel-menu
-       :n "j" #'gptel
+      (:prefix ("j" . "AI")
+       "m" #'gptel-menu
+       "j" #'gptel
        "C-g" #'gptel-abort
        "C-c" #'gptel-abort
-       :desc "Toggle context" :n "C" #'gptel-add
-       :n "s" #'gptel-system-prompt
-       :n "w" #'gptel-rewrite-menu
-       :n "t" #'gptel-org-set-topic
-       :n "P" #'gptel-org-set-properties
+       :desc "Toggle context" "C" #'gptel-add
+       "s" #'gptel-system-prompt
+       "w" #'gptel-rewrite-menu
+       "t" #'gptel-org-set-topic
+       "P" #'gptel-org-set-properties
        
-       :n "a" #'aider-transient-menu
+       "a" #'aider-transient-menu
        
-       (:prefix ("c" . "+Copilot Chat")
+       "e" #'elysium-query
+       
+       (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
         "c" #'copilot-chat-display  ;; display copilot chat buffers.
         "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
@@ -2598,9 +2600,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :config
   (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
          elysium-window-style 'vertical) ; Can be customized to horizontal
-  (map! :leader
-        :prefix ("l" "+AI")
-        :n "e" #'elysium-query)
    )
 
 (use-package! aider
