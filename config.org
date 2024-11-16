@@ -4085,7 +4085,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
       :n "t" #'gptel-org-set-topic
       :n "P" #'gptel-org-set-properties
       )
-
 #+end_src
 
 ** Elysium
