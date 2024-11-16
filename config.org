@@ -3899,6 +3899,9 @@ git blame lenses
   
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
   ;; Or call manually (copilot-chat-insert-commit-message) when in the commit message buffer.
+  (map! :leader
+        :prefix ("j" "+AI")
+        :n "c" #'copilot-chat-insert-commit-message)
   )
 #+end_src
 
