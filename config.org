@@ -3894,7 +3894,7 @@ git blame lenses
 #+begin_src elisp
 (use-package copilot-chat
   :after org
-  :command (copilot-chat-insert-commit-message copilot-chat-fix)
+  :command (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
   :config (setq! copilot-chat-model "claude-3.5-sonnet"
                  copilot-chat-frontend 'org)
   
