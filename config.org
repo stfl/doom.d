@@ -3899,10 +3899,11 @@ git blame lenses
   
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
   ;; Or call manually (copilot-chat-insert-commit-message) when in the commit message buffer.
-  (map! :leader
-        :prefix ("j" "+AI")
-        :n "c" #'copilot-chat-insert-commit-message)
   )
+
+(map! :leader
+      :prefix ("j" "+AI")
+      :n "c" #'copilot-chat-insert-commit-message)
 #+end_src
 
 ** Codeium
@@ -4019,19 +4020,6 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
-  (map! :leader
-        :prefix ("j" "+AI")
-        :n "m" #'gptel-menu
-        :n "j" #'gptel
-        "C-g" #'gptel-abort
-        "C-c" #'gptel-abort
-        :desc "Toggle context" :n "c" #'gptel-add
-        :n "s" #'gptel-system-prompt
-        :n "w" #'gptel-rewrite-menu
-        :n "t" #'gptel-org-set-topic
-        :n "P" #'gptel-org-set-properties
-        )
-  
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -4084,6 +4072,20 @@ Reply concisely. Wrap source code in a ```cpp block.")
   
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
+
+(map! :leader
+      :prefix ("j" "+AI")
+      :n "m" #'gptel-menu
+      :n "j" #'gptel
+      "C-g" #'gptel-abort
+      "C-c" #'gptel-abort
+      :desc "Toggle context" :n "c" #'gptel-add
+      :n "s" #'gptel-system-prompt
+      :n "w" #'gptel-rewrite-menu
+      :n "t" #'gptel-org-set-topic
+      :n "P" #'gptel-org-set-properties
+      )
+
 #+end_src
 
 ** Elysium
