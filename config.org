@@ -3857,7 +3857,23 @@ git blame lenses
       :n "a" #'aider-transient-menu
       
       :prefix ("c" "+Copilot Chat")
-      :n "f" #'copilot-chat-fix
+      ;; :n "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
+      :n "c" #'copilot-chat-display  ;; display copilot chat buffers.
+      :n "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
+      :n "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
+      :n "r" #'copilot-chat-review  ;; ask copilot to review selected code.
+      :n "d" #'copilot-chat-doc  ;; ask copilot to document selected code.
+      :n "f" #'copilot-chat-fix  ;; ask copilot to fix selected code.
+      :n "o" #'copilot-chat-optimize  ;; ask copilot to optimize selected code.
+      :n "t" #'copilot-chat-test  ;; ask copilot to write tests for selected code.
+      ;; :n "" #'copilot-chat-custom-prompt-selection  ;; ask for a prompt in minibuffer and pastes selection after it before sending it to copilot.
+      :n "b" #'copilot-chat-add-current-buffer  ;; add current buffer to copilot chat. Its content will be sent with every request.
+      :n "B" #'copilot-chat-del-current-buffer  ;; remove current buffer.
+      :n "l" #'copilot-chat-list  ;; open buffer list.
+      ;; :n "" #'copilot-chat-prompt-history-previous  ;; insert previous prompt from history in prompt buffer.
+      ;; :n "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
+      :n "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
+      :n "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
       )
 #+end_src
 
