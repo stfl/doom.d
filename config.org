@@ -3848,7 +3848,7 @@ git blame lenses
       :n "j" #'gptel
       "C-g" #'gptel-abort
       "C-c" #'gptel-abort
-      :desc "Toggle context" :n "c" #'gptel-add
+      :desc "Toggle context" :n "C" #'gptel-add
       :n "s" #'gptel-system-prompt
       :n "w" #'gptel-rewrite-menu
       :n "t" #'gptel-org-set-topic
