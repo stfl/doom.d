@@ -3893,7 +3893,7 @@ git blame lenses
 
 #+begin_src elisp
 (use-package copilot-chat
-  :after (request org markdown-mode shell-maker))
+  :after (org))
 #+end_src
 
 ** Codeium
