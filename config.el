@@ -2599,7 +2599,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands elysium
   :config
   (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
-         elysium-window-style 'vertical) ; Can be customized to horizontal
+         elysium-window-style 'horizontal) ; Can be customized to horizontal
    )
 
 (use-package! aider
