@@ -3887,8 +3887,7 @@ git blame lenses
 (package! copilot-chat
   :recipe (:host github
            :repo "chep/copilot-chat.el"
-           :files ("*.el"))
-  )
+           :files ("*.el")))
 #+end_src
 #+end_src
 
