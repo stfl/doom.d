@@ -3856,7 +3856,7 @@ git blame lenses
       
       :n "a" #'aider-transient-menu
       
-      :prefix ("c" "+Copilot Chat")
+      ():prefix ("c" "+Copilot Chat")
       ;; :n "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
       :n "c" #'copilot-chat-display  ;; display copilot chat buffers.
       :n "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
@@ -3874,7 +3874,7 @@ git blame lenses
       ;; :n "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
       :n "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
       :n "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-      ))
+      )))
 #+end_src
 
 ** Copilot
