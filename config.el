@@ -2376,6 +2376,40 @@ org-default-priority is treated as lower than the same set value"
   ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
 
+(map! :leader
+      (:prefix ("j" . "+AI")
+       :n "m" #'gptel-menu
+       :n "j" #'gptel
+       "C-g" #'gptel-abort
+       "C-c" #'gptel-abort
+       :desc "Toggle context" :n "C" #'gptel-add
+       :n "s" #'gptel-system-prompt
+       :n "w" #'gptel-rewrite-menu
+       :n "t" #'gptel-org-set-topic
+       :n "P" #'gptel-org-set-properties
+       
+       :n "a" #'aider-transient-menu
+       
+       (:prefix ("c" . "+Copilot Chat")
+        ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
+        "c" #'copilot-chat-display  ;; display copilot chat buffers.
+        "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
+        "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
+        "r" #'copilot-chat-review  ;; ask copilot to review selected code.
+        "d" #'copilot-chat-doc  ;; ask copilot to document selected code.
+        "f" #'copilot-chat-fix  ;; ask copilot to fix selected code.
+        "o" #'copilot-chat-optimize  ;; ask copilot to optimize selected code.
+        "t" #'copilot-chat-test  ;; ask copilot to write tests for selected code.
+        ;; :n "" #'copilot-chat-custom-prompt-selection  ;; ask for a prompt in minibuffer and pastes selection after it before sending it to copilot.
+        "b" #'copilot-chat-add-current-buffer  ;; add current buffer to copilot chat. Its content will be sent with every request.
+        "B" #'copilot-chat-del-current-buffer  ;; remove current buffer.
+        "l" #'copilot-chat-list  ;; open buffer list.
+        ;; "" #'copilot-chat-prompt-history-previous  ;; insert previous prompt from history in prompt buffer.
+        ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
+        "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
+        "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
+        )))
+
 
 
 (use-package! copilot
@@ -2407,6 +2441,12 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package copilot-chat
   :after org
+  :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
+  :config (setq! copilot-chat-model "claude-3.5-sonnet"
+                 copilot-chat-frontend 'org)
+  
+  ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
+  ;; Or call manually (copilot-chat-insert-commit-message) when in the commit message buffer.
   )
 
 (use-package! codeium
@@ -2486,7 +2526,7 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! gptel
   :after auth-source
-  :commands gptel
+  :commands (gptel gptel-menu)
   :config
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
@@ -2499,19 +2539,6 @@ org-default-priority is treated as lower than the same set value"
   ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
   ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
-  (map! :leader
-        :prefix ("j" "+AI")
-        :n "m" #'gptel-menu
-        :n "j" #'gptel
-        "C-g" #'gptel-abort
-        "C-c" #'gptel-abort
-        :desc "Toggle context" :n "c" #'gptel-add
-        :n "s" #'gptel-system-prompt
-        :n "w" #'gptel-rewrite-menu
-        :n "t" #'gptel-org-set-topic
-        :n "P" #'gptel-org-set-properties
-        )
-  
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -2578,12 +2605,9 @@ Reply concisely. Wrap source code in a ```cpp block.")
 
 (use-package! aider
   :after auth-source
-  :commands aider
+  :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
   (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
-  (map! :leader
-        :prefix ("j" "+AI")
-        :n "a" #'aider-transient-menu)
-   )
+  )
