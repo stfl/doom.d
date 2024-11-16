@@ -3843,7 +3843,7 @@ git blame lenses
 
 #+begin_src elisp
 (map! :leader
-      :prefix ("j" "+AI")
+      (:prefix ("j" "+AI")
       :n "m" #'gptel-menu
       :n "j" #'gptel
       "C-g" #'gptel-abort
@@ -3874,7 +3874,7 @@ git blame lenses
       ;; :n "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
       :n "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
       :n "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-      )
+      ))
 #+end_src
 
 ** Copilot
