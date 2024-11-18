@@ -2393,7 +2393,7 @@ org-default-priority is treated as lower than the same set value"
        "e" #'elysium-query
        
        (:prefix ("c" . "Copilot Chat")
-        "R" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
+        ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
         "c" #'copilot-chat-display  ;; display copilot chat buffers.
         "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
         "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
