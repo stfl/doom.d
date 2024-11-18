@@ -4029,7 +4029,7 @@ A free alternative to Github Copilot
   )
 #+end_src
 
-** AI Chat gptel
+** gptel
 
 #+begin_src elisp :tangle packages.el
 (package! gptel)
