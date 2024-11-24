@@ -2613,7 +2613,7 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
     (stfl/org-clock-csv-to-file '("~/.org/oebb.org" "~/.org/archive/oebb.org") "/tmp/org-clock-oebb.csv"))
   
   (defun stfl/org-clock-csv-to-file-pulswerk ()
-    (stfl/org-clock-csv-to-file '("~/.org/pulswerk.org" "~/.org/archive/pulswerk.org")))
+    (stfl/org-clock-csv-to-file '("~/.org/pulswerk.org" "~/.org/archive/pulswerk.org") "/tmp/org-clock-oebb.csv"))
   
   )
 #+end_src
