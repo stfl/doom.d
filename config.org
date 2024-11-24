@@ -2601,6 +2601,11 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 (use-package! org-clock-csv
   :after org
   :config 
+  (defun stfl/org-clock-csv ()
+    (interactive)
+    (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
+      (org-clock-csv)))
+  
   (defun stfl/org-clock-csv-to-file ()
     (interactive)
     (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
