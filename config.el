@@ -1853,7 +1853,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package org-clock-csv
-  :command +org-clock-project-csv-to-file)
+  :commands +org-clock-project-csv-to-file)
 
 (defun +org-clock-project-csv-to-file (project)
   (interactive
