@@ -2612,7 +2612,6 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
       :localleader
       :prefix "c"
       :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
-
 #+end_src
 
 * Module Settings
