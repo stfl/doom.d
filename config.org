@@ -2605,14 +2605,12 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
     (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
       (org-clock-csv)))
   
-  (defun +org-clock-project-csv-to-file (project)
-    (interactive
-     (list (completing-read "Select project: " stfl/org-gtd-projects)))
-    (let* ((org-agenda-files (list (doom-path org-directory project)
-                                   (doom-path org-directory "archive" project)))
-           (outfile (format "/tmp/org-clock-%s.csv" (file-name-base project))))
-      (org-clock-csv-to-file outfile)
-      (message "Wrote clock data to %s" outfile)))
+(defun +org-clock-project-csv-to-file (project)
+  (interactive
+   (list (completing-read "Select project: " stfl/org-gtd-projects)))
+  (let ((org-agenda-files (list (doom-path org-directory project)
+                               (doom-path org-directory "archive" project))))
+    (org-clock-csv-to-file (format "/tmp/org-clock-%s.csv" (file-name-base project)))))
 
   (defun stfl/org-clock-csv-to-file-oebb ()
     (stfl/org-clock-csv-to-file  ))
