@@ -1852,16 +1852,20 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
-(use-package! org-clock-csv
-  :after org
-  :config 
-  (defun +org-clock-project-csv-to-file (project)
-    (interactive
-     (list (completing-read "Select project: " stfl/org-gtd-projects)))
-    (let ((org-agenda-files (list (doom-path org-directory project)
-                                  (doom-path org-directory "archive" project))))
-      (org-clock-csv-to-file (format "/tmp/org-clock-%s.csv" (file-name-base project)))))
-  )
+(use-package org-clock-csv
+  :command +org-clock-project-csv-to-file)
+
+(defun +org-clock-project-csv-to-file (project)
+  (interactive
+   (list (completing-read "Select project: " stfl/org-gtd-projects)))
+  (let ((org-agenda-files (list (doom-path org-directory project)
+                                (doom-path org-directory "archive" project))))
+    (org-clock-csv-to-file (format "/tmp/org-clock-%s.csv" (file-name-base project)))))
+
+(map! :map org-mode-map
+      :localleader
+      :prefix "c"
+      :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
 
 ;; (use-package! define-word
 ;;   :after org
