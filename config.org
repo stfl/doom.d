@@ -2605,9 +2605,13 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
     (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
       (org-clock-csv)))
   
-  (defun stfl/org-clock-csv-to-file ()
-    (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
+  (defun stfl/org-clock-csv-to-file (files)
+    (let ((org-agenda-files files))
       (org-clock-csv-to-file "/tmp/org-clock.csv")))
+
+  (defun stfl/org-clock-csv-to-file-oebb ()
+    (stfl/org-clock-csv-to-file)
+    (org-clock-csv-to-file))
   )
 #+end_src
 
