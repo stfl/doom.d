@@ -2599,8 +2599,8 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 
 #+begin_src elisp
 (use-package! org-clock-csv
-  :command +org-clock-project-csv-to-file
-  :config 
+  :command +org-clock-project-csv-to-file)
+
   (defun +org-clock-project-csv-to-file (project)
     (interactive
      (list (completing-read "Select project: " stfl/org-gtd-projects)))
@@ -2612,7 +2612,6 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
         :localleader
         :prefix "c"
         :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
-  )
 
 #+end_src
 
