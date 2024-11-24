@@ -2599,7 +2599,13 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 
 #+begin_src elisp
 (use-package! org-clock-csv
-  :after org)
+  :after org
+  :config 
+  (defun stfl/org-clock-csv-to-file ()
+    (interactive)
+    (let ((org-agenda-files '("~/.org/oebb.org" "~/.org/archive/oebb.org")))
+      (org-clock-csv-to-file "/tmp/org-clock.csv")))
+  )
 #+end_src
 
 * Module Settings
