@@ -757,10 +757,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (add-hook! 'org-capture-after-finalize-hook :local #'stfl/org-capture-versicherung-post)
       (format "* OEGK [%s] %s
 :PROPERTIES:
-:CREATED: %%U
-:date: [%s]
-:betrag: %%^{Betrag|0}
-:oegk: nil
+:CREATED:  %%U
+:date:     [%s]
+:betrag:   %%^{Betrag|0}
+:oegk:     nil
 :generali: nil
 :category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
