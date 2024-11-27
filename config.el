@@ -410,10 +410,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (add-hook! 'org-capture-after-finalize-hook :local #'stfl/org-capture-versicherung-post)
       (format "* OEGK [%s] %s
 :PROPERTIES:
-:CREATED: %%U
-:date: [%s]
-:betrag: %%^{Betrag|0}
-:oegk: nil
+:CREATED:  %%U
+:date:     [%s]
+:betrag:   %%^{Betrag|0}
+:oegk:     nil
 :generali: nil
 :category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
@@ -1859,9 +1859,11 @@ org-default-priority is treated as lower than the same set value"
 (defun +org-clock-project-csv-to-file (project)
   (interactive
    (list (completing-read "Select project: " stfl/org-gtd-projects)))
-  (let ((org-agenda-files (list (doom-path org-directory project)
-                                (doom-path org-directory "archive" project))))
-    (org-clock-csv-to-file (format "/tmp/org-clock-%s.csv" (file-name-base project)))))
+  (let* ((org-agenda-files (list (doom-path org-directory project)
+                                 (doom-path org-directory "archive" project)))
+         (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
+         (filepath (doom-path org-directory "invoices" filename)))
+    (org-clock-csv-to-file filepath)))
 
 (map! :map org-mode-map
       :localleader
