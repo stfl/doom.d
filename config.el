@@ -1925,9 +1925,9 @@ org-default-priority is treated as lower than the same set value"
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
 
   (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "typst-lsp")
+   (make-lsp-client :new-connection (lsp-stdio-connection "tinymist")
                     :activation-fn (lsp-activate-on "typst")
-                    :server-id 'typst-lsp)))
+                    :server-id 'tinymist)))
 
 (after! org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
