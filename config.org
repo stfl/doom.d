@@ -1648,7 +1648,8 @@ I need to disable ws-butler for org-mode buffers.
        org-agenda-include-deadlines t
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 
-(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
+(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
+                                          "oebb" "@oebb" "#oebb"))
 #+end_src
 
 #+begin_src elisp
