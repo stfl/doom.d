@@ -1876,7 +1876,7 @@ I need to disable ws-butler for org-mode buffers.
         ;;                 ((org-ql-block-header "Backlog")
         ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)
         ;;                  (org-dim-blocked-tasks t)))))
-        ("wB" "Backlog #work w/ 3DataX"
+        ("wB" "Backlog #work w/ Primary Work"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
                               (and (work)
