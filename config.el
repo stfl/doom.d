@@ -1009,7 +1009,8 @@ exist after each headings's drawers."
        org-agenda-include-deadlines t
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
 
-(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"))
+(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
+                                          "oebb" "@oebb" "#oebb"))
 
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
@@ -1219,7 +1220,7 @@ exist after each headings's drawers."
         ;;                 ((org-ql-block-header "Backlog")
         ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)
         ;;                  (org-dim-blocked-tasks t)))))
-        ("wB" "Backlog #work w/ 3DataX"
+        ("wB" "Backlog #work w/ Primary Work"
          ((org-ql-block '(and (or (todo "PROJ")
                                   (standalone-next))
                               (and (work)
