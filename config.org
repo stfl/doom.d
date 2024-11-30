@@ -3547,6 +3547,12 @@ Use the (almost) default keybindings in evil normal-mode
         turbo-log-allow-insert-without-tree-sitter-p t))
 #+end_src
 
+** just
+
+#+begin_src elisp :tangle packages.el
+(package! justl :recipe (:host github :repo "psibi/justl.el"))
+#+end_src
+
 * Collaboration and VCS
 ** Directory tree diff - ztree
 :PROPERTIES:
