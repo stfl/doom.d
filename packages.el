@@ -81,6 +81,8 @@
 
 (package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
 
+(package! justl :recipe (:host github :repo "psibi/justl.el"))
+
 (package! ztree)
 
 (package! magit-todos)
