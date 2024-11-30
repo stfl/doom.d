@@ -821,6 +821,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
   :after org
   :commands +org-clock-project-csv-to-file)
 
+(setq +org-clock-export-dir "~/work/invoice.typ/invoices")
 (defun +org-clock-project-csv-to-file (project)
   (interactive
    (list (completing-read "Select project: " stfl/org-gtd-projects)))
