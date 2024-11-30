@@ -2243,9 +2243,11 @@ org-default-priority is treated as lower than the same set value"
   (setq turbo-log-msg-format-template "\"🚀: %s\""
         turbo-log-allow-insert-without-tree-sitter-p t))
 
-;; (use-package! justl
-;;   :config
-;;   (map! :n "e" 'justl-exec-recipe))
+(use-package just-mode)
+
+(use-package justl)
+  :config
+  (map! :n "e" 'justl-exec-recipe))
 
 (use-package! ztree)
 
