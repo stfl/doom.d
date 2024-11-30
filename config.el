@@ -443,6 +443,25 @@ Org-mode properties drawer already, keep the headline and don’t insert
         org-clock-report-include-clocking-task t
         org-log-note-clock-out t))
 
+(use-package org-clock-csv
+  :after org
+  :commands +org-clock-project-csv-to-file)
+
+(setq +org-clock-export-dir "~/work/invoice.typ/invoices")
+(defun +org-clock-project-csv-to-file (project)
+  (interactive
+   (list (completing-read "Select project: " stfl/org-gtd-projects)))
+  (let* ((org-agenda-files (list (doom-path org-directory project)
+                                 (doom-path org-directory "archive" project)))
+         (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
+         (filepath (doom-path +org-clock-export-dir filename)))
+    (org-clock-csv-to-file filepath)))
+
+(map! :map org-mode-map
+      :localleader
+      :prefix "c"
+      :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
+
 (use-package! org-edna
   :after org
   ;; :hook org-mode-hook  ;; load package after hook
@@ -1853,24 +1872,6 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
-(use-package org-clock-csv
-  :after org
-  :commands +org-clock-project-csv-to-file)
-
-(defun +org-clock-project-csv-to-file (project)
-  (interactive
-   (list (completing-read "Select project: " stfl/org-gtd-projects)))
-  (let* ((org-agenda-files (list (doom-path org-directory project)
-                                 (doom-path org-directory "archive" project)))
-         (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
-         (filepath (doom-path org-directory "invoices" filename)))
-    (org-clock-csv-to-file filepath)))
-
-(map! :map org-mode-map
-      :localleader
-      :prefix "c"
-      :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
-
 ;; (use-package! define-word
 ;;   :after org
 ;;   :config
@@ -1918,6 +1919,7 @@ org-default-priority is treated as lower than the same set value"
          typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
          typst-ts-mode-enable-raw-blocks-highlight t)
   :config
+  (setq! typst-ts-mode-indent-offset 2)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu)
   (add-hook! 'typst-ts-mode-hook #'lsp-deferred))

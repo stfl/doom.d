@@ -1,6 +1,8 @@
 (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
 
+(package! org-clock-csv)
+
 (package! org-edna)
 
 ;; (package! org-modern)
@@ -25,8 +27,6 @@
 (package! org-super-agenda)
 
 (package! org-ql)
-
-(package! org-clock-csv)
 
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
