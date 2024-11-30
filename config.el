@@ -2246,8 +2246,8 @@ org-default-priority is treated as lower than the same set value"
 (use-package just-mode)
 
 (use-package justl)
-  :config
-  (map! :n "e" 'justl-exec-recipe))
+  ;; :config
+  ;; (map! :n "e" 'justl-exec-recipe))
 
 (use-package! ztree)
 
