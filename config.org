@@ -187,7 +187,7 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 
 #+BEGIN_SRC elisp
-(let ((font "JetBrains Mono"))
+(let ((font "JetBrains Mono Nerd Font Mono"))
   (if (string= (system-name) "manjaro.stfl.sh")
       (setq doom-font (font-spec :family font :size 20)
             doom-variable-pitch-font (font-spec :family font)
