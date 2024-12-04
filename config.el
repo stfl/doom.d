@@ -65,14 +65,10 @@
 (setq! display-line-numbers-type t)
 (setq! which-key-idle-delay 0.3)
 
-(let ((font "JetBrains Mono"))
-  (if (string= (system-name) "manjaro.stfl.sh")
-      (setq doom-font (font-spec :family font :size 20)
-            doom-variable-pitch-font (font-spec :family font)
-            doom-big-font (font-spec :family font :size 30))
-    (setq doom-font (font-spec :family font :size 13)
-          doom-variable-pitch-font (font-spec :family font)
-          doom-big-font (font-spec :family font :size 20))))
+(let ((font "JetBrains Mono Nerd Font Mono"))
+  (setq doom-font (font-spec :family font :size 13)
+        doom-variable-pitch-font (font-spec :family font)
+        doom-big-font (font-spec :family font :size 20)))
 
 (custom-declare-face '+org-priority-a  '((t)) "")
 (custom-declare-face '+org-priority-b  '((t)) "")
