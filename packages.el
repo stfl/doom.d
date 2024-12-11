@@ -28,7 +28,7 @@
 
 (package! org-ql)
 
-(package! vterm :built-in t)
+(package! vterm :disable t)
 
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
