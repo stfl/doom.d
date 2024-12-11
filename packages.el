@@ -28,7 +28,7 @@
 
 (package! org-ql)
 
-(package! vterm :type 'virtual)
+(package! vterm :type 'built-in)
 
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
