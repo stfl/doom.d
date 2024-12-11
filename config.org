@@ -2661,8 +2661,8 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 :END:
 
 
-#+begin_src elips :tangle packages.el
-
+#+begin_src elisp :tangle packages.el
+(package! vterm :type 'virtual)
 #+end_src
 
 #+begin_src elisp
