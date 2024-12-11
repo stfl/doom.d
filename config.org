@@ -2662,7 +2662,7 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 
 
 #+begin_src elisp :tangle packages.el
-(package! vterm :built-in t)
+(package! vterm :disable t)
 #+end_src
 
 #+begin_src elisp
