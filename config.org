@@ -2660,6 +2660,11 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 :ID:       ac7ce678-a39e-4e3e-8911-c5155e79a620
 :END:
 
+
+#+begin_src elips :tangle packages.el
+
+#+end_src
+
 #+begin_src elisp
 (after! vterm
   (setq! vterm-max-scrollback 200000))
