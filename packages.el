@@ -28,6 +28,8 @@
 
 (package! org-ql)
 
+(package! vterm :type 'virtual)
+
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
