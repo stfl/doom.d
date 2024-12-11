@@ -3976,7 +3976,7 @@ git blame lenses
   )
 #+end_src
 
-** Codeium
+** KILL Codeium
 
 A free alternative to Github Copilot
 
