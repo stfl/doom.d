@@ -3528,13 +3528,6 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src elisp
 (use-package! turbo-log
   :after prog-mode
-  ;; :bind (("C-s-l" . turbo-log-print)
-  ;;        ("C-s-i" . turbo-log-print-immediately)
-  ;;        ("C-s-h" . turbo-log-comment-all-logs)
-  ;;        ("C-s-s" . turbo-log-uncomment-all-logs)
-  ;;        ("C-s-[" . turbo-log-paste-as-logger)
-  ;;        ("C-s-]" . turbo-log-paste-as-logger-immediately)
-  ;;        ("C-s-x" . turbo-log-delete-all-logs))
   :config
   (map! :leader
         "l l" #'turbo-log-print
@@ -3545,7 +3538,7 @@ Use the (almost) default keybindings in evil normal-mode
         "l ]" #'turbo-log-paste-as-logger-immediately
         "l x" #'turbo-log-delete-all-logs)
   (setq turbo-log-msg-format-template "\"🚀: %s\""
-        turbo-log-allow-insert-without-tree-sitter-p nil))
+        turbo-log-allow-insert-without-tree-sitter-p t))
 #+end_src
 
 ** just
