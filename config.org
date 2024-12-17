@@ -3545,7 +3545,7 @@ Use the (almost) default keybindings in evil normal-mode
         "l ]" #'turbo-log-paste-as-logger-immediately
         "l x" #'turbo-log-delete-all-logs)
   (setq turbo-log-msg-format-template "\"🚀: %s\""
-        turbo-log-allow-insert-without-tree-sitter-p t))
+        turbo-log-allow-insert-without-tree-sitter-p nil))
 #+end_src
 
 ** just
