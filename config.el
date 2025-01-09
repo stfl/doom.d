@@ -1886,8 +1886,7 @@ org-default-priority is treated as lower than the same set value"
 
 (after! vterm
   (setq! vterm-max-scrollback 200000
-         vterm-min-window-width 5000) ;; do not wrap long lines per default
-  )
+         vterm-min-window-width 5000)) ;; do not wrap long lines per default
 
 (map!
  :after vterm
