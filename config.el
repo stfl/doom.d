@@ -2220,13 +2220,6 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! turbo-log
   :after prog-mode
-  ;; :bind (("C-s-l" . turbo-log-print)
-  ;;        ("C-s-i" . turbo-log-print-immediately)
-  ;;        ("C-s-h" . turbo-log-comment-all-logs)
-  ;;        ("C-s-s" . turbo-log-uncomment-all-logs)
-  ;;        ("C-s-[" . turbo-log-paste-as-logger)
-  ;;        ("C-s-]" . turbo-log-paste-as-logger-immediately)
-  ;;        ("C-s-x" . turbo-log-delete-all-logs))
   :config
   (map! :leader
         "l l" #'turbo-log-print
