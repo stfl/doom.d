@@ -1885,7 +1885,9 @@ org-default-priority is treated as lower than the same set value"
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
 (after! vterm
-  (setq! vterm-max-scrollback 200000))
+  (setq! vterm-max-scrollback 200000
+         vterm-min-window-width 5000) ;; do not wrap long lines per default
+  )
 
 (map!
  :after vterm
