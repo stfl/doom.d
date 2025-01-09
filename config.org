@@ -2667,7 +2667,9 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 
 #+begin_src elisp
 (after! vterm
-  (setq! vterm-max-scrollback 200000))
+  (setq! vterm-max-scrollback 200000
+         vterm-min-window-width 5000) ;; do not wrap long lines per default
+  )
 #+end_src
 
 Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
