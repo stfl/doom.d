@@ -1,24 +1,6 @@
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
 
-(defun get-auth-info (host user &optional port)
-  (let ((info (nth 0 (auth-source-search
-                      :host host
-                      :user user
-                      :port port
-                      :require '(:user :secret)))))
-    (if info
-        (let ((secret (plist-get info :secret)))
-          (if (functionp secret)
-              (funcall secret)
-            secret))
-      nil)))
-
-(defun get-password (&rest keys)
-  (let ((result (apply #'auth-source-search keys)))
-    (when result
-      (funcall (plist-get (car result) :secret)))))
-
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
 (defun stfl/goto-private-config-file ()
@@ -1868,6 +1850,26 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
+(defun get-auth-info (host user &optional port)
+  (let ((info (nth 0 (auth-source-search
+                      :host host
+                      :user user
+                      :port port
+                      :require '(:user :secret)))))
+    (if info
+        (let ((secret (plist-get info :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      nil)))
+
+(defun get-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (when result
+      (funcall (plist-get (car result) :secret)))))
+
+(setq! auth-sources 'password-store)
+
 ;; (use-package! define-word
 ;;   :after org
 ;;   :config
@@ -2505,7 +2507,7 @@ org-default-priority is treated as lower than the same set value"
   (setq use-dialog-box nil) ;; do not use popup boxes
 
   ;; if you don't want to use customize to save the api-key
-  (setq codeium/metadata/api_key (get-password :host "Codeium"))
+  (setq codeium/metadata/api_key (password-store-get "API/Codeium"))
 
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable
@@ -2546,7 +2548,7 @@ org-default-priority is treated as lower than the same set value"
   :config
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (get-password :host "OpenAI-gptel")
+         gptel-api-key (password-store-get "API/OpenAI-gptel")
          gptel-model 'gpt-4o
          gptel-log-level 'info
          ;; gptel-use-curl nil
@@ -2564,12 +2566,12 @@ org-default-priority is treated as lower than the same set value"
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (get-password :host "Claude-gptel"))
+    :key (password-store-get "API/Claude-gptel"))
   
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
-    :key (get-password :host "Perplexity-gptel")
+    :key (password-store-get "API/Perplexity-gptel")  ;; FIXME this secret does not exist..
     :endpoint "/chat/completions"
     :stream t
     :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
@@ -2621,6 +2623,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
   )
