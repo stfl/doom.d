@@ -17,32 +17,6 @@ clients, file templates and snippets.
       user-mail-address "ste.lendl@gmail.com")
 #+END_SRC
 
-function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
-
-#+BEGIN_SRC elisp
-(defun get-auth-info (host user &optional port)
-  (let ((info (nth 0 (auth-source-search
-                      :host host
-                      :user user
-                      :port port
-                      :require '(:user :secret)))))
-    (if info
-        (let ((secret (plist-get info :secret)))
-          (if (functionp secret)
-              (funcall secret)
-            secret))
-      nil)))
-#+END_SRC
-
-get-password
-
-#+begin_src elisp
-(defun get-password (&rest keys)
-  (let ((result (apply #'auth-source-search keys)))
-    (when result
-      (funcall (plist-get (car result) :secret)))))
-#+end_src
-
 ** literate config
 *** Don't auto-recompile literate-config
 :PROPERTIES:
@@ -2616,6 +2590,38 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 #+end_src
 
 * Module Settings
+** auth-sources and passwords
+
+function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
+
+#+BEGIN_SRC elisp
+(defun get-auth-info (host user &optional port)
+  (let ((info (nth 0 (auth-source-search
+                      :host host
+                      :user user
+                      :port port
+                      :require '(:user :secret)))))
+    (if info
+        (let ((secret (plist-get info :secret)))
+          (if (functionp secret)
+              (funcall secret)
+            secret))
+      nil)))
+#+END_SRC
+
+get-password
+
+#+begin_src elisp
+(defun get-password (&rest keys)
+  (let ((result (apply #'auth-source-search keys)))
+    (when result
+      (funcall (plist-get (car result) :secret)))))
+#+end_src
+
+#+begin_src elisp
+(setq! auth-sources 'password-store)
+#+end_src
+
 ** Define Word
 :PROPERTIES:
 :ID:       8ce8fe9c-bf84-469c-afcd-3e9fc5ecc167
