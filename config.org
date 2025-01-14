@@ -4032,7 +4032,7 @@ A free alternative to Github Copilot
   (setq use-dialog-box nil) ;; do not use popup boxes
 
   ;; if you don't want to use customize to save the api-key
-  (setq codeium/metadata/api_key (get-password :host "Codeium"))
+  (setq codeium/metadata/api_key (password-store-get "API/Codeium"))
 
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable
@@ -4104,12 +4104,12 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (get-password :host "Claude-gptel"))
+    :key (password-store-get "API/Claude-gptel"))
   
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
-    :key (get-password :host "Perplexity-gptel")
+    :key (password-store-get "API/Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
     :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
@@ -4182,8 +4182,8 @@ Automatically apply AI-generated code changes.
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (get-password :host "OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (get-password :host "Claude-gptel"))
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
   )
 
 #+end_src
