@@ -4109,7 +4109,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
-    :key (password-store-get "API/Perplexity-gptel")
+    :key (password-store-get "API/Perplexity-gptel")  ;; FIXME this secret does not exist..
     :endpoint "/chat/completions"
     :stream t
     :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
