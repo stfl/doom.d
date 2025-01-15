@@ -415,11 +415,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
         ))
 
 (after! org-clock
-  (setq org-clock-rounding-minutes 15  ;; Org clock should clock in and out rounded to 5 minutes.
-        org-time-stamp-rounding-minutes '(0 15)
-        org-duration-format 'h:mm  ;; format hours and don't Xd (days)
-        org-clock-report-include-clocking-task t
-        org-log-note-clock-out t))
+  (setq! org-clock-rounding-minutes 15  ;; Org clock should clock in and out rounded to 5 minutes.
+         org-time-stamp-rounding-minutes '(0 15)
+         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+         org-clock-report-include-clocking-task t
+         org-log-note-clock-out t
+         org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
+         ))
 
 (use-package org-clock-csv
   :after org
