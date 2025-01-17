@@ -2621,7 +2621,7 @@ get-password
 #+end_src
 
 #+begin_src elisp
-(setq! auth-sources 'password-store)
+;; (setq! auth-sources 'password-store)
 #+end_src
 
 ** Define Word
