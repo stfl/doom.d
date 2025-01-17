@@ -1870,7 +1870,7 @@ org-default-priority is treated as lower than the same set value"
     (when result
       (funcall (plist-get (car result) :secret)))))
 
-(setq! auth-sources 'password-store)
+;; (setq! auth-sources 'password-store)
 
 ;; (use-package! define-word
 ;;   :after org
