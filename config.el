@@ -2574,10 +2574,11 @@ org-default-priority is treated as lower than the same set value"
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
-    :key (password-store-get "API/Perplexity-gptel")  ;; FIXME this secret does not exist..
+    :key (password-store-get "API/Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
-    :models '(llama-3.1-sonar-huge-128k-online ;; 405B model
+    :models '(sonar-pro
+              ;; llama-3.1-sonar-huge-128k-online ;; 405B model
               ))
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
