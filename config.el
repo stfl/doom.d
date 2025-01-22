@@ -2546,7 +2546,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package! gptel
-  :after auth-source
+  :after password-store
   :commands (gptel gptel-menu)
   :config
   (setq! gptel-default-mode 'org-mode
