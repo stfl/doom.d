@@ -421,6 +421,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
          org-log-note-clock-out t
          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
+         org-clock-continuously t  ;; clock-in from previous clock-out time
          ))
 
 (use-package org-clock-csv
