@@ -2087,7 +2087,9 @@ org-default-priority is treated as lower than the same set value"
          lsp-rust-analyzer-display-closure-return-type-hints t
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
          lsp-rust-analyzer-display-parameter-hints t
-         lsp-rust-analyzer-hide-named-constructor t))
+         lsp-rust-analyzer-hide-named-constructor t
+         lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
+         ))
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
