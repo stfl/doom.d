@@ -6,20 +6,23 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e" "02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
+   '("88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e"
+     "02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644"
+     "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((org-time-stamp-rounding-minutes 0 15)
-     (org-clock-rounding-minutes . 15)
-     (eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook"
+   '((eval progn
+      (add-to-list 'lsp-file-watch-ignored-directories
+       "[/\\\\]\\target-docker\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\logs\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\run\\'"))
+     (org-time-stamp-rounding-minutes 0 15) (org-clock-rounding-minutes . 15)
+     (eval ignore-errors
+      "Write-contents-functions is a buffer-local alternative to before-save-hook"
       (add-hook 'write-contents-functions
-                (lambda nil
-                  (delete-trailing-whitespace)
-                  nil))
-      (require 'whitespace)
-      "Sometimes the mode needs to be toggled off and on."
-      (whitespace-mode 0)
-      (whitespace-mode 1))
+                (lambda nil (delete-trailing-whitespace) nil))
+      (require 'whitespace) "Sometimes the mode needs to be toggled off and on."
+      (whitespace-mode 0) (whitespace-mode 1))
      (whitespace-line-column . 80)
      (whitespace-style face tabs trailing lines-tail))))
 (custom-set-faces
