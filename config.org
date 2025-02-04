@@ -4118,10 +4118,10 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :key (password-store-get "API/Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
-    :models '(sonar-pro
+    :models '(sonar
+              sonar-pro
               sonar-reasoning
               sonar-reasoning-pro
-              ;; llama-3.1-sonar-huge-128k-online ;; 405B model
               ))
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
