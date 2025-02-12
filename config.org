@@ -814,7 +814,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (apply orig-fn args)))
   )
-
 #+end_src
 
 ** org-clock export to csv
