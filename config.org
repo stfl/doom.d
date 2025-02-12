@@ -802,9 +802,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
             (stfl/org-time-minutes-ago time)
             (stfl/org-time-minutes-ago-rounded time)))
 
-  (stfl/org-time-format-ago org-clock-out-time)
-
-
   (defun stfl/org-clock-in-dwin (&optional select)
     (interactive "P")
     (let ((org-clock-continuously
