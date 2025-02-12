@@ -811,7 +811,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in select)))
-  
   )
 #+end_src
 
