@@ -421,8 +421,37 @@ Org-mode properties drawer already, keep the headline and don’t insert
          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
          org-log-note-clock-out t
          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
-         org-clock-continuously t  ;; clock-in from previous clock-out time
+         org-clock-continuously nil  ;; clock-in from previous clock-out time
          ))
+
+(after! org-clock
+  (defun stfl/org-time-minutes-ago-rounded (time)
+    (/ (org-time-convert-to-integer
+        (time-subtract (org-current-time org-clock-rounding-minutes t) time))
+       60))
+
+  (defun stfl/org-time-minutes-ago (time)
+    (/ (org-time-convert-to-integer
+        (time-subtract (org-current-time) time))
+       60))
+
+  (defun stfl/org-time-format-ago (time)
+    (format "%s (-%dm) (~%dm)"
+            (format-time-string (org-time-stamp-format 'with-time t) time)
+            (stfl/org-time-minutes-ago time)
+            (stfl/org-time-minutes-ago-rounded time)))
+
+  (defvar stfl/org-clock-continous-threshold 60)
+  
+  (defun stfl/org-clock-in-dwin (&optional select)
+    (interactive "P")
+    (let ((org-clock-continuously
+           (and org-clock-out-time
+                (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                  (stfl/org-time-format-ago org-clock-out-time))))))
+      (org-clock-in select)))
+  )
 
 (use-package org-clock-csv
   :after org
@@ -2580,8 +2609,10 @@ org-default-priority is treated as lower than the same set value"
     :key (password-store-get "API/Perplexity-gptel")
     :endpoint "/chat/completions"
     :stream t
-    :models '(sonar-pro
-              ;; llama-3.1-sonar-huge-128k-online ;; 405B model
+    :models '(sonar
+              sonar-pro
+              sonar-reasoning
+              sonar-reasoning-pro
               ))
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
