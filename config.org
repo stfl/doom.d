@@ -785,6 +785,8 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
 #+begin_src elisp
 (after! org-clock
+  (setq stfl/org-clock-continous-threshold 60)
+  
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
         (time-subtract (org-current-time org-clock-rounding-minutes t) time))
@@ -809,8 +811,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in select)))
-
-  (setq stfl/org-clock-continous-threshold 60)
   
   )
 #+end_src
