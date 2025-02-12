@@ -803,7 +803,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 
   (defvar stfl/org-clock-continous-threshold 60)
   
-  (defun stfl/org-clock-in-dwin (&optional select)
+  (defun stfl/org-clock-in (&optional select)
     (interactive "P")
     (let ((org-clock-continuously
            (and org-clock-out-time
@@ -811,10 +811,15 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in select)))
+  
+  (map! :map org-mode-map
+        :localleader
+        (:prefix ("c" . "clock")
+                 "i" #'stfl/org-clock-in
+                 )
+        )
   )
 
-(map! :map org-mode-map
- )
 #+end_src
 
 ** org-clock export to csv
