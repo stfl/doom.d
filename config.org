@@ -812,6 +812,15 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in select)))
   
+  (defun stfl/org-clock-in-last (&optional select)
+    (interactive "P")
+    (let ((org-clock-continuously
+           (and org-clock-out-time
+                (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                  (stfl/org-time-format-ago org-clock-out-time))))))
+      (org-clock-in select)))
+  
   (map! :map org-mode-map
         :localleader
         (:prefix ("c" . "clock")
