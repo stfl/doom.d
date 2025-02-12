@@ -832,18 +832,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                                   (stfl/org-time-format-ago org-clock-out-time))))))
           (apply orig-fn select start-time)))
 
-  (undefadvice! stfl/org-clock-continue? orig-fn &optional select start-time)
-
-  ;; (map! :map org-mode-map
-  ;;       :localleader
-  ;;       :prefix ("c" . "clock")
-  ;;       "i" #'stfl/org-clock-in
-  ;;       "I" #'stfl/org-clock-in-last)
-  
-  ;; (map! :map org-mode-map
-  ;;       :leader
-  ;;       :prefix ("n" . "notes")
-  ;;       "c" #'stfl/org-clock-in-last)
+  ;; (undefadvice! stfl/org-clock-continue? orig-fn &optional select start-time)
   )
 
 #+end_src
