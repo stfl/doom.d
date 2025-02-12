@@ -815,9 +815,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
   (map! :map org-mode-map
         :localleader
         (:prefix ("c" . "clock")
-                 "i" #'stfl/org-clock-in
-                 )
-        )
+         "i" #'stfl/org-clock-in))
   )
 
 #+end_src
