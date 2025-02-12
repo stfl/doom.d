@@ -830,7 +830,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
-      (message "select: %d %s" select start-time)
+      (message "select: %d" (or select -1))
       (apply orig-fn select start-time)))
 
   ;; (undefadvice! stfl/org-clock-continue? orig-fn &optional select start-time)
