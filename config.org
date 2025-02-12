@@ -821,16 +821,16 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in-last arg)))
 
-  (defadvice! stfl/org-clock-continue? (&optional arg)
+  (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
-    :before #'org-clock-in
+    :around #'org-clock-in
     (interactive "P")
-    (and org-clock-out-time
-         (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-         (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                           (stfl/org-time-format-ago org-clock-out-time)))))
-
-  (defadvice! stfl/)
+    (let ((org-clock-continuously
+           (and org-clock-out-time
+                (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                  (stfl/org-time-format-ago org-clock-out-time)))))
+          (apply orig-fn args))))
 
   (map! :map org-mode-map
         :localleader
