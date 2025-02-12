@@ -820,11 +820,18 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
       (org-clock-in-last arg)))
+
   
   (map! :map org-mode-map
         :localleader
-        (:prefix ("c" . "clock")
-         "i" #'stfl/org-clock-in))
+        :prefix ("c" . "clock")
+        "i" #'stfl/org-clock-in
+        "I" #'stfl/org-clock-in-last)
+  
+  (map! :map org-mode-map
+        :leader
+        :prefix ("n" . "notes")
+        "c" #'stfl/org-clock-in-last)
   )
 
 #+end_src
