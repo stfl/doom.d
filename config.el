@@ -421,10 +421,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
          org-log-note-clock-out t
          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
-         org-clock-continuously nil  ;; clock-in from previous clock-out time
          ))
 
 (after! org-clock
+  (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
+  (defvar stfl/org-clock-continous-threshold 60)
+  
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
         (time-subtract (org-current-time org-clock-rounding-minutes t) time))
@@ -441,16 +443,16 @@ Org-mode properties drawer already, keep the headline and don’t insert
             (stfl/org-time-minutes-ago time)
             (stfl/org-time-minutes-ago-rounded time)))
 
-  (defvar stfl/org-clock-continous-threshold 60)
-  
-  (defun stfl/org-clock-in-dwin (&optional select)
-    (interactive "P")
+  (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
+    "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
+    :around #'org-clock-in
+    (interactive)
     (let ((org-clock-continuously
            (and org-clock-out-time
-                (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                  (stfl/org-time-format-ago org-clock-out-time))))))
-      (org-clock-in select)))
+                (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                    (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                      (stfl/org-time-format-ago org-clock-out-time)))))))
+      (apply orig-fn args)))
   )
 
 (use-package org-clock-csv
