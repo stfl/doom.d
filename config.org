@@ -787,8 +787,7 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 (after! org-clock
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
-        (time-subtract (org-current-time org-clock-rounding-minutes t)
-                       time))
+        (time-subtract (org-current-time org-clock-rounding-minutes t) time))
        60))
 
   (defun stfl/org-time-minutes-ago (time)
