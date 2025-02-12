@@ -802,24 +802,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
             (stfl/org-time-minutes-ago-rounded time)))
 
   (defvar stfl/org-clock-continous-threshold 60)
-  
-  ;; (defun stfl/org-clock-in (&optional select)
-  ;;   (interactive "P")
-  ;;   (let ((org-clock-continuously
-  ;;          (and org-clock-out-time
-  ;;               (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-  ;;               (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-  ;;                                 (stfl/org-time-format-ago org-clock-out-time))))))
-  ;;     (org-clock-in select)))
-  
-  ;; (defun stfl/org-clock-in-last (&optional arg)
-  ;;   (interactive "P")
-  ;;   (let ((org-clock-continuously
-  ;;          (and org-clock-out-time
-  ;;               (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-  ;;               (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-  ;;                                 (stfl/org-time-format-ago org-clock-out-time))))))
-  ;;     (org-clock-in-last arg)))
 
   (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
@@ -830,7 +812,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
                 (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                 (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                   (stfl/org-time-format-ago org-clock-out-time))))))
-      (message "select: %d" (or select -1))
       (apply orig-fn args)))
 
   ;; (undefadvice! stfl/org-clock-continue? orig-fn &optional select start-time)
