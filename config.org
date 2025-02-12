@@ -822,6 +822,8 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
       (org-clock-in-last arg)))
 
   (defadvice! stfl/org-clock-continue? (&optional arg)
+    "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
+    :before #'org-clock-in
     (interactive "P")
     (and org-clock-out-time
          (> (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
