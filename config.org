@@ -779,12 +779,14 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
          org-log-note-clock-out t
          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
-         org-clock-continuously nil  ;; clock-in from previous clock-out time
          ))
 #+end_src
 
 #+begin_src elisp
 (after! org-clock
+  (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
+  (defvar stfl/org-clock-continous-threshold 60)
+  
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
         (time-subtract (org-current-time org-clock-rounding-minutes t) time))
@@ -800,8 +802,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
             (format-time-string (org-time-stamp-format 'with-time t) time)
             (stfl/org-time-minutes-ago time)
             (stfl/org-time-minutes-ago-rounded time)))
-
-  (defvar stfl/org-clock-continous-threshold 60)
 
   (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
