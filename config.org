@@ -4193,6 +4193,15 @@ Reply concisely. Wrap source code in a ```cpp block.")
   )
 #+end_src
 
+#+begin_src elisp
+(after! gptel
+  (defadvice! +gptel--rename-buffer ()
+    "rename gptel buffers to a *gptel prefix"
+    :filter-return #'gptel
+    (unless (string-prefix-p "*gptel" (buffer-name))
+      (rename-buffer (generate-new-buffer-name (concat "*gptel " (buffer-name))) t))))
+#+end_src
+
 ** Elysium
 
 Automatically apply AI-generated code changes.
