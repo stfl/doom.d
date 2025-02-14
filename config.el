@@ -2650,6 +2650,15 @@ Reply concisely. Wrap source code in a ```cpp block.")
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
 
+;; (after! gptel
+;;   (defadvice! +gptel--rename-buffer (&rest args)
+;;     "rename gptel buffers to a *gptel prefix"
+;;     :filter-return #'gptel
+;;         (unless (string-prefix-p "*gptel" (buffer-name))
+;;           (rename-buffer (generate-new-buffer-name (concat "*gptel " (buffer-name))) t)
+;;           (message "renamed gptel buffer to %s" (buffer-name))))
+;;   )
+
 (use-package! elysium
   :after gptel
   :commands elysium
