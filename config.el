@@ -1993,6 +1993,8 @@ org-default-priority is treated as lower than the same set value"
 (after! org-tempo
   (add-to-list 'org-structure-template-alist '("y" . "src typst")))
 
+(add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
+
 (map! :leader ":" #'ielm)
 
 (use-package! lsp-treemacs
@@ -2620,6 +2622,7 @@ org-default-priority is treated as lower than the same set value"
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+      ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
       ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
   
   (setf (alist-get 'perplexity gptel-directives) "You are Perplxity, a helpful search assistant, living in Emacs.
