@@ -2827,7 +2827,7 @@ use bash when opening a vterm in a tramp dir:
 ** systemd units as conf-mode
 
 #+begin_src elisp
-(add-to-list 'auto-mode-alist '("\\.service\\'" . conf-my-mode))
+(add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 #+end_src
 
 * Coding
