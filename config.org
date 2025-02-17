@@ -2824,6 +2824,11 @@ use bash when opening a vterm in a tramp dir:
 (package! pdf-tools :built-in 'prefer)
 #+end_src
 
+** systemd units as conf-mode
+
+#+begin_src elisp
+#+end_src
+
 * Coding
 ** ielm REPL
 
