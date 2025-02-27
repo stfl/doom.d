@@ -114,14 +114,14 @@
 
 (custom-set-faces!
   '(adoc-code-face :inherit org-block)
-  '(adoc-complex-replacement-face :inherit org-code :bold t)
+  '(adoc-complex-replacement-face :inherit org-code :weight 'bold)
   '(adoc-meta-face :inherit org-meta-line)
   '(adoc-typewriter-face :inherit org-code)
   '(adoc-verbatim-face :inherit org-verbatim)
   '(adoc-internal-reference-face :inherit org-link)
   '(adoc-reference-face :inherit org-link)
   `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-  '(adoc-bold-face :bold t)
+  '(adoc-bold-face :weight 'bold)
   `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
   '(adoc-warning-face :inherit org-warning))
 
@@ -446,13 +446,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
     :around #'org-clock-in
-    (interactive)
+    (interactive "P")
     (let ((org-clock-continuously
-           (and org-clock-out-time
-                (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                    (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                      (stfl/org-time-format-ago org-clock-out-time)))))))
-      (apply orig-fn args)))
+           (or (org-clocking-p)
+               (and org-clock-out-time
+                    (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                        (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                          (stfl/org-time-format-ago org-clock-out-time))))))))
+          (apply orig-fn args)))
   )
 
 (use-package org-clock-csv
@@ -619,7 +620,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org
   (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
                          ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         ("SOMEDAY" . (:slant italic :bold t))
+                         ("SOMEDAY" . (:slant 'italic :weight 'bold))
                          ;; ("finance" . (:foreground "goldenrod"))
                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
                          ("#inbox" . (:strike-through t))
