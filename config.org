@@ -4136,6 +4136,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (password-store-get "API/OpenAI-gptel")
          gptel-model 'gpt-4o
+         ;; 'gpt-4.5-preview
          gptel-log-level 'info
          ;; gptel-use-curl nil
          gptel-use-curl t
