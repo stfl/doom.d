@@ -3879,7 +3879,9 @@ forcing text comparison even if diff thinks files are binary
         ediff-toggle-skip-similar t
         ediff-diff-options "-w"
         ;; ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally))
+        ediff-split-window-function 'split-window-horizontally
+        ediff-floating-control-frame t
+        ))
 
 #+end_src
 
