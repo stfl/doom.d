@@ -2408,7 +2408,9 @@ org-default-priority is treated as lower than the same set value"
         ediff-toggle-skip-similar t
         ediff-diff-options "-w"
         ;; ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally))
+        ediff-split-window-function 'split-window-horizontally
+        ediff-floating-control-frame t
+        ))
 
 (use-package! diffview
   :commands diffview-current
@@ -2590,6 +2592,7 @@ org-default-priority is treated as lower than the same set value"
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (password-store-get "API/OpenAI-gptel")
          gptel-model 'gpt-4o
+         ;; 'gpt-4.5-preview
          gptel-log-level 'info
          ;; gptel-use-curl nil
          gptel-use-curl t
@@ -2608,18 +2611,25 @@ org-default-priority is treated as lower than the same set value"
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Claude-gptel"))
   
+  
+  (gptel-make-perplexity "Perplexity"          ;Any name you want
+    :stream t                             ;Streaming responses
+    :key (password-store-get "API/Perplexity-gptel"))
+    
   ;; Perplexity offers an OpenAI compatible API
-  (gptel-make-openai "Perplexity"         ;Any name you want
-    :host "api.perplexity.ai"
-    :key (password-store-get "API/Perplexity-gptel")
-    :endpoint "/chat/completions"
-    :stream t
-    :models '(sonar
-              sonar-pro
-              sonar-reasoning
-              sonar-reasoning-pro
-              ))
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
+  ;; (gptel-make-openai "Perplexity"         ;Any name you want
+  ;;   :host "api.perplexity.ai"
+  ;;   :key (password-store-get "API/Perplexity-gptel")
+  ;;   :endpoint "/chat/completions"
+  ;;   :stream t
+  ;;   :models '(sonar
+  ;;             sonar-pro
+  ;;             sonar-reasoning
+  ;;             sonar-reasoning-pro
+  ;;             sonar-deep-research	
+  ;;             r1-1776	
+  ;;             ))
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
