@@ -4160,6 +4160,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :key (password-store-get "API/Perplexity-gptel"))
     
   ;; Perplexity offers an OpenAI compatible API
+  ;; NOTE https://docs.perplexity.ai/guides/model-cards
   ;; (gptel-make-openai "Perplexity"         ;Any name you want
   ;;   :host "api.perplexity.ai"
   ;;   :key (password-store-get "API/Perplexity-gptel")
@@ -4172,7 +4173,6 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;;             sonar-deep-research	
   ;;             r1-1776	
   ;;             ))
-  ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
   (set-popup-rules!
     '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
