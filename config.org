@@ -4154,6 +4154,11 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Claude-gptel"))
   
+  
+  (gptel-make-perplexity "Perplexity"          ;Any name you want
+    :stream t                             ;Streaming responses
+    :key (password-store-get "API/Perplexity-gptel"))
+    
   ;; Perplexity offers an OpenAI compatible API
   (gptel-make-openai "Perplexity"         ;Any name you want
     :host "api.perplexity.ai"
