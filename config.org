@@ -4164,6 +4164,8 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
               sonar-pro
               sonar-reasoning
               sonar-reasoning-pro
+              sonar-deep-research	
+              r1-1776	
               ))
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
 
