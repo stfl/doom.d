@@ -3932,8 +3932,8 @@ git blame lenses
 
 #+begin_src elisp
 (map!
- "C-c a" #'aidermacs-transient-menu)
-:leader
+      "C-c a" #'aidermacs-transient-menu)
+      :leader
       (:prefix ("j" . "AI")
        "m" #'gptel-menu
        "j" #'gptel
