@@ -4271,7 +4271,6 @@ Automatically apply AI-generated code changes.
     :recipe (:host github
              :repo "MatthewZMD/aidermacs"
              :files ("*.el")))
-
 #+end_src
 
 #+begin_src elisp
