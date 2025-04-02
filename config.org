@@ -4273,7 +4273,6 @@ Automatically apply AI-generated code changes.
 
 ** Aidermacs
 
-
 #+begin_src elisp :tangle packages.el
 (package! aidermacs
     :recipe (:host github
