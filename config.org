@@ -4280,8 +4280,8 @@ Automatically apply AI-generated code changes.
   (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet")
-  
-  :bind (("C-c a" . aidermacs-transient-menu))
+  (map!
+   "C-c a" #'aidermacs-transient-menu)
   )
 #+end_src
 
