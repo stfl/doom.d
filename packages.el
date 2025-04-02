@@ -121,4 +121,7 @@
            :repo "tninja/aider.el"
            :files ("*.el")))
 
-(package! aidermacs)
+(package! aidermacs
+    :recipe (:host github
+             :repo "MatthewZMD/aidermacs"
+             :files ("*.el")))
