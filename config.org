@@ -129,6 +129,12 @@ If the line is already correctly indented, try to complete.
 (setq! tab-always-indent 'complete)
 #+end_src
 
+#+begin_src elisp
+(after! evil-escape
+  (setq evil-escape-key-sequence "jk"))
+#+end_src
+        
+
 * Theme
 ** doom-theme
 :PROPERTIES:
