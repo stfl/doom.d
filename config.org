@@ -4274,8 +4274,8 @@ Automatically apply AI-generated code changes.
 (use-package! aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
   :config
-  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
-  (setenv "ANTHROPIC_API_KEY" "sk-...")
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
   ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
   (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   :custom
