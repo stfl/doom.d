@@ -2682,10 +2682,23 @@ Reply concisely. Wrap source code in a ```cpp block.")
    )
 
 (use-package! aider
-  :after auth-source
+  :after password-store
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+  )
+
+(use-package! aidermacs
+  :after password-store
+  :config
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
+  (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
+  (setq! aidermacs-use-architect-mode t
+         aidermacs-default-model "sonnet")
+  (map!
+   "C-c a" #'aidermacs-transient-menu)
   )
