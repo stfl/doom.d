@@ -4253,7 +4253,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aider
-  :after auth-source
+  :after password-store
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
@@ -4272,7 +4272,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aidermacs
-  :after auth-source
+  :after password-store
   :config
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
