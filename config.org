@@ -3973,7 +3973,7 @@ git blame lenses
         ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
         "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
         "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-        ))
+        )))
 #+end_src
 
 ** Copilot
