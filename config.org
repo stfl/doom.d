@@ -4267,7 +4267,7 @@ Automatically apply AI-generated code changes.
 
 
 #+begin_src elisp :tangle packages.el
-(package! aidermacs )
+(package! aidermacs)
 #+end_src
 
 (use-package aidermacs
