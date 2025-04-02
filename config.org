@@ -133,7 +133,6 @@ If the line is already correctly indented, try to complete.
 (after! evil-escape
   (setq evil-escape-key-sequence "jk"))
 #+end_src
-        
 
 * Theme
 ** doom-theme
