@@ -4270,7 +4270,8 @@ Automatically apply AI-generated code changes.
 (package! aidermacs)
 #+end_src
 
-(use-package aidermacs
+#+begin_src elisp
+(use-package! aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
   :config
   ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
@@ -4281,4 +4282,5 @@ Automatically apply AI-generated code changes.
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
   (aidermacs-default-model "sonnet"))
+#+end_src
 
