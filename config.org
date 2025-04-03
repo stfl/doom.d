@@ -4300,7 +4300,8 @@ Automatically apply AI-generated code changes.
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
-         aidermacs-default-model "sonnet")
+         aidermacs-default-model "sonnet"
+         aidermacs-backend 'vterm)
   )
 #+end_src
 
