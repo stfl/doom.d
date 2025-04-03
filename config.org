@@ -427,7 +427,7 @@ Make the indent guides a little brighter to be more visible in doom-one dark the
 ** tab-width
 
 #+begin_src elisp
-(setq! tab-width 3)
+(setq! tab-width 4)
 #+end_src
 
 * [#D] Org mode settings
