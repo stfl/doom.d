@@ -48,6 +48,7 @@
                                         ; (:cond ((unless (string= system-name "stefan-t3600")
        indent-guides     ; highlighted indent columns
                                         ; )))
+       (smooth-scroll)     ; smooth scrolling
        ;; minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
@@ -69,7 +70,6 @@
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
-       (smooth-scroll)     ; smooth scrolling
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
