@@ -3135,21 +3135,25 @@ Disable formatting with lsp
 
 #+begin_src elisp
 (use-package! kubernetes
+  :disabled
   :commands (kubernetes-overview))
 #+end_src
 
 #+begin_src elisp
 (use-package! kubernetes-evil
+  :disabled
   :after kubernetes)
 #+end_src
 
 #+begin_src elisp
 (use-package! kubernetes-helm
+  :disabled
   :commands kubernetes-helm-status)
 #+end_src
 
 #+begin_src elisp
 (use-package! k8s-mode
+  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 #+end_src
