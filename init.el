@@ -125,7 +125,9 @@
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets         ; ...or in Dash docsets locally
-        +dictionary)
+        +dictionary
+        +offline
+        )
        ;; +offline)
        (lsp +peek)
        ;;macos             ; MacOS-specific commands
