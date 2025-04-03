@@ -3190,6 +3190,7 @@ EDBI has some dependencies has some dependencies
 
 #+begin_src elisp
 (use-package! edbi
+  :disabled
   :commands 'edbi:open-db-viewer
   )
 #+end_src
@@ -3197,6 +3198,7 @@ EDBI has some dependencies has some dependencies
 #+begin_src elisp
 
 (use-package! edbi-minor-mode
+  :disabled
   :after sql-mode
   :hook sql-mode-hook
   )
@@ -3216,6 +3218,7 @@ small exercises. The exercises can can be solved locally.
 
 #+begin_src elisp
 (use-package! exercism-mode
+  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
