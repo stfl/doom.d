@@ -104,7 +104,10 @@
 
        :checkers
        (syntax              ; tasing you for every semicolon you forget
-        +childframe)
+        +childframe
+        +flymake
+        +icons
+        )
        ;; (spell             ; tasing you for misspelling mispelling
        ;;  +aspell
        ;;  +enchant
