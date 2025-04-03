@@ -201,9 +201,9 @@
         ;; +present      ; using org-mode for presentations
         )
        ;; raku              ; write code no one else can comprehend
-       ;; (php                ; perl's insecure younger brother
-       ;;  +lsp
-       ;;  +tree-sitter)
+       (php                ; perl's insecure younger brother
+        +lsp
+        +tree-sitter)
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
