@@ -76,7 +76,9 @@
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        (format          ; automated prettiness
-        +onsave)
+        +onsave
+        +lsp
+        )
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -89,7 +91,7 @@
        :emacs
        (dired             ; making dired pretty [functional]
         +icons
-        +dirvish         ; ranger-like interface
+        ;; +dirvish         ; ranger-like interface
         )
        ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
