@@ -4307,7 +4307,7 @@ Automatically apply AI-generated code changes.
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
          aidermacs-architect-model "gemini"
-         aidermacs-weak-model ""
+         ;; aidermacs-weak-model ""
          aidermacs-backend 'vterm
          aidermacs-watch-files t)
   )
