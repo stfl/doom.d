@@ -4298,7 +4298,7 @@ Automatically apply AI-generated code changes.
   :config
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-  (setenv "GEMINI_API_KEY" (password-store-get "API/"))
+  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
