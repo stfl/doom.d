@@ -236,10 +236,10 @@
 
        :email
        ;; (mu4e +gmail +org)
-       (notmuch
-        +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
-        +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
-        )
+       ;; (notmuch
+       ;;  +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
+       ;;  +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
+       ;;  )
        ;;(wanderlust +gmail)
 
        :app
