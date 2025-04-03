@@ -2438,7 +2438,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (map!
-      "C-c a" #'aidermacs-transient-menu)
+      ;; "C-c a" #'aidermacs-transient-menu
       :leader
       (:prefix ("j" . "AI")
        "m" #'gptel-menu
@@ -2451,7 +2451,8 @@ org-default-priority is treated as lower than the same set value"
        "t" #'gptel-org-set-topic
        "P" #'gptel-org-set-properties
        
-       "a" #'aider-transient-menu
+       "a" #'aidermacs-transient-menu
+       ;; "a" #'aider-transient-menu
        
        "e" #'elysium-query
        
@@ -2473,7 +2474,7 @@ org-default-priority is treated as lower than the same set value"
         ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
         "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
         "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-        ))
+        )))
 
 
 
@@ -2701,8 +2702,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :config
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
-  (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
+  ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet")
   )
