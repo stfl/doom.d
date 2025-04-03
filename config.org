@@ -374,6 +374,7 @@ There is more fine grained face control for search based on tags :
 #+begin_src elisp
 ;; (after! (solaire-mode demap)
 (use-package! demap
+  :enable false
   :commands demap-toggle
   :config
   (setq demap-minimap-window-width 15)
