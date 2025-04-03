@@ -4308,7 +4308,8 @@ Automatically apply AI-generated code changes.
          aidermacs-default-model "sonnet"
          aidermacs-architect-model "gemini"
          aidermacs-weak-model "haiku"
-         aidermacs-backend 'vterm
+         ;; aidermacs-backend 'vterm
+         aidermacs-backend 'comint
          aidermacs-watch-files t)
   )
 #+end_src
