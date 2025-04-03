@@ -3634,7 +3634,7 @@ Use the (almost) default keybindings in evil normal-mode
 
 This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+BEGIN_SRC elisp
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 #+END_SRC
 
 *** Enable granular diff-highlights for all hunks
