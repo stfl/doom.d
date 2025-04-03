@@ -4143,7 +4143,7 @@ A free alternative to Github Copilot
 
 If get-password does not reply a proper key.. manually clear the auth-source cache with:
 #+begin_src elisp :tangle no :results silent
-(auth-source-forget-all-cached)
+;; (auth-source-forget-all-cached)
 #+end_src
 
 #+begin_src elisp
