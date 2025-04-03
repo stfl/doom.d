@@ -61,7 +61,6 @@
        ;;  )
        ;; +fira)
        ;; tabs              ; an tab bar for Emacs
-       (smooth-scroll)     ; smooth scrolling
        (treemacs          ; a project drawer, like neotree but cooler
         +lsp)            ; lsp-treemacs
        unicode           ; extended unicode support for various languages
@@ -70,6 +69,7 @@
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
+       (smooth-scroll)     ; smooth scrolling
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
