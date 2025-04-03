@@ -108,7 +108,7 @@
        :checkers
        (syntax              ; tasing you for every semicolon you forget
         +childframe
-        +flymake
+        ;; +flymake
         +icons)
        ;; (spell             ; tasing you for misspelling mispelling
        ;;  +aspell
