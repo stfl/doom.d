@@ -88,8 +88,9 @@
 
        :emacs
        (dired             ; making dired pretty [functional]
-        +icons)
-       ;; +ranger)
+        +icons
+        +dirvish         ; ranger-like interface
+        )
        ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
