@@ -180,7 +180,7 @@
        ;; (lua               ; one-based indices? one-based indices
        ;;  +lsp
        ;;  +fennel)
-       (markdown +grip)          ; writing docs for people to ignore
+       (markdown)          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        (nix               ; I hereby declare "nix geht mehr!"
         +tree-sitter
