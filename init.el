@@ -61,6 +61,7 @@
        ;;  )
        ;; +fira)
        ;; tabs              ; an tab bar for Emacs
+       (smooth-scroll)     ; smooth scrolling
        (treemacs          ; a project drawer, like neotree but cooler
         +lsp)            ; lsp-treemacs
        unicode           ; extended unicode support for various languages
