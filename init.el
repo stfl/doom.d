@@ -106,8 +106,7 @@
        (syntax              ; tasing you for every semicolon you forget
         +childframe
         +flymake
-        +icons
-        )
+        +icons)
        ;; (spell             ; tasing you for misspelling mispelling
        ;;  +aspell
        ;;  +enchant
