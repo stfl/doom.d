@@ -2153,15 +2153,19 @@ org-default-priority is treated as lower than the same set value"
 ;;   (gitlab-ci-mode-flycheck-enable))
 
 (use-package! kubernetes
+  :disabled
   :commands (kubernetes-overview))
 
 (use-package! kubernetes-evil
+  :disabled
   :after kubernetes)
 
 (use-package! kubernetes-helm
+  :disabled
   :commands kubernetes-helm-status)
 
 (use-package! k8s-mode
+  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 
@@ -2170,16 +2174,19 @@ org-default-priority is treated as lower than the same set value"
 )
 
 (use-package! edbi
+  :disabled
   :commands 'edbi:open-db-viewer
   )
 
 (use-package! edbi-minor-mode
+  :disabled
   :after sql-mode
   :hook sql-mode-hook
   )
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
 (use-package! exercism-mode
+  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -2199,6 +2206,7 @@ org-default-priority is treated as lower than the same set value"
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
 (use-package! logview
+  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -2264,6 +2272,7 @@ org-default-priority is treated as lower than the same set value"
 ;;         :n "l" #'gtest-list))
 
 (use-package! turbo-log
+  :disabled
   :after prog-mode
   :config
   (map! :leader
@@ -2279,7 +2288,9 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package just-mode)
 
-(use-package justl)
+(use-package justl
+  :disabled
+  )
   ;; :config
   ;; (map! :n "e" 'justl-exec-recipe))
 
