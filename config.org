@@ -4234,6 +4234,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! elysium
+  :disabled
   :after gptel
   :commands elysium
   :config
@@ -4253,6 +4254,7 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aider
+  :disabled
   :after password-store
   :commands (aider aider-transient-menu)
   :config
