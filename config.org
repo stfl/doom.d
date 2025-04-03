@@ -4169,6 +4169,9 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
+
+  (gptel-make-gemini "Gemini" :stream t
+    :key (password-store-get "API/Gemini-emacs"))
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
