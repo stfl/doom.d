@@ -3618,7 +3618,9 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(use-package justl)
+(use-package justl
+  :disabled
+  )
   ;; :config
   ;; (map! :n "e" 'justl-exec-recipe))
 #+end_src
