@@ -205,9 +205,7 @@
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 
-(pixel-scroll-precision-mode)
-
-(setq! tab-width 8)
+(setq! tab-width 4)
 
 (setq org-directory "~/.org")
 
@@ -2119,14 +2117,15 @@ org-default-priority is treated as lower than the same set value"
                                    :name "Python :: Run pytest (at point)")))
 
 (after! lsp-rust
-  (setq! lsp-rust-analyzer-binding-mode-hints t
-         lsp-rust-analyzer-display-chaining-hints t
-         lsp-rust-analyzer-display-closure-return-type-hints t
-         lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
-         lsp-rust-analyzer-display-parameter-hints t
-         lsp-rust-analyzer-hide-named-constructor t
-         lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
-         ))
+  ;; (setq! lsp-rust-analyzer-binding-mode-hints t
+  ;;        lsp-rust-analyzer-display-chaining-hints t
+  ;;        lsp-rust-analyzer-display-closure-return-type-hints t
+  ;;        lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+  ;;        lsp-rust-analyzer-display-parameter-hints t
+  ;;        lsp-rust-analyzer-hide-named-constructor t
+  ;;        lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
+  ;;        )
+  )
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
@@ -2284,9 +2283,11 @@ org-default-priority is treated as lower than the same set value"
   ;; :config
   ;; (map! :n "e" 'justl-exec-recipe))
 
-(use-package! ztree)
+(use-package! ztree
+  :disabled
+  )
 
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
 (after! magit
   (setq magit-diff-refine-hunk 'all))
@@ -2301,6 +2302,7 @@ org-default-priority is treated as lower than the same set value"
                       ("Updated" 10 t nill updated nil))))
 
 (use-package! magit-todos
+  :disabled
   :after magit
   :config
   (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
@@ -2416,6 +2418,7 @@ org-default-priority is treated as lower than the same set value"
         ))
 
 (use-package! diffview
+  :disabled
   :commands diffview-current
   :config
   (map!
@@ -2423,6 +2426,7 @@ org-default-priority is treated as lower than the same set value"
    :localleader "d" #'diffview-current))
 
 (use-package! blamer
+  :disabled
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
@@ -2680,6 +2684,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
 ;;   )
 
 (use-package! elysium
+  :disabled
   :after gptel
   :commands elysium
   :config
@@ -2688,6 +2693,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
    )
 
 (use-package! aider
+  :disabled
   :after password-store
   :commands (aider aider-transient-menu)
   :config
