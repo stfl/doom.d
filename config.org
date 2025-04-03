@@ -3262,6 +3262,7 @@ This will be the default in Emacs 30 (if I remember correctly)
 
 #+begin_src elisp
 (use-package! logview
+  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -3587,6 +3588,7 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (use-package! turbo-log
+  :disabled
   :after prog-mode
   :config
   (map! :leader
