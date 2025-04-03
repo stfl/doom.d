@@ -210,7 +210,7 @@
         +pyenv
         +poetry
         +lsp
-        +pyright
+        ;; +pyright
         ;; +conda
         +tree-sitter)
        ;;qt                ; the 'cutest' gui framework ever
