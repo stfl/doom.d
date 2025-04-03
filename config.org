@@ -3913,6 +3913,7 @@ git blame lenses
 
 #+begin_src elisp
 (use-package! blamer
+  :disabled
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
