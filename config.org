@@ -4046,7 +4046,7 @@ git blame lenses
 (use-package copilot-chat
   :after org
   :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
-  :config (setq! copilot-chat-model "claude-3.5-sonnet"
+  :config (setq! copilot-chat-model "claude-3.7-sonnet"
                  copilot-chat-frontend 'org)
   
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
