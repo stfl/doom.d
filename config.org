@@ -4026,6 +4026,7 @@ git blame lenses
         )
   
   (setq copilot-indent-offset-warning-disable t)
+  (setq copilot-max-char-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
   )
 #+end_src
