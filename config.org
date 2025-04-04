@@ -4025,9 +4025,10 @@ git blame lenses
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         )
   
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  
   (setq! copilot-indent-offset-warning-disable t
          copilot-max-char-warning-disable t)
-  (add-to-list 'copilot-indentation-alist '(org-mode 2))
   )
 #+end_src
 
