@@ -2520,8 +2520,10 @@ org-default-priority is treated as lower than the same set value"
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         )
   
-  (setq copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  
+  (setq! copilot-indent-offset-warning-disable t
+         copilot-max-char-warning-disable t)
   )
 
 (use-package copilot-chat
