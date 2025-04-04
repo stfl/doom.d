@@ -2518,7 +2518,11 @@ org-default-priority is treated as lower than the same set value"
         ;; :i "C-<tab>" #'copilot-next-completion
         "C-S-p" #'copilot-previouse-completion
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
-        ))
+        )
+  
+  (setq copilot-indent-offset-warning-disable t)
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  )
 
 (use-package copilot-chat
   :after org
@@ -2612,7 +2616,8 @@ org-default-priority is treated as lower than the same set value"
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (password-store-get "API/OpenAI-gptel")
-         gptel-model 'gpt-4o
+         ;; gptel-model 'gpt-4o
+         gptel-model 'gemini-pro
          ;; 'gpt-4.5-preview
          gptel-log-level 'info
          ;; gptel-use-curl nil
@@ -2627,6 +2632,9 @@ org-default-priority is treated as lower than the same set value"
   
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
+
+  (gptel-make-gemini "Gemini" :stream t
+    :key (password-store-get "API/Gemini-emacs"))
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
@@ -2719,7 +2727,13 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :config
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
-         aidermacs-default-model "sonnet")
+         aidermacs-default-model "sonnet"
+         aidermacs-architect-model "gemini"
+         aidermacs-weak-model "haiku"
+         ;; aidermacs-backend 'vterm
+         aidermacs-backend 'comint
+         aidermacs-watch-files t)
   )
