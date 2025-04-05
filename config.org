@@ -2625,6 +2625,12 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
   )
 #+end_src
 
+** org-checkbox
+
+#+begin_src elisp
+
+#+end_src
+
 * Module Settings
 ** auth-sources and passwords
 
