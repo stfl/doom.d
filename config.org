@@ -2627,8 +2627,8 @@ With the following view I list all open NEXT Actions with the :LASTMILE: tag.
 
 ** org-checkbox
 
-#+begin_src elisp
-
+#+begin_src elisp :tangle packages.el
+(package! org-repeat)
 #+end_src
 
 * Module Settings
