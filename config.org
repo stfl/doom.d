@@ -2913,6 +2913,8 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 ** Code Formatting
 
+
+
 mapping doom's ~+format/buffer~ and ~+format/region~
 
 #+begin_src elisp
@@ -3099,7 +3101,7 @@ set alejandra as the formatter
 Disable formatting with lsp
 
 #+begin_src elisp
-(setq-hook! 'nix-mode-hook +format-with-lsp nil)
+(setq-hook! 'nix-mode-hook +format-with-lsp t)
 #+end_src
 
 ** MQL
