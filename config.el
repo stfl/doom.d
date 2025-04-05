@@ -1886,6 +1886,9 @@ org-default-priority is treated as lower than the same set value"
                ))
   )
 
+(after! org-contrib
+  (require 'org-checklist))
+
 (defun get-auth-info (host user &optional port)
   (let ((info (nth 0 (auth-source-search
                       :host host
@@ -2529,7 +2532,7 @@ org-default-priority is treated as lower than the same set value"
 (use-package copilot-chat
   :after org
   :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
-  :config (setq! copilot-chat-model "claude-3.5-sonnet"
+  :config (setq! copilot-chat-model "claude-3.7-sonnet"
                  copilot-chat-frontend 'org)
   
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
