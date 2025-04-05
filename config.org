@@ -4315,9 +4315,6 @@ Automatically apply AI-generated code changes.
   :after password-store
   :commands (aidermacs-transient-menu)
   :config
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
@@ -4326,6 +4323,14 @@ Automatically apply AI-generated code changes.
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t)
+
+  (add-hook 'aidermacs-before-run-backend-hook
+          (lambda ()
+            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+            ))
+
   )
 #+end_src
 
