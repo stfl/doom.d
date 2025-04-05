@@ -35,25 +35,23 @@
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 
-(package! pdf-tools :built-in 'prefer)
-
 ;; (package! numpydoc)
 
-(package! kubernetes)
-(package! kubernetes-evil)
-(package! kubernetes-helm)
-(package! k8s-mode)
+(package! kubernetes :disable t)
+(package! kubernetes-evil :disable t)
+(package! kubernetes-helm :disable t)
+(package! k8s-mode :disable t)
 
 (package! sql-indent)
 
-(package! edbi)
-(package! edbi-minor-mode)
+(package! edbi :disable t)
+(package! edbi-minor-mode :disable t)
 
-(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode"))
+(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode") :disable t)
 
 (package! jest)
 
-(package! logview)
+(package! logview :disable t)
 
 (package! lsp-ltex
   :disable t
@@ -74,29 +72,31 @@
 ;;            ;; :files ("*.el")
 ;;            ))
 
-(package! meson-mode)
+(package! meson-mode :disable t)
 
 ;; (package! gtest-mode
 ;;   :recipe (:host github
 ;;            :repo "ppatoria/elisp"
 ;;            :files ("gtest-mode/*.el")))
 
-(package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
+(package! turbo-log :recipe (:host github :repo "artawower/turbo-log")
+  :disable t
+   )
 
 (package! just-mode)
 
-(package! justl :recipe (:host github :repo "psibi/justl.el"))
+(package! justl :recipe (:host github :repo "psibi/justl.el") :disable t)
 
-(package! ztree)
+(package! ztree :disable t)
 
-(package! magit-todos)
+(package! magit-todos :disable t)
 
 ;; (package! mailscripts.el
 ;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
 
-(package! diffview)
+(package! diffview :disable t)
 
-(package! blamer)
+(package! blamer :disable t)
 
 (package! copilot
   :recipe (:host github
@@ -110,16 +110,18 @@
 
 (package! codeium
   :recipe (:host github
-           :repo "Exafunction/codeium.el"))
+           :repo "Exafunction/codeium.el")
+  :disable t)
 
 (package! gptel)
 
-(package! elysium)
+(package! elysium :disable t)
 
 (package! aider
   :recipe (:host github
            :repo "tninja/aider.el"
-           :files ("*.el")))
+           :files ("*.el"))
+  :disable t)
 
 (package! aidermacs
     :recipe (:host github

@@ -3142,33 +3142,29 @@ Disable formatting with lsp
 
 
 #+begin_src elisp :tangle packages.el
-(package! kubernetes)
-(package! kubernetes-evil)
-(package! kubernetes-helm)
-(package! k8s-mode)
+(package! kubernetes :disable t)
+(package! kubernetes-evil :disable t)
+(package! kubernetes-helm :disable t)
+(package! k8s-mode :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! kubernetes
-  :disabled
   :commands (kubernetes-overview))
 #+end_src
 
 #+begin_src elisp
 (use-package! kubernetes-evil
-  :disabled
   :after kubernetes)
 #+end_src
 
 #+begin_src elisp
 (use-package! kubernetes-helm
-  :disabled
   :commands kubernetes-helm-status)
 #+end_src
 
 #+begin_src elisp
 (use-package! k8s-mode
-  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 #+end_src
@@ -3199,13 +3195,12 @@ EDBI has some dependencies has some dependencies
 [[https://github.com/kiwanami/emacs-edbi#installation][Installation Instructions]]
 
 #+begin_src elisp :tangle packages.el
-(package! edbi)
-(package! edbi-minor-mode)
+(package! edbi :disable t)
+(package! edbi-minor-mode :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! edbi
-  :disabled
   :commands 'edbi:open-db-viewer
   )
 #+end_src
@@ -3213,7 +3208,6 @@ EDBI has some dependencies has some dependencies
 #+begin_src elisp
 
 (use-package! edbi-minor-mode
-  :disabled
   :after sql-mode
   :hook sql-mode-hook
   )
@@ -3228,12 +3222,11 @@ small exercises. The exercises can can be solved locally.
 [[https://exercism.org/docs/using/solving-exercises/working-locally][Local Setup Instructions]]
 
 #+begin_src elisp :tangle packages.el
-(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode"))
+(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode") :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! exercism-mode
-  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -3272,12 +3265,11 @@ This will be the default in Emacs 30 (if I remember correctly)
 ** Logview
 
 #+begin_src elisp :tangle packages.el
-(package! logview)
+(package! logview :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! logview
-  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -3535,12 +3527,11 @@ Use the (almost) default keybindings in evil normal-mode
 ** Meson build system
 
 #+begin_src elisp :tangle packages.el
-(package! meson-mode)
+(package! meson-mode :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! meson-mode
-  :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 #+end_src
 
@@ -3598,12 +3589,13 @@ Use the (almost) default keybindings in evil normal-mode
 ** Turbo Log
 
 #+begin_src elisp :tangle packages.el
-(package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
+(package! turbo-log :recipe (:host github :repo "artawower/turbo-log")
+  :disable t
+   )
 #+end_src
 
 #+begin_src elisp
 (use-package! turbo-log
-  :disabled
   :after prog-mode
   :config
   (map! :leader
@@ -3629,7 +3621,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp :tangle packages.el
-(package! justl :recipe (:host github :repo "psibi/justl.el"))
+(package! justl :recipe (:host github :repo "psibi/justl.el") :disable t)
 #+end_src
 
 #+begin_src elisp
@@ -3647,13 +3639,11 @@ Use the (almost) default keybindings in evil normal-mode
 :END:
 
 #+begin_src elisp :tangle packages.el
-(package! ztree)
+(package! ztree :disable t)
 #+end_src
 
 #+BEGIN_SRC elisp
-(use-package! ztree
-  :disabled
-  )
+(use-package! ztree)
 #+END_SRC
 
 ** Magit
@@ -3714,14 +3704,13 @@ display more columns in forge list topic
 *** magit-todos
 
 #+begin_src elisp :tangle packages.el
-(package! magit-todos)
+(package! magit-todos :disable t)
 #+end_src
 
 activate magit-todo to display the TODOs section in magit buffer
 
 #+begin_src elisp
 (use-package! magit-todos
-  :disabled
   :after magit
   :config
   (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
@@ -3917,12 +3906,11 @@ forcing text comparison even if diff thinks files are binary
 Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format. This comes in handy for reading patches from mailing lists (or from whencever you might acquire them).
 
 #+begin_src elisp :tangle packages.el
-(package! diffview)
+(package! diffview :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! diffview
-  :disabled
   :commands diffview-current
   :config
   (map!
@@ -3936,12 +3924,11 @@ https://github.com/Artawower/blamer.el
 git blame lenses
 
 #+begin_src elisp :tangle packages.el
-(package! blamer)
+(package! blamer :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! blamer
-  :disabled
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
@@ -4076,13 +4063,12 @@ A free alternative to Github Copilot
 #+begin_src elisp :tangle packages.el
 (package! codeium
   :recipe (:host github
-           :repo "Exafunction/codeium.el"))
+           :repo "Exafunction/codeium.el")
+  :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! codeium
-  :disabled
-
   :defer t  ;; TODO to start it, manually call codeium-init
 
   ;; if you use straight
@@ -4271,12 +4257,11 @@ Reply concisely. Wrap source code in a ```cpp block.")
 Automatically apply AI-generated code changes.
 
 #+begin_src elisp :tangle packages.el
-(package! elysium)
+(package! elysium :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! elysium
-  :disabled
   :after gptel
   :commands elysium
   :config
@@ -4291,12 +4276,12 @@ Automatically apply AI-generated code changes.
 (package! aider
   :recipe (:host github
            :repo "tninja/aider.el"
-           :files ("*.el")))
+           :files ("*.el"))
+  :disable t)
 #+end_src
 
 #+begin_src elisp
 (use-package! aider
-  :disabled
   :after password-store
   :commands (aider aider-transient-menu)
   :config

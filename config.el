@@ -1960,7 +1960,11 @@ org-default-priority is treated as lower than the same set value"
   :config
   (setq! typst-ts-mode-indent-offset 2)
   (map! :map typst-ts-mode-map
-        "C-c C-c" #'typst-ts-tmenu)
+        "C-c C-c" #'typst-ts-tmenu
+        :localleader
+        :desc "Compile" "c" #'typst-ts-compile
+        :desc "Watch" "w" #'typst-ts-watch-mode
+        :desc "Menu" "m" #'typst-ts-tmenu)
   (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
 
 (after! lsp-mode
@@ -1970,33 +1974,6 @@ org-default-priority is treated as lower than the same set value"
    (make-lsp-client :new-connection (lsp-stdio-connection "tinymist")
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'tinymist)))
-
-(after! org
-  (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
-  
-  ;; Set up babel support for Typst
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((typst . t)))
-
-  ;; Configure babel execution for Typst
-  (defun org-babel-execute:typst (body params)
-    "Execute a block of Typst code with org-babel."
-    (message "Executing Typst code block")
-    (let* ((in-file (org-babel-temp-file "typst-" ".typ"))
-           (out-file (or (cdr (assq :file params))
-                         (org-babel-temp-file "typst-" ".pdf"))))
-      (with-temp-file in-file
-        (insert body))
-      (org-babel-eval
-       (format "typst compile %s %s" in-file out-file)
-       "")
-      nil))) ; Return nil as we're not inserting results into the org buffer
-
-;; If you want to add a structure template for Typst blocks
-;; TODO working? expansion not working?
-(after! org-tempo
-  (add-to-list 'org-structure-template-alist '("y" . "src typst")))
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
@@ -2156,19 +2133,15 @@ org-default-priority is treated as lower than the same set value"
 ;;   (gitlab-ci-mode-flycheck-enable))
 
 (use-package! kubernetes
-  :disabled
   :commands (kubernetes-overview))
 
 (use-package! kubernetes-evil
-  :disabled
   :after kubernetes)
 
 (use-package! kubernetes-helm
-  :disabled
   :commands kubernetes-helm-status)
 
 (use-package! k8s-mode
-  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 
@@ -2177,19 +2150,16 @@ org-default-priority is treated as lower than the same set value"
 )
 
 (use-package! edbi
-  :disabled
   :commands 'edbi:open-db-viewer
   )
 
 (use-package! edbi-minor-mode
-  :disabled
   :after sql-mode
   :hook sql-mode-hook
   )
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
 (use-package! exercism-mode
-  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -2209,7 +2179,6 @@ org-default-priority is treated as lower than the same set value"
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
 (use-package! logview
-  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -2238,7 +2207,6 @@ org-default-priority is treated as lower than the same set value"
 ;;   :defer t)
 
 (use-package! meson-mode
-  :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
 (after! projectile
@@ -2275,7 +2243,6 @@ org-default-priority is treated as lower than the same set value"
 ;;         :n "l" #'gtest-list))
 
 (use-package! turbo-log
-  :disabled
   :after prog-mode
   :config
   (map! :leader
@@ -2297,9 +2264,7 @@ org-default-priority is treated as lower than the same set value"
   ;; :config
   ;; (map! :n "e" 'justl-exec-recipe))
 
-(use-package! ztree
-  :disabled
-  )
+(use-package! ztree)
 
 ;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
@@ -2316,7 +2281,6 @@ org-default-priority is treated as lower than the same set value"
                       ("Updated" 10 t nill updated nil))))
 
 (use-package! magit-todos
-  :disabled
   :after magit
   :config
   (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
@@ -2432,7 +2396,6 @@ org-default-priority is treated as lower than the same set value"
         ))
 
 (use-package! diffview
-  :disabled
   :commands diffview-current
   :config
   (map!
@@ -2440,7 +2403,6 @@ org-default-priority is treated as lower than the same set value"
    :localleader "d" #'diffview-current))
 
 (use-package! blamer
-  :disabled
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
@@ -2540,8 +2502,6 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package! codeium
-  :disabled
-
   :defer t  ;; TODO to start it, manually call codeium-init
 
   ;; if you use straight
@@ -2708,7 +2668,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
 ;;   )
 
 (use-package! elysium
-  :disabled
   :after gptel
   :commands elysium
   :config
@@ -2717,7 +2676,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
    )
 
 (use-package! aider
-  :disabled
   :after password-store
   :commands (aider aider-transient-menu)
   :config
@@ -2730,9 +2688,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :after password-store
   :commands (aidermacs-transient-menu)
   :config
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
@@ -2741,4 +2696,11 @@ Reply concisely. Wrap source code in a ```cpp block.")
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t)
+
+  (add-hook 'aidermacs-before-run-backend-hook
+          (lambda ()
+            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
+            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+            ))
   )
