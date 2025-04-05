@@ -2761,7 +2761,7 @@ use bash when opening a vterm in a tramp dir:
                               ("ssh" "/bin/bash"))))
 #+end_src
 
-** typst
+** Typst
 
 #+begin_src elisp :tangle packages.el
 (package! typst-ts-mode
@@ -2779,10 +2779,13 @@ use bash when opening a vterm in a tramp dir:
   :config
   (setq! typst-ts-mode-indent-offset 2)
   (map! :map typst-ts-mode-map
-        "C-c C-c" #'typst-ts-tmenu)
+        "C-c C-c" #'typst-ts-tmenu
+        :localleader
+        :desc "Compile" "c" #'typst-ts-compile
+        :desc "Watch" "w" #'typst-ts-watch-mode
+        :desc "Menu" "m" #'typst-ts-tmenu)
   (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
 #+end_src
-
 
 #+begin_src emacs-lisp
 (after! lsp-mode
@@ -2809,19 +2812,22 @@ use bash when opening a vterm in a tramp dir:
     (message "Executing Typst code block")
     (let* ((in-file (org-babel-temp-file "typst-" ".typ"))
            (out-file (or (cdr (assq :file params))
-                         (org-babel-temp-file "typst-" ".pdf"))))
+                         (org-babel-temp-file "typst-" ".pdf")))
+           (result-params (cdr (assq :result-params params)))
+           (cmdline (or (cdr (assq :cmdline params)) "")))
       (with-temp-file in-file
         (insert body))
       (org-babel-eval
-       (format "typst compile %s %s" in-file out-file)
+       (format "typst compile %s %s %s" cmdline in-file out-file)
        "")
-      nil))) ; Return nil as we're not inserting results into the org buffer
+      (when (member "file" result-params)
+        (org-babel-result-cond result-params
+          out-file
+          (format "[[file:%s]]" out-file))))))
 
-;; If you want to add a structure template for Typst blocks
-;; TODO working? expansion not working?
+;; Add structure template for Typst blocks
 (after! org-tempo
-  (add-to-list 'org-structure-template-alist '("y" . "src typst")))
-#+end_src
+  (add-to-list 'org-structure-template-alist '("y" . "src typst :file output.pdf")))
 
 ** pdf-tools
 
