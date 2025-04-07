@@ -45,6 +45,14 @@
 (after! evil-escape
   (setq evil-escape-key-sequence "jk"))
 
+(use-package! drag-stuff
+   :commands (drag-stuff-up drag-stuff-down drag-stuff-lef drag-stuff-right)
+   :config
+   (map! "<M-up>"    #'drag-stuff-up
+         "<M-down>"  #'drag-stuff-down
+         "<M-left>"  #'drag-stuff-left
+         "<M-right>" #'drag-stuff-right))
+
 (setq doom-theme 'doom-one)
 
 (setq! display-line-numbers-type t)
