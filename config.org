@@ -134,6 +134,13 @@ If the line is already correctly indented, try to complete.
   (setq evil-escape-key-sequence "jk"))
 #+end_src
 
+** moving lines up and down 
+
+#+begin_src elisp :tangle ""
+
+#+end_src
+(package! drag-stuff)
+
 * Theme
 ** doom-theme
 :PROPERTIES:
