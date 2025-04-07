@@ -148,7 +148,6 @@ If the line is already correctly indented, try to complete.
         "<M-down>"  #'drag-stuff-down
         "<M-left>"  #'drag-stuff-left
         "<M-right>" #'drag-stuff-right))
-
 #+end_src
 
 * Theme
