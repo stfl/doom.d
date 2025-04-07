@@ -144,10 +144,11 @@ If the line is already correctly indented, try to complete.
 (use-package! drag-stuff
    :defer t
    :commands (drag-stuff)
-   :init (map! "<M-up>"    #'drag-stuff-up
-               "<M-down>"  #'drag-stuff-down
-               "<M-left>"  #'drag-stuff-left
-               "<M-right>" #'drag-stuff-right))
+   :config
+   (map! "<M-up>"    #'drag-stuff-up
+         "<M-down>"  #'drag-stuff-down
+         "<M-left>"  #'drag-stuff-left
+         "<M-right>" #'drag-stuff-right))
 #+end_src
 
 * Theme
