@@ -142,7 +142,6 @@ If the line is already correctly indented, try to complete.
 
 #+begin_src elisp
 (use-package! drag-stuff
-   :defer t
    :commands (drag-stuff-up drag-stuff-down drag-stuff-lef drag-stuff-right)
    :config
    (map! "<M-up>"    #'drag-stuff-up
