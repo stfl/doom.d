@@ -136,10 +136,9 @@ If the line is already correctly indented, try to complete.
 
 ** moving lines up and down 
 
-#+begin_src elisp :tangle ""
-
-#+end_src
+#+begin_src elisp :tangle packages.el
 (package! drag-stuff)
+#+end_src
 
 * Theme
 ** doom-theme
