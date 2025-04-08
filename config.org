@@ -3605,9 +3605,7 @@ Use the (almost) default keybindings in evil normal-mode
 ** Turbo Log
 
 #+begin_src elisp :tangle packages.el
-(package! turbo-log :recipe (:host github :repo "artawower/turbo-log")
-  :disable t
-   )
+(package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
 #+end_src
 
 #+begin_src elisp
