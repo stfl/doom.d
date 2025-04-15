@@ -272,7 +272,7 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
-  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'greed) 0.35) :inherit (bold org-todo))
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.35) :inherit (bold org-todo))
   '(+org-priority-a  :foreground "red3" :weight bold :height .95)
   '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
   '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
