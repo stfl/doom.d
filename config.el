@@ -73,6 +73,7 @@
 (custom-declare-face '+org-priority-h  '((t)) "")
 (custom-declare-face '+org-priority-i  '((t)) "")
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
 (custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
 (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
@@ -96,6 +97,7 @@
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.45) :inherit (bold org-todo))
   '(+org-priority-a  :foreground "red3" :weight bold :height .95)
   '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
   '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
@@ -546,6 +548,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("[?]"  . +org-todo-onhold)
           ("WAIT" . +org-todo-onhold)
           ("HOLD" . +org-todo-onhold)
+          ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic)
           ("NO"   . +org-todo-cancel)
