@@ -7,8 +7,6 @@
 
 (package! org-edna)
 
-;; (package! org-modern)
-
 (package! websocket)
 (package! org-roam-ui
   :recipe (:host github
