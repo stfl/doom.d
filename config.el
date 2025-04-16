@@ -97,7 +97,7 @@
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
-  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.45) :inherit (bold org-todo))
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
   '(+org-priority-a  :foreground "red3" :weight bold :height .95)
   '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
   '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
@@ -2083,14 +2083,14 @@ org-default-priority is treated as lower than the same set value"
                                    :name "Python :: Run pytest (at point)")))
 
 (after! lsp-rust
-  ;; (setq! lsp-rust-analyzer-binding-mode-hints t
+  (setq! lsp-rust-analyzer-binding-mode-hints t
   ;;        lsp-rust-analyzer-display-chaining-hints t
   ;;        lsp-rust-analyzer-display-closure-return-type-hints t
   ;;        lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
   ;;        lsp-rust-analyzer-display-parameter-hints t
   ;;        lsp-rust-analyzer-hide-named-constructor t
-  ;;        lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
-  ;;        )
+         lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
+         )
   )
 
 (after! (rust-mode dap-mode)
