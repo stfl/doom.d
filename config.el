@@ -1977,7 +1977,9 @@ org-default-priority is treated as lower than the same set value"
 
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t
-         lsp-headerline-breadcrumb-enable t))
+         lsp-headerline-breadcrumb-enable t)
+  ;; (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.aider*\\'")
+  )
 
 (when (< emacs-major-version 30)
   (after! lsp-mode
@@ -2082,15 +2084,26 @@ org-default-priority is treated as lower than the same set value"
                                    :request "launch"
                                    :name "Python :: Run pytest (at point)")))
 
+(map!
+ :after rustic-mode
+ :map rustic-mode-map
+ :localleader
+ :desc "rerun test" "t r" #'rustic-cargo-test-rerun
+ )
+
 (after! lsp-rust
   (setq! lsp-rust-analyzer-binding-mode-hints t
   ;;        lsp-rust-analyzer-display-chaining-hints t
   ;;        lsp-rust-analyzer-display-closure-return-type-hints t
-  ;;        lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+         lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
   ;;        lsp-rust-analyzer-display-parameter-hints t
   ;;        lsp-rust-analyzer-hide-named-constructor t
          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
          )
+
+  
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\target-docker\\'")
+  (add-to-)
   )
 
 (after! (rust-mode dap-mode)
