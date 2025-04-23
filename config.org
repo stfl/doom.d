@@ -3060,7 +3060,7 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 #+begin_src elisp
 (after! rustic-mode
-  (when (executable-find "cargo-rustic")
+  (when (executable-find "cargo-nextest")
     (setq! rustic-cargo-test-runner 'nextest)))
 #+end_src
 
