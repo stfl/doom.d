@@ -3058,6 +3058,12 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
  )
 #+end_src
 
+#+begin_src elisp
+(after! rustic-mode
+  (when (executable-find "cargo-rustic")
+    (setq! rustic-cargo-test-runner 'nextest)))
+#+end_src
+
 Configure inlay type hints
 
 This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inlay Hints]]
