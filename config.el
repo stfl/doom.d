@@ -2100,10 +2100,6 @@ org-default-priority is treated as lower than the same set value"
   ;;        lsp-rust-analyzer-hide-named-constructor t
          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
          )
-
-  
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\target-docker\\'")
-  (add-to-)
   )
 
 (after! (rust-mode dap-mode)
