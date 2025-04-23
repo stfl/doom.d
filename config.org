@@ -939,7 +939,7 @@ After much feedback and discussing with other users, I decided to simplify the k
            "EPIC(e)"  ; A set of Projects
            "|"
            "DONE(d@)"  ; Task successfully completed
-           "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+           "IDEA(i)"   ; An unconfirmed and unapproved task or notion
            "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
           (sequence
            "[ ](T)"   ; A task that needs doing
