@@ -2085,11 +2085,15 @@ org-default-priority is treated as lower than the same set value"
                                    :name "Python :: Run pytest (at point)")))
 
 (map!
- :after rustic-mode
+ :mode rustic-mode
  :map rustic-mode-map
  :localleader
  :desc "rerun test" "t r" #'rustic-cargo-test-rerun
  )
+
+(after! rustic-mode
+  (when (executable-find "cargo-rustic")
+    (setq! rustic-cargo-test-runner 'nextest)))
 
 (after! lsp-rust
   (setq! lsp-rust-analyzer-binding-mode-hints t
