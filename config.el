@@ -2092,7 +2092,7 @@ org-default-priority is treated as lower than the same set value"
  )
 
 (after! rustic-mode
-  (when (executable-find "cargo-rustic")
+  (when (executable-find "cargo-nextest")
     (setq! rustic-cargo-test-runner 'nextest)))
 
 (after! lsp-rust
