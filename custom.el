@@ -12,7 +12,13 @@
      "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((rustic-cargo-test-runner . nextest) (rustic-cargo-test-runner nextest)
+   '((eval with-eval-after-load 'lsp-mode
+      (message "setup lsp-file-watch-ignored-directories for project")
+      (add-to-list 'lsp-file-watch-ignored-directories
+       "[/\\\\]\\target-docker\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\logs\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\run\\'"))
+     (rustic-cargo-test-runner . nextest) (rustic-cargo-test-runner nextest)
      (rustic-cargo-test-runner 'nextest)
      (eval progn
       (add-to-list 'lsp-file-watch-ignored-directories
