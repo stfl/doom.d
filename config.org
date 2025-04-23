@@ -3051,7 +3051,7 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 #+begin_src elisp
 (map!
- :after rustic-mode
+ :mode rustic-mode
  :map rustic-mode-map
  :localleader
  :desc "rerun test" "t r" #'rustic-cargo-test-rerun
