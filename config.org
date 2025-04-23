@@ -919,7 +919,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 | HOLD    | Has actionable items, but is on hold due to various reasons. |
 | WAIT    | Waiting for something                                        |
 | NEXT    | Is ready to be worked and should be worked on soon.          |
-| IDEA    | Might do, that but most likely drop it                   |
+| IDEA    | Might do, that but most likely drop it                       |
 | DONE    | Task is completed and closed.                                |
 | KILL    | Abandoned or terminated.                                     |
 
