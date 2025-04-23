@@ -4261,7 +4261,7 @@ Automatically apply AI-generated code changes.
    )
 #+end_src
 
-** Aider
+** KILL Aider
 
 #+begin_src elisp :tangle packages.el
 (package! aider
