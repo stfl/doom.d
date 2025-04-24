@@ -523,12 +523,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
            "STRT(s)"  ; A task that is in progress
            "WAIT(w)"  ; Something external is holding up this task
            "HOLD(h)"  ; This task is paused/on hold because of me
-           "IDEA(i)"  ; An unconfirmed and unapproved task or notion
            "LOOP(r)"  ; A recurring task
            "PROJ(p)"  ; Project with multiple task items.
            "EPIC(e)"  ; A set of Projects
            "|"
            "DONE(d@)"  ; Task successfully completed
+           "IDEA(i)"   ; An unconfirmed and unapproved task or notion
            "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
           (sequence
            "[ ](T)"   ; A task that needs doing
