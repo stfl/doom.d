@@ -4317,7 +4317,6 @@ Automatically apply AI-generated code changes.
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t)
-
   )
 #+end_src
 
