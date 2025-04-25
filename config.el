@@ -2579,7 +2579,7 @@ org-default-priority is treated as lower than the same set value"
   :config
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (password-store-get "API/OpenAI-gptel")
+         gptel-api-key (password-store-get "API/OpenAI-emacs")
          ;; gptel-model 'gpt-4o
          gptel-model 'gemini-pro
          ;; 'gpt-4.5-preview
@@ -2602,12 +2602,12 @@ org-default-priority is treated as lower than the same set value"
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (password-store-get "API/Claude-gptel"))
+    :key (password-store-get "API/Claude-emacs"))
   
   
   (gptel-make-perplexity "Perplexity"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (password-store-get "API/Perplexity-gptel"))
+    :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
     
   ;; Perplexity offers an OpenAI compatible API
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
@@ -2679,27 +2679,30 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
   )
 
 (use-package! aidermacs
-  :after password-store
   :commands (aidermacs-transient-menu)
+  :init
+  (add-hook 'aidermacs-before-run-backend-hook
+          (lambda ()
+            (message "Setting up API keys")
+            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
+            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
+            ))
   :config
-  ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
          aidermacs-architect-model "gemini"
          aidermacs-weak-model "haiku"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
-         aidermacs-watch-files t)
-
-  (add-hook 'aidermacs-before-run-backend-hook
-          (lambda ()
-            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
-            ))
+         aidermacs-watch-files t
+         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium")
+         )
+  
   )
