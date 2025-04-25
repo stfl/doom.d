@@ -4318,7 +4318,10 @@ Automatically apply AI-generated code changes.
          aidermacs-weak-model "haiku"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
-         aidermacs-watch-files t)
+         aidermacs-watch-files t
+         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "high")
+         )
+  
   )
 #+end_src
 
