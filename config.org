@@ -4310,7 +4310,6 @@ Automatically apply AI-generated code changes.
             (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
             ))
   :config
-  ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
   (setq! aidermacs-use-architect-mode t
          aidermacs-default-model "sonnet"
          aidermacs-architect-model "gemini"
