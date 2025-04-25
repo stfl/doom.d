@@ -2091,7 +2091,7 @@ org-default-priority is treated as lower than the same set value"
  :desc "rerun test" "t r" #'rustic-cargo-test-rerun
  )
 
-(after! rustic-mode
+(after! rustic
   (when (executable-find "cargo-nextest")
     (setq! rustic-cargo-test-runner 'nextest)))
 
