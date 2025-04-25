@@ -4306,10 +4306,10 @@ Automatically apply AI-generated code changes.
   (add-hook 'aidermacs-before-run-backend-hook
           (lambda ()
             (message "Setting up API keys")
-            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
             (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
-            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-gptel"))
+            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-op"))
             ))
   :config
   (setq! aidermacs-use-architect-mode t
