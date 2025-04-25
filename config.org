@@ -4315,9 +4315,9 @@ Automatically apply AI-generated code changes.
 
   (add-hook 'aidermacs-before-run-backend-hook
           (lambda ()
-            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
-            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+            (setenv "OPENAI_API_KEY" ,(password-store-get "API/OpenAI-gptel"))
+            (setenv "ANTHROPIC_API_KEY" ,(password-store-get "API/Claude-gptel"))
+            (setenv "GEMINI_API_KEY" ,(password-store-get "API/Gemini-emacs"))
             ))
   )
 #+end_src
