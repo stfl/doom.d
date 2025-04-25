@@ -2693,12 +2693,13 @@ Reply concisely. Wrap source code in a ```cpp block.")
             (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
             (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
             (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
+            (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs"))
             ))
   :config
   (setq! aidermacs-use-architect-mode t
-         aidermacs-default-model "sonnet"
-         aidermacs-architect-model "gemini"
-         aidermacs-weak-model "haiku"
+         aidermacs-default-model "openrouter/google/gemini-2.5-pro-preview-03-25"
+         aidermacs-architect-model "openrouter/anthropic/claude-3.7-sonnet"
+         aidermacs-weak-model "openrouter/anthropic/claude-3-5-haiku"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t
