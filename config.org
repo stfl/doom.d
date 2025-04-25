@@ -4158,7 +4158,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   :config
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (password-store-get "API/OpenAI-gptel")
+         gptel-api-key (password-store-get "API/OpenAI-emacs")
          ;; gptel-model 'gpt-4o
          gptel-model 'gemini-pro
          ;; 'gpt-4.5-preview
@@ -4181,12 +4181,12 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (password-store-get "API/Claude-gptel"))
+    :key (password-store-get "API/Claude-emacs"))
   
   
   (gptel-make-perplexity "Perplexity"          ;Any name you want
     :stream t                             ;Streaming responses
-    :key (password-store-get "API/Perplexity-gptel"))
+    :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
     
   ;; Perplexity offers an OpenAI compatible API
   ;; NOTE https://docs.perplexity.ai/guides/model-cards
@@ -4284,8 +4284,8 @@ Automatically apply AI-generated code changes.
   :commands (aider aider-transient-menu)
   :config
   (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-gptel"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-gptel"))
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
   )
 
 #+end_src
