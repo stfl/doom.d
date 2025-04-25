@@ -4313,7 +4313,7 @@ Automatically apply AI-generated code changes.
             ))
   :config
   (setq! aidermacs-use-architect-mode t
-         aidermacs-default-model "sonnet"
+         aidermacs-default-model "openrouter/sonnet"
          aidermacs-architect-model "gemini"
          aidermacs-weak-model "haiku"
          ;; aidermacs-backend 'vterm
