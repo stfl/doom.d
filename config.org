@@ -4309,7 +4309,7 @@ Automatically apply AI-generated code changes.
             (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
             (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
             (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
-            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-op"))
+            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
             ))
   :config
   (setq! aidermacs-use-architect-mode t
