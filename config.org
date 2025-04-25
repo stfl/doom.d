@@ -4319,7 +4319,7 @@ Automatically apply AI-generated code changes.
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t
-         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "high")
+         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium")
          )
   
   )
