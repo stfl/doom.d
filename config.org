@@ -4301,7 +4301,6 @@ Automatically apply AI-generated code changes.
 
 #+begin_src elisp
 (use-package! aidermacs
-  :after password-store
   :commands (aidermacs-transient-menu)
   :config
   ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
