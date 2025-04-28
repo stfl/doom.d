@@ -2749,7 +2749,6 @@ use bash when opening a vterm in a tramp dir:
 #+begin_src elisp :tangle packages.el
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
-           ;; https://git.sr.ht/~meow_king/typst-ts-mode
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 #+end_src
