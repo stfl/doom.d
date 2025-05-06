@@ -414,6 +414,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
 
+(after! org (require 'org-checklist))
+
 (use-package! org-habit
   :after org-agenda
   :config
