@@ -765,6 +765,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
 #+END_SRC
 
+** org-checklist
+
+[[https://orgmode.org/worg/org-contrib/org-checklist.html][org-checklist]] can be used to automatically reset the 
+
 ** org-habit
 :PROPERTIES:
 :ID:       d7e8ca81-775d-4623-ae1e-665181143649
