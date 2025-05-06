@@ -772,8 +772,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 
 #+begin_src elisp
-
-
+(after! org (require 'org-checklist))
 #+end_src
 
 ** org-habit
