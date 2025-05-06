@@ -767,7 +767,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 ** org-checklist
 
-[[https://orgmode.org/worg/org-contrib/org-checklist.html][org-checklist]] can be used to automatically reset the 
+[[https://orgmode.org/worg/org-contrib/org-checklist.html][org-checklist]] can be used to automatically reset the checkboxes in a recurring task
+
+set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
+
+#+begin_src elisp
+
+
+#+end_src
 
 ** org-habit
 :PROPERTIES:
