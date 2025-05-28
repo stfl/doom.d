@@ -511,11 +511,12 @@ To make the priorities mor visually appealing we add some nice symbols.
  
 
 First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
+
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-hide-emphasis-markers t
-        org-hide-leading-stars t
-        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+  (setq ;; org-hide-emphasis-markers t
+        ;; org-hide-leading-stars t
+        ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
         ;; org-ellipsis " ▼"
         ))
 #+END_SRC
