@@ -152,7 +152,7 @@ If the line is already correctly indented, try to complete.
 
 ** Garbage Collection
 
-disable automatic garbage collection and run when emacs is idle.
+Disable automatic garbage collection and run when emacs is idle.
 
 https://jackjamison.xyz/blog/emacs-garbage-collection/
 
