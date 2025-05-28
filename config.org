@@ -606,6 +606,12 @@ To make the priorities mor visually appealing we add some nice symbols.
 #+begin_src elisp
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
+
+(after! org-modern
+  (setq! org-modern-priority
+        '((?A . "❗")
+                (?B . "⬆")
+                (?C . "⬇"))))
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
