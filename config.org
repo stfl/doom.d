@@ -604,20 +604,18 @@ Set default Priority to E
 To make the priorities mor visually appealing we add some nice symbols.
 
 #+begin_src elisp
-(after! org-fancy-priorities
-
-(after! org-modern
-  (setq! org-modern-priority '(
-          (?A . "⛔")
-          (?B . "𐱄")
-          (?C . "▲" )
-          (?A . "ᐱ")
-          (?B . "Ⲷ")
-          (?C . "ᐯ")
-          (?A . "▼")
-          (?B . "𐠠")
-          (?C . "҉")
-          )))
+  (after! org-modern
+    (setq! org-modern-priority
+           '((?A . "⛔")
+             (?B . "𐱄")
+             (?C . "▲" )
+             (?A . "ᐱ")
+             (?B . "Ⲷ")
+             (?C . "ᐯ")
+             (?A . "▼")
+             (?B . "𐠠")
+             (?C . "҉")
+             )))
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
