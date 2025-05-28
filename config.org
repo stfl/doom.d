@@ -605,13 +605,18 @@ To make the priorities mor visually appealing we add some nice symbols.
 
 #+begin_src elisp
 (after! org-fancy-priorities
-  (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
 
 (after! org-modern
   (setq! org-modern-priority '(
-          (?A . "❗")
-          (?B . "⬆")
-          (?C . "⬇")
+          (?A . "⛔")
+          (?B . "𐱄")
+          (?C . "▲" )
+          (?A . "ᐱ")
+          (?B . "Ⲷ")
+          (?C . "ᐯ")
+          (?A . "▼")
+          (?B . "𐠠")
+          (?C . "҉")
           )))
 #+end_src
 
