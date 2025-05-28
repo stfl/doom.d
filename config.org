@@ -466,7 +466,7 @@ First I like to add some extra fancy stuff to make orgmode more appealing when i
   (setq org-hide-emphasis-markers t
         org-hide-leading-stars t
         org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-        org-ellipsis " ▼"
+        ;; org-ellipsis " ▼"
         ))
 #+END_SRC
 
@@ -500,6 +500,28 @@ also rebuild that via org-roam
 #+begin_src elisp
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 #+end_src
+
+** Appearance
+
+To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
+
+
+To make the priorities mor visually appealing we add some nice symbols.
+
+#+begin_src elisp
+(after! org-modern
+  (setq! org-modern-priority
+         '((?A . "⛔")
+           (?B . "𐱄")
+           (?C . "▲")
+           (?D . "ᐱ")
+           (?E . "Ⲷ")
+           (?F . "ᐯ")
+           (?G . "▼")
+           (?H . "𐠠")
+           (?I . "҉"))))
+#+end_src
+ 
 
 ** Auto-saving org-mode files
 
@@ -599,22 +621,6 @@ Set default Priority to E
 (after! org
   (setq org-priority-default ?E)
   (setq org-priority-lowest ?I))
-#+end_src
-
-To make the priorities mor visually appealing we add some nice symbols.
-
-#+begin_src elisp
-(after! org-modern
-  (setq! org-modern-priority
-         '((?A . "⛔")
-           (?B . "𐱄")
-           (?C . "▲")
-           (?D . "ᐱ")
-           (?E . "Ⲷ")
-           (?F . "ᐯ")
-           (?G . "▼")
-           (?H . "𐠠")
-           (?I . "҉"))))
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
