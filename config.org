@@ -460,18 +460,6 @@ Org directory
 (setq org-directory "~/.org")
 #+END_SRC
 
-First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
-#+BEGIN_SRC elisp
-(after! org
-  (setq org-hide-emphasis-markers t
-        org-hide-leading-stars t
-        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-        ;; org-ellipsis " ▼"
-        ))
-#+END_SRC
-
-- Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
-- Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
 # Add a when condition that only adjust settings when certain features are enabled... This depends on where i'm running Emacs from (eg: Terminla, X11 or native).
 # #+BEGIN_SRC elisp
@@ -521,6 +509,19 @@ To make the priorities mor visually appealing we add some nice symbols.
            (?I . "҉"))))
 #+end_src
  
+
+First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
+#+BEGIN_SRC elisp
+(after! org
+  (setq org-hide-emphasis-markers t
+        org-hide-leading-stars t
+        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+        ;; org-ellipsis " ▼"
+        ))
+#+END_SRC
+
+- Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
+- Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
 ** Auto-saving org-mode files
 
