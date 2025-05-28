@@ -609,12 +609,12 @@ To make the priorities mor visually appealing we add some nice symbols.
          '((?A . "⛔")
            (?B . "𐱄")
            (?C . "▲")
-           (?A . "ᐱ")
-           (?B . "Ⲷ")
-           (?C . "ᐯ")
-           (?A . "▼")
-           (?B . "𐠠")
-           (?C . "҉"))))
+           (?D . "ᐱ")
+           (?E . "Ⲷ")
+           (?F . "ᐯ")
+           (?G . "▼")
+           (?H . "𐠠")
+           (?I . "҉"))))
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
