@@ -608,7 +608,7 @@ To make the priorities mor visually appealing we add some nice symbols.
   (setq! org-modern-priority
          '((?A . "⛔")
            (?B . "𐱄")
-           (?C . "▲" )
+           (?C . "▲")
            (?A . "ᐱ")
            (?B . "Ⲷ")
            (?C . "ᐯ")
