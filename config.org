@@ -152,6 +152,10 @@ If the line is already correctly indented, try to complete.
 
 ** Garbage Collection
 
+disable automatic garbage collection and run when emacs is idle.
+
+https://jackjamison.xyz/blog/emacs-garbage-collection/
+
 #+begin_src elisp
 (defun my-minibuffer-setup-hook ()
   (setq gc-cons-threshold most-positive-fixnum))
