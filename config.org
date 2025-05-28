@@ -516,8 +516,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 (after! org
   (setq ;; org-hide-emphasis-markers t
         ;; org-pretty-entities t
-   org-auto-align-tags nil
-   org-tags-column 0
+        org-auto-align-tags nil
+        org-tags-column 0
 
         ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
         org-ellipsis " …"
