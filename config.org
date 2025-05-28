@@ -515,14 +515,14 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+BEGIN_SRC elisp
 (after! org
   (setq! ;; org-hide-emphasis-markers t
-        ;; org-pretty-entities t
-        org-auto-align-tags nil
-        org-tags-column 0
+         ;; org-pretty-entities t
+         org-auto-align-tags nil
+         org-tags-column 0
 
-        ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-        org-fold-catch-invisible-edits 'show-and-error
-        org-ellipsis " …"
-        ))
+         ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+         org-fold-catch-invisible-edits 'show-and-error
+         org-ellipsis " …"
+         ))
 #+END_SRC
 
 - Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
