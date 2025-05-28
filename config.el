@@ -53,6 +53,19 @@
          "<M-left>"  #'drag-stuff-left
          "<M-right>" #'drag-stuff-right))
 
+;; (defun my-minibuffer-setup-hook ()
+;;   (setq gc-cons-threshold most-positive-fixnum))
+
+;; (defun my-minibuffer-exit-hook ()
+;;   (setq gc-cons-threshold 800000000))
+
+;; (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+;; (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+(setq gc-cons-threshold most-positive-fixnum)
+
+(run-with-idle-timer 1.2 t 'garbage-collect)
+
 (setq doom-theme 'doom-one)
 
 (setq! display-line-numbers-type t)
@@ -219,13 +232,6 @@
 
 (setq org-directory "~/.org")
 
-(after! org
-  (setq org-hide-emphasis-markers t
-        org-hide-leading-stars t
-        org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-        org-ellipsis " ▼"
-        ))
-
 (after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
@@ -234,6 +240,29 @@
 (after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
+
+(after! org-modern
+  (setq! org-modern-priority
+         '((?A . "⛔")
+           (?B . "𐱄")
+           (?C . "▲")
+           (?D . "ᐱ")
+           (?E . "Ⲷ")
+           (?F . "ᐯ")
+           (?G . "▼")
+           (?H . "𐠠")
+           (?I . "҉"))))
+
+(after! org
+  (setq! ;; org-hide-emphasis-markers t
+         ;; org-pretty-entities t
+         org-auto-align-tags nil
+         org-tags-column 0
+
+         ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
+         org-fold-catch-invisible-edits 'show-and-error
+         org-ellipsis "…"
+         ))
 
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 
@@ -292,9 +321,6 @@
 (after! org
   (setq org-priority-default ?E)
   (setq org-priority-lowest ?I))
-
-(after! org-fancy-priorities
-  (setq org-fancy-priorities-list '("⛔" "𐱄" "▲" "ᐱ" "Ⲷ" "ᐯ" "▼" "𐠠" "҉")))
 
 (defun stfl/build-my-someday-files ()
   (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
