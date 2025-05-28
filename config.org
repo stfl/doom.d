@@ -150,6 +150,7 @@ If the line is already correctly indented, try to complete.
          "<M-right>" #'drag-stuff-right))
 #+end_src
 
+** Garbage Collection
 * Theme
 ** doom-theme
 :PROPERTIES:
