@@ -151,6 +151,19 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 ** Garbage Collection
+
+#+begin_src elisp
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000000))
+
+(setq gc-cons-threshold most-positive-fixnum)
+
+(run-with-idle-timer 1.2 t 'garbage-collect)
+#+end_src
+
 * Theme
 ** doom-theme
 :PROPERTIES:
