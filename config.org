@@ -520,7 +520,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
         org-tags-column 0
 
         ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-        org-ellipsis " …"
+        org-catch-invisible-edits 'show-and-error
+       org-ellipsis " …"
         ))
 #+END_SRC
 
