@@ -614,8 +614,7 @@ To make the priorities mor visually appealing we add some nice symbols.
            (?C . "ᐯ")
            (?A . "▼")
            (?B . "𐠠")
-           (?C . "҉")
-           )))
+           (?C . "҉"))))
 #+end_src
 
 and add change the color of the symbols to color range from red to blue
