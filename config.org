@@ -994,12 +994,9 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("NEXT" . +org-todo-next)
           ("[?]"  . +org-todo-onhold)
           ("WAIT" . +org-todo-onhold)
-          ("HOLD" . +org-todo-onhold)
           ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic)
-          ;; ("NO"   . +org-todo-cancel)
-          ;; ("KILL" . +org-todo-cancel))
         ))
 #+END_SRC
 
