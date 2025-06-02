@@ -982,10 +982,8 @@ After much feedback and discussing with other users, I decided to simplify the k
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "NEXT(n)"  ; Task is next to be worked on.
-           ;; "STRT(s)"  ; A task that is in progress
            "WAIT(w)"  ; Something external is holding up this task
            "HOLD(h)"  ; This task is paused/on hold because of me
-           ;; "LOOP(r)"  ; A recurring task
            "PROJ(p)"  ; Project with multiple task items.
            "EPIC(e)"  ; A set of Projects
            "|"
@@ -994,7 +992,6 @@ After much feedback and discussing with other users, I decided to simplify the k
            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
-          ("STRT" . +org-todo-active)
           ("NEXT" . +org-todo-next)
           ("[?]"  . +org-todo-onhold)
           ("WAIT" . +org-todo-onhold)
