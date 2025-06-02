@@ -983,7 +983,6 @@ After much feedback and discussing with other users, I decided to simplify the k
            "TODO(t)"  ; A task that needs doing & is ready to do
            "NEXT(n)"  ; Task is next to be worked on.
            "WAIT(w)"  ; Something external is holding up this task
-           "HOLD(h)"  ; This task is paused/on hold because of me
            "PROJ(p)"  ; Project with multiple task items.
            "EPIC(e)"  ; A set of Projects
            "|"
