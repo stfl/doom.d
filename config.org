@@ -996,8 +996,7 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("WAIT" . +org-todo-onhold)
           ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
-          ("EPIC" . +org-todo-epic)
-        ))
+          ("EPIC" . +org-todo-epic)))
 #+END_SRC
 
 Increase indenation in org-indent
