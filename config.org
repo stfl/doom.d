@@ -1002,8 +1002,9 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic)
-          ("NO"   . +org-todo-cancel)
-          ("KILL" . +org-todo-cancel))))
+          ;; ("NO"   . +org-todo-cancel)
+          ;; ("KILL" . +org-todo-cancel))
+        ))
 #+END_SRC
 
 Increase indenation in org-indent
