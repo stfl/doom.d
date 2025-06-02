@@ -991,18 +991,7 @@ After much feedback and discussing with other users, I decided to simplify the k
            "|"
            "DONE(d@)"  ; Task successfully completed
            "IDEA(i)"   ; An unconfirmed and unapproved task or notion
-           "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
-          ;; (sequence
-          ;;  "[ ](T)"   ; A task that needs doing
-          ;;  "[-](S)"   ; Task is in progress
-          ;;  "[?](W)"   ; Task is being held up or paused
-          ;;  "|"
-          ;;  "[X](D)")  ; Task was completed
-          (sequence
-           "|"
-           "OKAY(o)"
-           "YES(y)"
-           "NO(x)"))
+           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
           ("STRT" . +org-todo-active)
