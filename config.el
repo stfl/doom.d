@@ -544,43 +544,25 @@ Org-mode properties drawer already, keep the headline and don’t insert
       )
 
 (after! org
-  (setq org-todo-keywords
+  (setq! org-todo-keywords
         '((sequence
            "TODO(t)"  ; A task that needs doing & is ready to do
            "NEXT(n)"  ; Task is next to be worked on.
-           "STRT(s)"  ; A task that is in progress
            "WAIT(w)"  ; Something external is holding up this task
-           "HOLD(h)"  ; This task is paused/on hold because of me
-           "LOOP(r)"  ; A recurring task
            "PROJ(p)"  ; Project with multiple task items.
            "EPIC(e)"  ; A set of Projects
            "|"
            "DONE(d@)"  ; Task successfully completed
            "IDEA(i)"   ; An unconfirmed and unapproved task or notion
-           "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
-          (sequence
-           "[ ](T)"   ; A task that needs doing
-           "[-](S)"   ; Task is in progress
-           "[?](W)"   ; Task is being held up or paused
-           "|"
-           "[X](D)")  ; Task was completed
-          (sequence
-           "|"
-           "OKAY(o)"
-           "YES(y)"
-           "NO(x)"))
+           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
         '(("[-]"  . +org-todo-active)
-          ("STRT" . +org-todo-active)
           ("NEXT" . +org-todo-next)
-          ("[?]"  . +org-todo-onhold)
           ("WAIT" . +org-todo-onhold)
-          ("HOLD" . +org-todo-onhold)
           ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
-          ("EPIC" . +org-todo-epic)
-          ("NO"   . +org-todo-cancel)
-          ("KILL" . +org-todo-cancel))))
+          ("EPIC" . +org-todo-epic))
+        org-todo-repeat-to-state "NEXT"))
 
 (after! org (setq org-indent-indentation-per-level 2))
 
