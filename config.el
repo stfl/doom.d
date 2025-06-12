@@ -2215,14 +2215,15 @@ org-default-priority is treated as lower than the same set value"
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
 
-(use-package! bb-modes
+(use-package bb-modes
   :init
   (add-to-list 'auto-mode-alist '("\\.bb" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\.bbappend" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\.bbclass" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\conf/.conf" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
-  :defer t)
+  :config
+  (bitbake-lsp-register))
 
 (defun bitbake-lsp-register ()
   "Register to start using this language server."
