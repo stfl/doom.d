@@ -3562,10 +3562,11 @@ Use the (almost) default keybindings in evil normal-mode
   "Register to start using this language server."
   (interactive)
   (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
-  (make-lsp-client :new-connection
-                   (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
-                   :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
-                   :server-id 'bitbake))
+    (lsp-register-client
+     (make-lsp-client :new-connection
+                      (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
+                      :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
+                      :server-id 'bitbake)))
 #+end_src
 
 ** Meson build system
