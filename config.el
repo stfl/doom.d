@@ -2224,7 +2224,7 @@ org-default-priority is treated as lower than the same set value"
   (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
   :defer t)
 
-(defun ellsp-register ()
+(defun bitbake-lsp-register ()
   "Register to start using this language server."
   (interactive)
   (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
