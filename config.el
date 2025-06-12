@@ -2215,6 +2215,12 @@ org-default-priority is treated as lower than the same set value"
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
 
+(after! lsp-mode
+  (make-lsp-client :new-connection
+                   (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
+                   :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
+                   :server-id "bitbake"))
+
 (use-package! meson-mode
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
