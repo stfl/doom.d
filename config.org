@@ -3561,7 +3561,7 @@ Use the (almost) default keybindings in evil normal-mode
 (package! bb-mode
   :recipe (:host github
            :repo "mferland/bb-mode"
-           : files ("*.el")))
+           :files ("*.el")))
 #+end_src
 
 #+begin_src elisp
