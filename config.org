@@ -3573,7 +3573,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(defun ellsp-register ()
+(defun bitbake-lsp-register ()
   "Register to start using this language server."
   (interactive)
   (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
