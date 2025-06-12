@@ -75,7 +75,7 @@
 (package! bb-mode
   :recipe (:host github
            :repo "mferland/bb-mode"
-           : files ("*.el")))
+           :files ("*.el")))
 
 (package! meson-mode :disable t)
 
