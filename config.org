@@ -3562,6 +3562,12 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
+(use-package! bb-modes
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
+  :defer t)
+#+end_src
+
+#+begin_src elisp
 (defun ellsp-register ()
   "Register to start using this language server."
   (interactive)
