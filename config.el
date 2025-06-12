@@ -2215,25 +2215,25 @@ org-default-priority is treated as lower than the same set value"
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
 
-(use-package bb-modes
-  :init
-  (add-to-list 'auto-mode-alist '("\\.bb" . bb-mode))
-  (add-to-list 'auto-mode-alist '("\\.bbappend" . bb-mode))
-  (add-to-list 'auto-mode-alist '("\\.bbclass" . bb-mode))
-  (add-to-list 'auto-mode-alist '("\\conf/.conf" . bb-mode))
-  (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
-  :config
-  (bitbake-lsp-register))
+;; (use-package bb-modes
+;;   :init
+;;   (add-to-list 'auto-mode-alist '("\\.bb" . bb-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.bbappend" . bb-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.bbclass" . bb-mode))
+;;   (add-to-list 'auto-mode-alist '("\\conf/.conf" . bb-mode))
+;;   (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
+;;   :config
+;;   (bitbake-lsp-register))
 
-(defun bitbake-lsp-register ()
-  "Register to start using this language server."
-  (interactive)
-  (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
-    (lsp-register-client
-     (make-lsp-client :new-connection
-                      (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
-                      :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
-                      :server-id 'bitbake)))
+;; (defun bitbake-lsp-register ()
+;;   "Register to start using this language server."
+;;   (interactive)
+;;   (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
+;;     (lsp-register-client
+;;      (make-lsp-client :new-connection
+;;                       (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
+;;                       :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
+;;                       :server-id 'bitbake)))
 
 (use-package! meson-mode
   :config (add-hook! 'meson-mode-hook #'company-mode))
