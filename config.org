@@ -3558,7 +3558,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(after! lsp
+(after! lsp-mode
   (make-lsp-client :new-connection
                    (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
                    :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
