@@ -3563,7 +3563,12 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (use-package! bb-modes
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
+  (setq auto-mode-alist (cons '("\\.bb$" . bb-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.inc$" . bb-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.bbappend$" . bb-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.bbclass$" . bb-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.conf$" . bb-mode) auto-mode-alist))
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
   :defer t)
 #+end_src
 
