@@ -3559,10 +3559,10 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (make-lsp-client :new-connection
-(lsp-stdio-connection
-  `(,(executable-find "bitbake-language-server")))
-  :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
-  :server-id "bitbake")))
+                 (lsp-stdio-connection
+                  `(,(executable-find "bitbake-language-server")))
+                 :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
+                 :server-id "bitbake")))
 #+end_src
 
 ** Meson build system
