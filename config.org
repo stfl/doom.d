@@ -3558,7 +3558,10 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(after! lsp-mode
+(defun ellsp-register ()
+  "Register to start using this language server."
+  (interactive)
+  (add-to-list 'lsp-language-id-configuration '(bb-mode . "emacs-lisp"))
   (make-lsp-client :new-connection
                    (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
                    :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
