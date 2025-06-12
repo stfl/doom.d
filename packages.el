@@ -72,6 +72,8 @@
 ;;            ;; :files ("*.el")
 ;;            ))
 
+(package! bb-mode)
+
 (package! meson-mode :disable t)
 
 ;; (package! gtest-mode
