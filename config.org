@@ -3569,7 +3569,7 @@ Use the (almost) default keybindings in evil normal-mode
   (add-to-list 'auto-mode-alist '("\\.bbappend" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\.bbclass" . bb-mode))
   (add-to-list 'auto-mode-alist '("\\conf/.conf" . bb-mode))
-  )
+  :defer t)
 #+end_src
 
 #+begin_src elisp
