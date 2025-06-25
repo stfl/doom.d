@@ -2727,7 +2727,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
             ))
   :config
   (setq! aidermacs-use-architect-mode t
-         aidermacs-default-model "openrouter/google/gemini-2.5"
+         aidermacs-default-model "openrouter/google/gemini-2.5-pro"
          aidermacs-architect-model "openrouter/anthropic/claude-sonnet-4"
          aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
          ;; aidermacs-backend 'vterm
