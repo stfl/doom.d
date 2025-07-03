@@ -481,6 +481,10 @@ also rebuild that via org-roam
 
 First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
 
+- Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
+- Extra options for headline-bullets-list: "◉" "●" "○" "∴"
+
+
 #+BEGIN_SRC elisp
 (after! org
   (setq! org-auto-align-tags nil
@@ -492,6 +496,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+END_SRC
 
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
+
 To make the priorities mor visually appealing we add some nice symbols.
 
 #+begin_src elisp
@@ -519,9 +524,6 @@ To make the priorities mor visually appealing we add some nice symbols.
            )))
 #+end_src
  
-
-- Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
-- Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
 ** Auto-saving org-mode files
 
