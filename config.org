@@ -965,6 +965,9 @@ After much feedback and discussing with other users, I decided to simplify the k
 #+END_SRC
 
 
+  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
+
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
