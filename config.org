@@ -315,7 +315,6 @@ Priority specific faces
 
 #+begin_src elisp
 (after! org
-  (auto-fill-mode))
 #+end_src
 
 ** adoc-mode theme
@@ -536,7 +535,6 @@ doom's (org +pretty) module
           (?I . +org-priority-i))))
 #+end_src
  
-
 First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
 
 #+BEGIN_SRC elisp
@@ -549,6 +547,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
          ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
          org-fold-catch-invisible-edits 'show-and-error
          org-ellipsis "…"
+         
+         (auto-fill-mode)
          ))
 #+END_SRC
 
