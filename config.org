@@ -488,8 +488,6 @@ To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad
 (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 #+end_src
 
-#+end_src
-
 
 To make the ~priorities~ mor visually appealing we add some nice symbols.
 
