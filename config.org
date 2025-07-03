@@ -958,7 +958,7 @@ After much feedback and discussing with other users, I decided to simplify the k
          '(
            ;; ("[-]" :inherit (font-lock-constant-face org-todo))
            ;; . +org-todo-active)
-           ("NEXT" (:inherit (font-lock-keyword-face org-done)))
+           ("NEXT" :inherit (font-lock-keyword-face org-todo))
            ;; . +org-todo-next)
            ("WAIT" . +org-todo-onhold)
            ("IDEA" . +org-todo-idea)
