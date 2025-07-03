@@ -463,6 +463,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
   (auto-fill-mode))
 #+END_SRC
 
+# (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+
 #+begin_src elisp
 (custom-set-faces!
   ;; '(org-date :foreground "dark goldenrod" :height 0.85)
@@ -971,7 +973,6 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
 (custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
 (custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-# (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 ** Logging and Drawers
 :PROPERTIES:
