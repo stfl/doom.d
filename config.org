@@ -466,7 +466,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+begin_src elisp
 (custom-set-faces!
   ;; '(org-date :foreground "dark goldenrod" :height 0.85)
-  ;; '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
   ;; '(org-drawer :foreground "dark gray" :height 0.8)
   ;; '(org-property-value :height 0.85)
   '(org-ql-view-due-date :foreground "dark goldenrod")
