@@ -463,7 +463,6 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
   (auto-fill-mode))
 #+END_SRC
 
-
 #+begin_src elisp
 ; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
