@@ -512,6 +512,17 @@ doom's (org +pretty) module
 (custom-declare-face '+org-priority-h  '((t)) "")
 (custom-declare-face '+org-priority-i  '((t)) "")
 
+(custom-set-faces!
+  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
+  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
+  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
+  '(+org-priority-d  :foreground "gold3" :weight bold)
+  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
+  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
+  '(+org-priority-g  :foreground "cyan4" :weight bold)
+  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
+  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
+
 (after! org
   (setq! org-priority-faces
         '((?A . +org-priority-a)
