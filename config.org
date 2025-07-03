@@ -507,45 +507,6 @@ To make the priorities mor visually appealing we add some nice symbols.
            (?I :inverse-video t :foreground "LightSteelBlue3" :weight bold)
            )))
 #+end_src
-
-
-the +org-priority-* faces will be transferred into org-modernd-priority-faces in
-doom's (org +pretty) module
-
-#+begin_src elisp
-(custom-declare-face '+org-priority-a  '((t)) "")
-(custom-declare-face '+org-priority-b  '((t)) "")
-(custom-declare-face '+org-priority-c  '((t)) "")
-(custom-declare-face '+org-priority-d  '((t)) "")
-(custom-declare-face '+org-priority-e  '((t)) "")
-(custom-declare-face '+org-priority-f  '((t)) "")
-(custom-declare-face '+org-priority-g  '((t)) "")
-(custom-declare-face '+org-priority-h  '((t)) "")
-(custom-declare-face '+org-priority-i  '((t)) "")
-
-(custom-set-faces!
-  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-  '(+org-priority-d  :foreground "gold3" :weight bold)
-  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-  '(+org-priority-g  :foreground "cyan4" :weight bold)
-  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
-
-(after! org
-  (setq! org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-#+end_src
  
 First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
 
