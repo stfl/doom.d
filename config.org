@@ -942,6 +942,15 @@ After much feedback and discussing with other users, I decided to simplify the k
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
 
 #+begin_src elisp
+(after! org
+  (setq! org-todo-keyword-faces
+         '(("[-]"  . +org-todo-active)
+           ("NEXT" . +org-todo-next)
+           ("WAIT" . +org-todo-onhold)
+           ("IDEA" . +org-todo-idea)
+           ("PROJ" . +org-todo-project)
+           ("EPIC" . +org-todo-epic))))
+  
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
@@ -967,14 +976,6 @@ After much feedback and discussing with other users, I decided to simplify the k
             "DONE(d@)"  ; Task successfully completed
             "IDEA(i)"   ; An unconfirmed and unapproved task or notion
             "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
-         org-todo-keyword-faces
-         '(
-           ("[-]"  . +org-todo-active)
-           ("NEXT" . +org-todo-next)
-           ("WAIT" . +org-todo-onhold)
-           ("IDEA" . +org-todo-idea)
-           ("PROJ" . +org-todo-project)
-           ("EPIC" . +org-todo-epic))
          org-todo-repeat-to-state "NEXT"))
 #+END_SRC
 
