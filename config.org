@@ -480,7 +480,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
 
-~Keywords~
+[[id:c7d94cf2-b4f1-4d87-8887-cf477260b432][Keywords]]
+
 
 #+begin_src elisp
 #+end_src
