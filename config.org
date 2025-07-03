@@ -507,17 +507,6 @@ To make the ~priorities~ mor visually appealing we add some nice symbols.
            (?G . "▼")
            (?H . "𐠠")
            (?I . "҉"))
-         ;; org-priority-faces
-         ;; '((?A :inverse-video t :foreground "red3" :weight bold :height .95)
-         ;;   (?B :inverse-video t :foreground "OrangeRed2" :weight bold)
-         ;;   (?C :inverse-video t :foreground "DarkOrange2" :weight bold)
-         ;;   (?D :inverse-video t :foreground "gold3" :weight bold)
-         ;;   (?E :inverse-video t :foreground "OliveDrab1" :weight bold)
-         ;;   (?F :inverse-video t :foreground "SpringGreen3" :weight bold)
-         ;;   (?G :inverse-video t :foreground "cyan4" :weight bold)
-         ;;   (?H :inverse-video t :foreground "DeepSkyBlue4" :weight bold)
-         ;;   (?I :inverse-video t :foreground "LightSteelBlue3" :weight bold)
-         ;;   )
          org-priority-faces
          '((?A :foreground "red3" :weight bold :height .95)
            (?B :foreground "OrangeRed2" :weight bold)
