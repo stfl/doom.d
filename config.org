@@ -954,7 +954,7 @@ After much feedback and discussing with other users, I decided to simplify the k
             "DONE(d@)"  ; Task successfully completed
             "IDEA(i)"   ; An unconfirmed and unapproved task or notion
             "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
-         org-modern-todo-keyword-faces
+         org-modern-todo-faces
          '(
            ;; ("[-]" :inherit (font-lock-constant-face org-todo))
            ;; . +org-todo-active)
