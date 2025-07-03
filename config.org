@@ -312,8 +312,7 @@ Priority specific faces
 
 #+begin_src elisp
 (after! org
-
-  (setq org-priority-faces
+  (setq! org-priority-faces
         '((?A . +org-priority-a)
           (?B . +org-priority-b)
           (?C . +org-priority-c)
