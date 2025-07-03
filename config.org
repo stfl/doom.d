@@ -306,7 +306,7 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 )
 #+end_src
 
-** org-mode Theme :theme:
+** org-mode Theme
 
 Priority specific faces
 
