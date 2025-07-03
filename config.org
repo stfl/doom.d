@@ -257,15 +257,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 :END:
 
 #+begin_src elisp
-(custom-declare-face '+org-priority-a  '((t)) "")
-(custom-declare-face '+org-priority-b  '((t)) "")
-(custom-declare-face '+org-priority-c  '((t)) "")
-(custom-declare-face '+org-priority-d  '((t)) "")
-(custom-declare-face '+org-priority-e  '((t)) "")
-(custom-declare-face '+org-priority-f  '((t)) "")
-(custom-declare-face '+org-priority-g  '((t)) "")
-(custom-declare-face '+org-priority-h  '((t)) "")
-(custom-declare-face '+org-priority-i  '((t)) "")
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
@@ -511,6 +502,16 @@ the +org-priority-* faces will be transferred into org-modernd-priority-faces in
 doom's (org +pretty) module
 
 #+begin_src elisp
+(custom-declare-face '+org-priority-a  '((t)) "")
+(custom-declare-face '+org-priority-b  '((t)) "")
+(custom-declare-face '+org-priority-c  '((t)) "")
+(custom-declare-face '+org-priority-d  '((t)) "")
+(custom-declare-face '+org-priority-e  '((t)) "")
+(custom-declare-face '+org-priority-f  '((t)) "")
+(custom-declare-face '+org-priority-g  '((t)) "")
+(custom-declare-face '+org-priority-h  '((t)) "")
+(custom-declare-face '+org-priority-i  '((t)) "")
+
 (after! org
   (setq! org-priority-faces
         '((?A . +org-priority-a)
