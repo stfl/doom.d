@@ -957,7 +957,7 @@ After much feedback and discussing with other users, I decided to simplify the k
         org-todo-keyword-faces
         '(("[-]" :inherit (font-lock-constant-face org-todo))
            ;; . +org-todo-active)
-          ("NEXT" (:inherit (bold font-lock-keyword-face org-todo))
+          ("NEXT" (:inherit (bold font-lock-keyword-face org-todo)))
            ;; . +org-todo-next)
           ("WAIT" . +org-todo-onhold)
           ("IDEA" . +org-todo-idea)
