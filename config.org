@@ -311,17 +311,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 Priority specific faces
 
 #+begin_src elisp
-(after! org
-  (setq! org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
 #+end_src
 
 #+begin_src elisp
@@ -527,6 +516,18 @@ To make the priorities mor visually appealing we add some nice symbols.
            (?G . "▼")
            (?H . "𐠠")
            (?I . "҉"))))
+
+(after! org
+  (setq! org-priority-faces
+        '((?A . +org-priority-a)
+          (?B . +org-priority-b)
+          (?C . +org-priority-c)
+          (?D . +org-priority-d)
+          (?E . +org-priority-e)
+          (?F . +org-priority-f)
+          (?G . +org-priority-g)
+          (?H . +org-priority-h)
+          (?I . +org-priority-i))))
 #+end_src
  
 
