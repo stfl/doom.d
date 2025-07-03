@@ -976,8 +976,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 
 (custon-set-face!
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
-  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
- )
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
 #+end_src
 
 ** Logging and Drawers
