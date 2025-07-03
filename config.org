@@ -479,6 +479,19 @@ also rebuild that via org-roam
 
 ** Appearance
 
+First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq! org-auto-align-tags nil
+         org-tags-column 0
+         org-fold-catch-invisible-edits 'show-and-error
+         org-ellipsis "…")
+  
+  (auto-fill-mode)
+  )
+#+END_SRC
+
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
 
 To make the priorities mor visually appealing we add some nice symbols.
@@ -508,18 +521,6 @@ To make the priorities mor visually appealing we add some nice symbols.
            )))
 #+end_src
  
-First I like to add some extra fancy stuff to make org-mode more appealing when i'm using =+pretty= flag.
-
-#+BEGIN_SRC elisp
-(after! org
-  (setq! org-auto-align-tags nil
-         org-tags-column 0
-         org-fold-catch-invisible-edits 'show-and-error
-         org-ellipsis "…")
-  
-  (auto-fill-mode)
-  )
-#+END_SRC
 
 - Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
 - Extra options for headline-bullets-list: "◉" "●" "○" "∴"
