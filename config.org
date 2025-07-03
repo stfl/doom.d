@@ -495,8 +495,7 @@ To make the priorities mor visually appealing we add some nice symbols.
            (?G . "▼")
            (?H . "𐠠")
            (?I . "҉"))
-         org-modern-priority-faces
-         '((?A :inverse-video t :foreground "red3" :weight bold :height .95)
+         org-modern-priority-faces '((?A :inverse-video t :foreground "red3" :weight bold :height .95)
            (?B :inverse-video t :foreground "OrangeRed2" :weight bold)
            (?C :inverse-video t :foreground "DarkOrange2" :weight bold)
            (?D :inverse-video t :foreground "gold3" :weight bold)
