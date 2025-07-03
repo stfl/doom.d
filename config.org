@@ -473,6 +473,14 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 
 #+begin_src elisp
 (custom-set-faces!
+  ;; '(org-date :foreground "dark goldenrod" :height 0.85)
+  ;; '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  ;; '(org-drawer :foreground "dark gray" :height 0.8)
+  ;; '(org-property-value :height 0.85)
+  ;; '(org-ql-view-due-date :foreground "dark goldenrod")
+  ;; '(org-special-keyword :foreground "#83898d" :height 0.8)
+  ;; '(org-tag :foreground "#83898d" :weight light :height 0.7)
+  ;; `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
   '(outline-1 :height 1.5)
   '(outline-2 :height 1.25)
   '(outline-3 :height 1.15))
