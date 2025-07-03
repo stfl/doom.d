@@ -483,13 +483,6 @@ To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad
 ~Keywords~
 
 #+begin_src elisp
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 #+end_src
 
 To make the ~priorities~ mor visually appealing we add some nice symbols.
@@ -970,6 +963,15 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("EPIC" . +org-todo-epic))
         org-todo-repeat-to-state "NEXT"))
 #+END_SRC
+
+
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+# (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 ** Logging and Drawers
 :PROPERTIES:
