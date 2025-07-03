@@ -76,67 +76,24 @@
         doom-variable-pitch-font (font-spec :family font)
         doom-big-font (font-spec :family font :size 20)))
 
-(custom-declare-face '+org-priority-a  '((t)) "")
-(custom-declare-face '+org-priority-b  '((t)) "")
-(custom-declare-face '+org-priority-c  '((t)) "")
-(custom-declare-face '+org-priority-d  '((t)) "")
-(custom-declare-face '+org-priority-e  '((t)) "")
-(custom-declare-face '+org-priority-f  '((t)) "")
-(custom-declare-face '+org-priority-g  '((t)) "")
-(custom-declare-face '+org-priority-h  '((t)) "")
-(custom-declare-face '+org-priority-i  '((t)) "")
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-
 (custom-set-faces!
-  '(org-date :foreground "dark goldenrod" :height 0.85)
-  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
-  '(org-drawer :foreground "dark gray" :height 0.8)
-  '(org-property-value :height 0.85)
-  '(org-ql-view-due-date :foreground "dark goldenrod")
-  '(org-special-keyword :foreground "#83898d" :height 0.8)
-  '(org-tag :foreground "#83898d" :weight light :height 0.7)
-  `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
-  '(outline-1 :height 1.5)
-  '(outline-2 :height 1.25)
-  '(outline-3 :height 1.15)
+  ;; '(org-date :foreground "dark goldenrod" :height 0.85)
+  ;; '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  ;; '(org-drawer :foreground "dark gray" :height 0.8)
+  ;; '(org-property-value :height 0.85)
+  ;; '(org-ql-view-due-date :foreground "dark goldenrod")
+  ;; '(org-special-keyword :foreground "#83898d" :height 0.8)
+  ;; '(org-tag :foreground "#83898d" :weight light :height 0.7)
+  ;; `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
+  ;; '(outline-1 :height 1.5)
+  ;; '(outline-2 :height 1.25)
+  ;; '(outline-3 :height 1.15)
   `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
-
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
   `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
-  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-  '(+org-priority-d  :foreground "gold3" :weight bold)
-  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-  '(+org-priority-g  :foreground "cyan4" :weight bold)
-  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
 )
-
-(after! org
-
-  (setq org-priority-faces
-        '((?A . +org-priority-a)
-          (?B . +org-priority-b)
-          (?C . +org-priority-c)
-          (?D . +org-priority-d)
-          (?E . +org-priority-e)
-          (?F . +org-priority-f)
-          (?G . +org-priority-g)
-          (?H . +org-priority-h)
-          (?I . +org-priority-i))))
-
-(after! org
-  (auto-fill-mode))
 
 (custom-set-faces!
   '(adoc-code-face :inherit org-block)
@@ -241,6 +198,23 @@
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
+(after! org
+  (setq! org-auto-align-tags nil
+         org-tags-column 0
+         org-fold-catch-invisible-edits 'show-and-error
+         org-ellipsis "…"
+         org-indent-indentation-per-level 2)
+  
+  (auto-fill-mode))
+
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+
 (after! org-modern
   (setq! org-modern-priority
          '((?A . "⛔")
@@ -251,17 +225,29 @@
            (?F . "ᐯ")
            (?G . "▼")
            (?H . "𐠠")
-           (?I . "҉"))))
-
-(after! org
-  (setq! ;; org-hide-emphasis-markers t
-         ;; org-pretty-entities t
-         org-auto-align-tags nil
-         org-tags-column 0
-
-         ;; org-list-demote-modify-bullet '(("+" . "-") ("1." . "a.") ("-" . "+"))
-         org-fold-catch-invisible-edits 'show-and-error
-         org-ellipsis "…"
+           (?I . "҉"))
+         ;; org-priority-faces
+         ;; '((?A :inverse-video t :foreground "red3" :weight bold :height .95)
+         ;;   (?B :inverse-video t :foreground "OrangeRed2" :weight bold)
+         ;;   (?C :inverse-video t :foreground "DarkOrange2" :weight bold)
+         ;;   (?D :inverse-video t :foreground "gold3" :weight bold)
+         ;;   (?E :inverse-video t :foreground "OliveDrab1" :weight bold)
+         ;;   (?F :inverse-video t :foreground "SpringGreen3" :weight bold)
+         ;;   (?G :inverse-video t :foreground "cyan4" :weight bold)
+         ;;   (?H :inverse-video t :foreground "DeepSkyBlue4" :weight bold)
+         ;;   (?I :inverse-video t :foreground "LightSteelBlue3" :weight bold)
+         ;;   )
+         org-priority-faces
+         '((?A :foreground "red3" :weight bold :height .95)
+           (?B :foreground "OrangeRed2" :weight bold)
+           (?C :foreground "DarkOrange2" :weight bold)
+           (?D :foreground "gold3" :weight bold)
+           (?E :foreground "OliveDrab1" :weight bold)
+           (?F :foreground "SpringGreen3" :weight bold)
+           (?G :foreground "cyan4" :weight bold)
+           (?H :foreground "DeepSkyBlue4" :weight bold)
+           (?I :foreground "LightSteelBlue3" :weight bold)
+           )
          ))
 
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
@@ -563,8 +549,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic))
         org-todo-repeat-to-state "NEXT"))
-
-(after! org (setq org-indent-indentation-per-level 2))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
