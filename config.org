@@ -955,8 +955,10 @@ After much feedback and discussing with other users, I decided to simplify the k
            "IDEA(i)"   ; An unconfirmed and unapproved task or notion
            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
         org-todo-keyword-faces
-        '(("[-]"  . +org-todo-active)
-          ("NEXT" . +org-todo-next)
+        '(("[-]" :inherit (font-lock-constant-face org-todo))
+           ;; . +org-todo-active)
+          ("NEXT" (:inherit (bold font-lock-keyword-face org-todo))
+           ;; . +org-todo-next)
           ("WAIT" . +org-todo-onhold)
           ("IDEA" . +org-todo-idea)
           ("PROJ" . +org-todo-project)
