@@ -285,15 +285,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
   `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
-  '(+org-priority-a  :foreground "red3" :weight bold :height .95)
-  '(+org-priority-b  :foreground "OrangeRed2" :weight bold)
-  '(+org-priority-c  :foreground "DarkOrange2" :weight bold)
-  '(+org-priority-d  :foreground "gold3" :weight bold)
-  '(+org-priority-e  :foreground "OliveDrab1" :weight bold)
-  '(+org-priority-f  :foreground "SpringGreen3" :weight bold)
-  '(+org-priority-g  :foreground "cyan4" :weight bold)
-  '(+org-priority-h  :foreground "DeepSkyBlue4" :weight bold)
-  '(+org-priority-i  :foreground "LightSteelBlue3" :weight bold)
 )
 #+end_src
 
