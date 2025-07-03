@@ -484,7 +484,6 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 - Other options for ellipsis "▼, ↴, ⬎, ⤷,…, and ⋱."
 - Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
-
 #+BEGIN_SRC elisp
 (after! org
   (setq! org-auto-align-tags nil
