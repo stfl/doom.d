@@ -480,11 +480,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
 
-[[id:c7d94cf2-b4f1-4d87-8887-cf477260b432][Keywords]]
-
-
-#+begin_src elisp
-#+end_src
+[[id:c7d94cf2-b4f1-4d87-8887-cf477260b432][TODO Keywords]] and fonts are defined there!
 
 To make the ~priorities~ mor visually appealing we add some nice symbols.
 
@@ -923,7 +919,7 @@ Some functions to quickly add TRIGGER and BLOCKER properties
       )
 #+END_SRC
 
-** Keywords
+** Todo keywords
 :PROPERTIES:
 :ID:       c7d94cf2-b4f1-4d87-8887-cf477260b432
 :END:
