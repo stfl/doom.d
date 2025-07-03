@@ -956,10 +956,8 @@ After much feedback and discussing with other users, I decided to simplify the k
             "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
          org-todo-keyword-faces
          '(
-           ;; ("[-]" :inherit (font-lock-constant-face org-todo))
-           ;; . +org-todo-active)
-           ("NEXT" :inherit (font-lock-keyword-face org-todo bold))
-           ;; . +org-todo-next)
+           ("[-]" . +org-todo-active)
+           ("NEXT" . +org-todo-next)
            ("WAIT" . +org-todo-onhold)
            ("IDEA" . +org-todo-idea)
            ("PROJ" . +org-todo-project)
