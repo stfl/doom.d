@@ -942,14 +942,6 @@ After much feedback and discussing with other users, I decided to simplify the k
 [[https://orgmode.org/manual/Tracking-TODO-state-changes.html#Tracking-TODO-state-changes][Tracking TODO state changes]]
 
 #+begin_src elisp
-(after! org
-  (setq! org-todo-keyword-faces
-         '(("[-]"  . +org-todo-active)
-           ("NEXT" . +org-todo-next)
-           ("WAIT" . +org-todo-onhold)
-           ("IDEA" . +org-todo-idea)
-           ("PROJ" . +org-todo-project)
-           ("EPIC" . +org-todo-epic))))
   
 (custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 (custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
@@ -961,6 +953,15 @@ After much feedback and discussing with other users, I decided to simplify the k
 (custom-set-faces!
   `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
   `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
+
+(after! org
+  (setq! org-todo-keyword-faces
+         '(("[-]"  . +org-todo-active)
+           ("NEXT" . +org-todo-next)
+           ("WAIT" . +org-todo-onhold)
+           ("IDEA" . +org-todo-idea)
+           ("PROJ" . +org-todo-project)
+           ("EPIC" . +org-todo-epic))))
 #+end_src
 
 #+begin_src elisp
