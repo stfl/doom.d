@@ -492,7 +492,6 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+END_SRC
 
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
-
 To make the priorities mor visually appealing we add some nice symbols.
 
 #+begin_src elisp
