@@ -488,8 +488,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
          org-fold-catch-invisible-edits 'show-and-error
          org-ellipsis "…")
   
-  (auto-fill-mode)
-  )
+  (auto-fill-mode))
 #+END_SRC
 
 To enhance the appearance of org-mode, doomemacs uses [[https://github.com/minad/org-modern][org-modern]].
