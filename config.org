@@ -469,7 +469,8 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
   (setq! org-auto-align-tags nil
          org-tags-column 0
          org-fold-catch-invisible-edits 'show-and-error
-         org-ellipsis "…")
+         org-ellipsis "…"
+         org-indent-indentation-per-level 2)
   
   (auto-fill-mode))
 #+END_SRC
@@ -965,11 +966,6 @@ After much feedback and discussing with other users, I decided to simplify the k
           ("PROJ" . +org-todo-project)
           ("EPIC" . +org-todo-epic))
         org-todo-repeat-to-state "NEXT"))
-#+END_SRC
-
-Increase indenation in org-indent
-#+BEGIN_SRC elisp
-(after! org (setq org-indent-indentation-per-level 2))
 #+END_SRC
 
 ** Logging and Drawers
