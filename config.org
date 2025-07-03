@@ -306,17 +306,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 )
 #+end_src
 
-** org-mode Theme
-
-Priority specific faces
-
-#+begin_src elisp
-#+end_src
-
-#+begin_src elisp
-(after! org
-#+end_src
-
 ** adoc-mode theme
 
 
