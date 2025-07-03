@@ -77,22 +77,9 @@
         doom-big-font (font-spec :family font :size 20)))
 
 (custom-set-faces!
-  ;; '(org-date :foreground "dark goldenrod" :height 0.85)
-  ;; '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
-  ;; '(org-drawer :foreground "dark gray" :height 0.8)
-  ;; '(org-property-value :height 0.85)
-  ;; '(org-ql-view-due-date :foreground "dark goldenrod")
-  ;; '(org-special-keyword :foreground "#83898d" :height 0.8)
-  ;; '(org-tag :foreground "#83898d" :weight light :height 0.7)
-  ;; `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
-  ;; '(outline-1 :height 1.5)
-  ;; '(outline-2 :height 1.25)
-  ;; '(outline-3 :height 1.15)
   `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
-  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
-  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo))
 )
 
 (custom-set-faces!
@@ -207,13 +194,20 @@
   
   (auto-fill-mode))
 
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
-(custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+
+(custom-set-faces!
+  ;; '(org-date :foreground "dark goldenrod" :height 0.85)
+  '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
+  ;; '(org-drawer :foreground "dark gray" :height 0.8)
+  ;; '(org-property-value :height 0.85)
+  '(org-ql-view-due-date :foreground "dark goldenrod")
+  ;; '(org-special-keyword :foreground "#83898d" :height 0.8)
+  ;; '(org-tag :foreground "#83898d" :weight light :height 0.7)
+  `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
+  '(outline-1 :height 1.5)
+  '(outline-2 :height 1.25)
+  '(outline-3 :height 1.15))
 
 (after! org-modern
   (setq! org-modern-priority
@@ -226,17 +220,6 @@
            (?G . "▼")
            (?H . "𐠠")
            (?I . "҉"))
-         ;; org-priority-faces
-         ;; '((?A :inverse-video t :foreground "red3" :weight bold :height .95)
-         ;;   (?B :inverse-video t :foreground "OrangeRed2" :weight bold)
-         ;;   (?C :inverse-video t :foreground "DarkOrange2" :weight bold)
-         ;;   (?D :inverse-video t :foreground "gold3" :weight bold)
-         ;;   (?E :inverse-video t :foreground "OliveDrab1" :weight bold)
-         ;;   (?F :inverse-video t :foreground "SpringGreen3" :weight bold)
-         ;;   (?G :inverse-video t :foreground "cyan4" :weight bold)
-         ;;   (?H :inverse-video t :foreground "DeepSkyBlue4" :weight bold)
-         ;;   (?I :inverse-video t :foreground "LightSteelBlue3" :weight bold)
-         ;;   )
          org-priority-faces
          '((?A :foreground "red3" :weight bold :height .95)
            (?B :foreground "OrangeRed2" :weight bold)
@@ -531,24 +514,37 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (after! org
   (setq! org-todo-keywords
-        '((sequence
-           "TODO(t)"  ; A task that needs doing & is ready to do
-           "NEXT(n)"  ; Task is next to be worked on.
-           "WAIT(w)"  ; Something external is holding up this task
-           "PROJ(p)"  ; Project with multiple task items.
-           "EPIC(e)"  ; A set of Projects
-           "|"
-           "DONE(d@)"  ; Task successfully completed
-           "IDEA(i)"   ; An unconfirmed and unapproved task or notion
-           "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
-        org-todo-keyword-faces
-        '(("[-]"  . +org-todo-active)
-          ("NEXT" . +org-todo-next)
-          ("WAIT" . +org-todo-onhold)
-          ("IDEA" . +org-todo-idea)
-          ("PROJ" . +org-todo-project)
-          ("EPIC" . +org-todo-epic))
-        org-todo-repeat-to-state "NEXT"))
+         '((sequence
+            "TODO(t)"  ; A task that needs doing & is ready to do
+            "NEXT(n)"  ; Task is next to be worked on.
+            "WAIT(w)"  ; Something external is holding up this task
+            "PROJ(p)"  ; Project with multiple task items.
+            "EPIC(e)"  ; A set of Projects
+            "|"
+            "DONE(d@)"  ; Task successfully completed
+            "IDEA(i)"   ; An unconfirmed and unapproved task or notion
+            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
+         org-todo-repeat-to-state "NEXT"))
+
+(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
+(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
+(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
+(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+
+(custom-set-faces!
+  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
+
+(after! org
+  (setq! org-todo-keyword-faces
+         '(("[-]"  . +org-todo-active)
+           ("NEXT" . +org-todo-next)
+           ("WAIT" . +org-todo-onhold)
+           ("IDEA" . +org-todo-idea)
+           ("PROJ" . +org-todo-project)
+           ("EPIC" . +org-todo-epic))))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
