@@ -519,7 +519,8 @@ To make the priorities mor visually appealing we add some nice symbols.
 #+end_src
 
 
-the +org-priority-* faces will be transferred into org-modernd-priority-faces in doom's (org +pretty) module
+the +org-priority-* faces will be transferred into org-modernd-priority-faces in
+doom's (org +pretty) module
 
 #+begin_src elisp
 (after! org
