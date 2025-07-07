@@ -4001,7 +4001,7 @@ git blame lenses
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
        
-       "e" #'elysium-query
+       ;; "e" #'elysium-query
        
        (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
