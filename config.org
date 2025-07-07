@@ -339,52 +339,52 @@ There is more fine grained face control for search based on tags :
 ** Minimap (demap.el)
 
 #+begin_src elisp :tangle packages.el
-(package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
+;; (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
 #+end_src
 
 #+begin_src elisp
 ;; (after! (solaire-mode demap)
-(use-package! demap
-  :commands demap-toggle
-  :config
-  (setq demap-minimap-window-width 15)
-  (let ((gray1 "#1A1C22")
-        (gray2 "#21242b")
-        (gray3 "#282c34")
-        (gray4 "#2b3038") )
-    (face-spec-set 'demap-minimap-font-face
-                   `((t :background ,gray2
-                        :inherit    unspecified
-                        :family     "minimap"
-                        :height     10          )))
-    (face-spec-set 'demap-visible-region-face
-                   `((t :background ,gray4
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-visible-region-inactive-face
-                   `((t :background ,gray3
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-face
-                   `((t :background ,gray1
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-inactive-face
-                   `((t :background ,gray1
-                        :inherit    unspecified ))))
+;; (use-package! demap
+;;   :commands demap-toggle
+;;   :config
+;;   (setq demap-minimap-window-width 15)
+;;   (let ((gray1 "#1A1C22")
+;;         (gray2 "#21242b")
+;;         (gray3 "#282c34")
+;;         (gray4 "#2b3038") )
+;;     (face-spec-set 'demap-minimap-font-face
+;;                    `((t :background ,gray2
+;;                         :inherit    unspecified
+;;                         :family     "minimap"
+;;                         :height     10          )))
+;;     (face-spec-set 'demap-visible-region-face
+;;                    `((t :background ,gray4
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-visible-region-inactive-face
+;;                    `((t :background ,gray3
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-current-line-face
+;;                    `((t :background ,gray1
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-current-line-inactive-face
+;;                    `((t :background ,gray1
+;;                         :inherit    unspecified ))))
 
-;;   (defun my-track-window-update-p()
-;;     "my minimap update predicate function.
+;; ;;   (defun my-track-window-update-p()
+;; ;;     "my minimap update predicate function.
 
-;; minimaps only show windows in the same frame"
-;;     (and (demap-track-w-mode-update-p-func-default)
-;;          (get-buffer-window) ))
+;; ;; minimaps only show windows in the same frame"
+;; ;;     (and (demap-track-w-mode-update-p-func-default)
+;; ;;          (get-buffer-window) ))
 
-;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
+;; ;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
 
-  (map!
-   :leader
-   :prefix ("t" "+toggle")
-   :desc "Minimap" "m" #'demap-toggle)
-  )
+;;   (map!
+;;    :leader
+;;    :prefix ("t" "+toggle")
+;;    :desc "Minimap" "m" #'demap-toggle)
+;;   )
 #+end_src
 
 ** Indent Guides
