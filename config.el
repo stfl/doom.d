@@ -53,15 +53,6 @@
          "<M-left>"  #'drag-stuff-left
          "<M-right>" #'drag-stuff-right))
 
-;; (defun my-minibuffer-setup-hook ()
-;;   (setq gc-cons-threshold most-positive-fixnum))
-
-;; (defun my-minibuffer-exit-hook ()
-;;   (setq gc-cons-threshold 800000000))
-
-;; (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
-;; (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
-
 (setq gc-cons-threshold most-positive-fixnum)
 
 (run-with-idle-timer 1.2 t 'garbage-collect)
@@ -126,48 +117,6 @@
     ;; :weight semi-light
     ;; :foreground ,(doom-color 'base5)
     ))
-
-;; (after! (solaire-mode demap)
-;; (use-package! demap
-;;   :commands demap-toggle
-;;   :config
-;;   (setq demap-minimap-window-width 15)
-;;   (let ((gray1 "#1A1C22")
-;;         (gray2 "#21242b")
-;;         (gray3 "#282c34")
-;;         (gray4 "#2b3038") )
-;;     (face-spec-set 'demap-minimap-font-face
-;;                    `((t :background ,gray2
-;;                         :inherit    unspecified
-;;                         :family     "minimap"
-;;                         :height     10          )))
-;;     (face-spec-set 'demap-visible-region-face
-;;                    `((t :background ,gray4
-;;                         :inherit    unspecified )))
-;;     (face-spec-set 'demap-visible-region-inactive-face
-;;                    `((t :background ,gray3
-;;                         :inherit    unspecified )))
-;;     (face-spec-set 'demap-current-line-face
-;;                    `((t :background ,gray1
-;;                         :inherit    unspecified )))
-;;     (face-spec-set 'demap-current-line-inactive-face
-;;                    `((t :background ,gray1
-;;                         :inherit    unspecified ))))
-
-;; ;;   (defun my-track-window-update-p()
-;; ;;     "my minimap update predicate function.
-
-;; ;; minimaps only show windows in the same frame"
-;; ;;     (and (demap-track-w-mode-update-p-func-default)
-;; ;;          (get-buffer-window) ))
-
-;; ;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
-
-;;   (map!
-;;    :leader
-;;    :prefix ("t" "+toggle")
-;;    :desc "Minimap" "m" #'demap-toggle)
-;;   )
 
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))

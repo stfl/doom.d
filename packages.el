@@ -1,8 +1,5 @@
 (package! drag-stuff)
 
-;; (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
-;; (package! demap)
-
 (package! org-clock-csv)
 
 (package! org-edna)
