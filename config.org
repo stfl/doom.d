@@ -4294,17 +4294,17 @@ Reply concisely. Wrap source code in a ```cpp block.")
 Automatically apply AI-generated code changes.
 
 #+begin_src elisp :tangle packages.el
-(package! elysium :disable t)
+;; (package! elysium :disable t)
 #+end_src
 
 #+begin_src elisp
-(use-package! elysium
-  :after gptel
-  :commands elysium
-  :config
-  (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
-         elysium-window-style 'horizontal) ; Can be customized to horizontal
-   )
+;; (use-package! elysium
+;;   :after gptel
+;;   :commands elysium
+;;   :config
+;;   (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
+;;          elysium-window-style 'horizontal) ; Can be customized to horizontal
+;;    )
 #+end_src
 
 ** KILL Aider
