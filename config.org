@@ -4221,7 +4221,6 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Claude-emacs"))
   
-  
   (gptel-make-perplexity "Perplexity"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
