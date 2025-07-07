@@ -3988,15 +3988,15 @@ git blame lenses
       ;; "C-c a" #'aidermacs-transient-menu
       :leader
       (:prefix ("j" . "AI")
-       "m" #'gptel-menu
-       "j" #'gptel
-       "C-g" #'gptel-abort
-       "C-c" #'gptel-abort
-       :desc "Toggle context" "C" #'gptel-add
-       "s" #'gptel-system-prompt
-       "w" #'gptel-rewrite-menu
-       "t" #'gptel-org-set-topic
-       "P" #'gptel-org-set-properties
+       ;; "m" #'gptel-menu
+       ;; "j" #'gptel
+       ;; "C-g" #'gptel-abort
+       ;; "C-c" #'gptel-abort
+       ;; :desc "Toggle context" "C" #'gptel-add
+       ;; "s" #'gptel-system-prompt
+       ;; "w" #'gptel-rewrite-menu
+       ;; "t" #'gptel-org-set-topic
+       ;; "P" #'gptel-org-set-properties
        
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
