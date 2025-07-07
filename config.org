@@ -4241,10 +4241,10 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   ;;             r1-1776	
   ;;             ))
 
-  (set-popup-rules!
-    '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
+  ;; (set-popup-rules!
+  ;;   '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+  ;;     ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+  ;;     ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
   
   (setf (alist-get 'perplexity gptel-directives) "You are Perplxity, a helpful search assistant, living in Emacs.
 
