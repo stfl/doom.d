@@ -4182,7 +4182,7 @@ A free alternative to Github Copilot
 ** gptel
 
 #+begin_src elisp :tangle packages.el
-(package! gptel)
+;; (package! gptel)
 #+end_src
 
 If get-password does not reply a proper key.. manually clear the auth-source cache with:
