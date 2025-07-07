@@ -4307,28 +4307,6 @@ Automatically apply AI-generated code changes.
 ;;    )
 #+end_src
 
-** KILL Aider
-
-#+begin_src elisp :tangle packages.el
-(package! aider
-  :recipe (:host github
-           :repo "tninja/aider.el"
-           :files ("*.el"))
-  :disable t)
-#+end_src
-
-#+begin_src elisp
-(use-package! aider
-  :after password-store
-  :commands (aider aider-transient-menu)
-  :config
-  (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
-  )
-
-#+end_src
-
 ** Aidermacs
 
 #+begin_src elisp :tangle packages.el
