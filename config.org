@@ -155,6 +155,7 @@ Disable automatic garbage collection and run when emacs is idle.
 
 https://jackjamison.xyz/blog/emacs-garbage-collection/
 
+#+begin_src elisp
 (setq gc-cons-threshold most-positive-fixnum)
 
 (run-with-idle-timer 1.2 t 'garbage-collect)
