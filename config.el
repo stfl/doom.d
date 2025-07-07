@@ -128,46 +128,46 @@
     ))
 
 ;; (after! (solaire-mode demap)
-(use-package! demap
-  :commands demap-toggle
-  :config
-  (setq demap-minimap-window-width 15)
-  (let ((gray1 "#1A1C22")
-        (gray2 "#21242b")
-        (gray3 "#282c34")
-        (gray4 "#2b3038") )
-    (face-spec-set 'demap-minimap-font-face
-                   `((t :background ,gray2
-                        :inherit    unspecified
-                        :family     "minimap"
-                        :height     10          )))
-    (face-spec-set 'demap-visible-region-face
-                   `((t :background ,gray4
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-visible-region-inactive-face
-                   `((t :background ,gray3
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-face
-                   `((t :background ,gray1
-                        :inherit    unspecified )))
-    (face-spec-set 'demap-current-line-inactive-face
-                   `((t :background ,gray1
-                        :inherit    unspecified ))))
+;; (use-package! demap
+;;   :commands demap-toggle
+;;   :config
+;;   (setq demap-minimap-window-width 15)
+;;   (let ((gray1 "#1A1C22")
+;;         (gray2 "#21242b")
+;;         (gray3 "#282c34")
+;;         (gray4 "#2b3038") )
+;;     (face-spec-set 'demap-minimap-font-face
+;;                    `((t :background ,gray2
+;;                         :inherit    unspecified
+;;                         :family     "minimap"
+;;                         :height     10          )))
+;;     (face-spec-set 'demap-visible-region-face
+;;                    `((t :background ,gray4
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-visible-region-inactive-face
+;;                    `((t :background ,gray3
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-current-line-face
+;;                    `((t :background ,gray1
+;;                         :inherit    unspecified )))
+;;     (face-spec-set 'demap-current-line-inactive-face
+;;                    `((t :background ,gray1
+;;                         :inherit    unspecified ))))
 
-;;   (defun my-track-window-update-p()
-;;     "my minimap update predicate function.
+;; ;;   (defun my-track-window-update-p()
+;; ;;     "my minimap update predicate function.
 
-;; minimaps only show windows in the same frame"
-;;     (and (demap-track-w-mode-update-p-func-default)
-;;          (get-buffer-window) ))
+;; ;; minimaps only show windows in the same frame"
+;; ;;     (and (demap-track-w-mode-update-p-func-default)
+;; ;;          (get-buffer-window) ))
 
-;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
+;; ;;   (setq demap-track-window-mode-update-p-func #'my-track-window-update-p)
 
-  (map!
-   :leader
-   :prefix ("t" "+toggle")
-   :desc "Minimap" "m" #'demap-toggle)
-  )
+;;   (map!
+;;    :leader
+;;    :prefix ("t" "+toggle")
+;;    :desc "Minimap" "m" #'demap-toggle)
+;;   )
 
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
@@ -2430,20 +2430,20 @@ org-default-priority is treated as lower than the same set value"
       ;; "C-c a" #'aidermacs-transient-menu
       :leader
       (:prefix ("j" . "AI")
-       "m" #'gptel-menu
-       "j" #'gptel
-       "C-g" #'gptel-abort
-       "C-c" #'gptel-abort
-       :desc "Toggle context" "C" #'gptel-add
-       "s" #'gptel-system-prompt
-       "w" #'gptel-rewrite-menu
-       "t" #'gptel-org-set-topic
-       "P" #'gptel-org-set-properties
+       ;; "m" #'gptel-menu
+       ;; "j" #'gptel
+       ;; "C-g" #'gptel-abort
+       ;; "C-c" #'gptel-abort
+       ;; :desc "Toggle context" "C" #'gptel-add
+       ;; "s" #'gptel-system-prompt
+       ;; "w" #'gptel-rewrite-menu
+       ;; "t" #'gptel-org-set-topic
+       ;; "P" #'gptel-org-set-properties
        
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
        
-       "e" #'elysium-query
+       ;; "e" #'elysium-query
        
        (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
@@ -2583,10 +2583,11 @@ org-default-priority is treated as lower than the same set value"
       (setq codeium-command-executable codeium-exe)))
   )
 
-(use-package! gptel
-  :after password-store
-  :commands (gptel gptel-menu)
-  :config
+;; (use-package! gptel
+;;   :after password-store
+;;   :commands (gptel gptel-menu)
+;;   :config
+(after! gptel
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (password-store-get "API/OpenAI-emacs")
@@ -2597,8 +2598,6 @@ org-default-priority is treated as lower than the same set value"
          ;; gptel-use-curl nil
          gptel-use-curl t
          gptel-stream t)
-  ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-  ;; (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
@@ -2613,7 +2612,6 @@ org-default-priority is treated as lower than the same set value"
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Claude-emacs"))
-  
   
   (gptel-make-perplexity "Perplexity"          ;Any name you want
     :stream t                             ;Streaming responses
@@ -2634,10 +2632,10 @@ org-default-priority is treated as lower than the same set value"
   ;;             r1-1776	
   ;;             ))
 
-  (set-popup-rules!
-    '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-      ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
+  ;; (set-popup-rules!
+  ;;   '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+  ;;     ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
+  ;;     ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
   
   (setf (alist-get 'perplexity gptel-directives) "You are Perplxity, a helpful search assistant, living in Emacs.
 
@@ -2675,23 +2673,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
 ;;           (rename-buffer (generate-new-buffer-name (concat "*gptel " (buffer-name))) t)
 ;;           (message "renamed gptel buffer to %s" (buffer-name))))
 ;;   )
-
-(use-package! elysium
-  :after gptel
-  :commands elysium
-  :config
-  (setq! elysium-window-size 0.33 ; The elysium buffer will be 1/3 your screen
-         elysium-window-style 'horizontal) ; Can be customized to horizontal
-   )
-
-(use-package! aider
-  :after password-store
-  :commands (aider aider-transient-menu)
-  :config
-  (setq aider-args '("--model" "claude-3-5-sonnet-20241022"))
-  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
-  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
-  )
 
 (use-package! aidermacs
   :commands (aidermacs-transient-menu)

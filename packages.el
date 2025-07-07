@@ -1,6 +1,6 @@
 (package! drag-stuff)
 
-(package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
+;; (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
 
 (package! org-clock-csv)
@@ -116,15 +116,7 @@
            :repo "Exafunction/codeium.el")
   :disable t)
 
-(package! gptel)
-
-(package! elysium :disable t)
-
-(package! aider
-  :recipe (:host github
-           :repo "tninja/aider.el"
-           :files ("*.el"))
-  :disable t)
+;; (package! gptel)
 
 (package! aidermacs
     :recipe (:host github
