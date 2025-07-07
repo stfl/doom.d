@@ -338,6 +338,9 @@ There is more fine grained face control for search based on tags :
 
 ** Minimap (demap.el)
 
+demap is now used in doom's :ui minimap
+I am not acutally using demap so let's drop it alltogether
+
 #+begin_src elisp :tangle packages.el
 ;; (package! demap :recipe (:host gitlab :repo "sawyerjgardner/demap.el"))
 ;; (package! demap)
