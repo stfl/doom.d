@@ -2643,7 +2643,10 @@ Reply concisely. Wrap source code in a ```cpp block.")
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t
-         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium")
-         )
-  
+         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium"))
+  (set-popup-rule! "^\\*aidermacs:"
+    :select t
+    :size 0.3
+    :quit nil
+    :ttl nil)
   )
