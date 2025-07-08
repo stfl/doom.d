@@ -4259,8 +4259,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
     :select t
     :size 0.3
     :quit nil
-    :ttl nil
-    )
+    :ttl nil)
   )
 #+end_src
 
