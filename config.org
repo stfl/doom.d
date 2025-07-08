@@ -4256,8 +4256,10 @@ Reply concisely. Wrap source code in a ```cpp block.")
          aidermacs-watch-files t
          aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium"))
   (set-popup-rule! "^\\*aidermacs:"
-    :ignore t
+    :select t
+    :size 0.3
     :quit nil
+    :ttl nil
     )
   )
 #+end_src
