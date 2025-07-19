@@ -1548,6 +1548,7 @@ I need to disable ws-butler for org-mode buffers.
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
+      "s" #'org-toggle-sticky-agenda
 
       :prefix ("p" . "priorities")
       :desc "Prioity" "p" #'org-agenda-priority
