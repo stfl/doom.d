@@ -1608,7 +1608,7 @@ I need to disable ws-butler for org-mode buffers.
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
        org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
-       org-agenda-sticky t
+       org-agenda-sticky t  ;; q key will NOT bury agenda buffers
        )
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
