@@ -1607,7 +1607,9 @@ I need to disable ws-butler for org-mode buffers.
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
+       org-agenda-sticky t
+       )
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
                                           "oebb" "@oebb" "#oebb"))
