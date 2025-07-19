@@ -17,6 +17,14 @@
       (add-to-list 'lsp-file-watch-ignored-directories
        "[/\\\\]\\target-docker\\'")
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\logs\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories
+       "[/\\\\]\\integration_tests\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\run\\'"))
+     (eval with-eval-after-load 'lsp-mode
+      (message "setup lsp-file-watch-ignored-directories for project")
+      (add-to-list 'lsp-file-watch-ignored-directories
+                   "[/\\\\]\\target-docker\\'")
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\logs\\'")
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\run\\'"))
      (rustic-cargo-test-runner . nextest) (rustic-cargo-test-runner nextest)
      (rustic-cargo-test-runner 'nextest)
