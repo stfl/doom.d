@@ -4252,7 +4252,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :config
   (setq! aidermacs-default-chat-mode 'architect
          aidermacs-default-model "openrouter/anthropic/claude-sonnet-4"
-         aidermacs-architect-model "openrouter/anthropic/claude-sonnet-4"
+         aidermacs-architect-model "x-ai/grok-4"
          aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
