@@ -134,6 +134,9 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 ** moving lines up and down 
+:PROPERTIES:
+:ID:       abc34dae-c955-4aa3-a1fd-65888a3f6a5c
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! drag-stuff)
