@@ -254,6 +254,7 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
   `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
+  '(lsp-bridge-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 )
 #+end_src
 
