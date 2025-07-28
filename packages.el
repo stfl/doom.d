@@ -32,6 +32,8 @@
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 
+(package! lsp-mode :disable t
+
 ;; (package! lsp-bridge
 ;;   :recipe (:host github
 ;;            :repo "manateelazycat/lsp-bridge"

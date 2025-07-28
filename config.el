@@ -71,6 +71,7 @@
   `(whitespace-indentation :background ,(doom-color 'base4)) ; Visually highlight if an indentation issue was discovered which emacs already does for us
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
+  '(lsp-bridge-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 )
 
 (custom-set-faces!
@@ -1900,9 +1901,8 @@ org-default-priority is treated as lower than the same set value"
 
 (map! :leader ":" #'ielm)
 
-(use-package! lsp-treemacs
-  :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1))
+(after! lsp-treemacs
+  (lsp-treemacs-sync-mode 1))
 
 (map! (:after lsp-mode
        :map lsp-mode-map
@@ -1951,7 +1951,10 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! lsp-bridge
   :config
-  (global-lsp-bridge-mode))
+  (global-lsp-bridge-mode)
+  (setq! lsp-bridge-enable-inlay-hint t)
+  ;; (map! :map ?? lsp-bridge-map)
+  )
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
