@@ -22,11 +22,11 @@
        ;; (company          ; the ultimate code completion backend
        ;;  +auto            ; as-you-type code completion
        ;;  +childframe)     ; a nicer company UI (Emacs 26+ only)
-       (corfu
-        +icons
-        +orderless
-        ;; +dabbrev
-        )
+       ;; (corfu
+       ;;  +icons
+       ;;  +orderless
+       ;; +dabbrev
+       ;; )
        ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy              ; a search engine for love and life

@@ -46,7 +46,7 @@
   (setq evil-escape-key-sequence "jk"))
 
 (use-package! drag-stuff
-   :commands (drag-stuff-up drag-stuff-down drag-stuff-lef drag-stuff-right)
+   :commands (drag-stuff-up drag-stuff-down drag-stuff-left drag-stuff-right)
    :config
    (map! "<M-up>"    #'drag-stuff-up
          "<M-down>"  #'drag-stuff-down
@@ -183,13 +183,6 @@
          ))
 
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
-
-(after! org
-  (set-company-backend! 'org-mode
-    '(:separate company-capf
-      :separate company-org-roam
-      :separate company-yasnippet
-      :separate company-files)))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -913,6 +906,7 @@ exist after each headings's drawers."
       :desc "Filter" "f" #'org-agenda-filter
       :desc "Follow" "F" #'org-agenda-follow-mode
       "o" #'org-agenda-set-property
+      "s" #'org-toggle-sticky-agenda
 
       :prefix ("p" . "priorities")
       :desc "Prioity" "p" #'org-agenda-priority
@@ -965,7 +959,9 @@ exist after each headings's drawers."
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") ""))
+       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
+       org-agenda-sticky t  ;; q key will NOT bury agenda buffers
+       )
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
                                           "oebb" "@oebb" "#oebb"))
@@ -1905,6 +1901,7 @@ org-default-priority is treated as lower than the same set value"
 (map! :leader ":" #'ielm)
 
 (use-package! lsp-treemacs
+  :if (featurep lsp)
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
@@ -1952,6 +1949,10 @@ org-default-priority is treated as lower than the same set value"
             orig-result)))
       (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
   )
+
+(use-package! lsp-bridge
+  :config
+  (global-lsp-bridge-mode))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
@@ -2637,13 +2638,16 @@ Reply concisely. Wrap source code in a ```cpp block.")
             ))
   :config
   (setq! aidermacs-default-chat-mode 'architect
-         aidermacs-default-model "openrouter/google/gemini-2.5-pro"
+         ;; aidermacs-default-model "openrouter/google/gemini-2.5-pro"
+         aidermacs-default-model "openrouter/anthropic/claude-sonnet-4"
          aidermacs-architect-model "openrouter/anthropic/claude-sonnet-4"
-         aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
+         ;; aidermacs-architect-model "openrouter/x-ai/grok-4"
+         ;; aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
+         aidermacs-weak-model "openrouter/deepseek/deepseek-r1-0528"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t
-         aidermacs-extra-args '("--thinking-tokens" "16k" "--reasoning-effort" "medium"))
+         aidermacs-extra-args '("--thinking-tokens" "8k" "--reasoning-effort" "medium"))
   (set-popup-rule! "^\\*aidermacs:"
     :select t
     :size 0.3
