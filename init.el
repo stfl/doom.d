@@ -138,7 +138,7 @@
         +offline
         )
        ;; +offline)
-       (lsp +peek)
+       ;; (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
         +forge)
