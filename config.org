@@ -2893,10 +2893,6 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 #+END_SRC
 
 ** Python
-:PROPERTIES:
-:ID:       294592b7-60fa-4fd5-ab2a-1d2eeadbd623
-:END:
-
 *** poetry
 
 Poetry needs to scan for a project whenever a new file is opened. Tracking via
