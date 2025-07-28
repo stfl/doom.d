@@ -2628,7 +2628,7 @@ https://tecosaur.github.io/emacs-config/config.html#plaintext
 :ID:       ac7ce678-a39e-4e3e-8911-c5155e79a620
 :END:
 
-disable vterm from straight because we installed it via emacs-overlay
+disable vterm from straight because we installed it via nix
 
 #+begin_src elisp :tangle packages.el
 (package! vterm :disable t)
