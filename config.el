@@ -1901,7 +1901,6 @@ org-default-priority is treated as lower than the same set value"
 (map! :leader ":" #'ielm)
 
 (use-package! lsp-treemacs
-  :if (featurep lsp)
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 
