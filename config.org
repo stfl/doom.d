@@ -462,22 +462,6 @@ Automatically saving all org-buffers when emacs is idle for 30 seconds.
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 #+END_SRC
 
-** Completion backends in org-mode
-
-This is simply copied from discord.. Probably not that bad but don't know.. I
-wanted to disable completion of enflish words.  These propbably come from
-completion-at-point (capf)...
-
-#+begin_src elisp
-;; (after! org
-;;   (set-company-backend! 'org-mode
-;;     '(:separate company-capf
-;;       :separate company-org-roam
-;;       :separate company-yasnippet
-;;       :separate company-files))
-;;   )
-#+end_src
-
 ** Orgmode Startup
 :PROPERTIES:
 :ID:       fadd0d57-a6dd-4d17-ab0c-784b5159b7ed
