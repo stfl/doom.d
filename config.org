@@ -474,7 +474,8 @@ completion-at-point (capf)...
     '(:separate company-capf
       :separate company-org-roam
       :separate company-yasnippet
-      :separate company-files)))
+      :separate company-files))
+  )
 #+end_src
 
 ** Orgmode Startup
