@@ -469,13 +469,13 @@ wanted to disable completion of enflish words.  These propbably come from
 completion-at-point (capf)...
 
 #+begin_src elisp
-(after! org
-  (set-company-backend! 'org-mode
-    '(:separate company-capf
-      :separate company-org-roam
-      :separate company-yasnippet
-      :separate company-files))
-  )
+;; (after! org
+;;   (set-company-backend! 'org-mode
+;;     '(:separate company-capf
+;;       :separate company-org-roam
+;;       :separate company-yasnippet
+;;       :separate company-files))
+;;   )
 #+end_src
 
 ** Orgmode Startup
