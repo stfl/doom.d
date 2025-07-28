@@ -65,7 +65,8 @@
        ;; +fira)
        ;; tabs              ; an tab bar for Emacs
        (treemacs          ; a project drawer, like neotree but cooler
-        +lsp)            ; lsp-treemacs
+        ;; +lsp              ; lsp-treemacs
+        )
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;; vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -157,7 +158,7 @@
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
        (cc                 ; C/C++/Obj-C madness
-        +lsp
+        ;; +lsp
         +tree-sitter)
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
@@ -181,7 +182,7 @@
        ;;idris             ;
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        (javascript         ; all(hope(abandon(ye(who(enter(here))))))
-        +lsp
+        ;; +lsp
         +tree-sitter)
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
@@ -196,7 +197,8 @@
        ;;nim               ; python + lisp at the speed of c
        (nix               ; I hereby declare "nix geht mehr!"
         +tree-sitter
-        +lsp)
+        ;; +lsp
+        )
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers
@@ -214,14 +216,14 @@
         )
        ;; raku              ; write code no one else can comprehend
        (php                ; perl's insecure younger brother
-        +lsp
+        ;; +lsp
         +tree-sitter)
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
         ;; +pyenv
         +poetry
-        +lsp
+        ;; +lsp
         +pyright           ; NOTE can use basedpyright
         ;; +conda
         +tree-sitter)
@@ -232,18 +234,18 @@
        ;;rst               ; ReST in peace
        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        +lsp
+        ;; +lsp
         +tree-sitter)
        ;;scala             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
-        +lsp
+        ;; +lsp
         +tree-sitter)
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        (web                ; the tubes
-        +lsp
+        ;; +lsp
         +tree-sitter)
        yaml                ; JSON, but readable
 
