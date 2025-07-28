@@ -2774,7 +2774,7 @@ map ielm to ~SPC :~
 ** LSP
 
 #+begin_src elisp :tangle packages.el
-(package! lsp-mode :disable t
+(package! lsp-mode :disable t)
 #+end_src
 
 #+begin_src elisp
