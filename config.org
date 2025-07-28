@@ -2774,9 +2774,8 @@ map ielm to ~SPC :~
 ** LSP
 
 #+begin_src elisp
-(use-package! lsp-treemacs
-  :after lsp-mode  ;; and treemacs
-  :config (lsp-treemacs-sync-mode 1))
+(after! lsp-treemacs
+  (lsp-treemacs-sync-mode 1))
 #+end_src
 
 *** Key Mappings
@@ -2856,8 +2855,7 @@ Enable hinlay hints and make the font a little smaller than the rest
 (use-package! lsp-bridge
   :config
   (global-lsp-bridge-mode)
-  (setq! lsp-bridge-enable-inlay-hint t)
-  )
+  (setq! lsp-bridge-enable-inlay-hint t))
 #+end_src
 
 ** Code Formatting
