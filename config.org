@@ -2855,7 +2855,9 @@ Enable hinlay hints and make the font a little smaller than the rest
 (use-package! lsp-bridge
   :config
   (global-lsp-bridge-mode)
-  (setq! lsp-bridge-enable-inlay-hint t))
+  (setq! lsp-bridge-enable-inlay-hint t)
+  (map! )
+  )
 #+end_src
 
 ** Code Formatting
