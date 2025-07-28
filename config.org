@@ -2769,7 +2769,7 @@ map ielm to ~SPC :~
 (map! :leader ":" #'ielm)
 #+end_src
 
-** lsp-mode
+** LSP
 
 #+begin_src elisp
 (use-package! lsp-treemacs
