@@ -2774,7 +2774,6 @@ map ielm to ~SPC :~
 
 #+begin_src elisp
 (use-package! lsp-treemacs
-  :if (featurep lsp)
   :after lsp-mode  ;; and treemacs
   :config (lsp-treemacs-sync-mode 1))
 #+end_src
