@@ -111,6 +111,7 @@ But this would active again resizing to the right...
 :END:
 
 limit evil-snipe to the bufffer
+
 #+BEGIN_SRC elisp
 (after! evil-snipe
   (setq evil-snipe-scope 'visible
