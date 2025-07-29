@@ -169,6 +169,7 @@ https://jackjamison.xyz/blog/emacs-garbage-collection/
 
 Sway automatically focues a frame when moving the mouse over. Emacs does not
 register this and mouse clicks are registed on the wrong frame.
+To prevent this, we can set focus-follow to 'auto-raise.
 
 #+BEGIN_SRC elisp
 (setq! focus-follow-mouse 'auto-raise)
