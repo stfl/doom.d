@@ -57,6 +57,8 @@
 
 (run-with-idle-timer 1.2 t 'garbage-collect)
 
+(setq! focus-follow-mouse t)
+
 (setq doom-theme 'doom-one)
 
 (setq! display-line-numbers-type t)
