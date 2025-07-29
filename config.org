@@ -172,7 +172,8 @@ register this and mouse clicks are registed on the wrong frame.
 To prevent this, we can set focus-follow to 'auto-raise.
 
 #+BEGIN_SRC elisp
-(setq! focus-follow-mouse 'auto-raise)
+;; (setq! focus-follow-mouse 'auto-raise)
+(setq! focus-follow-mouse t)
 #+END_SRC
 
 * Theme
