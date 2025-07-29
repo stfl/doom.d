@@ -167,7 +167,8 @@ https://jackjamison.xyz/blog/emacs-garbage-collection/
 
 ** Frames
 
-src
+#begin_src
+#end_src
 
 * Theme
 ** doom-theme
