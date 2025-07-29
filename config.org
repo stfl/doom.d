@@ -167,8 +167,9 @@ https://jackjamison.xyz/blog/emacs-garbage-collection/
 
 ** Frames
 
-#begin_src
-#end_src
+#+BEGIN_SRC elisp
+(setq! focus-follow-mouse 'auto-raise)
+#+END_SRC
 
 * Theme
 ** doom-theme
