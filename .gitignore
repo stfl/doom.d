@@ -1,11 +1,11 @@
 *.sync-conflict*
+.aider*
+.env
 .syncthing*.tmp
 /.stversions/
 /flycheck_init.el
 /intelephense.txt
 /nil
-/node_modules/
 /yarn.lock
 flycheck_config.el
-.aider*
-.env
+node_modules/
