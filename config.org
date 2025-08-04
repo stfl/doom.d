@@ -2880,8 +2880,8 @@ Enable hinlay hints and make the font a little smaller than the rest
         "C-k" #'lsp-bridge-peek-list-prev-line
         "C-S-j" #'lsp-bridge-peek-file-content-next-line
         "C-S-k" #'lsp-bridge-peek-file-content-prev-line
-        "[RET]" #'lsp-bridge-peek-jump
-        "[ESC]" #'lsp-bridge-peek-abort)
+        "<ret>" #'lsp-bridge-peek-jump
+        "<esc>" #'lsp-bridge-peek-abort)
   
   (global-lsp-bridge-mode))
 #+end_src
