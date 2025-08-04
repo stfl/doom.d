@@ -1958,33 +1958,35 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-signature-help t
          lsp-bridge-enable-auto-format-code nil
+         lsp-brdige-
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
   
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
+    ;; :definition #'lsp-bridge-find-def
     :references #'lsp-bridge-find-references
     :documentation #'lsp-bridge-popup-documentation
     :implementations #'lsp-bridge-find-impl
     :type-definition #'lsp-bridge-find-type-def)
 
   (map! :map lsp-bridge-peek-keymap
-        "C-j" #'lsp-bridge-peek-list-next-line
-        "C-k" #'lsp-bridge-peek-list-prev-line
-        "C-S-j" #'lsp-bridge-peek-file-content-next-line
-        "C-S-k" #'lsp-bridge-peek-file-content-prev-line
-        "RET" #'lsp-bridge-peek-jump
-        "ESC" #'lsp-bridge-peek-abort
-        )
+        :g "C-j" #'lsp-bridge-peek-list-next-line
+        :g "C-k" #'lsp-bridge-peek-list-prev-line
+        :g "C-S-j" #'lsp-bridge-peek-file-content-next-line
+        :g "C-S-k" #'lsp-bridge-peek-file-content-prev-line
+        :g "RET" #'lsp-bridge-peek-jump
+        :g "C-SPC" #'lsp-bridge-peek-jump
+        :g "ESC" #'lsp-bridge-peek-abort)
   
   (global-lsp-bridge-mode))
 
 (after! acm-mode
   (setq! acm-enable-capf t)
   (map! :map acm-mode-map
-        :i "C-j" #'acm-select-next
-        :i "C-k" #'acm-select-prev)
+        :g "C-j" #'acm-select-next
+        :g "C-k" #'acm-select-prev)
   )
 
 (map! (:when (modulep! :editor format)
