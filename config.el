@@ -2145,6 +2145,10 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! ssh-config-mode :defer t)
 
+(use-package! bitbake-ts-mode
+  :defer t
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode)))
+
 ;; (use-package! bitbake-modes
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
 ;;   :defer t)
