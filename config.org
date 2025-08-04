@@ -2728,7 +2728,6 @@ use bash when opening a vterm in a tramp dir:
                     :server-id 'tinymist)))
 #+end_src
 
-
 #+begin_src emacs-lisp
 (after! org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
