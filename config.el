@@ -1956,23 +1956,35 @@ org-default-priority is treated as lower than the same set value"
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
-         ;; lsp-bridge-enable-signature-help t
-         ;; lsp-bridge-enable-auto-format-code nil
+         lsp-bridge-enable-signature-help t
+         lsp-bridge-enable-auto-format-code nil
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         ;; acm-enable-capf t
          )
-  ;; (map! :map ?? lsp-bridge-map)
+  
+  (set-lookup-handlers! 'lsp-bridge-mode
+    :definition #'lsp-bridge-peek
+    :references #'lsp-bridge-find-references
+    :documentation #'lsp-bridge-popup-documentation
+    :implementations #'lsp-bridge-find-impl
+    :type-definition #'lsp-bridge-find-type-def)
+
+  (map! :map lsp-bridge-peek-keymap
+        "C-j" #'lsp-bridge-peek-list-next-line
+        "C-k" #'lsp-bridge-peek-list-prev-line
+        "C-S-j" #'lsp-bridge-peek-file-content-next-line
+        "C-S-k" #'lsp-bridge-peek-file-content-prev-line
+        "RET" #'lsp-bridge-peek-jump
+        "ESC" #'lsp-bridge-peek-abort
+        )
+  
   (global-lsp-bridge-mode))
 
 (after! acm-mode
-  :config
-  (setq! ;; acm-enable-capf t
-         )
+  (setq! acm-enable-capf t)
   (map! :map acm-mode-map
-        "\C-j" #'acm-select-next
-        "\C-k" #'acm-select-prev
-        )
+        :i "C-j" #'acm-select-next
+        :i "C-k" #'acm-select-prev)
   )
 
 (map! (:when (modulep! :editor format)
@@ -2045,12 +2057,13 @@ org-default-priority is treated as lower than the same set value"
                                    :request "launch"
                                    :name "Python :: Run pytest (at point)")))
 
-(map!
- :mode rustic-mode
- :map rustic-mode-map
- :localleader
- :desc "rerun test" "t r" #'rustic-cargo-test-rerun
- )
+(after! rust-mode
+  (setq! rust-mode-treesitter-derive t))
+
+(map! :mode rustic-mode
+      :map rustic-mode-map
+      :localleader
+      :desc "rerun test" "t r" #'rustic-cargo-test-rerun)
 
 (after! rustic
   (when (executable-find "cargo-nextest")
