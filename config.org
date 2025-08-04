@@ -2729,9 +2729,9 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src emacs-lisp
-(after! lsp-bridge
-  (add-to-list 'lsp-bridge-single-lang-server-mode-list
-               '(typst-ts-mode . "typst"))
+;; (after! lsp-bridge
+;;   (add-to-list 'lsp-bridge-single-lang-server-mode-list
+;;                '(typst-ts-mode . "typst")))
 #+end_src
 
 
