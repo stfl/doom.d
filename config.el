@@ -1957,7 +1957,8 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-org-babel t
-         lsp-bridge-log-level 'debug
+         lsp-bridge-log-level 'default
+         ;; lsp-bridge-log-level 'debug
          acm-enable-capf t)
   ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))

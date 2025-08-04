@@ -2,5 +2,5 @@
     "name": "language-server-bitbake",
     "languageId": "bitbake",
     "command": [ "/home/stefan/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
-    "settings": { }
+    "settings": {}
 }
