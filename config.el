@@ -1957,11 +1957,10 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! lsp-bridge
   :config
-  (global-lsp-bridge-mode)
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
          lsp-bridge-enable-inlay-hint t)
   ;; (map! :map ?? lsp-bridge-map)
-  )
+  (global-lsp-bridge-mode))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
