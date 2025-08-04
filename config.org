@@ -2865,7 +2865,6 @@ Enable hinlay hints and make the font a little smaller than the rest
          ;; lsp-bridge-enable-auto-format-code nil
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         ;; acm-enable-capf t
          )
   ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))
@@ -2877,7 +2876,6 @@ https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
 (after! acm-mode
   (setq! acm-enable-capf t)
   (map! :map acm-mode-map
-        :a
         :i "C-j" #'acm-select-next
         :i "C-k" #'acm-select-prev)
   )
