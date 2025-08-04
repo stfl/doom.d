@@ -3480,8 +3480,9 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp :tangle packages.el
 (package! bitbake-ts-mode
-  
-  )
+  :recipe (:host github
+           :repo "seokbeomKim/bitbake-ts-mode"
+           :files ("*.el")))
 #+end_src
 
 #+begin_src elisp :tangle packages.el
