@@ -2872,7 +2872,7 @@ Enable hinlay hints and make the font a little smaller than the rest
     :references #'lsp-bridge-find-references
     :documentation #'lsp-bridge-popup-documentation
     :implementations #'lsp-bridge-find-impl
-    :type-definition #'lsp-find-type-definition)
+    :type-definition #'lsp-bridge-find-type-def)
   
   (global-lsp-bridge-mode))
 #+end_src
