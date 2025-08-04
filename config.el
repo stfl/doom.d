@@ -2159,7 +2159,8 @@ org-default-priority is treated as lower than the same set value"
 
 (after! lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
-               '(bitbake-ts-mode . "bitbake-language-server") t))
+               ;; '(bitbake-ts-mode . "bitbake-language-server")
+               '(bitbake-ts-mode . "language-server-bitbake")))
 
 ;; (use-package! bitbake-modes
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
