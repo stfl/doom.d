@@ -2863,6 +2863,7 @@ Enable hinlay hints and make the font a little smaller than the rest
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-signature-help t
          lsp-bridge-enable-auto-format-code nil
+         lsp-brdige-
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
@@ -2880,8 +2881,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         "C-S-j" #'lsp-bridge-peek-file-content-next-line
         "C-S-k" #'lsp-bridge-peek-file-content-prev-line
         "RET" #'lsp-bridge-peek-jump
-        "ESC" #'lsp-bridge-peek-abort
-        )
+        "ESC" #'lsp-bridge-peek-abort)
   
   (global-lsp-bridge-mode))
 #+end_src
