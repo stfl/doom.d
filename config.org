@@ -3042,6 +3042,12 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 ** Rust
 
 #+begin_src elisp
+(after! rust-mode
+  (setq rust-mode-treesitter-derive t))
+#+end_src
+
+
+#+begin_src elisp
 (map! :mode rustic-mode
       :map rustic-mode-map
       :localleader
