@@ -2773,6 +2773,15 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 * Coding
+
+#+begin_src elisp
+(after! flycheck
+  (map! :map lsp-bridge-mode-map
+        :leader
+        "c x" #'lsp-bridge-diagnostic-list)
+  )
+#+end_src
+
 ** ielm REPL
 
 map ielm to ~SPC :~
