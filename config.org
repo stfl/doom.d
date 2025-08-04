@@ -2796,10 +2796,10 @@ map ielm to ~SPC :~
 
 #+begin_src elisp
 (map! :after lsp-mode
-       :map lsp-mode-map
-       :leader
-       :prefix ("c" . "+code")
-       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
+      :map lsp-mode-map
+      :leader
+      :prefix ("c" . "+code")
+      :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
 #+end_src
 
 *** Options
