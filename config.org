@@ -3043,7 +3043,7 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 #+begin_src elisp
 (after! rust-mode
-  (setq rust-mode-treesitter-derive t))
+  (setq! rust-mode-treesitter-derive t))
 #+end_src
 
 
