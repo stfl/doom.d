@@ -2007,6 +2007,9 @@ org-default-priority is treated as lower than the same set value"
         lsp-auto-guess-root nil
         lsp-idle-delay 0.8))
 
+(after! lsp-bridge
+  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff"))
+
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 
 (after! conda (conda-env-autoactivate-mode))
@@ -2093,6 +2096,9 @@ org-default-priority is treated as lower than the same set value"
 
 (after! nix-mode
   (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode)))
+
+(after! lsb-bridge
+  (setq! lsp-bridge-nix-lsp-server "nil"))
 
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
 
@@ -2214,6 +2220,9 @@ org-default-priority is treated as lower than the same set value"
 
 (after! projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
+
+(after! lsp-bridge
+  (setq! lsp-bridge-c-lsp-server "ccls"))
 
 (defun run-ctest (arg)
   (interactive "P")
