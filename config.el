@@ -1901,16 +1901,21 @@ org-default-priority is treated as lower than the same set value"
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
+(after! flycheck
+  (map! :map flycheck-mode-map
+        :leader
+        "c x" #'consult-flycheck)
+
 (map! :leader ":" #'ielm)
 
 (after! lsp-treemacs
   (lsp-treemacs-sync-mode 1))
 
-(map! (:after lsp-mode
-       :map lsp-mode-map
-       :leader
-       :prefix ("c" . "+code")
-       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
+(map! :after lsp-mode
+      :map lsp-mode-map
+      :leader
+      :prefix ("c" . "+code")
+      :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
 
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t
