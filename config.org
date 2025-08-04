@@ -2895,8 +2895,7 @@ https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
   (setq! acm-enable-capf t)
   (map! :map acm-mode-map
         :g "C-j" #'acm-select-next
-        :g "C-k" #'acm-select-prev)
-  )
+        :g "C-k" #'acm-select-prev))
 #+end_src
 
 ** Code Formatting
