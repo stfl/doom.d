@@ -2873,6 +2873,10 @@ Enable hinlay hints and make the font a little smaller than the rest
     :documentation #'lsp-bridge-popup-documentation
     :implementations #'lsp-bridge-find-impl
     :type-definition #'lsp-bridge-find-type-def)
+
+  (map! :map lsp-bridge-peek-keymap
+        :i "C-j" #'acm-select-next
+        :i "C-k" #'acm-select-prev)
   
   (global-lsp-bridge-mode))
 #+end_src
