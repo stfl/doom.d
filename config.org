@@ -3494,7 +3494,7 @@ Use the (almost) default keybindings in evil normal-mode
 {
     "name": "bitbake",
     "languageId": "bitbake",
-    "command": [ "bitbake-language-server"],
+    "command": [ "bitbake-language-server" ],
     "settings": { },
 }
 #+end_src
