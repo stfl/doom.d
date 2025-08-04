@@ -2871,6 +2871,7 @@ Enable hinlay hints and make the font a little smaller than the rest
   (global-lsp-bridge-mode))
 #+end_src
 
+https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el
 
 #+begin_src elisp
 (after! acm-mode
