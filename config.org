@@ -3629,8 +3629,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
 
 #+begin_src elisp
 (after! lsp-bridge
-  (setq! lsp-bridge-c-lsp-server "ccls")
-  )
+  (setq! lsp-bridge-c-lsp-server "ccls"))
 #+end_src
 
 #+begin_src elisp
