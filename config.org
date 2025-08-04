@@ -3508,7 +3508,7 @@ Alternative bitbake lsp from the vscode-bitbake project
 {
     "name": "language-server-bitbake",
     "languageId": "bitbake",
-    "command": [ "~/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
+    "command": [ "/home/stefan/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
     "settings": { }
 }
 #+end_src
