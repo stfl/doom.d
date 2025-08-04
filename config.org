@@ -2909,8 +2909,6 @@ https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
 
 ** Code Formatting
 
-
-
 mapping doom's ~+format/buffer~ and ~+format/region~
 
 #+begin_src elisp
