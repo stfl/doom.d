@@ -138,8 +138,7 @@
        (lookup           ; helps you navigate your code and documentation
         +docsets         ; ...or in Dash docsets locally
         +dictionary
-        +offline
-        )
+        +offline)
        ;; +offline)
        ;; (lsp +peek)
        ;;macos             ; MacOS-specific commands
