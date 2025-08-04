@@ -3115,7 +3115,7 @@ set alejandra as the formatter
 #+end_src
 
 #+begin_src elisp
-(after! lsb-bridge
+(after! lsp-bridge
   (setq! lsp-bridge-nix-lsp-server "nil"))
 #+end_src
 
