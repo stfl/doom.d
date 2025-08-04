@@ -1956,6 +1956,9 @@ org-default-priority is treated as lower than the same set value"
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
+         lsp-bridge-enable-signature-help t
+         ;; lsp-bridge-enable-auto-format-code
+         lsp-brid m.co
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          acm-enable-capf t)
@@ -2447,7 +2450,7 @@ org-default-priority is treated as lower than the same set value"
       (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
   
   ;; Bind the custom function to <tab> in Evil's insert state
-  (evil-define-key 'insert 'global (kbd "<tab>") #'+copilot-tab-or-default)
+  ;; (evil-define-key 'insert 'global (kbd "<tab>") #'+copilot-tab-or-default)
 
   (map! :map copilot-completion-map
         "<tab>" #'+copilot-tab-or-default
