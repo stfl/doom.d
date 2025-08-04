@@ -2778,7 +2778,7 @@ use bash when opening a vterm in a tramp dir:
 (after! flycheck
   (map! :map flycheck-mode-map
         :leader
-        "c x" #'lsp-bridge-diagnostic-list)
+        "c x" #'consult-flycheck
   )
 #+end_src
 
