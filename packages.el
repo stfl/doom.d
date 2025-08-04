@@ -1,39 +1,3 @@
-(package! drag-stuff)
-
-(package! org-clock-csv)
-
-(package! org-edna)
-
-(package! websocket)
-(package! org-roam-ui
-  :recipe (:host github
-           :repo "org-roam/org-roam-ui"
-           :files ("*.el" "out")))
-
-(package! ob-mermaid
-  :disable t)
-
-(package! org-jira
-  :disable t)
-
-;; (package! org-pandoc-import
-;;   :recipe (:host github
-;;            :repo "tecosaur/org-pandoc-import"
-;;            :files ("*.el" "filters" "preprocessors")))
-
-(package! org-super-agenda)
-
-(package! org-ql)
-
-(package! vterm :disable t)
-
-(package! typst-ts-mode
-  :recipe (:type git :host codeberg
-           :repo "meow_king/typst-ts-mode"
-           :files (:defaults "*.el")))
-
-(package! lsp-mode :disable t)
-
 ;; (package! numpydoc)
 
 (package! kubernetes :disable t)
