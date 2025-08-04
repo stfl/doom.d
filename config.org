@@ -3513,10 +3513,12 @@ lsp-bridge requires a json config file to configure the language server.
 {
     "name": "language-server-bitbake",
     "languageId": "bitbake",
-    "command": [ "bitbake-language-server", "--stdio" ],
+    "command": [ "~/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
     "settings": { }
 }
 #+end_src
+
+    "command": [ "bitbake-language-server", "--stdio" ],
 
 #+begin_src elisp :tangle packages.el
 ;; (package! bitbake-modes
