@@ -2866,12 +2866,14 @@ Enable hinlay hints and make the font a little smaller than the rest
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
-  (set-lookup-handlers! 'lsp-mode
+  
+  (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'+lsp-lookup-definition-handler
     :references #'+lsp-lookup-references-handler
     :documentation '(lsp-describe-thing-at-point :async t)
     :implementations '(lsp-find-implementation :async t)
     :type-definition #'lsp-find-type-definition)
+  
   (global-lsp-bridge-mode))
 #+end_src
 
