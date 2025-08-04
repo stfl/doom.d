@@ -2869,7 +2869,7 @@ Enable hinlay hints and make the font a little smaller than the rest
          )
   ;; (map! :map ?? lsp-bridge-map)
   (map! :map acm-mode-map
-        "C-j" #'acm-select-next)
+        "C-j" #'acm-select-next
         "C-k" #'acm-select-prev)
 
         
