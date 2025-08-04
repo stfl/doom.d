@@ -139,7 +139,6 @@
         +docsets         ; ...or in Dash docsets locally
         +dictionary
         +offline)
-       ;; +offline)
        ;; (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
