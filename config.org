@@ -4025,6 +4025,9 @@ git blame lenses
 #+end_src
 
 ** Copilot
+:PROPERTIES:
+:ID:       ee6aaae4-4c0e-4eff-b758-72cdb6cc4e4b
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! copilot
