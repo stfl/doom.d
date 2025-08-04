@@ -1,6 +1,6 @@
 {
-    "name": "bitbake",
-    // "languageId": "bitbake",
+    "name": "bitbake-language-server",
+    "languageId": "bitbake",
     "command": [ "bitbake-language-server" ],
     "settings": { },
 }
