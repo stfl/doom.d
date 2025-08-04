@@ -1956,11 +1956,12 @@ org-default-priority is treated as lower than the same set value"
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
-         lsp-bridge-enable-signature-help t
+         ;; lsp-bridge-enable-signature-help t
          ;; lsp-bridge-enable-auto-format-code
-         lsp-bridge-enable-org-babel t
+         ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         acm-enable-capf t)
+         ;; acm-enable-capf t
+         )
   ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))
 
