@@ -2882,6 +2882,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         :g "C-S-j" #'lsp-bridge-peek-file-content-next-line
         :g "C-S-k" #'lsp-bridge-peek-file-content-prev-line
         :g "RET" #'lsp-bridge-peek-jump
+        :g "C-SPC" #'lsp-bridge-peek-jump
         :g "ESC" #'lsp-bridge-peek-abort)
   
   (global-lsp-bridge-mode))
