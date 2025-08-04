@@ -2866,7 +2866,6 @@ Enable hinlay hints and make the font a little smaller than the rest
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
-  ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))
 #+end_src
 
