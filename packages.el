@@ -65,10 +65,10 @@
            ;; :files ("*.el" "out"))
   )
 
-(package! bitbake-ts-mode
-  :recipe (:host github
-           :repo "seokbeomKim/bitbake-ts-mode"
-           :files ("*.el")))
+(package! bitbake-ts-mode)
+  ;; :recipe (:host github
+  ;;          :repo "seokbeomKim/bitbake-ts-mode"
+  ;;          :files ("*.el")))
 
 ;; (package! bitbake-modes
 ;;   :recipe (:host bitbucket
