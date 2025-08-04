@@ -2868,8 +2868,7 @@ Enable hinlay hints and make the font a little smaller than the rest
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
          lsp-bridge-enable-inlay-hint t)
   ;; (map! :map ?? lsp-bridge-map)
-  (global-lsp-bridge-mode)
-  )
+  (global-lsp-bridge-mode))
 #+end_src
 
 ** Code Formatting
