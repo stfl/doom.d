@@ -2874,12 +2874,11 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 #+begin_src elisp
 (after! acm-mode
-  :config
   (setq! ;; acm-enable-capf t
          )
   (map! :map acm-mode-map
-        "\C-j" #'acm-select-next
-        "\C-k" #'acm-select-prev
+        "<C-j>" #'acm-select-next
+        "<C-k>" #'acm-select-prev
         )
   )
 #+end_src
