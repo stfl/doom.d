@@ -1958,7 +1958,9 @@ org-default-priority is treated as lower than the same set value"
 (use-package! lsp-bridge
   :config
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
-         lsp-bridge-enable-inlay-hint t)
+         lsp-bridge-enable-inlay-hint t
+         lsp-bridge-log-level 'debug
+         )
   ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))
 
