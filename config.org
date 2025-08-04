@@ -3490,6 +3490,12 @@ Use the (almost) default keybindings in evil normal-mode
                '(bitbake-ts-mode . "bitbake-language-server") t))
 #+end_src
 
+#+begin_src elisp
+(after! lsp-bridge
+  (add-to-list 'lsp-bridge-single-lang-server-mode-list
+               '(bitbake-ts-mode . "bitbake-language-server") t))
+#+end_src
+
 
 #+begin_src elisp :tangle packages.el
 ;; (package! bitbake-modes
