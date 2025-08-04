@@ -1,0 +1,6 @@
+{
+    "name": "language-server-bitbake",
+    "languageId": "bitbake",
+    "command": [ "bitbake-language-server", "--stdio" ],
+    "settings": { }
+}
