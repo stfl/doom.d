@@ -3493,7 +3493,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src js :eval no :tangle "langserver/bitbake-language-server.json"
 {
     "name": "bitbake-language-server",
-    "languageId": "bitbake-ts",
+    "languageId": "bitbake",
     "command": [ "bitbake-language-server"],
     "settings": { },
 }
