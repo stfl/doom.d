@@ -3499,7 +3499,7 @@ lsp-bridge requires a json config file to configure the language server.
     "name": "bitbake-language-server",
     "languageId": "bitbake",
     "command": [ "bitbake-language-server" ],
-    "settings": { }
+    "settings": {}
 }
 #+end_src
 
@@ -3510,7 +3510,7 @@ Alternative bitbake lsp from the vscode-bitbake project
     "name": "language-server-bitbake",
     "languageId": "bitbake",
     "command": [ "/home/stefan/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
-    "settings": { }
+    "settings": {}
 }
 #+end_src
 
