@@ -2795,11 +2795,11 @@ map ielm to ~SPC :~
 *** Key Mappings
 
 #+begin_src elisp
-(map! (:after lsp-mode
+(map! :after lsp-mode
        :map lsp-mode-map
        :leader
        :prefix ("c" . "+code")
-       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list))
+       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
 #+end_src
 
 *** Options
