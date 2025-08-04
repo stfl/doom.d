@@ -3490,8 +3490,12 @@ Use the (almost) default keybindings in evil normal-mode
                '(bitbake-ts-mode . "bitbake-language-server") t))
 #+end_src
 
-#+begin_src js :exec no :tangle "langserver/bitbake-language-server.json"
+#+begin_src js :noexec :tangle "langserver/bitbake-language-server.json"
 #+end_src
+
+#+RESULTS:
+: undefined
+
 
 
 #+begin_src elisp :tangle packages.el
