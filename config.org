@@ -3111,7 +3111,8 @@ set alejandra as the formatter
 
 #+begin_src elisp
 (after! nix-mode
-  (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode)))
+  (set-formatter! 'alejandra '("alejandra" "--quiet")
+    :modes '(nix-mode)))
 #+end_src
 
 #+begin_src elisp
