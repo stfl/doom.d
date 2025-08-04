@@ -2876,7 +2876,8 @@ https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
 #+begin_src elisp
 (after! acm-mode
   (setq! acm-enable-capf t)
-  (map! :map acm-mode-map
+  (map! :after acm-mode
+        :map acm-mode-map
         :i "C-j" #'acm-select-next
         :i "C-k" #'acm-select-prev)
   )
