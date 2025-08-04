@@ -2863,7 +2863,7 @@ Enable hinlay hints and make the font a little smaller than the rest
          lsp-bridge-enable-hover-diagnostic t
          ;; lsp-bridge-enable-signature-help t
          ;; lsp-bridge-enable-auto-format-code
-         lsp-bridge-enable-org-babel t
+         ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          acm-enable-capf t)
   ;; (map! :map ?? lsp-bridge-map)
