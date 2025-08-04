@@ -2942,7 +2942,7 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 
 #+begin_src elisp
 (after! lsp-bridge
-  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff"))
+  (setq! lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
 #+end_src
 
 *** poetry
