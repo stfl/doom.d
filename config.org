@@ -3493,8 +3493,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+begin_src elisp
 (after! lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
-               '(bitbake-ts-mode . "bitbake-language-server"))
-  )
+               '(bitbake-ts-mode . "bitbake-language-server")))
 #+end_src
 
 
