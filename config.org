@@ -3041,6 +3041,14 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
                                    :name "Python :: Run pytest (at point)")))
 #+end_src
 
+*** lsp-bridge
+
+#+begin_src elisp
+(after! lsp-bridge
+  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff")
+  )
+#+end_src
+
 ** Rust
 
 Derive rust-mode from rust-ts-mode
