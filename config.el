@@ -1986,8 +1986,7 @@ org-default-priority is treated as lower than the same set value"
   (setq! acm-enable-capf t)
   (map! :map acm-mode-map
         :g "C-j" #'acm-select-next
-        :g "C-k" #'acm-select-prev)
-  )
+        :g "C-k" #'acm-select-prev))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
