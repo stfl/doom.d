@@ -1958,7 +1958,6 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-signature-help t
          lsp-bridge-enable-auto-format-code nil
-         lsp-brdige-
          ;; lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
@@ -1980,7 +1979,9 @@ org-default-priority is treated as lower than the same set value"
         :g "C-SPC" #'lsp-bridge-peek-jump
         :g "ESC" #'lsp-bridge-peek-abort)
   
-  (global-lsp-bridge-mode))
+  (global-lsp-bridge-mode)
+  (lsp-bridge-semantic-tokens-mode t)
+  )
 
 (after! acm-mode
   (setq! acm-enable-capf t)
