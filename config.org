@@ -3643,7 +3643,6 @@ Alternative bitbake lsp from the vscode-bitbake project.
       ;; :n "T" #'gtest-run
       ;; :n "l" #'gtest-list
       )
-
 #+end_src
 
 #+begin_src elisp
