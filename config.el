@@ -1899,10 +1899,6 @@ org-default-priority is treated as lower than the same set value"
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'tinymist)))
 
-(after! lsp-bridge
-  (add-to-list 'lsp-bridge-single-lang-server-mode-list
-               '(typst-ts-mode . "typst"))
-
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
 (map! :leader ":" #'ielm)
@@ -1962,8 +1958,7 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'debug
-         acm-enable-capf t
-         )
+         acm-enable-capf t)
   ;; (map! :map ?? lsp-bridge-map)
   (global-lsp-bridge-mode))
 
