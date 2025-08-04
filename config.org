@@ -3042,11 +3042,10 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 ** Rust
 
 #+begin_src elisp
-(map!
- :mode rustic-mode
- :map rustic-mode-map
- :localleader
- :desc "rerun test" "t r" #'rustic-cargo-test-rerun
+(map! :mode rustic-mode
+      :map rustic-mode-map
+      :localleader
+      :desc "rerun test" "t r" #'rustic-cargo-test-rerun
  )
 #+end_src
 
