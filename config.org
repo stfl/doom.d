@@ -3045,8 +3045,7 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 #+begin_src elisp
 (after! lsp-bridge
-  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff")
-  )
+  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff"))
 #+end_src
 
 ** Rust
