@@ -2873,26 +2873,18 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 
 #+begin_src elisp
-(use-package! acm-mode
+(after! acm-mode
   :config
-  (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
-         lsp-bridge-enable-inlay-hint t
-         lsp-bridge-enable-hover-diagnostic t
-         ;; lsp-bridge-enable-signature-help t
-         ;; lsp-bridge-enable-auto-format-code nil
-         ;; lsp-bridge-enable-org-babel t
-         lsp-bridge-log-level 'default
-         ;; acm-enable-capf t
+  (setq! ;; acm-enable-capf t
          )
-  ;; (map! :map ?? lsp-bridge-map)
-  (global-lsp-bridge-mode))
-#+end_src
   (map! :map acm-mode-map
         "\C-j" #'acm-select-next
         "\C-k" #'acm-select-prev
 
         
         )
+  )
+#+end_src
 
 ** Code Formatting
 
