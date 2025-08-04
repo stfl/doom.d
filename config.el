@@ -6,7 +6,7 @@
 (defun stfl/goto-private-config-file ()
   "Open your private config.el file."
   (interactive)
-  (find-file (expand-file-name "config.org" doom-private-dir)))
+  (find-file (expand-file-name "config.org" doom-user-dir)))
 
 (define-key! help-map
       "dc" #'stfl/goto-private-config-file
@@ -281,15 +281,15 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-capture-templates
         `(("n" "capture to inbox" entry
            (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-private-dir "templates/template-inbox.org"))
+           (file ,(doom-path doom-user-dir "templates/template-inbox.org"))
            :empty-lines-after 1)
           ("p" "Project" entry
            (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-private-dir "templates/template-projects.org"))
+           (file ,(doom-path doom-user-dir "templates/template-projects.org"))
            :empty-lines-after 1)
           ("s" "scheduled" entry
            (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-private-dir "templates/template-scheduled.org"))
+           (file ,(doom-path doom-user-dir "templates/template-scheduled.org"))
            :empty-lines-after 1)
           ("v" "Versicherung" entry
            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
@@ -297,7 +297,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
            :root "~/Documents/Finanzielles/Einreichung Versicherung")
           ("S" "deadline" entry
            (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-private-dir "templates/template-deadline.org"))
+           (file ,(doom-path doom-user-dir "templates/template-deadline.org"))
            :empty-lines-after 1)
           ("P" "Protocol" entry
            (file ,stfl/org-gtd-inbox-absolute)
@@ -310,7 +310,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("h" "Haushalt")
           ("hw" "Wäsche" entry
            (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
-           (file ,(doom-path doom-private-dir "templates/template-wäsche.org")))
+           (file ,(doom-path doom-user-dir "templates/template-wäsche.org")))
           ))
   )
 
@@ -1958,12 +1958,12 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! lsp-bridge
   :config
-  (setq! lsp-bridge-user-langserver-dir (doom-path doom-private-dir "langserver")
+  (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-signature-help t
          lsp-bridge-enable-auto-format-code nil
-         ;; lsp-bridge-enable-org-babel t
+         lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          )
   
@@ -2184,7 +2184,7 @@ org-default-priority is treated as lower than the same set value"
   (setq lsp-ltex-server-store-path "~/.nix-profile/bin/ltex-ls"
         lsp-ltex-version "16.0.0"
         lsp-ltex-mother-tongue "de-AT"
-        lsp-ltex-user-rules-path (doom-path doom-private-dir "lsp-ltex")))
+        lsp-ltex-user-rules-path (doom-path doom-user-dir "lsp-ltex")))
 
 (use-package! ssh-config-mode :defer t)
 
@@ -2195,30 +2195,6 @@ org-default-priority is treated as lower than the same set value"
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
                ;; '(bitbake-ts-mode . "bitbake-language-server")
                '(bitbake-ts-mode . "language-server-bitbake")))
-
-;; (use-package! bitbake-modes
-;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
-;;   :defer t)
-
-;; (use-package bb-modes
-;;   :init
-;;   (add-to-list 'auto-mode-alist '("\\.bb" . bb-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.bbappend" . bb-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.bbclass" . bb-mode))
-;;   (add-to-list 'auto-mode-alist '("\\conf/.conf" . bb-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.inc$" . bb-mode))
-;;   :config
-;;   (bitbake-lsp-register))
-
-;; (defun bitbake-lsp-register ()
-;;   "Register to start using this language server."
-;;   (interactive)
-;;   (add-to-list 'lsp-language-id-configuration '(bb-mode . "bitbake"))
-;;     (lsp-register-client
-;;      (make-lsp-client :new-connection
-;;                       (lsp-stdio-connection `(,(executable-find "bitbake-language-server")))
-;;                       :activation-fn (lsp-activate-on "*.bb" "*.bbappend" "*.bbclass" "*.inc" "conf/*.conf")
-;;                       :server-id 'bitbake)))
 
 (use-package! meson-mode
   :config (add-hook! 'meson-mode-hook #'company-mode))

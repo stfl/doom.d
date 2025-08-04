@@ -59,24 +59,9 @@
 ;; bbatsov/adoc-mode
 (package! adoc-mode)
 
-(package! ssh-config-mode
-  ;; :recipe (:host github
-           ;; :repo "jhgorrell/ssh-config-mode-el"
-           ;; :files ("*.el" "out"))
-  )
+(package! ssh-config-mode)
 
 (package! bitbake-ts-mode)
-
-;; (package! bitbake-modes
-;;   :recipe (:host bitbucket
-;;            :repo "olanilsson/bitbake-modes"
-;;            ;; :files ("*.el")
-;;            ))
-
-;; (package! bb-mode
-;;   :recipe (:host github
-;;            :repo "mferland/bb-mode"
-;;            :files ("*.el")))
 
 (package! meson-mode :disable t)
 
