@@ -1899,6 +1899,10 @@ org-default-priority is treated as lower than the same set value"
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'tinymist)))
 
+(after! lsp-bridge
+  (add-to-list 'lsp-bridge-single-lang-server-mode-list
+               '(typst-ts-mode . "typst"))
+
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
 (map! :leader ":" #'ielm)
@@ -2146,8 +2150,11 @@ org-default-priority is treated as lower than the same set value"
 (use-package! ssh-config-mode :defer t)
 
 (use-package! bitbake-ts-mode
-  :defer t
   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode)))
+
+(after! lsp-bridge
+  (add-to-list 'lsp-bridge-single-lang-server-mode-list
+               '(bitbake-ts-mode . "bitbake-language-server")))
 
 ;; (use-package! bitbake-modes
 ;;   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
