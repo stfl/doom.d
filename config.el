@@ -2013,7 +2013,7 @@ org-default-priority is treated as lower than the same set value"
         lsp-idle-delay 0.8))
 
 (after! lsp-bridge
-  (setq! lsp-bridge-python-multi-lsp-server "pyright_ruff"))
+  (setq! lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
 
 (after! poetry (setq poetry-tracking-strategy 'projectile))
 
