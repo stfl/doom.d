@@ -1390,7 +1390,8 @@ relevant again"
   (stfl/org-agenda-set-someday '(4)))
 
 (defun stfl/org-agenda-remove-someday ()
-  "Remove SOMEDAY tag and scheduling from the current element and reintegrate into the Agenda"
+  "Remove SOMEDAY tag and scheduling from the current element and
+reintegrate into the Agenda"
   (interactive)
   (unless (stfl/org-agenda-someday?)
     (error "Element has no SOMEDAY tag"))
