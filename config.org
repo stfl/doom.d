@@ -3503,7 +3503,7 @@ lsp-bridge requires a json config file to configure the language server.
 }
 #+end_src
 
-Alternative bitbake lsp from the vscode-bitbake project
+Alternative bitbake lsp from the vscode-bitbake project.
 
 #+begin_src js :eval no :tangle "langserver/language-server-bitbake.json"
 {
