@@ -1958,7 +1958,6 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-hover-diagnostic t
          lsp-bridge-enable-signature-help t
          ;; lsp-bridge-enable-auto-format-code
-         lsp-brid m.co
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          acm-enable-capf t)
