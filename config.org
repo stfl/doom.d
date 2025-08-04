@@ -2868,7 +2868,7 @@ Enable hinlay hints and make the font a little smaller than the rest
          )
   
   (set-lookup-handlers! 'lsp-bridge-mode
-    :definition #'+lsp-lookup-definition-handler
+    :definition #'lsp-bridge-peek
     :references #'+lsp-lookup-references-handler
     :documentation '(lsp-describe-thing-at-point :async t)
     :implementations '(lsp-find-implementation :async t)
