@@ -2877,8 +2877,8 @@ Enable hinlay hints and make the font a little smaller than the rest
   (setq! ;; acm-enable-capf t
          )
   (map! :map acm-mode-map
-        "<C-j>" #'acm-select-next
-        "<C-k>" #'acm-select-prev
+        :i "C-j" #'acm-select-next
+        :i "C-k" #'acm-select-prev
         )
   )
 #+end_src
