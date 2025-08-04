@@ -2876,10 +2876,10 @@ Enable hinlay hints and make the font a little smaller than the rest
     :type-definition #'lsp-bridge-find-type-def)
 
   (map! :map lsp-bridge-peek-keymap
-        "C-j" #'lsp-bridge-peek-list-next-line
-        "C-k" #'lsp-bridge-peek-list-prev-line
-        "C-S-j" #'lsp-bridge-peek-file-content-next-line
-        "C-S-k" #'lsp-bridge-peek-file-content-prev-line
+        :g "C-j" #'lsp-bridge-peek-list-next-line
+        :g "C-k" #'lsp-bridge-peek-list-prev-line
+        :g "C-S-j" #'lsp-bridge-peek-file-content-next-line
+        :g "C-S-k" #'lsp-bridge-peek-file-content-prev-line
         :g "<ret>" #'lsp-bridge-peek-jump
         :g "<esc>" #'lsp-bridge-peek-abort)
   
