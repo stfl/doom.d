@@ -3486,7 +3486,7 @@ Use the (almost) default keybindings in evil normal-mode
   :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode)))
 #+end_src
 
-Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge
+Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
 
 #+begin_src elisp
 (after! lsp-bridge
@@ -3495,7 +3495,7 @@ Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge
 #+end_src
 
 lsp-bridge requires a json config file to configure the language server.
-=NOTE:= the ~:tangle "langserver/<server>.json"~ 
+=NOTE:= the ~:tangle "langserver/<server>.json"~ needs to match the alist above ~(<mode> . <server>)~
 
 #+begin_src js :eval no :tangle "langserver/bitbake-language-server.json"
 {
