@@ -3485,6 +3485,12 @@ Use the (almost) default keybindings in evil normal-mode
            :files ("*.el")))
 #+end_src
 
+#+begin_src elisp
+(use-package! bitbake-ts-mode
+  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-mode))
+  :defer t)
+#+end_src
+
 #+begin_src elisp :tangle packages.el
 ;; (package! bitbake-modes
 ;;   :recipe (:host bitbucket
