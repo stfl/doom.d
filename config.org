@@ -2776,7 +2776,7 @@ use bash when opening a vterm in a tramp dir:
 
 #+begin_src elisp
 (after! flycheck
-  (map! :map lsp-bridge-mode-map
+  (map! :map flycheck-mode-map
         :leader
         "c x" #'lsp-bridge-diagnostic-list)
   )
