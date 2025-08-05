@@ -2896,6 +2896,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         :leader
         "c r" #'lsp-bridge-rename
         "c a" #'lsp-bridge-code-action
+        "c f" #'lsp-bridge-code-format
         )
   
   (global-lsp-bridge-mode)
