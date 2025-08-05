@@ -2892,6 +2892,10 @@ Enable hinlay hints and make the font a little smaller than the rest
         :g "C-SPC" #'lsp-bridge-peek-jump
         :g "ESC" #'lsp-bridge-peek-abort)
   
+  (map! :map lsp-bridge-mode-map
+        :leader
+        "c r" #'lsp-bridge-rename)
+  
   (global-lsp-bridge-mode)
   (lsp-bridge-semantic-tokens-mode t)
   )
