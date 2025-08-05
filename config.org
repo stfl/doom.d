@@ -2894,7 +2894,9 @@ Enable hinlay hints and make the font a little smaller than the rest
   
   (map! :map lsp-bridge-mode-map
         :leader
-        "c r" #'lsp-bridge-rename)
+        "c r" #'lsp-bridge-rename
+        "c a" #'lsp-bridge-code-action
+        )
   
   (global-lsp-bridge-mode)
   (lsp-bridge-semantic-tokens-mode t)
