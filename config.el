@@ -1961,7 +1961,7 @@ org-default-priority is treated as lower than the same set value"
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
-         lsp-bridge-enable-signature-help t
+         lsp-bridge-enable-signature-help nil 
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
@@ -1984,6 +1984,13 @@ org-default-priority is treated as lower than the same set value"
         :g "C-SPC" #'lsp-bridge-peek-jump
         :g "ESC" #'lsp-bridge-peek-abort)
   
+  (map! :map lsp-bridge-mode-map
+        :leader
+        :n "c r" #'lsp-bridge-rename
+        :n "c a" #'lsp-bridge-code-action
+        :n "c f" #'lsp-bridge-code-format
+        )
+  
   (global-lsp-bridge-mode)
   (lsp-bridge-semantic-tokens-mode t)
   )
@@ -1991,8 +1998,8 @@ org-default-priority is treated as lower than the same set value"
 (after! acm-mode
   (setq! acm-enable-capf t)
   (map! :map acm-mode-map
-        :g "C-j" #'acm-select-next
-        :g "C-k" #'acm-select-prev))
+        :i "C-j" #'acm-select-next
+        :i "C-k" #'acm-select-prev))
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
@@ -2100,9 +2107,10 @@ org-default-priority is treated as lower than the same set value"
                                      :cwd nil)))
 
 (after! nix-mode
-  (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode)))
+  (set-formatter! 'alejandra '("alejandra" "--quiet")
+    :modes '(nix-mode)))
 
-(after! lsb-bridge
+(after! lsp-bridge
   (setq! lsp-bridge-nix-lsp-server "nil"))
 
 (setq-hook! 'nix-mode-hook +format-with-lsp nil)
