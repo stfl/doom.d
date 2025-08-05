@@ -2900,7 +2900,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         )
   
   (global-lsp-bridge-mode)
-  (lsp-bridge-semantic-tokens-mode t)
+  ;; (lsp-bridge-semantic-tokens-mode t)
   )
 #+end_src
 
