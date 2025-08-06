@@ -1965,7 +1965,7 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         )
+         acm-enable-capf t)
   
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
@@ -1991,15 +1991,15 @@ org-default-priority is treated as lower than the same set value"
         :n "c f" #'lsp-bridge-code-format
         )
   
-  (global-lsp-bridge-mode)
-  (lsp-bridge-semantic-tokens-mode t)
-  )
-
-(after! acm-mode
-  (setq! acm-enable-capf t)
   (map! :map acm-mode-map
         :i "C-j" #'acm-select-next
-        :i "C-k" #'acm-select-prev))
+        :i "C-k" #'acm-select-prev)
+  
+  (global-lsp-bridge-mode)
+  ;; (lsp-bridge-semantic-tokens-mode t)
+  )
+
+(after! acm-mode)
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
