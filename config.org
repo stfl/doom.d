@@ -165,7 +165,7 @@ https://jackjamison.xyz/blog/emacs-garbage-collection/
 (run-with-idle-timer 1.2 t 'garbage-collect)
 #+end_src
 
-** Mouse Window and frame selection
+** Mouse Window and Frame selection
 
 Sway automatically focues a frame when moving the mouse over. Emacs does not
 register this and mouse clicks are registed on the wrong frame.
