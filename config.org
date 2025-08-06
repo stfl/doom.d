@@ -172,7 +172,7 @@ register this and mouse clicks are registed on the wrong frame.
 
 #+BEGIN_SRC elisp
 (setq! focus-follows-mouse t
-       mouse-autoselect-window t)
+       mouse-autoselect-window nil)
 #+END_SRC
 
 * Theme
