@@ -2873,7 +2873,7 @@ Enable hinlay hints and make the font a little smaller than the rest
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         )
+         acm-enable-capf t)
   
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
@@ -2899,6 +2899,10 @@ Enable hinlay hints and make the font a little smaller than the rest
         :n "c f" #'lsp-bridge-code-format
         )
   
+  (map! :map acm-mode-map
+        :i "C-j" #'acm-select-next
+        :i "C-k" #'acm-select-prev)
+  
   (global-lsp-bridge-mode)
   ;; (lsp-bridge-semantic-tokens-mode t)
   )
@@ -2908,10 +2912,7 @@ https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
 
 #+begin_src elisp
 (after! acm-mode
-  (setq! acm-enable-capf t)
-  (map! :map acm-mode-map
-        :i "C-j" #'acm-select-next
-        :i "C-k" #'acm-select-prev))
+  )
 #+end_src
 
 ** Code Formatting
