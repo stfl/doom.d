@@ -2908,7 +2908,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         :i "C-j" #'acm-select-next
         :i "C-k" #'acm-select-prev)
   
-  (acm-mode nil)
+  (acm-mode t)
   (global-lsp-bridge-mode)
   ;; (lsp-bridge-semantic-tokens-mode t)
   )
