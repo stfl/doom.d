@@ -968,6 +968,7 @@ REVIEW should we define any additional tags?
                         ("@lena" . ?l)
                         ;; ("@kg" . ?k)
                         ("@jg" . ?j)
+                        ("@mfg" . ?m)
                         ;; ("@robert" . ?r)
                         ;; ("@baudock_meeting" . ?b)
                         ;; ("@PC" . ?p)
