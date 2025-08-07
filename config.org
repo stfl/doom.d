@@ -3544,8 +3544,7 @@ Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
                ;; '(bitbake-ts-mode . "bitbake-language-server")
                '(bitbake-ts-mode . "language-server-bitbake"))
-  (add-to-list 'lsp-bridge-mode-hook 'bitbake-ts-mode-hook)
-  )
+  (add-to-list 'lsp-bridge-mode-hook 'bitbake-ts-mode-hook))
 #+end_src
 
 lsp-bridge requires a json config file to configure the language server.
