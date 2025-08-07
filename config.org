@@ -2876,7 +2876,9 @@ Enable hinlay hints and make the font a little smaller than the rest
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         acm-enable-capf t)
+         acm-enable-capf t
+         acm-enable-org-roam t
+         )
   
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
