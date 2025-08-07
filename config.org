@@ -965,6 +965,7 @@ REVIEW should we define any additional tags?
                         ("@home" . ?h)
                         ("@office". ?o)
                         ("@sarah" . ?s)
+                        ("@sarah" . ?l)
                         ("@kg" . ?k)
                         ("@jg" . ?j)
                         ;; ("@robert" . ?r)
