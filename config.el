@@ -1926,8 +1926,8 @@ org-default-priority is treated as lower than the same set value"
   ;; (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.aider*\\'")
   )
 
-(after! lsp-mode
-  (when (executable-find "emacs-lsp-booster")
+(when (executable-find "emacs-lsp-booster")
+  (after! lsp-mode
     (message "setting up emacs-lsp-booster")
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
@@ -1938,7 +1938,7 @@ org-default-priority is treated as lower than the same set value"
                  (not (functionp 'json-rpc-connection))  ;; native json-rpc
                  (executable-find "emacs-lsp-booster"))
             (progn
-              (message "Using emacs-lsp-booster for %s!" orig-result)
+              (message "Using emacs-lsp-booster for %s!" (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
               (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
