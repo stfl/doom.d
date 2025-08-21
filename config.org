@@ -2914,6 +2914,8 @@ https://github.com/konrad1977/flyover
   :after flycheck
   :config
   (setq flyover-levels '(error warning info))  ; Show all levels
+  (setq flyover-use-theme-colors t) ;; Use theme colors for error/warning/info faces
+  ;; (setq flyover-background-lightness 45) ;; Adjust background lightness (lower values = darker)
 
   (add-hook 'flycheck-mode-hook #'flyover-mode)
   )
