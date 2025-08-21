@@ -2909,6 +2909,10 @@ https://github.com/konrad1977/flyover
 (package! flyover :recipe (:host github :repo "konrad1977/flyover"))
 #+end_src
 
+#+begin_src elisp :tangle packages.el
+(package! flyover :recipe (:host github :repo "konrad1977/flyover"))
+#+end_src
+
 ** Code Formatting
 
 mapping doom's ~+format/buffer~ and ~+format/region~
