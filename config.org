@@ -2909,7 +2909,7 @@ https://github.com/konrad1977/flyover
 (package! flyover :recipe (:host github :repo "konrad1977/flyover"))
 #+end_src
 
-#+begin_src elisp :tangle packages.el
+#+begin_src elisp
 (use-package! flyover
   :after flycheck
   :config
