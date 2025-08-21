@@ -2823,7 +2823,7 @@ Enable hinlay hints and make the font a little smaller than the rest
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t
          lsp-headerline-breadcrumb-enable t
-         lsp-use-plists t)
+         )
   )
 #+end_src
 
@@ -2832,6 +2832,8 @@ Enable hinlay hints and make the font a little smaller than the rest
 #+begin_src elisp
 (when (executable-find "emacs-lsp-booster")
   (after! lsp-mode
+    (setq! lsp-use-plists t)
+    
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
       (let ((orig-result (funcall old-fn cmd test?)))
