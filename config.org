@@ -2913,27 +2913,21 @@ https://github.com/konrad1977/flyover
 (use-package! flyover
   :after flycheck
   :config
-  (setq flyover-levels '(error warning info))  ; Show all levels
-  (setq flyover-use-theme-colors t) ;; Use theme colors for error/warning/info faces
-  ;; (setq flyover-background-lightness 45) ;; Adjust background lightness (lower values = darker)
-  ;; (setq flyover-percent-darker 40) ;; Make icon background darker than foreground
-  ;; (setq flyover-text-tint 'lighter) ;; or 'darker or nil
-  ;; (setq flyover-text-tint-percent 50) ;; "Percentage to lighten or darken the text when tinting is enabled."
+  (setq! flyover-levels '(error warning info)  ; Show all levels
+         flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
+         ;; flyover-background-lightness 45 ;; Adjust background lightness (lower values = darker)
+         ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
+         ;; flyover-text-tint 'lighter ;; or 'darker or nil
+         ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
+         flyover-debug nil ;; Enable debug messages
+         ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
+         
+         ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
+         ;; flyover-max-line-length 80 ;; Maximum length of each line when wrapping messages
 
 
-  (setq flyover-debug nil) ;; Enable debug messages
-  
-  ;; (setq flyover-debounce-interval 0.2) ;; Time in seconds to wait before checking and displaying errors after a change
-
-  ;; Enable wrapping of long error messages across multiple lines
-  ;; (setq flyover-wrap-messages t)
-
-  ;; Maximum length of each line when wrapping messages
-  ;; (setq flyover-max-line-length 80)
-
-
-  (add-hook 'flycheck-mode-hook #'flyover-mode)
-  )
+         (add-hook 'flycheck-mode-hook #'flyover-mode)
+         )
 #+end_src
 
 ** Code Formatting
