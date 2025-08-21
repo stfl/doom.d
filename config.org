@@ -2842,7 +2842,7 @@ Enable hinlay hints and make the font a little smaller than the rest
                  (not (functionp 'json-rpc-connection))  ;; native json-rpc
                  (executable-find "emacs-lsp-booster"))
             (progn
-              (message "Using emacs-lsp-booster for %s!" (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
+              (message "Using emacs-lsp-booster for %s!" orig-result)
               (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
