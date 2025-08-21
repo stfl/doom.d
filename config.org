@@ -2915,7 +2915,7 @@ https://github.com/konrad1977/flyover
   :config
   (setq! flyover-checkers '(flycheck flymake)
          flyover-levels '(error warning info)  ; Show all levels
-         ;; flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
+         flyover-use-theme-colors nil ;; Use theme colors for error/warning/info faces
          ;; flyover-background-lightness 45 ;; Adjust background lightness (lower values = darker)
          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
          flyover-text-tint 'lighter ;; or 'darker or nil
