@@ -2926,7 +2926,7 @@ https://github.com/konrad1977/flyover
          
          ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
          ;; flyover-max-line-length 80 ;; Maximum length of each line when wrapping messages
-         flyover-line-position-offset 1
+         flyover-line-position-offset 0
          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
 )
