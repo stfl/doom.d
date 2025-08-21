@@ -2824,7 +2824,6 @@ Enable hinlay hints and make the font a little smaller than the rest
   (setq! lsp-inlay-hint-enable t
          lsp-headerline-breadcrumb-enable t
          lsp-use-plists t)
-  ;; (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.aider*\\'")
   )
 #+end_src
 
