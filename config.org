@@ -2921,6 +2921,8 @@ https://github.com/konrad1977/flyover
   ;; (setq flyover-text-tint-percent 50) ;; "Percentage to lighten or darken the text when tinting is enabled."
 
 
+  (setq flyover-debug nil) ;; Enable debug messages
+
   (add-hook 'flycheck-mode-hook #'flyover-mode)
   )
 #+end_src
