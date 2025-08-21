@@ -1990,6 +1990,31 @@ org-default-priority is treated as lower than the same set value"
   ;; (lsp-bridge-semantic-tokens-mode t)
   )
 
+(use-package! flyover
+  :after flycheck
+  :config
+  (setq flyover-levels '(error warning info))  ; Show all levels
+  (setq flyover-use-theme-colors t) ;; Use theme colors for error/warning/info faces
+  ;; (setq flyover-background-lightness 45) ;; Adjust background lightness (lower values = darker)
+  ;; (setq flyover-percent-darker 40) ;; Make icon background darker than foreground
+  ;; (setq flyover-text-tint 'lighter) ;; or 'darker or nil
+  ;; (setq flyover-text-tint-percent 50) ;; "Percentage to lighten or darken the text when tinting is enabled."
+
+
+  (setq flyover-debug nil) ;; Enable debug messages
+  
+  ;; (setq flyover-debounce-interval 0.2) ;; Time in seconds to wait before checking and displaying errors after a change
+
+  ;; Enable wrapping of long error messages across multiple lines
+  ;; (setq flyover-wrap-messages t)
+
+  ;; Maximum length of each line when wrapping messages
+  ;; (setq flyover-max-line-length 80)
+
+
+  (add-hook 'flycheck-mode-hook #'flyover-mode)
+  )
+
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
        :v "SPC =" '+format/region
