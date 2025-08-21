@@ -1,3 +1,5 @@
+;; -*- no-byte-compile: t; -*-
+;; config.el --- Stefan's Doom Emacs configuration -*- lexical-binding: t; -*-
 
 (setq user-full-name "Stefan Lendl"
       user-mail-address "ste.lendl@gmail.com")
