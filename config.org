@@ -2926,7 +2926,7 @@ https://github.com/konrad1977/flyover
          ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
          
          ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
-         ;; flyover-max-line-length 80 ;; Maximum length of each line when wrapping messages
+         flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
          
          flyover-hide-checker-name t
          
