@@ -2901,6 +2901,14 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 https://github.com/manateelazycat/lsp-bridge/blob/master/acm/acm.el#L233
 
+** Flyover
+
+https://github.com/konrad1977/flyover
+
+#+begin_src elisp :tangle packages.el
+(package! flyover :recipe (:host github :repo "konrad1977/flyover"))
+#+end_src
+
 ** Code Formatting
 
 mapping doom's ~+format/buffer~ and ~+format/region~
