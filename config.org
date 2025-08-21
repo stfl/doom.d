@@ -2913,7 +2913,8 @@ https://github.com/konrad1977/flyover
 (use-package! flyover
   :after flycheck
   :config
-  (setq! flyover-levels '(error warning info)  ; Show all levels
+  (setq! flyover-checkers '(flycheck flymake)
+         flyover-levels '(error warning info)  ; Show all levels
          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
          ;; flyover-background-lightness 45 ;; Adjust background lightness (lower values = darker)
          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
