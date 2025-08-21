@@ -2842,7 +2842,6 @@ Enable hinlay hints and make the font a little smaller than the rest
            (when (byte-code-function-p bytecode)
              (funcall bytecode))))
        (apply old-fn args)))
-
     
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
