@@ -1923,13 +1923,13 @@ org-default-priority is treated as lower than the same set value"
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t
          lsp-headerline-breadcrumb-enable t
-         lsp-use-plists t)
+         lsp-ui-sideline-enable nil)
   )
 
 (when (executable-find "emacs-lsp-booster")
   (after! lsp-mode
-    (message "setting up emacs-lsp-booster")
-
+    (setq! lsp-use-plists t)
+    
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
       (let ((orig-result (funcall old-fn cmd test?)))
