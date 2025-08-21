@@ -2822,7 +2822,10 @@ Enable hinlay hints and make the font a little smaller than the rest
 #+begin_src elisp
 (after! lsp-mode
   (setq! lsp-inlay-hint-enable t
-         lsp-headerline-breadcrumb-enable t)
+         lsp-headerline-breadcrumb-enable t
+         lsp-use-plists
+         )
+  
   ;; (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.aider*\\'")
   )
 #+end_src
@@ -2838,6 +2841,7 @@ Enable hinlay hints and make the font a little smaller than the rest
       (let ((orig-result (funcall old-fn cmd test?)))
         (if (and (not test?)                             ;; for check lsp-server-present?
                  (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                 lsp-use-plists
                  (not (functionp 'json-rpc-connection))  ;; native json-rpc
                  (executable-find "emacs-lsp-booster"))
             (progn
