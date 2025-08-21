@@ -2913,7 +2913,7 @@ https://github.com/konrad1977/flyover
 (use-package! flyover
   :after flycheck
   :config
-  (setq! flyover-checkers '(flycheck flymake)
+  (setq! flyover-checkers '(flycheck)
          ;; flyover-levels '(error warning info)  ; Show all levels
          flyover-levels '(error)  ; only show errors with flyover
          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
