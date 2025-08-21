@@ -2931,7 +2931,7 @@ https://github.com/konrad1977/flyover
          flyover-hide-checker-name t
          
          flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
-         flyover-virtual-line-type 'straight-arrow
+         ;; flyover-virtual-line-type 'straight-arrow
          
          flyover-line-position-offset 1
          
