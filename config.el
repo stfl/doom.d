@@ -1,4 +1,4 @@
-;; config.el --- Stefan's Doom Emacs configuration -*- lexical-binding: t; -*-
+;; -*- lexical-binding: t; -*-
 ;; -*- no-byte-compile: t; -*-
 
 (setq user-full-name "Stefan Lendl"
