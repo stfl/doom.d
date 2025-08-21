@@ -1942,7 +1942,6 @@ org-default-priority is treated as lower than the same set value"
               (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
-)
 
 (use-package! lsp-bridge
   :disabled t
