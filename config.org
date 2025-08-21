@@ -2846,7 +2846,6 @@ Enable hinlay hints and make the font a little smaller than the rest
               (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
-)
 #+end_src
 
 *** lsp-bridge
