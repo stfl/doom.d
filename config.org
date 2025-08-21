@@ -2929,7 +2929,8 @@ https://github.com/konrad1977/flyover
          
          ;; flyover-line-position-offset 1
          flyover-hide-checker-name t
-         ;; flyover-show-at-eol t
+         flyover-show-at-eol t
+         flyover-hide-when-cursor-is-on-same-line t
          flyover-show-virtual-line t
          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
