@@ -2925,6 +2925,12 @@ https://github.com/konrad1977/flyover
   
   ;; (setq flyover-debounce-interval 0.2) ;; Time in seconds to wait before checking and displaying errors after a change
 
+  ;; Enable wrapping of long error messages across multiple lines
+  ;; (setq flyover-wrap-messages t)
+
+  ;; Maximum length of each line when wrapping messages
+  ;; (setq flyover-max-line-length 80)
+
 
   (add-hook 'flycheck-mode-hook #'flyover-mode)
   )
