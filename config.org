@@ -2928,8 +2928,8 @@ https://github.com/konrad1977/flyover
          )
 
 
-         (add-hook 'flycheck-mode-hook #'flyover-mode)
-         )
+  (add-hook 'flycheck-mode-hook #'flyover-mode)
+)
 #+end_src
 
 ** Code Formatting
