@@ -2922,6 +2922,9 @@ https://github.com/konrad1977/flyover
 
 
   (setq flyover-debug nil) ;; Enable debug messages
+  
+  ;; (setq flyover-debounce-interval 0.2) ;; Time in seconds to wait before checking and displaying errors after a change
+
 
   (add-hook 'flycheck-mode-hook #'flyover-mode)
   )
