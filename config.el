@@ -57,7 +57,8 @@
 
 (run-with-idle-timer 1.2 t 'garbage-collect)
 
-(setq! focus-follow-mouse t)
+(setq! focus-follows-mouse 'auto-raise
+       mouse-autoselect-window nil)
 
 (setq doom-theme 'doom-one)
 
@@ -512,11 +513,13 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-tag-alist '((:startgrouptag)
                         ("Context" . nil)
                         (:grouptags)
-                        ("@home" . ?h)
-                        ("@office". ?o)
+                        ;; ("@home" . ?h)
+                        ;; ("@office". ?o)
                         ("@sarah" . ?s)
-                        ("@kg" . ?k)
+                        ("@lena" . ?l)
+                        ;; ("@kg" . ?k)
                         ("@jg" . ?j)
+                        ("@mfg" . ?m)
                         ;; ("@robert" . ?r)
                         ;; ("@baudock_meeting" . ?b)
                         ;; ("@PC" . ?p)
@@ -1965,7 +1968,9 @@ org-default-priority is treated as lower than the same set value"
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
-         acm-enable-capf t)
+         acm-enable-capf t
+         acm-enable-org-roam t
+         )
   
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
@@ -1995,11 +2000,10 @@ org-default-priority is treated as lower than the same set value"
         :i "C-j" #'acm-select-next
         :i "C-k" #'acm-select-prev)
   
+  (acm-mode t)
   (global-lsp-bridge-mode)
   ;; (lsp-bridge-semantic-tokens-mode t)
   )
-
-(after! acm-mode)
 
 (map! (:when (modulep! :editor format)
        :v "g Q" '+format/region
@@ -2202,7 +2206,8 @@ org-default-priority is treated as lower than the same set value"
 (after! lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
                ;; '(bitbake-ts-mode . "bitbake-language-server")
-               '(bitbake-ts-mode . "language-server-bitbake")))
+               '(bitbake-ts-mode . "language-server-bitbake"))
+  (add-to-list 'lsp-bridge-default-mode-hooks 'bitbake-ts-mode-hook t))
 
 (use-package! meson-mode
   :config (add-hook! 'meson-mode-hook #'company-mode))
