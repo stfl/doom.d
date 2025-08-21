@@ -2834,15 +2834,6 @@ Enable hinlay hints and make the font a little smaller than the rest
   (after! lsp-mode
     (message "setting up emacs-lsp-booster")
 
-    (defun lsp-booster--advice-json-parse (old-fn &rest args)
-      "Try to parse bytecode instead of json."
-      (or
-       (when (equal (following-char) ?#)
-         (let ((bytecode (read (current-buffer))))
-           (when (byte-code-function-p bytecode)
-             (funcall bytecode))))
-       (apply old-fn args)))
-    
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
       (let ((orig-result (funcall old-fn cmd test?)))
