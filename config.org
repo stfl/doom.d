@@ -2918,7 +2918,7 @@ https://github.com/konrad1977/flyover
          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
          ;; flyover-background-lightness 45 ;; Adjust background lightness (lower values = darker)
          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
-         ;; flyover-text-tint 'lighter ;; or 'darker or nil
+         flyover-text-tint 'lighter ;; or 'darker or nil
          ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
          flyover-debug nil ;; Enable debug messages
          ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
