@@ -22,11 +22,11 @@
        ;; (company          ; the ultimate code completion backend
        ;;  +auto            ; as-you-type code completion
        ;;  +childframe)     ; a nicer company UI (Emacs 26+ only)
-       ;; (corfu
-       ;;  +icons
-       ;;  +orderless
-       ;; +dabbrev
-       ;; )
+       (corfu
+        +icons
+        +orderless
+        ;; +dabbrev
+        )
        ;; helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; (ivy              ; a search engine for love and life
@@ -65,7 +65,7 @@
        ;; +fira)
        ;; tabs              ; an tab bar for Emacs
        (treemacs          ; a project drawer, like neotree but cooler
-        ;; +lsp              ; lsp-treemacs
+        +lsp              ; lsp-treemacs
         )
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
@@ -80,7 +80,7 @@
        fold              ; (nigh) universal code folding
        (format          ; automated prettiness
         +onsave
-        ;; +lsp
+        +lsp
         )
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
@@ -139,7 +139,7 @@
         +docsets         ; ...or in Dash docsets locally
         +dictionary
         +offline)
-       ;; (lsp +peek)
+       (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
         +forge)
@@ -197,7 +197,7 @@
        ;;nim               ; python + lisp at the speed of c
        (nix               ; I hereby declare "nix geht mehr!"
         +tree-sitter
-        ;; +lsp
+        +lsp
         )
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
@@ -223,8 +223,8 @@
        (python             ; beautiful is better than ugly
         ;; +pyenv
         +poetry
-        ;; +lsp
-        ;; +pyright      (requirs +lsp)     ; NOTE can use basedpyright
+        +lsp
+        +pyright      ; (requirs +lsp)     ; NOTE can use basedpyright
         ;; +conda
         +tree-sitter)
        ;;qt                ; the 'cutest' gui framework ever
@@ -234,13 +234,13 @@
        ;;rst               ; ReST in peace
        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        ;; +lsp
+        +lsp
         ;; +tree-sitter
         )
        ;;scala             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
-        ;; +lsp
+        +lsp
         +tree-sitter)
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
