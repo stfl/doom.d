@@ -2839,8 +2839,7 @@ Enable hinlay hints and make the font a little smaller than the rest
         (if (and (not test?)                             ;; for check lsp-server-present?
                  (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
                  lsp-use-plists
-                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                 (executable-find "emacs-lsp-booster"))
+                 (not (functionp 'json-rpc-connection)))  ;; native json-rpc
             (progn
               (message "Using emacs-lsp-booster for %s!" orig-result)
               (append '("emacs-lsp-booster" "--disable-bytecode") orig-result))
