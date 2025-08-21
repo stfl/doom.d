@@ -2937,7 +2937,7 @@ https://github.com/konrad1977/flyover
          
          flyover-show-at-eol t ;;; show at end of the line instead.
          flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
-         flyover-virtual-line-type "━━►"
+         ;; flyover-virtual-line-type "━━►"
 
          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
