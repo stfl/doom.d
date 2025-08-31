@@ -3263,8 +3263,7 @@ EDBI has some dependencies has some dependencies
 
 (use-package! edbi-minor-mode
   :after sql-mode
-  :hook sql-mode-hook
-  )
+  :hook sql-mode-hook)
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 #+end_src
 
