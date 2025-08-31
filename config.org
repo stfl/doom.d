@@ -3128,6 +3128,10 @@ This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inla
   )
 #+end_src
 
+#+begin_src elisp
+(after! eglot (set))
+#+end_src
+
 configre dap-mode for rust
 
 #+begin_src elisp
