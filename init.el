@@ -248,7 +248,9 @@
        (web                ; the tubes
         +lsp
         +tree-sitter)
-       yaml                ; JSON, but readable
+       (yaml                ; JSON, but readable
+        +lsp
+        +tree-sitter)
 
        :email
        ;; (mu4e +gmail +org)
