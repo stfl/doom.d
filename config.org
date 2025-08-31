@@ -2724,6 +2724,12 @@ use bash when opening a vterm in a tramp dir:
 (add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
 #+end_src
 
+#+begin_src elisp
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               `(typst-ts-mode . ("tinymist"))))
+#+end_src
+
 #+begin_src emacs-lisp
 (after! lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
