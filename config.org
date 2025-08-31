@@ -2792,7 +2792,6 @@ map ielm to ~SPC :~
 (map! :leader ":" #'ielm)
 #+end_src
 
-** eglot
 ** lsp-mode
 
 I am not using lsp-mode anymore
