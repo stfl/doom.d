@@ -3381,7 +3381,7 @@ _tangle is disabled for the entire section_ and is only kept as a reference!
 
 #+begin_src elisp :tangle packages.el
 ;; bbatsov/adoc-mode
-(package! adoc-mode :disabled t)
+(package! adoc-mode)
 #+end_src
 
 ~TODO~ adoc-mode requires org due to inhereting the theme
