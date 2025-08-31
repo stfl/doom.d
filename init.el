@@ -158,7 +158,7 @@
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
        (cc                 ; C/C++/Obj-C madness
-        ;; +lsp
+        +lsp
         +tree-sitter)
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
