@@ -2097,12 +2097,8 @@ org-default-priority is treated as lower than the same set value"
                                    :name "Python :: Run pytest (at point)")))
 
 (use-package! rust-mode
-  ;; :ensure t
   :init
   (setq rust-mode-treesitter-derive t))
-
-;; (after! rust-mode
-;;   (setq! rust-mode-treesitter-derive t))
 
 (map! :mode rustic-mode
       :map rustic-mode-map
@@ -2123,6 +2119,12 @@ org-default-priority is treated as lower than the same set value"
          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
          )
   )
+
+(after! eglot
+  (setq eglot-workspace-configuration
+        (plist-put eglot-workspace-configuration
+                   :rust-analyzer
+                   '(:inlayHints (:maxLength 40)))))
 
 (after! (rust-mode dap-mode)
   (dap-register-debug-template "Rust::GDB Run Configuration"
