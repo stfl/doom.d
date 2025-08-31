@@ -2167,17 +2167,14 @@ org-default-priority is treated as lower than the same set value"
   :hook (k8s-mode . yas-minor-mode))
 
 (use-package! sql-indent
-  :after sql-mode
-)
+  :after sql-mode)
 
 (use-package! edbi
-  :commands 'edbi:open-db-viewer
-  )
+  :commands 'edbi:open-db-viewer)
 
 (use-package! edbi-minor-mode
   :after sql-mode
-  :hook sql-mode-hook
-  )
+  :hook sql-mode-hook)
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
 (use-package! exercism-mode
@@ -2207,11 +2204,17 @@ org-default-priority is treated as lower than the same set value"
         "k" #'logview-previous-entry))
 
 ;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
-(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+(setq lsp-ltex-active-modes '(text-mode
+                              bibtex-mode
+                              context-mode
+                              latex-mode
+                              markdown-mode
+                              org-mode
+                              rst-mode
+                              adoc-mode))
 
 (use-package! lsp-ltex
-  :after ;; (lsp-mode adoc-mode)
-        lsp-ltex-active-modes
+  :after lsp-ltex-active-modes
   :hook (adoc-mode . (lambda ()
                        (require 'lsp-ltex)
                        (lsp-deferred)))  ; or lsp-deferred
@@ -2247,8 +2250,7 @@ org-default-priority is treated as lower than the same set value"
     (projectile-test-project arg)))
 
 
-(map! ;;:after cc-mode
-      :mode c++-mode
+(map! :mode c++-mode
       :map c++-mode-map
       :localleader 
       :prefix ("t" "test")
@@ -2257,19 +2259,6 @@ org-default-priority is treated as lower than the same set value"
       ;; :n "T" #'gtest-run
       ;; :n "l" #'gtest-list
       )
-
-;; (after! lsp-mode
-;;   (set-lsp-priority! 'ccls 2))
-
-;; (use-package! gtest-mode
-;;   ;; :after c++-mode
-;;   :config
-;;   (map! :map gtest-mode-map
-;;         :localleader 
-;;         :prefix ("t" "test")
-;;         :n "t" #'gtest-run-at-point
-;;         :n "T" #'gtest-run
-;;         :n "l" #'gtest-list))
 
 (use-package! turbo-log
   :after prog-mode
@@ -2281,17 +2270,12 @@ org-default-priority is treated as lower than the same set value"
         "l s" #'turbo-log-uncomment-all-logs
         "l [" #'turbo-log-paste-as-logger
         "l ]" #'turbo-log-paste-as-logger-immediately
-        "l x" #'turbo-log-delete-all-logs)
-  (setq turbo-log-msg-format-template "\"🚀: %s\""
-        turbo-log-allow-insert-without-tree-sitter-p t))
+        "l d" #'turbo-log-delete-all-logs)
+  (setq! turbo-log-msg-format-template "\"🚀: %s\""
+         turbo-log-allow-insert-without-treesit-p t))
 
-(use-package just-mode)
-
-(use-package justl
-  :disabled
-  )
-  ;; :config
-  ;; (map! :n "e" 'justl-exec-recipe))
+(use-package! just-mode
+  :defer t)
 
 (use-package! ztree)
 

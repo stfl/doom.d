@@ -32,8 +32,6 @@
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 
-(package! lsp-mode :disable t)
-
 (package! flyover :recipe (:host github :repo "konrad1977/flyover"))
 
 ;; (package! numpydoc)
@@ -48,15 +46,16 @@
 (package! edbi :disable t)
 (package! edbi-minor-mode :disable t)
 
-(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode") :disable t)
+(package! exercism-mode
+  :disable t
+  :recipe (:host github
+           :repo "timotheosh/exercism-mode"))
 
-(package! jest)
+(package! jest :disabled t)
 
 (package! logview :disable t)
 
-(package! lsp-ltex
-  :disable t
-  )
+(package! lsp-ltex :disable t)
 
 ;; bbatsov/adoc-mode
 (package! adoc-mode)
@@ -67,16 +66,11 @@
 
 (package! meson-mode :disable t)
 
-;; (package! gtest-mode
-;;   :recipe (:host github
-;;            :repo "ppatoria/elisp"
-;;            :files ("gtest-mode/*.el")))
-
-(package! turbo-log :recipe (:host github :repo "artawower/turbo-log"))
+(package! turbo-log
+  :recipe (:host github
+           :repo "artawower/turbo-log"))
 
 (package! just-mode)
-
-(package! justl :recipe (:host github :repo "psibi/justl.el") :disable t)
 
 (package! ztree :disable t)
 
