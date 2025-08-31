@@ -1,4 +1,4 @@
-;; (package! drag-stuff)
+(package! drag-stuff)
 
 (package! org-clock-csv)
 

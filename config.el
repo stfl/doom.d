@@ -45,12 +45,12 @@
 (after! evil-escape
   (setq evil-escape-key-sequence "jk"))
 
-;; (use-package! drag-stuff :defer t)
+(use-package! drag-stuff :defer t)
 
-;; (map! "<M-up>"    #'drag-stuff-up
-;;       "<M-down>"  #'drag-stuff-down
-;;       "<M-left>"  #'drag-stuff-left
-;;       "<M-right>" #'drag-stuff-right)
+(map! "<M-up>"    #'drag-stuff-up
+      "<M-down>"  #'drag-stuff-down
+      "<M-left>"  #'drag-stuff-left
+      "<M-right>" #'drag-stuff-right)
 
 (setq gc-cons-threshold most-positive-fixnum)
 
