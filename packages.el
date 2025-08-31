@@ -51,7 +51,7 @@
   :recipe (:host github
            :repo "timotheosh/exercism-mode"))
 
-(package! jest :disabled t)
+(package! jest :disable t)
 
 (package! logview :disable t)
 
