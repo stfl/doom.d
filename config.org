@@ -2708,9 +2708,7 @@ use bash when opening a vterm in a tramp dir:
 (use-package! typst-ts-mode
   :defer t
   :init
-  (setq! 
-         typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
-         )
+  (setq! typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
   :config
   (setq!
    typst-ts-watch-options "--open"
