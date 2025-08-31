@@ -3276,9 +3276,9 @@ small exercises. The exercises can can be solved locally.
 
 #+begin_src elisp :tangle packages.el
 (package! exercism-mode
+  :disable t
   :recipe (:host github
-           :repo "timotheosh/exercism-mode")
-  :disable t)
+           :repo "timotheosh/exercism-mode"))
 #+end_src
 
 #+begin_src elisp
