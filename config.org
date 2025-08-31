@@ -3294,7 +3294,7 @@ small exercises. The exercises can can be solved locally.
 *** Jest Testing Framework
 
 #+begin_src elisp :tangle packages.el
-(package! jest :disabled t)
+(package! jest :disable t)
 #+end_src
 
 #+begin_src elisp
