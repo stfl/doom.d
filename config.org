@@ -3131,9 +3131,9 @@ This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inla
 #+begin_src elisp
 (after! eglot
   (setq eglot-workspace-configuration
-      (plist-put eglot-workspace-configuration
-                 :rust-analyzer
-                 '(:inlayHints (:maxLength 25)))))
+        (plist-put eglot-workspace-configuration
+                   :rust-analyzer
+                   '(:inlayHints (:maxLength 25)))))
 #+end_src
 
 configre dap-mode for rust
