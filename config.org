@@ -3682,7 +3682,8 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp
-(use-package! just-mode :defer t)
+(use-package! just-mode
+  :defer t)
 #+end_src
 
 #+begin_src elisp :tangle packages.el
