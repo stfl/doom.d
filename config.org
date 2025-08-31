@@ -3359,8 +3359,7 @@ manually add adoc-mode to the list.. I don't like that...
 
 #+begin_src elisp
 (use-package! lsp-ltex
-  :after ;; (lsp-mode adoc-mode)
-        lsp-ltex-active-modes
+  :after lsp-ltex-active-modes
   :hook (adoc-mode . (lambda ()
                        (require 'lsp-ltex)
                        (lsp-deferred)))  ; or lsp-deferred
