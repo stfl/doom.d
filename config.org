@@ -3670,7 +3670,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
         "l s" #'turbo-log-uncomment-all-logs
         "l [" #'turbo-log-paste-as-logger
         "l ]" #'turbo-log-paste-as-logger-immediately
-        "l x" #'turbo-log-delete-all-logs)
+        "l d" #'turbo-log-delete-all-logs)
   (setq! turbo-log-msg-format-template "\"🚀: %s\""
          turbo-log-allow-insert-without-treesit-p t))
 #+end_src
