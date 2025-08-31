@@ -144,12 +144,13 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 #+begin_src elisp
-(use-package! drag-stuff :defer t)
-
-(map! "<M-up>"    #'drag-stuff-up
-      "<M-down>"  #'drag-stuff-down
-      "<M-left>"  #'drag-stuff-left
-      "<M-right>" #'drag-stuff-right)
+  (use-package! drag-stuff
+    :defer t
+    :init
+    (map! "<M-up>"    #'drag-stuff-up
+          "<M-down>"  #'drag-stuff-down
+          "<M-left>"  #'drag-stuff-left
+          "<M-right>" #'drag-stuff-right))
 #+end_src
 
 ** Garbage Collection
