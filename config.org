@@ -140,16 +140,16 @@ If the line is already correctly indented, try to complete.
 :END:
 
 #+begin_src elisp :tangle packages.el
-;; (package! drag-stuff)
+(package! drag-stuff)
 #+end_src
 
 #+begin_src elisp
-;; (use-package! drag-stuff :defer t)
+(use-package! drag-stuff :defer t)
 
-;; (map! "<M-up>"    #'drag-stuff-up
-;;       "<M-down>"  #'drag-stuff-down
-;;       "<M-left>"  #'drag-stuff-left
-;;       "<M-right>" #'drag-stuff-right)
+(map! "<M-up>"    #'drag-stuff-up
+      "<M-down>"  #'drag-stuff-down
+      "<M-left>"  #'drag-stuff-left
+      "<M-right>" #'drag-stuff-right)
 #+end_src
 
 ** Garbage Collection
