@@ -3096,7 +3096,7 @@ Derive rust-mode from rust-ts-mode
 
 #+begin_src elisp
 (use-package! rust-mode
-  :ensure t
+  ;; :ensure t
   :init
   (setq rust-mode-treesitter-derive t))
 
