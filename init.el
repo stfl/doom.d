@@ -66,7 +66,6 @@
        ;; tabs              ; an tab bar for Emacs
        (treemacs          ; a project drawer, like neotree but cooler
         +lsp              ; lsp-treemacs
-        +booster          ; performance improvements for eglot
         )
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
@@ -126,8 +125,7 @@
        :tools
        ;;ansible
        (debugger          ; FIXME stepping through code, to help you add bugs
-        +lsp
-        )
+        +lsp)
        direnv
        (docker
         +lsp
@@ -141,7 +139,9 @@
         +docsets         ; ...or in Dash docsets locally
         +dictionary
         +offline)
-       (lsp +peek)
+       (lsp
+        +booster          ; performance improvements for eglot
+        +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
         +forge)
