@@ -1880,6 +1880,7 @@ org-default-priority is treated as lower than the same set value"
                               ("ssh" "/bin/bash"))))
 
 (use-package! typst-ts-mode
+  :defer t
   :init
   (setq! typst-ts-watch-options "--open"
          typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
@@ -1892,7 +1893,14 @@ org-default-priority is treated as lower than the same set value"
         :desc "Compile" "c" #'typst-ts-compile
         :desc "Watch" "w" #'typst-ts-watch-mode
         :desc "Menu" "m" #'typst-ts-tmenu)
-  (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
+  ;; (add-hook! 'typst-ts-mode-hook #'lsp-deferred)
+  (add-hook! 'typst-ts-mode-hook #'eglot-ensure))
+
+(add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
+
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               `(typst-ts-mode . ("tinymist"))))
 
 (after! lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
