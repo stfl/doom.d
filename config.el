@@ -1881,12 +1881,13 @@ org-default-priority is treated as lower than the same set value"
 
 (use-package! typst-ts-mode
   :defer t
-  :init
-  (setq! typst-ts-watch-options "--open"
-         typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
-         typst-ts-mode-enable-raw-blocks-highlight t)
+  ;; :init
+  ;; (setq! typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
   :config
-  (setq! typst-ts-mode-indent-offset 2)
+  (setq!
+   typst-ts-watch-options "--open"
+   typst-ts-indent-offset 2
+   typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
