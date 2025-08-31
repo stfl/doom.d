@@ -134,7 +134,7 @@ If the line is already correctly indented, try to complete.
   (setq evil-escape-key-sequence "jk"))
 #+end_src
 
-** moving lines up and down 
+** moving lines up and down (drag-stuff)
 :PROPERTIES:
 :ID:       abc34dae-c955-4aa3-a1fd-65888a3f6a5c
 :END:
