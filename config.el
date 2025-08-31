@@ -2096,8 +2096,13 @@ org-default-priority is treated as lower than the same set value"
                                    :request "launch"
                                    :name "Python :: Run pytest (at point)")))
 
-(after! rust-mode
-  (setq! rust-mode-treesitter-derive t))
+(use-package! rust-mode
+  ;; :ensure t
+  :init
+  (setq rust-mode-treesitter-derive t))
+
+;; (after! rust-mode
+;;   (setq! rust-mode-treesitter-derive t))
 
 (map! :mode rustic-mode
       :map rustic-mode-map
