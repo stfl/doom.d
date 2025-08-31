@@ -2792,7 +2792,10 @@ map ielm to ~SPC :~
 (map! :leader ":" #'ielm)
 #+end_src
 
+** eglot
 ** lsp-mode
+
+I am not using lsp-mode anymore
 
 #+begin_src elisp
 (after! lsp-treemacs
@@ -2844,7 +2847,7 @@ Enable hinlay hints and make the font a little smaller than the rest
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 #+end_src
 
-*** lsp-bridge
+** lsp-bridge
 
 #+begin_src elisp
 (use-package! lsp-bridge
