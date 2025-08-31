@@ -145,7 +145,8 @@
         +peek)
        ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
-        +forge)
+        ;; +forge
+        )
        ;;make              ; run make tasks from Emacs
        (pass +auth)        ; password manager for nerds
        pdf               ; pdf enhancements
