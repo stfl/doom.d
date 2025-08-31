@@ -2708,11 +2708,14 @@ use bash when opening a vterm in a tramp dir:
 (use-package! typst-ts-mode
   :defer t
   :init
-  (setq! typst-ts-watch-options "--open"
+  (setq! 
          typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
-         typst-ts-enable-raw-blocks-highlight t)
+         )
   :config
-  (setq! typst-ts-indent-offset 2)
+  (setq!
+   typst-ts-watch-options "--open"
+   typst-ts-indent-offset 2
+   typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
