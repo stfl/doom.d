@@ -3405,8 +3405,8 @@ _tangle is disabled for the entire section_ and is only kept as a reference!
 *** Magit Default Sign-Off commits
 
 #+begin_src elisp
-;; (after! magit
-;;   (setq transient-values  '((magit-commit "--signoff"))))
+(after! magit
+  (setq transient-values  '((magit-commit "--signoff"))))
 #+end_src
 
 *** Javascript indentation style
