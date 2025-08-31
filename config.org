@@ -3347,7 +3347,15 @@ manually add adoc-mode to the list.. I don't like that...
 
 #+begin_src elisp
 ;; (add-to-list 'lsp-ltex-active-modes 'adoc-mode t)
-(setq lsp-ltex-active-modes '(text-mode bibtex-mode context-mode latex-mode markdown-mode org-mode rst-mode adoc-mode))
+(setq lsp-ltex-active-modes
+      '(text-mode
+        bibtex-mode
+        context-mode
+        latex-mode
+        markdown-mode
+        org-mode
+        rst-mode
+        adoc-mode))
 #+end_src
 
 #+begin_src elisp
