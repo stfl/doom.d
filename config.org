@@ -3686,7 +3686,10 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp :tangle packages.el
-(package! justl :recipe (:host github :repo "psibi/justl.el") :disable t)
+(package! justl
+  :disable t
+  :recipe (:host github
+           :repo "psibi/justl.el"))
 #+end_src
 
 #+begin_src elisp
