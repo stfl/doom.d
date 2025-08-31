@@ -3341,8 +3341,7 @@ switch to evil-emacs-mode ~C-z~ to use the keybindings.
 
 #+begin_src elisp :tangle packages.el
 (package! lsp-ltex
-  :disable t
-  )
+  :disable t)
 #+end_src
 
 manually add adoc-mode to the list.. I don't like that...
