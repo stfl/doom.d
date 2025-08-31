@@ -3275,7 +3275,10 @@ small exercises. The exercises can can be solved locally.
 [[https://exercism.org/docs/using/solving-exercises/working-locally][Local Setup Instructions]]
 
 #+begin_src elisp :tangle packages.el
-(package! exercism-mode :recipe (:host github :repo "timotheosh/exercism-mode") :disable t)
+(package! exercism-mode
+  :recipe (:host github
+           :repo "timotheosh/exercism-mode")
+  :disable t)
 #+end_src
 
 #+begin_src elisp
