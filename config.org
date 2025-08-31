@@ -3236,8 +3236,7 @@ Disable formatting with lsp
 
 #+begin_src elisp
 (use-package! sql-indent
-  :after sql-mode
-)
+  :after sql-mode)
 #+end_src
 
 ** Database Interface (edbi)
@@ -3257,8 +3256,7 @@ EDBI has some dependencies has some dependencies
 
 #+begin_src elisp
 (use-package! edbi
-  :commands 'edbi:open-db-viewer
-  )
+  :commands 'edbi:open-db-viewer)
 #+end_src
 
 #+begin_src elisp
