@@ -2712,7 +2712,7 @@ use bash when opening a vterm in a tramp dir:
          typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)
          typst-ts-mode-enable-raw-blocks-highlight t)
   :config
-  (setq! typst-ts-mode-indent-offset 2)
+  (setq! typst-ts-indent-offset 2)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
