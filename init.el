@@ -140,6 +140,7 @@
         +dictionary
         +offline)
        (lsp
+        +eglot
         +booster          ; performance improvements for eglot
         +peek)
        ;;macos             ; MacOS-specific commands
