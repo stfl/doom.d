@@ -2719,7 +2719,9 @@ use bash when opening a vterm in a tramp dir:
         :desc "Compile" "c" #'typst-ts-compile
         :desc "Watch" "w" #'typst-ts-watch-mode
         :desc "Menu" "m" #'typst-ts-tmenu)
-  (add-hook! 'typst-ts-mode-hook #'lsp-deferred))
+  (add-hook! 'typst-ts-mode-hook #'lsp-deferred)
+  (add-hook! 'typst-ts-mode-hook #'eglot-ensure)
+  )
 
 (add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
 #+end_src
