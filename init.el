@@ -194,12 +194,12 @@
        ;; (lua               ; one-based indices? one-based indices
        ;;  +lsp
        ;;  +fennel)
-       (markdown)          ; writing docs for people to ignore
+       (markdown          ; writing docs for people to ignore
+        +tree-sitter)
        ;;nim               ; python + lisp at the speed of c
        (nix               ; I hereby declare "nix geht mehr!"
         +tree-sitter
-        +lsp
-        )
+        +lsp)
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers
