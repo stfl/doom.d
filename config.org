@@ -3996,7 +3996,7 @@ git blame lenses
   (setq! blamer-idle-time 0.3
          blamer-max-commit-message-length 80
          ;; blamer-max-lines 100
-         ;; blamer-type 'visual
+         blamer-type 'visual
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
