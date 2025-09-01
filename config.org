@@ -465,7 +465,6 @@ To make the ~priorities~ mor visually appealing we add some nice symbols.
            (?H :foreground "DeepSkyBlue4" :weight bold)
            (?I :foreground "LightSteelBlue3" :weight bold))))
 #+end_src
- 
 
 ** Auto-saving org-mode files
 
