@@ -463,9 +463,7 @@ To make the ~priorities~ mor visually appealing we add some nice symbols.
            (?F :foreground "SpringGreen3" :weight bold)
            (?G :foreground "cyan4" :weight bold)
            (?H :foreground "DeepSkyBlue4" :weight bold)
-           (?I :foreground "LightSteelBlue3" :weight bold)
-           )
-         ))
+           (?I :foreground "LightSteelBlue3" :weight bold))))
 #+end_src
  
 
