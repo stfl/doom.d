@@ -2423,22 +2423,22 @@ org-default-priority is treated as lower than the same set value"
   :config
   (map! :leader "g i" #'blamer-show-posframe-commit-info)
   (setq! blamer-idle-time 0.3
-         blamer-type 'visual
          blamer-max-commit-message-length 80
          ;; blamer-max-lines 100
+         blamer-type 'visual
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
   
-  (custom-set-faces!
-    `(blamer-face :inherit font-lock-comment-face
-      :slant italic
-      :font "JetBrains Mono"
-      ;; :height 0.9
-      :background unspecified
-      ;; :weight semi-light
-      ;; :foreground ,(doom-color 'base5)
-      ))
+  ;; (custom-set-faces!
+  ;;   `(blamer-face :inherit font-lock-comment-face
+  ;;     :slant italic
+  ;;     :font "JetBrains Mono"
+  ;;     ;; :height 0.9
+  ;;     :background unspecified
+  ;;     ;; :weight semi-light
+  ;;     ;; :foreground ,(doom-color 'base5)
+  ;;     ))
   
   (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
