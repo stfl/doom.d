@@ -4000,7 +4000,7 @@ git blame lenses
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
-  ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
+  (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   
   (custom-set-faces!
     `(blamer-face :inherit font-lock-comment-face
