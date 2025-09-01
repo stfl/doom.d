@@ -79,14 +79,14 @@
 
 (custom-set-faces!
   '(adoc-code-face :inherit org-block)
-  '(adoc-complex-replacement-face :inherit org-code :weight 'bold)
+  '(adoc-complex-replacement-face :inherit org-code :weight bold)
   '(adoc-meta-face :inherit org-meta-line)
   '(adoc-typewriter-face :inherit org-code)
   '(adoc-verbatim-face :inherit org-verbatim)
   '(adoc-internal-reference-face :inherit org-link)
   '(adoc-reference-face :inherit org-link)
   `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-  '(adoc-bold-face :weight 'bold)
+  '(adoc-bold-face :weight bold)
   `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
   '(adoc-warning-face :inherit org-warning))
 
@@ -109,14 +109,14 @@
 
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
-(custom-set-faces!
-  `(blamer-face :italic t :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
+;; (custom-set-faces!
+;;   `(blamer-face :slant italic :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
 
 (custom-set-faces!
   `(blamer-face :inherit font-lock-comment-face
-    :italic t
+    :slant italic
     :font "JetBrains Mono"
-    :height 0.9
+    ;; :height 0.9
     :background unspecified
     ;; :weight semi-light
     ;; :foreground ,(doom-color 'base5)
@@ -160,7 +160,10 @@
   `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
   '(outline-1 :height 1.5)
   '(outline-2 :height 1.25)
-  '(outline-3 :height 1.15))
+  '(outline-3 :height 1.15)
+  `(org-column :height 150 :background ,(doom-color 'base4)
+    :slant normal :weight regular :underline nil :overline nil :strike-through nil :box nil :inverse-video nil)
+  `(org-column-title :height 150 :background ,(doom-color 'base4) :weight bold :underline t))
 
 (after! org-modern
   (setq! org-modern-priority
@@ -182,9 +185,25 @@
            (?F :foreground "SpringGreen3" :weight bold)
            (?G :foreground "cyan4" :weight bold)
            (?H :foreground "DeepSkyBlue4" :weight bold)
-           (?I :foreground "LightSteelBlue3" :weight bold)
-           )
-         ))
+           (?I :foreground "LightSteelBlue3" :weight bold))))
+
+(after! org
+  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
+                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                         ("SOMEDAY" . (:slant italic :weight bold))
+                         ;; ("finance" . (:foreground "goldenrod"))
+                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                         ("#inbox" . (:strike-through t))
+                         ("3datax" . (:foreground ,(doom-color 'green)))
+                         ("oebb" . (:foreground ,(doom-color 'green)))
+                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
+                         ("#work" . (:foreground ,(doom-color 'blue)))
+                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
+                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
+                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
+                         ;; ("emacs" . (:foreground "#c678dd"))
+                         ))
+  )
 
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 
@@ -541,24 +560,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ("#personal" . ?_)
                         ("emacs" . ?-)
                         )))
-
-(after! org
-  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
-                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         ("SOMEDAY" . (:slant 'italic :weight 'bold))
-                         ;; ("finance" . (:foreground "goldenrod"))
-                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
-                         ("#inbox" . (:strike-through t))
-                         ("3datax" . (:foreground ,(doom-color 'green)))
-                         ("oebb" . (:foreground ,(doom-color 'green)))
-                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
-                         ("#work" . (:foreground ,(doom-color 'blue)))
-                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
-                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
-                         ;; ("emacs" . (:foreground "#c678dd"))
-                         ))
-  )
 
 (after! org-roam
   (setq org-roam-tag-sources '(prop last-directory)
