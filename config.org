@@ -4001,6 +4001,7 @@ git blame lenses
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
   ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
+  
   (custom-set-faces!
     `(blamer-face :inherit font-lock-comment-face
       :slant italic
