@@ -4001,15 +4001,15 @@ git blame lenses
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
   
-  (custom-set-faces!
-    `(blamer-face :inherit font-lock-comment-face
-      :slant italic
-      :font "JetBrains Mono"
-      ;; :height 0.9
-      :background unspecified
-      ;; :weight semi-light
-      ;; :foreground ,(doom-color 'base5)
-      ))
+  ;; (custom-set-faces!
+  ;;   `(blamer-face :inherit font-lock-comment-face
+  ;;     :slant italic
+  ;;     :font "JetBrains Mono"
+  ;;     ;; :height 0.9
+  ;;     :background unspecified
+  ;;     ;; :weight semi-light
+  ;;     ;; :foreground ,(doom-color 'base5)
+  ;;     ))
   
   (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
