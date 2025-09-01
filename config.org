@@ -431,7 +431,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
   '(outline-1 :height 1.5)
   '(outline-2 :height 1.25)
   '(outline-3 :height 1.15)
-  `(org-column :height 150 :background ,(doom-color 'base4) :slant normal :weight regular :underline nil :overline nil :strike-through nil :box nil)
+  `(org-column :height 150 :background ,(doom-color 'base4) :slant normal :weight regular :underline nil :overline nil :strike-through nil :box nil :inverse-video nil)
   `(org-column-title :height 150 :background ,(doom-color 'base4) :weight bold :underline t))
 #+end_src
 
