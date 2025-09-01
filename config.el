@@ -112,16 +112,6 @@
 ;; (custom-set-faces!
 ;;   `(blamer-face :slant italic :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
 
-(custom-set-faces!
-  `(blamer-face :inherit font-lock-comment-face
-    :slant italic
-    :font "JetBrains Mono"
-    ;; :height 0.9
-    :background unspecified
-    ;; :weight semi-light
-    ;; :foreground ,(doom-color 'base5)
-    ))
-
 (after! highlight-indent-guides
   (setq! highlight-indent-guides-auto-character-face-perc 20))
 
@@ -2439,7 +2429,18 @@ org-default-priority is treated as lower than the same set value"
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
-  ;; (add-hook! org-mode-hook (λ! (blamer-mode 0)))
+  
+  (custom-set-faces!
+    `(blamer-face :inherit font-lock-comment-face
+      :slant italic
+      :font "JetBrains Mono"
+      ;; :height 0.9
+      :background unspecified
+      ;; :weight semi-light
+      ;; :foreground ,(doom-color 'base5)
+      ))
+  
+  (add-hook! org-mode-hook (λ! (blamer-mode 0)))
   )
 
 (map!

@@ -81,7 +81,7 @@
 
 (package! diffview :disable t)
 
-(package! blamer :disable t)
+(package! blamer)
 
 (package! copilot
   :recipe (:host github
