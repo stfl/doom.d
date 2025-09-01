@@ -4104,7 +4104,10 @@ git blame lenses
   
   (setq! copilot-indent-offset-warning-disable t
          copilot-max-char-warning-disable t)
+  
+  (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "claude-4-sonnet"))))
   )
+
 #+end_src
 
 ** Copilot Chat
