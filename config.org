@@ -4011,8 +4011,7 @@ git blame lenses
   ;;     ;; :foreground ,(doom-color 'base5)
   ;;     ))
   
-  (add-hook! org-mode-hook (λ! (blamer-mode 0)))
-  )
+  (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 #+end_src
 
 * AI
