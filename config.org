@@ -466,6 +466,28 @@ To make the ~priorities~ mor visually appealing we add some nice symbols.
            (?I :foreground "LightSteelBlue3" :weight bold))))
 #+end_src
 
+** Tag colors
+
+#+begin_src elisp
+(after! org
+  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
+                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                         ("SOMEDAY" . (:slant 'italic :weight 'bold))
+                         ;; ("finance" . (:foreground "goldenrod"))
+                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                         ("#inbox" . (:strike-through t))
+                         ("3datax" . (:foreground ,(doom-color 'green)))
+                         ("oebb" . (:foreground ,(doom-color 'green)))
+                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
+                         ("#work" . (:foreground ,(doom-color 'blue)))
+                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
+                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
+                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
+                         ;; ("emacs" . (:foreground "#c678dd"))
+                         ))
+  )
+#+end_src
+
 ** Auto-saving org-mode files
 
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
@@ -991,28 +1013,6 @@ REVIEW should we define any additional tags?
                         ("emacs" . ?-)
                         )))
 #+END_SRC
-
-** Tag colors
-
-#+begin_src elisp
-(after! org
-  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
-                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         ("SOMEDAY" . (:slant 'italic :weight 'bold))
-                         ;; ("finance" . (:foreground "goldenrod"))
-                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
-                         ("#inbox" . (:strike-through t))
-                         ("3datax" . (:foreground ,(doom-color 'green)))
-                         ("oebb" . (:foreground ,(doom-color 'green)))
-                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
-                         ("#work" . (:foreground ,(doom-color 'blue)))
-                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
-                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
-                         ;; ("emacs" . (:foreground "#c678dd"))
-                         ))
-  )
-#+end_src
 
 ** org-roam
 :PROPERTIES:
