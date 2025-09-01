@@ -3984,7 +3984,7 @@ https://github.com/Artawower/blamer.el
 git blame lenses
 
 #+begin_src elisp :tangle packages.el
-(package! blamer :disable t)
+(package! blamer)
 #+end_src
 
 #+begin_src elisp
