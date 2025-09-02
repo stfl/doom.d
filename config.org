@@ -2756,10 +2756,6 @@ use bash when opening a vterm in a tramp dir:
           out-file
           (format "[[file:%s]]" out-file))))))
 
-;; Add structure template for Typst blocks
-(after! org
-  (add-to-list 'org-structure-template-alist '("y" . "src typst :file output.pdf")))
-
 ** pdf-tools
 
 #+begin_src elisp :tangle packages.el
