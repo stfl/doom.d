@@ -325,14 +325,6 @@ There is more fine grained face control for search based on tags :
 
   # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
 
-** blamer theme
-
-#+begin_src elisp
-;; (custom-set-faces!
-;;   `(blamer-face :slant italic :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
-
-#+end_src
-
 ** tab-width
 
 #+begin_src elisp
