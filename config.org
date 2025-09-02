@@ -320,7 +320,6 @@ There is more fine grained face control for search based on tags :
   # (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
 
 #+begin_src elisp
-(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 #+end_src
 
   # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
@@ -3024,6 +3023,10 @@ org babel integration for ein
 (when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
+#+end_src
+
+#+begin_src elisp
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 #+end_src
 
 *** emacs-jupyter
