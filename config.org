@@ -289,18 +289,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 
 ** notmuch theme
 
-#+begin_src elisp
-(custom-set-faces!
- '(notmuch-message-summary-face      :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text           :foreground ,(doom-color 'base6))
- `(notmuch-search-subject            :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face        :weight bold :slant italic)
- `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
- `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
- `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
- `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
- `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
-#+end_src
 
 There is more fine grained face control for search based on tags :
 
@@ -3449,7 +3437,19 @@ Proxmox specific Perl indentation style using a tab where 8 spaces would be used
   (add-to-list '+word-wrap-disabled-modes 'notmuch-show-mode)
   (add-hook! 'notmuch-hello-mode-hook #'read-only-mode)
   (defun +notmuch-get-sync-command ()
-    "mbsync -a && notmuch new && afew -n -t"))
+    "mbsync -a && notmuch new && afew -n -t")
+  
+  (custom-set-faces!
+    '(notmuch-message-summary-face      :foreground "#848d94")  ;; between dooms base6 and base7
+    `(notmuch-wash-cited-text           :foreground ,(doom-color 'base6))
+    `(notmuch-search-subject            :foreground ,(doom-darken (doom-color 'fg) 0.05))
+    '(notmuch-search-unread-face        :weight bold :slant italic)
+    `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
+    `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
+    `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
+    `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
+    `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
+  )
 #+end_src
 
 Additional functions to apply tags according to my workflow
