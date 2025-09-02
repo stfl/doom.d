@@ -1871,14 +1871,11 @@ org-default-priority is treated as lower than the same set value"
                               ("ssh" "/bin/bash"))))
 
 (use-package! typst-ts-mode
-  :defer t
-  ;; :init
-  ;; (setq! typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
+  :mode ("\\.typ\\'" . typst-ts-mode)
   :config
-  (setq!
-   typst-ts-watch-options "--open"
-   typst-ts-indent-offset 2
-   typst-ts-enable-raw-blocks-highlight t)
+  (setq! typst-ts-watch-options "--open"
+         typst-ts-indent-offset 2
+         typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
@@ -1887,8 +1884,6 @@ org-default-priority is treated as lower than the same set value"
         :desc "Menu" "m" #'typst-ts-tmenu)
   ;; (add-hook! 'typst-ts-mode-hook #'lsp-deferred)
   (add-hook! 'typst-ts-mode-hook #'eglot-ensure))
-
-(add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
 
 (after! eglot
   (add-to-list 'eglot-server-programs
