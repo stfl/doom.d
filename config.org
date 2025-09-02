@@ -333,15 +333,6 @@ There is more fine grained face control for search based on tags :
 
 #+end_src
 
-** Indent Guides
-
-Make the indent guides a little brighter to be more visible in doom-one dark theme.
-
-#+begin_src elisp
-(after! highlight-indent-guides
-  (setq! highlight-indent-guides-auto-character-face-perc 20))
-#+end_src
-
 ** tab-width
 
 #+begin_src elisp
