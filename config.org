@@ -270,28 +270,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 #+end_src
 
 ** adoc-mode theme
-
-
-#+begin_src elisp
-(custom-set-faces!
-  '(adoc-code-face :inherit org-block)
-  '(adoc-complex-replacement-face :inherit org-code :weight bold)
-  '(adoc-meta-face :inherit org-meta-line)
-  '(adoc-typewriter-face :inherit org-code)
-  '(adoc-verbatim-face :inherit org-verbatim)
-  '(adoc-internal-reference-face :inherit org-link)
-  '(adoc-reference-face :inherit org-link)
-  `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-  '(adoc-bold-face :weight bold)
-  `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
-  '(adoc-warning-face :inherit org-warning))
-#+end_src
-
-** notmuch theme
-
-
-There is more fine grained face control for search based on tags :
-
 ** tab-width
 
 #+begin_src elisp
