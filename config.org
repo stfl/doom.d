@@ -269,7 +269,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 )
 #+end_src
 
-** adoc-mode theme
 ** tab-width
 
 #+begin_src elisp
