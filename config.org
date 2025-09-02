@@ -2733,9 +2733,7 @@ use bash when opening a vterm in a tramp dir:
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
   
   ;; Set up babel support for Typst
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((typst . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages '((typst . t)))
 
   ;; Configure babel execution for Typst
   (defun org-babel-execute:typst (body params)
