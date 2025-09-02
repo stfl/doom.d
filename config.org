@@ -304,26 +304,6 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 
 There is more fine grained face control for search based on tags :
 
-** popup rules
-:PROPERTIES:
-:ID:       1f322103-dc44-4293-b354-a8f5301b89e4
-:END:
-
-#+BEGIN_SRC elisp
-;; (set-popup-rules!
-;;   '(("^\\*subject:" :ignore t)  ; notmuch list view
-;;     ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
-;;     ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
-;;     ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
-#+END_SRC
-
-  # (set-popup-rule! "*ChatGPT*" :side 'bottom :size 30 :select t :quit nil))
-
-#+begin_src elisp
-#+end_src
-
-  # ;; (set-popup-rule! "^\\*Minimap" :modeline nil)
-
 ** tab-width
 
 #+begin_src elisp
