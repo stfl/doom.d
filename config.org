@@ -2757,7 +2757,7 @@ use bash when opening a vterm in a tramp dir:
           (format "[[file:%s]]" out-file))))))
 
 ;; Add structure template for Typst blocks
-(after! org-tempo
+(after! org
   (add-to-list 'org-structure-template-alist '("y" . "src typst :file output.pdf")))
 
 ** pdf-tools
