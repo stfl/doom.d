@@ -176,13 +176,7 @@
       :leader
       :prefix ("n" . "notes")
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
-      :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
       )
-
-;; Die sind eigentlich nicht org spezifisch
-      ;; :desc "Outline" "o" #'counsel-outline
-      ;; :desc "Counsel ripgrep" "d" #'counsel-rg
-      ;; :desc "Swiper All" "@" #'swiper-all
 
 (map! :after org
       :map org-mode-map
