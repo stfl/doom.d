@@ -2440,8 +2440,7 @@ org-default-priority is treated as lower than the same set value"
   ;;     ;; :foreground ,(doom-color 'base5)
   ;;     ))
   
-  (add-hook! org-mode-hook (λ! (blamer-mode 0)))
-  )
+  (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 
 (map!
       ;; "C-c a" #'aidermacs-transient-menu
@@ -2515,6 +2514,8 @@ org-default-priority is treated as lower than the same set value"
   
   (setq! copilot-indent-offset-warning-disable t
          copilot-max-char-warning-disable t)
+  
+  (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
   )
 
 (use-package copilot-chat
