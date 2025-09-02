@@ -2697,9 +2697,7 @@ use bash when opening a vterm in a tramp dir:
 
 #+begin_src emacs-lisp
 (use-package! typst-ts-mode
-  :defer t
-  ;; :init
-  ;; (setq! typst-ts-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
+  :mode ("\\.typ\\'" . typst-ts-mode)
   :config
   (setq!
    typst-ts-watch-options "--open"
@@ -2714,7 +2712,7 @@ use bash when opening a vterm in a tramp dir:
   ;; (add-hook! 'typst-ts-mode-hook #'lsp-deferred)
   (add-hook! 'typst-ts-mode-hook #'eglot-ensure))
 
-(add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
+(add-to-list 'auto-mode-alist ')
 #+end_src
 
 #+begin_src elisp
