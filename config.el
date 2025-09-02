@@ -77,44 +77,6 @@
   '(lsp-bridge-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
 )
 
-(custom-set-faces!
-  '(adoc-code-face :inherit org-block)
-  '(adoc-complex-replacement-face :inherit org-code :weight bold)
-  '(adoc-meta-face :inherit org-meta-line)
-  '(adoc-typewriter-face :inherit org-code)
-  '(adoc-verbatim-face :inherit org-verbatim)
-  '(adoc-internal-reference-face :inherit org-link)
-  '(adoc-reference-face :inherit org-link)
-  `(adoc-emphasis-face :foreground ,(doom-lighten (doom-color 'green) 0.2) :slant italic)
-  '(adoc-bold-face :weight bold)
-  `(adoc-command-face :foreground ,(doom-color 'base1) :background ,(doom-color 'base6))
-  '(adoc-warning-face :inherit org-warning))
-
-(custom-set-faces!
- '(notmuch-message-summary-face      :foreground "#848d94")  ;; between dooms base6 and base7
- `(notmuch-wash-cited-text           :foreground ,(doom-color 'base6))
- `(notmuch-search-subject            :foreground ,(doom-darken (doom-color 'fg) 0.05))
- '(notmuch-search-unread-face        :weight bold :slant italic)
- `(notmuch-tree-match-tree-face      :foreground              ,(doom-color 'yellow))
- `(notmuch-tree-no-match-tree-face   :foreground              ,(doom-color 'base5))
- `(notmuch-tree-no-match-author-face :foreground ,(doom-darken (doom-color 'blue)    0.3))
- `(notmuch-tree-no-match-date-face   :foreground ,(doom-darken (doom-color 'numbers) 0.3))
- `(notmuch-tree-no-match-tag-face    :foreground ,(doom-darken (doom-color 'yellow)  0.4)))
-
-;; (set-popup-rules!
-;;   '(("^\\*subject:" :ignore t)  ; notmuch list view
-;;     ("^CAPTURE" :side 'bottom :size 0.40 :select t :ttl nil)
-;;     ("^\\*Org Note" :side 'bottom :size 0.40 :select t :ttl nil)
-;;     ("^\\*Org QL View" :side 'left :size 0.40 :select t :quit nil)))
-
-(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
-
-;; (custom-set-faces!
-;;   `(blamer-face :slant italic :height 90 :weight semi-light :foreground ,(doom-color 'base5)))
-
-(after! highlight-indent-guides
-  (setq! highlight-indent-guides-auto-character-face-perc 20))
-
 (setq! tab-width 4)
 
 (setq org-directory "~/.org")
@@ -140,18 +102,13 @@
 ; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (custom-set-faces!
-  ;; '(org-date :foreground "dark goldenrod" :height 0.85)
   '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
-  ;; '(org-drawer :foreground "dark gray" :height 0.8)
-  ;; '(org-property-value :height 0.85)
   '(org-ql-view-due-date :foreground "dark goldenrod")
-  ;; '(org-special-keyword :foreground "#83898d" :height 0.8)
-  ;; '(org-tag :foreground "#83898d" :weight light :height 0.7)
   `(org-code :foreground ,(doom-lighten (doom-color 'warning) 0.3) :extend t)
   '(outline-1 :height 1.5)
   '(outline-2 :height 1.25)
   '(outline-3 :height 1.15)
-  `(org-column :height 150 :background ,(doom-color 'base4)
+  `(org-column :height 130 :background ,(doom-color 'base4)
     :slant normal :weight regular :underline nil :overline nil :strike-through nil :box nil :inverse-video nil)
   `(org-column-title :height 150 :background ,(doom-color 'base4) :weight bold :underline t))
 
@@ -1882,8 +1839,7 @@ org-default-priority is treated as lower than the same set value"
         :desc "Compile" "c" #'typst-ts-compile
         :desc "Watch" "w" #'typst-ts-watch-mode
         :desc "Menu" "m" #'typst-ts-tmenu)
-  ;; (add-hook! 'typst-ts-mode-hook #'lsp-deferred)
-  (add-hook! 'typst-ts-mode-hook #'eglot-ensure))
+  (add-hook! 'typst-ts-mode-hook #'lsp!))
 
 (after! eglot
   (add-to-list 'eglot-server-programs
@@ -2068,6 +2024,8 @@ org-default-priority is treated as lower than the same set value"
 (when (modulep! :tools ein)
   (after! org
     (require 'ob-ein)))
+
+(set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
 (after! org
   (setq org-babel-default-header-args:jupyter-python
