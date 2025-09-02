@@ -3092,14 +3092,6 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 ** Rust
 
-Derive rust-mode from rust-ts-mode
-
-#+begin_src elisp
-(use-package! rust-mode
-  :init
-  (setq rust-mode-treesitter-derive t))
-#+end_src
-
 #+begin_src elisp
 (map! :mode rustic-mode
       :map rustic-mode-map
