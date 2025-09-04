@@ -925,8 +925,17 @@ exist after each headings's drawers."
       stfl/org-gtd-todo "todo.org"
       stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
       ;; stfl/org-gtd-projects "gtd/projects/"
-      stfl/org-gtd-projects '("emacs.org" "freelance.org" "geschenke.org" "media.org" "projects.org"
-                              "3datax.org" "pulswerk.org" "versicherung.org" "ikea.org" "oebb.org")
+      stfl/org-gtd-projects '("emacs.org"
+                              "freelance.org"
+                              "geschenke.org"
+                              "media.org"
+                              "projects.org"
+                              "3datax.org"
+                              "pulswerk.org"
+                              "versicherung.org"
+                              "ikea.org"
+                              "oebb.org"
+                              "cafe-glas.org")
       stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
 (after! org
