@@ -2412,6 +2412,8 @@ org-default-priority is treated as lower than the same set value"
        ;; "a" #'aider-transient-menu
        
        ;; "e" #'elysium-query
+
+       "o" #'claude-code-ide-menu
        
        (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
@@ -2674,3 +2676,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
     :quit nil
     :ttl nil)
   )
+
+(use-package! claude-code-ide
+  :commands (claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
