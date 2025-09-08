@@ -3970,6 +3970,8 @@ git blame lenses
        ;; "a" #'aider-transient-menu
        
        ;; "e" #'elysium-query
+
+       "o" #'claude-code-ide-menu
        
        (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
