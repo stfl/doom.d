@@ -4302,3 +4302,11 @@ Reply concisely. Wrap source code in a ```cpp block.")
   )
 #+end_src
 
+** Claude Code IDE
+
+#+begin_src elisp :tangle packages.el
+(package! claude-code-ide
+  :recipe (:host github
+           :repo "manzaltu/claude-code-ide.el"))
+#+end_src
+
