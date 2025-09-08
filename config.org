@@ -4310,3 +4310,10 @@ Reply concisely. Wrap source code in a ```cpp block.")
            :repo "manzaltu/claude-code-ide.el"))
 #+end_src
 
+#+begin_src elisp
+(use-package! claude-code-ide
+  :commands (claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+#+end_src
+
