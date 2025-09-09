@@ -985,7 +985,6 @@ do not automatically open the roam side-pane
 
 #+begin_src elisp
 (use-package! websocket
-  :disable
     :after org-roam)
 
 (use-package! org-roam-ui
