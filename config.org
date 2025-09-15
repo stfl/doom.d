@@ -3513,7 +3513,10 @@ Use the (almost) default keybindings in evil normal-mode
 
 #+begin_src elisp
 (use-package! bitbake-ts-mode
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode)))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode))
+  )
 #+end_src
 
 Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
