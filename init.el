@@ -99,6 +99,7 @@
        ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)           ; interactive buffer management
+       tramp             ; remote files at your arthritic fingertips
        vc                ; version-control and Emacs, sitting in a tree
        (undo
         ;; +tree
