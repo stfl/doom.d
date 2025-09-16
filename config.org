@@ -2824,6 +2824,7 @@ https://github.com/konrad1977/flyover
 
 #+begin_src elisp
 (use-package! flyover
+  :disable
   :after flycheck
   :config
   (setq! flyover-checkers '(flycheck)
