@@ -160,6 +160,7 @@
        llm
 
        :lang
+       ;;ada
        ;;agda              ; types of types of types of types...
        ;;assembly          ; assembly for fun or debugging
        (cc                 ; C/C++/Obj-C madness
