@@ -1945,6 +1945,7 @@ org-default-priority is treated as lower than the same set value"
   )
 
 (use-package! flyover
+  :disabled
   :after flycheck
   :config
   (setq! flyover-checkers '(flycheck)
@@ -2181,7 +2182,9 @@ org-default-priority is treated as lower than the same set value"
 (use-package! ssh-config-mode :defer t)
 
 (use-package! bitbake-ts-mode
-  :config (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode)))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode)))
 
 (after! lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
