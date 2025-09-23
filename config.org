@@ -2678,6 +2678,11 @@ use bash when opening a vterm in a tramp dir:
           out-file
           (format "[[file:%s]]" out-file))))))
 
+
+          
+          
+          
+
 ** pdf-tools
 
 #+begin_src elisp :tangle packages.el
