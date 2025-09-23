@@ -121,7 +121,7 @@
        ;; +enchant
        ;;  +everywhere
        ;; )
-       grammar           ; tasing grammar mistake every you make
+       ;; grammar           ; tasing grammar mistake every you make
 
        :tools
        ;;ansible
