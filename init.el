@@ -117,11 +117,11 @@
         ;; +flymake        ; use flymake instead of flycheck
         +icons)
        (spell             ; tasing you for misspelling mispelling
-        ;; +aspell
-        +enchant
+        +aspell
+        ;; +enchant
         ;;  +everywhere
         )
-       ;; grammar           ; tasing grammar mistake every you make
+       grammar           ; tasing grammar mistake every you make
 
        :tools
        ;;ansible
