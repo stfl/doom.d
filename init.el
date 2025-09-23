@@ -119,8 +119,8 @@
        (spell             ; tasing you for misspelling mispelling
         ;; +aspell
         +enchant
-       ;;  +everywhere
-       )
+        ;;  +everywhere
+        )
        ;; grammar           ; tasing grammar mistake every you make
 
        :tools
