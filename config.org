@@ -2677,7 +2677,17 @@ use bash when opening a vterm in a tramp dir:
         (org-babel-result-cond result-params
           out-file
           (format "[[file:%s]]" out-file))))))
+#+end_src
 
+#+begin_src elisp :tangle packages.el
+(package! ox-typst)
+#+end_src
+
+#+begin_src elisp
+(use-package! ox-typst
+  :after org
+  )
+#+end_src
           
 
 ** pdf-tools
