@@ -1856,6 +1856,34 @@ org-default-priority is treated as lower than the same set value"
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'tinymist)))
 
+(after! org
+  (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
+  
+  ;; Set up babel support for Typst
+  (org-babel-do-load-languages 'org-babel-load-languages '((typst . t)))
+
+  ;; Configure babel execution for Typst
+  (defun org-babel-execute:typst (body params)
+    "Execute a block of Typst code with org-babel."
+    (message "Executing Typst code block")
+    (let* ((in-file (org-babel-temp-file "typst-" ".typ"))
+           (out-file (or (cdr (assq :file params))
+                         (org-babel-temp-file "typst-" ".pdf")))
+           (result-params (cdr (assq :result-params params)))
+           (cmdline (or (cdr (assq :cmdline params)) "")))
+      (with-temp-file in-file
+        (insert body))
+      (org-babel-eval
+       (format "typst compile %s %s %s" cmdline in-file out-file)
+       "")
+      (when (member "file" result-params)
+        (org-babel-result-cond result-params
+          out-file
+          (format "[[file:%s]]" out-file))))))
+
+(use-package! ox-typst
+  :after org)
+
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
 (after! flycheck

@@ -2685,8 +2685,7 @@ use bash when opening a vterm in a tramp dir:
 
 #+begin_src elisp
 (use-package! ox-typst
-  :after org
-  )
+  :after org)
 #+end_src
           
 

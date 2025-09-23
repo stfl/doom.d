@@ -32,6 +32,10 @@
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")))
 
+(package! ox-typst)
+
+(package! pdf-tools :built-in 'prefer)
+
 (package! flyover :recipe (:host github :repo "konrad1977/flyover"))
 
 ;; (package! numpydoc)
