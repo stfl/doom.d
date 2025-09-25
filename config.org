@@ -2718,6 +2718,7 @@ Allow writing a file or an entire project to a remote location after local save.
     (let* ((local-file (car mapping))
            (buffer (get-file-buffer local-file)))
       (when buffer
+        (message "Unregistering ssh-deploy mapping from %s" buffer)
         (with-current-buffer buffer
           (setq-local ssh-deploy-root-local nil
                       ssh-deploy-root-remote nil)))))
