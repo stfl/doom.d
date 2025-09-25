@@ -2731,7 +2731,7 @@ Allow writing a file or an entire project to a remote location after local save.
                    (list nil)  ; Don't prompt when unregistering
                  (list (read-file-name "Remote path: " nil nil nil
                                        (when (boundp 'ssh-deploy-root-remote)
-                                         ssh-deploy-root-remote))))
+                                         ssh-deploy-root-remote)))))
   (require 'ssh-deploy)
   (let ((local-file (expand-file-name (buffer-file-name))))
     (message "%s" local-file)
