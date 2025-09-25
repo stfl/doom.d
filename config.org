@@ -2705,6 +2705,12 @@ use bash when opening a vterm in a tramp dir:
 
 Allow writing a file or an entire project to a remote location after local save.
 
+#+begin_src elisp
+(after! ssh-deploy
+  (defun stfl/ssh-deploy-register-file ())
+  )
+#+end_src
+
 * Coding
 
 #+begin_src elisp
