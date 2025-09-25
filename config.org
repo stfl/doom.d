@@ -2706,6 +2706,9 @@ use bash when opening a vterm in a tramp dir:
 Allow writing a file or an entire project to a remote location after local save.
 
 #+begin_src elisp
+(after! ssh-deploy
+  (setq! ssh-deploy-async 1))
+
 (defvar stfl/ssh-deploy-local-mappings nil
   "global alist to store local to remote mappings (local-file . remote-path).")
 
