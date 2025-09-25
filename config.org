@@ -2706,13 +2706,13 @@ use bash when opening a vterm in a tramp dir:
 Allow writing a file or an entire project to a remote location after local save.
 
 #+begin_src elisp
-(after! ssh-deploy
 (defun stfl/ssh-deploy-register-file (&optional remote-path)
   (interactive (if current-prefix-arg
                    (list nil)  ; Don't prompt when unregistering
                  (list (read-file-name "Remote path: " nil nil nil
                                        (when (boundp 'ssh-deploy-root-remote)
                                          ssh-deploy-root-remote)))))
+  (require 'ssh-deploy)
   (if current-prefix-arg
       (progn
         (message "Unregistering ssh-deploy for this buffer")
@@ -2721,7 +2721,8 @@ Allow writing a file or an entire project to a remote location after local save.
       (progn
         (setq-local ssh-deploy-root-local (expand-file-name (buffer-file-name))
                     ssh-deploy-root-remote remote-path)
-        (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote))))
+        (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)))
+
   )
 #+end_src
 
