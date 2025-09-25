@@ -2727,11 +2727,15 @@ Allow writing a file or an entire project to a remote location after local save.
       (progn
         (message "Unregistering ssh-deploy for this buffer")
         (setq-local ssh-deploy-root-local nil
-                    ssh-deploy-root-remote nil))
+                    ssh-deploy-root-remote nil)
+        ;; AI add (local . remote) to stfl/ssh-deploy-local-mappings
+        )
     (progn
       (setq-local ssh-deploy-root-local (expand-file-name (buffer-file-name))
                   ssh-deploy-root-remote remote-path)
-      (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)))
+      (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
+      ;; AI remove (local . remote) from stfl/ssh-deploy-local-mappings
+      ))
 
   )
 #+end_src
