@@ -2727,8 +2727,7 @@ global mapping list."
           (setq-local ssh-deploy-root-local nil
                       ssh-deploy-root-remote nil)))))
   ;; Clear the global alist
-  (setq +upload-local-mappings nil)
-  (message "Cleared all ssh-deploy mappings"))
+  (setq +upload-local-mappings nil))
 
 (defun +upload-register-mapping (&optional remote-path)
   "Register or unregister ssh-deploy mapping for current buffer.
