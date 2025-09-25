@@ -2706,12 +2706,17 @@ use bash when opening a vterm in a tramp dir:
 Allow writing a file or an entire project to a remote location after local save.
 
 #+begin_src elisp
-(defvar +upload-buffer-local-mappings nil
-  "global alist to store local to remote mappings (local-file . remote-path).")
+(defvar +upload-local-mappings nil
+  "Global alist to store local to remote mappings (local-file . remote-path).
+Each entry maps an absolute local file path to its corresponding remote path
+for ssh-deploy functionality.")
 
 (defun +upload-clear-mappings ()
+  "Clear all ssh-deploy mappings and remove buffer-local variables.
+Iterates through all stored mappings in +upload-local-mappings and clears
+ssh-deploy buffer-local variables for any open buffers, then clears the
+global mapping list."
   (interactive)
-  "Clear all ssh-deploy mappings and remove buffer-local variables."
   ;; For each mapping, find open buffers and clear their local variables
   (dolist (mapping +upload-local-mappings)
     (let* ((local-file (car mapping))
@@ -2726,6 +2731,11 @@ Allow writing a file or an entire project to a remote location after local save.
   (message "Cleared all ssh-deploy mappings"))
 
 (defun +upload-register-mapping (&optional remote-path)
+  "Register or unregister ssh-deploy mapping for current buffer.
+With C-u prefix, unregisters the current buffer's mapping and removes it
+from the global +upload-local-mappings list. Otherwise prompts for REMOTE-PATH
+and registers the mapping, storing it in both buffer-local variables and the
+global mapping list. Updates or replaces any existing mapping for the current file."
   (interactive (if current-prefix-arg
                    (list nil)  ; Don't prompt when unregistering
                  (list (expand-file-name (read-file-name "Remote path: ")))))
