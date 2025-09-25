@@ -2712,8 +2712,17 @@ Allow writing a file or an entire project to a remote location after local save.
 
 (defun stfl/ssh-deploy-clear-mappings ()
   (interactive)
-  ;; AI for each mapping in stfl/ssh-deploy-local-mappings, remove the buffer local variables and remove from the alist
-  ;; (setq stfl/ssh-deploy-local-mappings nil)
+  "Clear all ssh-deploy mappings and remove buffer-local variables."
+  ;; For each mapping, find open buffers and clear their local variables
+  (dolist (mapping stfl/ssh-deploy-local-mappings)
+    (let* ((local-file (car mapping))
+           (buffer (get-file-buffer local-file)))
+      (when buffer
+        (with-current-buffer buffer
+          (setq-local ssh-deploy-root-local nil
+                      ssh-deploy-root-remote nil)))))
+  ;; Clear the global alist
+  (setq stfl/ssh-deploy-local-mappings nil)
   (message "Cleared all ssh-deploy mappings"))
 
 (defun stfl/ssh-deploy-register-local-mapping (&optional remote-path)
@@ -2723,21 +2732,23 @@ Allow writing a file or an entire project to a remote location after local save.
                                        (when (boundp 'ssh-deploy-root-remote)
                                          ssh-deploy-root-remote)))))
   (require 'ssh-deploy)
-  (if current-prefix-arg
+  (let ((local-file (expand-file-name (buffer-file-name))))
+    (if current-prefix-arg
+        (progn
+          (message "Unregistering ssh-deploy for this buffer")
+          (setq-local ssh-deploy-root-local nil
+                      ssh-deploy-root-remote nil)
+          ;; Remove mapping from global alist
+          (setq stfl/ssh-deploy-local-mappings
+                (assoc-delete-all local-file stfl/ssh-deploy-local-mappings)))
       (progn
-        (message "Unregistering ssh-deploy for this buffer")
-        (setq-local ssh-deploy-root-local nil
-                    ssh-deploy-root-remote nil)
-        ;; AI add (local . remote) to stfl/ssh-deploy-local-mappings
-        )
-    (progn
-      (setq-local ssh-deploy-root-local (expand-file-name (buffer-file-name))
-                  ssh-deploy-root-remote remote-path)
-      (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
-      ;; AI remove (local . remote) from stfl/ssh-deploy-local-mappings
-      ))
-
-  )
+        (setq-local ssh-deploy-root-local local-file
+                    ssh-deploy-root-remote remote-path)
+        (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
+        ;; Add/update mapping in global alist
+        (setq stfl/ssh-deploy-local-mappings
+              (cons (cons local-file remote-path)
+                    (assoc-delete-all local-file stfl/ssh-deploy-local-mappings)))))))
 #+end_src
 
 #+begin_src elisp
