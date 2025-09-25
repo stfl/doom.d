@@ -2727,7 +2727,7 @@ Allow writing a file or an entire project to a remote location after local save.
 #+end_src
 
 #+begin_src elisp
-(defvar stfl/ssh-deploy-
+(defvar stfl/ssh-deploy-mappings
   )
 #+end_src
 
