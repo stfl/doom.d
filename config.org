@@ -2728,10 +2728,7 @@ Allow writing a file or an entire project to a remote location after local save.
 (defun +upload-register-mapping (&optional remote-path)
   (interactive (if current-prefix-arg
                    (list nil)  ; Don't prompt when unregistering
-                 (list (expand-file-name
-                        (read-file-name "Remote path: " nil
-                                        (when (boundp 'ssh-deploy-root-remote)
-                                          ssh-deploy-root-remote))))))
+                 (list (expand-file-name (read-file-name "Remote path: ")))))
   (require 'ssh-deploy)
   (let ((local-file (expand-file-name (buffer-file-name))))
     (if current-prefix-arg
