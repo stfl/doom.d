@@ -2707,7 +2707,10 @@ Allow writing a file or an entire project to a remote location after local save.
 
 #+begin_src elisp
 (after! ssh-deploy
-  (defun stfl/ssh-deploy-register-file ())
+  (defun stfl/ssh-deploy-register-file ()
+    ;; AI: interactive
+    ;; AI: allow 
+    )
   )
 #+end_src
 
