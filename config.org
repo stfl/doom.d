@@ -2749,7 +2749,7 @@ Allow writing a file or an entire project to a remote location after local save.
         ;; Add/update mapping in global alist
         (setq stfl/ssh-deploy-local-mappings
               (cons (cons local-file remote-path)
-                    (assoc-delete-all local-file stfl/ssh-deploy-local-mappings)))))))
+                    (assoc-delete-all local-file stfl/ssh-deploy-local-mappings))))))))
 #+end_src
 
 #+begin_src elisp
