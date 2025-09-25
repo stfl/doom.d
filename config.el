@@ -1886,59 +1886,66 @@ org-default-priority is treated as lower than the same set value"
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
-(defvar stfl/ssh-deploy-local-mappings nil
-  "global alist to store local to remote mappings (local-file . remote-path).")
+;; (defvar +upload-local-mappings nil
+;;   "Global alist to store local to remote mappings (local-file . remote-path).
+;; Each entry maps an absolute local file path to its corresponding remote path
+;; for ssh-deploy functionality.")
 
-(defun stfl/ssh-deploy-clear-mappings ()
-  (interactive)
-  "Clear all ssh-deploy mappings and remove buffer-local variables."
-  ;; For each mapping, find open buffers and clear their local variables
-  (dolist (mapping stfl/ssh-deploy-local-mappings)
-    (let* ((local-file (car mapping))
-           (buffer (get-file-buffer local-file)))
-      (when buffer
-        (message "Unregistering ssh-deploy mapping from %s" buffer)
-        (with-current-buffer buffer
-          (setq-local ssh-deploy-root-local nil
-                      ssh-deploy-root-remote nil)))))
-  ;; Clear the global alist
-  (setq stfl/ssh-deploy-local-mappings nil)
-  (message "Cleared all ssh-deploy mappings"))
+;; (defun +upload-clear-mappings ()
+;;   "Clear all ssh-deploy mappings and remove buffer-local variables.
+;; Iterates through all stored mappings in +upload-local-mappings and clears
+;; ssh-deploy buffer-local variables for any open buffers, then clears the
+;; global mapping list."
+;;   (interactive)
+;;   ;; For each mapping, find open buffers and clear their local variables
+;;   (dolist (mapping +upload-local-mappings)
+;;     (let* ((local-file (car mapping))
+;;            (buffer (get-file-buffer local-file)))
+;;       (when buffer
+;;         (message "Unregistering ssh-deploy mapping from %s" buffer)
+;;         (with-current-buffer buffer
+;;           (setq-local ssh-deploy-root-local nil
+;;                       ssh-deploy-root-remote nil)))))
+;;   ;; Clear the global alist
+;;   (setq +upload-local-mappings nil))
 
-(defun stfl/ssh-deploy-register-local-mapping (&optional remote-path)
-  (interactive (if current-prefix-arg
-                   (list nil)  ; Don't prompt when unregistering
-                 (list (expand-file-name
-                        (read-file-name "Remote path: " nil
-                                        (when (boundp 'ssh-deploy-root-remote)
-                                          ssh-deploy-root-remote))))))
-  (require 'ssh-deploy)
-  (let ((local-file (expand-file-name (buffer-file-name))))
-    (if current-prefix-arg
-        (progn
-          (message "Unregistering ssh-deploy for this buffer")
-          (setq-local ssh-deploy-root-local nil
-                      ssh-deploy-root-remote nil)
-          ;; Remove mapping from global alist
-          (setq stfl/ssh-deploy-local-mappings
-                (assoc-delete-all local-file stfl/ssh-deploy-local-mappings)))
-      (progn
-        (setq-local ssh-deploy-root-local local-file
-                    ssh-deploy-root-remote remote-path)
-        (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
-        ;; Add/update mapping in global alist
-        (setq stfl/ssh-deploy-local-mappings
-              (cons (cons local-file remote-path)
-                    (assoc-delete-all local-file stfl/ssh-deploy-local-mappings)))))))
+;; (defun +upload-register-mapping (&optional remote-path)
+;;   "Register or unregister ssh-deploy mapping for current buffer.
+;; With C-u prefix, unregisters the current buffer's mapping and removes it
+;; from the global +upload-local-mappings list. Otherwise prompts for REMOTE-PATH
+;; and registers the mapping, storing it in both buffer-local variables and the
+;; global mapping list. Updates or replaces any existing mapping for the current file."
+;;   (interactive (if current-prefix-arg
+;;                    (list nil)  ; Don't prompt when unregistering
+;;                  (list (expand-file-name (read-file-name "Remote path: ")))))
+;;   (require 'ssh-deploy)
+;;   (let ((local-file (expand-file-name (buffer-file-name))))
+;;     (if current-prefix-arg
+;;         (progn
+;;           (message "Unregistering ssh-deploy for this buffer")
+;;           (setq-local ssh-deploy-root-local nil
+;;                       ssh-deploy-root-remote nil)
+;;           ;; Remove mapping from global alist
+;;           (setq +upload-local-mappings
+;;                 (assoc-delete-all local-file +upload-local-mappings)))
+;;       (progn
+;;         (setq-local ssh-deploy-root-local local-file
+;;                     ssh-deploy-root-remote remote-path)
+;;         (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
+;;         ;; Add/update mapping in global alist
+;;         (setq +upload-local-mappings
+;;               (cons (cons local-file remote-path)
+;;                     (assoc-delete-all local-file +upload-local-mappings)))))))
 
 (after! ssh-deploy
   (setq! ssh-deploy-async 1)
 
-  (map! :map ssh-deploy-menu-map
-        :leader
-        :prefix "r"
-        "l" #'stfl/ssh-deploy-register-local-mapping
-        "L" #'stfl/ssh-deploy-clear-mappings))
+  ;; (map! :map ssh-deploy-menu-map
+  ;;       :leader
+  ;;       :prefix "r"
+  ;;       "l" #'+upload-register-mapping
+  ;;       "L" #'+upload-clear-mappings)
+  )
 
 (after! flycheck
   (map! :map flycheck-mode-map
