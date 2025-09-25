@@ -2712,6 +2712,7 @@ Allow writing a file or an entire project to a remote location after local save.
 
 (defun stfl/ssh-deploy-clear-mappings ()
   (interactive)
+  ;; AI for each mapping in stfl/ssh-deploy-local-mappings, remove the buffer local variables and remove from the alist
   ;; (setq stfl/ssh-deploy-local-mappings nil)
   (message "Cleared all ssh-deploy mappings"))
 
