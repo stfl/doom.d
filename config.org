@@ -2734,6 +2734,7 @@ Allow writing a file or an entire project to a remote location after local save.
                                          ssh-deploy-root-remote))))
   (require 'ssh-deploy)
   (let ((local-file (expand-file-name (buffer-file-name))))
+    (message "%s" local-file)
     (if current-prefix-arg
         (progn
           (message "Unregistering ssh-deploy for this buffer")
