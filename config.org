@@ -2701,6 +2701,10 @@ use bash when opening a vterm in a tramp dir:
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 #+end_src
 
+** ssh-deploy
+
+Allow writing a file or an entire project to a remote location after local save.
+
 * Coding
 
 #+begin_src elisp
