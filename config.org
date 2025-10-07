@@ -3151,11 +3151,6 @@ set alejandra as the formatter
     :modes '(nix-mode)))
 #+end_src
 
-#+begin_src elisp
-(after! lsp-bridge
-  (setq! lsp-bridge-nix-lsp-server "nil"))
-#+end_src
-
 Disable formatting with lsp
 
 #+begin_src elisp
