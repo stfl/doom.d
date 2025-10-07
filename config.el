@@ -1938,14 +1938,13 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                     (assoc-delete-all local-file +upload-local-mappings)))))))
 
 (after! ssh-deploy
-  (setq! ssh-deploy-async 1)
+  (setq! ssh-deploy-async 1))
 
-  (map! :map ssh-deploy-menu-map
-        :leader
-        :prefix "r"
-        "l" #'+upload-register-mapping
-        "L" #'+upload-clear-mappings)
-  )
+(map! :map ssh-deploy-menu-map
+    :leader
+    :prefix "r"
+    "l" #'+upload/register-remote
+    "L" #'+upload/unregister-all-remotes)
 
 (after! flycheck
   (map! :map flycheck-mode-map
