@@ -3152,7 +3152,7 @@ set alejandra as the formatter
 Disable formatting with lsp
 
 #+begin_src elisp
-(setq-hook! 'nix-mode-hook +format-with nil)
+(setq-hook! 'nix-mode-hook +format-with 'nixfmt)
 #+end_src
 
 ** MQL
