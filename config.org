@@ -183,7 +183,7 @@ register this and mouse clicks are registed on the wrong frame.
 ;; C-u consult-fd-args --no-ignore
 ;; )
 
-;; (map! :leader "sf" #'stfl/consult-fd) instead of locate which is useless anyway
+;; (map! :leader "sf" #'stfl/consult-fd) instead of locate which I don't use anyway
 #+end_src
 
 * Theme
