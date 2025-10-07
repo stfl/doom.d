@@ -178,9 +178,12 @@ register this and mouse clicks are registed on the wrong frame.
 ** find files
 
 #+begin_src elisp
-;; (if featerp :vertico)
+;; (defun stfl/consult-fd (&optional arg)
+;; interactive
 ;; C-u consult-fd-args --no-ignore
-;; (map! :leader "sf" #'consult-fd)
+;; )
+
+;; (map! :leader "sf" #'stfl/consult-fd) instead of 
 #+end_src
 
 * Theme
