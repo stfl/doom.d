@@ -2765,8 +2765,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (map! :map ssh-deploy-menu-map
         :leader
         :prefix "r"
-        "l" #'+upload-register-mapping
-        "L" #'+upload-clear-mappings)
+        "l" #'+upload/register-remote
+        "L" #'+upload/unregister-all-remotes)
   )
 #+end_src
 
