@@ -124,7 +124,7 @@
 
        :tools
        ;;ansible
-       (debugger)          ; stepping through code, to help you add bugs
+       debugger          ; stepping through code, to help you add bugs
        direnv
        (docker
         +lsp
