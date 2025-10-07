@@ -3146,7 +3146,7 @@ configre dap-mode for rust
 set alejandra as the formatter
 
 #+begin_src elisp
-(set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-mode)))
+(set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 #+end_src
 
 Disable formatting with lsp
