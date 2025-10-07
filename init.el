@@ -124,8 +124,7 @@
 
        :tools
        ;;ansible
-       (debugger          ; FIXME stepping through code, to help you add bugs
-        +lsp)
+       (debugger)          ; stepping through code, to help you add bugs
        direnv
        (docker
         +lsp
