@@ -2177,14 +2177,9 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                                      :target nil
                                      :cwd nil)))
 
-(after! nix-mode
-  (set-formatter! 'alejandra '("alejandra" "--quiet")
-    :modes '(nix-mode)))
+(set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 
-(after! lsp-bridge
-  (setq! lsp-bridge-nix-lsp-server "nil"))
-
-(setq-hook! 'nix-mode-hook +format-with-lsp nil)
+(setq-hook! 'nix-ts-mode-hook +format-with 'nixfmt)
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
