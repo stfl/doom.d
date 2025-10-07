@@ -3149,10 +3149,10 @@ configure alejandra, an alternative nix formatter
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 #+end_src
 
-select the formatter
+select the formatter for nix
 
 #+begin_src elisp
-(setq-hook! 'nix-mode-hook +format-with 'nixfmt)
+(setq-hook! 'nix-ts-mode-hook +format-with 'nixfmt)
 #+end_src
 
 ** MQL
