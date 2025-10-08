@@ -2720,7 +2720,7 @@ use bash when opening a vterm in a tramp dir:
 Each entry maps an absolute local file path to its corresponding remote path
 for ssh-deploy functionality.")
 
-(defun +upload-clear-mappings ()
+(defun stfl/upload-unregister-all-remotes ()
   "Clear all ssh-deploy mappings and remove buffer-local variables.
 Iterates through all stored mappings in +upload-local-mappings and clears
 ssh-deploy buffer-local variables for any open buffers, then clears the
@@ -2738,7 +2738,7 @@ global mapping list."
   ;; Clear the global alist
   (setq +upload-local-mappings nil))
 
-(defun +upload-register-mapping (&optional remote-path)
+(defun stfl/upload-register-mapping (&optional remote-path)
   "Register or unregister ssh-deploy mapping for current buffer.
 With C-u prefix, unregisters the current buffer's mapping and removes it
 from the global +upload-local-mappings list. Otherwise prompts for REMOTE-PATH
@@ -2774,8 +2774,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (map! :map ssh-deploy-menu-map
     :leader
     :prefix "r"
-    "l" #'+upload/register-remote
-    "L" #'+upload/unregister-all-remotes)
+    "l" #'stfl/upload-register-mapping
+    "L" #'stfl/upload-unregister-all-remotes)
 #+end_src
 
 * Coding
