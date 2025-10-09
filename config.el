@@ -60,6 +60,31 @@
 (setq! focus-follows-mouse 'auto-raise
        mouse-autoselect-window nil)
 
+(after! consult
+  (setq! consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
+                           "--color=never"
+                           ;; "--full-path"
+                           ;; "--absolute-path"
+                           "--hidden"
+                           "--exclude .git"
+                           (if (featurep :system 'windows) "--path-separator=/"))))
+
+(defun stfl/consult-fd (&optional arg)
+  (interactive "P")
+  (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
+    (consult-fd)))
+
+(defun stfl/consult-fd-dir (&optional arg)
+  (interactive "P")
+  (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
+    (consult-fd)))
+
+(map!
+ :leader
+ :prefix "s"
+ "f" #'stfl/consult-fd
+ "F" #'stfl/consult-fd-dir)
+
 (setq doom-theme 'doom-one)
 
 (setq! display-line-numbers-type t)
@@ -1886,19 +1911,19 @@ org-default-priority is treated as lower than the same set value"
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
-(defvar +upload-local-mappings nil
+(defvar stfl/upload-local-mappings nil
   "Global alist to store local to remote mappings (local-file . remote-path).
 Each entry maps an absolute local file path to its corresponding remote path
 for ssh-deploy functionality.")
 
-(defun +upload-clear-mappings ()
+(defun stfl/upload-unregister-all-remotes ()
   "Clear all ssh-deploy mappings and remove buffer-local variables.
-Iterates through all stored mappings in +upload-local-mappings and clears
+Iterates through all stored mappings in stfl/upload-local-mappings and clears
 ssh-deploy buffer-local variables for any open buffers, then clears the
 global mapping list."
   (interactive)
   ;; For each mapping, find open buffers and clear their local variables
-  (dolist (mapping +upload-local-mappings)
+  (dolist (mapping stfl/upload-local-mappings)
     (let* ((local-file (car mapping))
            (buffer (get-file-buffer local-file)))
       (when buffer
@@ -1907,12 +1932,12 @@ global mapping list."
           (setq-local ssh-deploy-root-local nil
                       ssh-deploy-root-remote nil)))))
   ;; Clear the global alist
-  (setq +upload-local-mappings nil))
+  (setq stfl/upload-local-mappings nil))
 
-(defun +upload-register-mapping (&optional remote-path)
+(defun stfl/upload-register-mapping (&optional remote-path)
   "Register or unregister ssh-deploy mapping for current buffer.
 With C-u prefix, unregisters the current buffer's mapping and removes it
-from the global +upload-local-mappings list. Otherwise prompts for REMOTE-PATH
+from the global stfl/upload-local-mappings list. Otherwise prompts for REMOTE-PATH
 and registers the mapping, storing it in both buffer-local variables and the
 global mapping list. Updates or replaces any existing mapping for the current file."
   (interactive (if current-prefix-arg
@@ -1926,16 +1951,16 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           (setq-local ssh-deploy-root-local nil
                       ssh-deploy-root-remote nil)
           ;; Remove mapping from global alist
-          (setq +upload-local-mappings
-                (assoc-delete-all local-file +upload-local-mappings)))
+          (setq stfl/upload-local-mappings
+                (assoc-delete-all local-file stfl/upload-local-mappings)))
       (progn
         (setq-local ssh-deploy-root-local local-file
                     ssh-deploy-root-remote remote-path)
         (message "registered ssh-deploy for this buffer to %s" ssh-deploy-root-remote)
         ;; Add/update mapping in global alist
-        (setq +upload-local-mappings
+        (setq stfl/upload-local-mappings
               (cons (cons local-file remote-path)
-                    (assoc-delete-all local-file +upload-local-mappings)))))))
+                    (assoc-delete-all local-file stfl/upload-local-mappings)))))))
 
 (after! ssh-deploy
   (setq! ssh-deploy-async 1))
@@ -1943,8 +1968,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (map! :map ssh-deploy-menu-map
     :leader
     :prefix "r"
-    "l" #'+upload/register-remote
-    "L" #'+upload/unregister-all-remotes)
+    "l" #'stfl/upload-register-mapping
+    "L" #'stfl/upload-unregister-all-remotes)
 
 (after! flycheck
   (map! :map flycheck-mode-map
