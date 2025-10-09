@@ -203,6 +203,7 @@ register this and mouse clicks are registed on the wrong frame.
       (consult-fd)))
   
   (map! :leader
+        "SPC" #'stfl/projectile-find-file
         :prefix "f"
         "l" #'stfl/consult-fd
         "L" #'stfl/consult-fd-dir))
