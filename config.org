@@ -178,6 +178,10 @@ register this and mouse clicks are registed on the wrong frame.
 ** Find files and directories using fd
 
 #+begin_src elisp
+(after! consult
+  (remove "")
+  ;; "--full-path --absolute-path" 
+  )
 (defun stfl/consult-fd (&optional arg)
   (interactive "P")
   (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
