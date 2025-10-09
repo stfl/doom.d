@@ -175,9 +175,10 @@ register this and mouse clicks are registed on the wrong frame.
        mouse-autoselect-window nil)
 #+END_SRC
 
-** find files
+** Find files and directories using fd
 
 #+begin_src elisp
+
 (defun stfl/consult-fd (&optional arg)
   (interactive "P")
   (let ((consult-fd-args (if arg (append consult-fd-args '("--no-ignore"))
