@@ -191,12 +191,17 @@ register this and mouse clicks are registed on the wrong frame.
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
       (consult-fd)))
+  
+  (defun stfl/projectile-find-file (&optional arg)
+    (interactive "P")
+    (if arg (stfl/consult-fd arg)
+      (projectile-find-file)))
 
   (defun stfl/consult-fd-dir (&optional arg)
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
       (consult-fd)))
-
+  
   (map! :leader
         :prefix "f"
         "l" #'stfl/consult-fd
