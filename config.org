@@ -178,7 +178,7 @@ register this and mouse clicks are registed on the wrong frame.
 ** find files
 
 #+begin_src elisp
-;; (defun stfl/consult-fd (&optional arg)
+(defun stfl/consult-fd (&optional arg)
 ;; interactive
 ;; C-u consult-fd-args --no-ignore
 ;; )
