@@ -194,9 +194,13 @@ register this and mouse clicks are registed on the wrong frame.
   
   (defun stfl/projectile-find-file (&optional arg)
     (interactive "P")
-    (let ((projectile-git-fd-args (concat projectile-git-fd-args (and arg " --no-ignore-vcs"))))
-      (message (format "%s" projectile-git-fd-args))
+    (if arg (stfl/consult-fd arg)
       (projectile-find-file)))
+  
+  ;; (defun stfl/projectile-find-file (&optional arg)
+  ;;   (interactive "P")
+  ;;   (let ((projectile-git-fd-args (concat projectile-git-fd-args (and arg " --no-ignore-vcs"))))
+  ;;     (projectile-find-file)))
 
   (defun stfl/consult-fd-dir (&optional arg)
     (interactive "P")
