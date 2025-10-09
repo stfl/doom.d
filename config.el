@@ -67,23 +67,22 @@
                            ;; "--absolute-path"
                            "--hidden"
                            "--exclude .git"
-                           (if (featurep :system 'windows) "--path-separator=/"))))
+                           (if (featurep :system 'windows) "--path-separator=/")))
+  
+  (defun stfl/consult-fd (&optional arg)
+    (interactive "P")
+    (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
+      (consult-fd)))
 
-(defun stfl/consult-fd (&optional arg)
-  (interactive "P")
-  (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
-    (consult-fd)))
+  (defun stfl/consult-fd-dir (&optional arg)
+    (interactive "P")
+    (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
+      (consult-fd)))
 
-(defun stfl/consult-fd-dir (&optional arg)
-  (interactive "P")
-  (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
-    (consult-fd)))
-
-(map!
- :leader
- :prefix "s"
- "f" #'stfl/consult-fd
- "F" #'stfl/consult-fd-dir)
+  (map! :leader
+        :prefix "s"
+        "f" #'stfl/consult-fd
+        "F" #'stfl/consult-fd-dir))
 
 (setq doom-theme 'doom-one)
 
