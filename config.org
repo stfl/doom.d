@@ -198,9 +198,9 @@ register this and mouse clicks are registed on the wrong frame.
       (consult-fd)))
 
   (map! :leader
-        :prefix "s"
-        "f" #'stfl/consult-fd
-        "F" #'stfl/consult-fd-dir))
+        :prefix "f"
+        "l" #'stfl/consult-fd
+        "L" #'stfl/consult-fd-dir))
 #+end_src
 
 * Theme
