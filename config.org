@@ -183,22 +183,6 @@ register this and mouse clicks are registed on the wrong frame.
   (let ((consult-fd-args (if arg (append consult-fd-args '("--no-ignore"))
                            consult-fd-args)))
     (consult-fd)))
-;; interactive
-;; C-u consult-fd-args --no-ignore
-;; )
-
-(cons "--no-ignore"
-      '((if (executable-find "fdfind" 'remote) "fdfind" "fd") "--color=never"
-        "--full-path --absolute-path" "--hidden --exclude .git"
-        (if (featurep :system 'windows) "--path-separator=/"))
-      )
-
-(append 
-      '((if (executable-find "fdfind" 'remote) "fdfind" "fd") "--color=never"
-        "--full-path --absolute-path" "--hidden --exclude .git"
-        (if (featurep :system 'windows) "--path-separator=/"))
-'("--no-ignore")
-      )
 #+end_src
 
 * Theme
