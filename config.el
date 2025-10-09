@@ -68,21 +68,32 @@
                            "--hidden"
                            "--exclude .git"
                            (if (featurep :system 'windows) "--path-separator=/")))
-  
+
   (defun stfl/consult-fd (&optional arg)
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
       (consult-fd)))
+  
+  (defun stfl/projectile-find-file (&optional arg)
+    (interactive "P")
+    (if arg (stfl/consult-fd arg)
+      (projectile-find-file)))
+  
+  ;; (defun stfl/projectile-find-file (&optional arg)
+  ;;   (interactive "P")
+  ;;   (let ((projectile-git-fd-args (concat projectile-git-fd-args (and arg " --no-ignore-vcs"))))
+  ;;     (projectile-find-file)))
 
   (defun stfl/consult-fd-dir (&optional arg)
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
       (consult-fd)))
-
+  
   (map! :leader
-        :prefix "s"
-        "f" #'stfl/consult-fd
-        "F" #'stfl/consult-fd-dir))
+        "SPC" #'stfl/projectile-find-file
+        :prefix "f"
+        "l" #'stfl/consult-fd
+        "L" #'stfl/consult-fd-dir))
 
 (setq doom-theme 'doom-one)
 
