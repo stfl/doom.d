@@ -197,11 +197,10 @@ register this and mouse clicks are registed on the wrong frame.
     (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
       (consult-fd)))
 
-  (map!
-   :leader
-   :prefix "s"
-   "f" #'stfl/consult-fd
-   "F" #'stfl/consult-fd-dir))
+  (map! :leader
+        :prefix "s"
+        "f" #'stfl/consult-fd
+        "F" #'stfl/consult-fd-dir))
 
 #+end_src
 
