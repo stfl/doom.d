@@ -179,11 +179,26 @@ register this and mouse clicks are registed on the wrong frame.
 
 #+begin_src elisp
 (defun stfl/consult-fd (&optional arg)
+  (interactive "P")
+  (let ((consult-fd-args (if arg (append consult-fd-args '("--no-ignore"))
+                           consult-fd-args)))
+    (consult-fd)))
 ;; interactive
 ;; C-u consult-fd-args --no-ignore
 ;; )
 
-;; (map! :leader "sf" #'stfl/consult-fd) instead of locate which I don't use anyway
+(cons "--no-ignore"
+      '((if (executable-find "fdfind" 'remote) "fdfind" "fd") "--color=never"
+        "--full-path --absolute-path" "--hidden --exclude .git"
+        (if (featurep :system 'windows) "--path-separator=/"))
+      )
+
+(append 
+      '((if (executable-find "fdfind" 'remote) "fdfind" "fd") "--color=never"
+        "--full-path --absolute-path" "--hidden --exclude .git"
+        (if (featurep :system 'windows) "--path-separator=/"))
+'("--no-ignore")
+      )
 #+end_src
 
 * Theme
