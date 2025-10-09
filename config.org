@@ -201,7 +201,6 @@ register this and mouse clicks are registed on the wrong frame.
         :prefix "s"
         "f" #'stfl/consult-fd
         "F" #'stfl/consult-fd-dir))
-
 #+end_src
 
 * Theme
