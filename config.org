@@ -687,12 +687,6 @@ set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 #+end_src
 
 ** org-habit
-:PROPERTIES:
-:ID:       d7e8ca81-775d-4623-ae1e-665181143649
-:END:
-:LOGBOOK:
-CLOCK: [2025-10-14 Di 07:30]--[2025-10-14 Di 13:30] =>  6:00
-:END:
 
 load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+BEGIN_SRC elisp
@@ -709,9 +703,6 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** org-clock
-:LOGBOOK:
-CLOCK: [2025-10-14 Di 13:00]--[2025-10-14 Di 14:00] =>  1:00
-:END:
 
 #+begin_src elisp
 (after! org-clock
@@ -766,9 +757,6 @@ Prompt to continue from the last clock-out time if the gap is
 #+end_src
 
 ** org-clock export to csv
-:LOGBOOK:
-CLOCK: [2025-10-14 Di 13:30]
-:END:
 
 #+begin_src elisp :tangle packages.el
 (package! org-clock-csv)
