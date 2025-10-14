@@ -750,19 +750,22 @@ Prompt to continue from the last clock-out time if the gap is
     (interactive "P")
     (let* ((manual-time (cadr args))
            (org-clock-continuously
-            ;; (and (not manual-time)
+            (and (not manual-time)
                  (or (org-clocking-p)
                      (and org-clock-out-time
                           (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                               (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                                 (stfl/org-time-format-ago org-clock-out-time))))))))
-      ;; )
+      )
       (message (format "manual-time %s %s" manual-time (not manual-time)))
       (apply orig-fn args)))
   )
 #+end_src
 
 ** org-clock export to csv
+:LOGBOOK:
+CLOCK: [2025-10-14 Di 10:00]
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! org-clock-csv)
