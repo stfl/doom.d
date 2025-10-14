@@ -691,7 +691,7 @@ set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 :ID:       d7e8ca81-775d-4623-ae1e-665181143649
 :END:
 :LOGBOOK:
-CLOCK: [2025-10-14 Di 13:30]
+CLOCK: [2025-10-14 Di 07:30]
 :END:
 
 load org-habit because many of the functions in ~org-helpers.el~ require it...
