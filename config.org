@@ -748,14 +748,13 @@ Prompt to continue from the last clock-out time if the gap is
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
     :around #'org-clock-in
     (interactive "P")
-    (let* (;;(manual-time? )
-           (org-clock-continuously
-           (or (org-clocking-p)
-               (and org-clock-out-time
-                    (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                        (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                          (stfl/org-time-format-ago org-clock-out-time))))))))
-     (message (format "args: %s" args))
+    (let* ((manual-time? )
+           (org-clock-continuously (or (org-clocking-p)
+                                       (and org-clock-out-time
+                                            (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                                                (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                                                  (stfl/org-time-format-ago org-clock-out-time))))))))
+     (message (format "args: %s -> manual? %s" args (cadr args)))
           (apply orig-fn args)))
   )
 
@@ -763,6 +762,9 @@ Prompt to continue from the last clock-out time if the gap is
 #+end_src
 
 ** org-clock export to csv
+:LOGBOOK:
+CLOCK: [2025-10-14 Di 13:30]
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! org-clock-csv)
