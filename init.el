@@ -93,8 +93,7 @@
        snippets          ; my elves. They type so I don't have to
        (whitespace       ; a butler for your whitespace
         +guess
-        ;; +trim
-        )
+        +trim)
        word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
