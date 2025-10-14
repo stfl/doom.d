@@ -1382,7 +1382,14 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
       (error "no more than 2 files should be marked"))))
 #+end_src
 
-** Ensure blank lines between headings and before contents
+** Orgzly compatability format
+
+Ensures blank lines between headings and before contents to ensure the same
+formatting as orgzly and avoid merge conflicts due to whitespace difference.
+
+#+begin_src elisp
+
+#+end_src
 
 Always add a blank line when adding a new heading.
 
