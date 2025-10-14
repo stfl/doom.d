@@ -709,6 +709,9 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** org-clock
+:LOGBOOK:
+CLOCK: [2025-10-14 Di 13:00]--[2025-10-14 Di 14:00] =>  1:00
+:END:
 
 #+begin_src elisp
 (after! org-clock
@@ -749,20 +752,22 @@ Prompt to continue from the last clock-out time if the gap is
     :around #'org-clock-in
     (interactive "P")
     (let* ((start-time (cadr args))
-           (org-clock-continuously
-            (and (not start-time) ;; only try to continue of do not manually set the start-time time
+           (continue (and (not start-time) ;; only try to continue of do not manually set the start-time time
                  (or (org-clocking-p)
                      (and org-clock-out-time
                           (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                               (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                                (stfl/org-time-format-ago org-clock-out-time)))))))))
+                                                (stfl/org-time-format-ago org-clock-out-time))))))))
+
+           (org-clock-continuously
+            ))
       (apply orig-fn args)))
   )
 #+end_src
 
 ** org-clock export to csv
 :LOGBOOK:
-CLOCK: [2025-10-14 Di 12:00]
+CLOCK: [2025-10-14 Di 13:30]
 :END:
 
 #+begin_src elisp :tangle packages.el
