@@ -808,6 +808,8 @@ Not added when either:
                       (set-window-configuration wnd))))
       (error "no more than 2 files should be marked"))))
 
+
+
 ;;;###autoload
 (defun +org-fix-blank-lines (&optional prefix)
   "Ensure that blank lines exist between headings and between headings and their contents.
