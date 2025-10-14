@@ -808,8 +808,11 @@ Not added when either:
                       (set-window-configuration wnd))))
       (error "no more than 2 files should be marked"))))
 
+(after! ws-butler
+  (cl-callf2 -remove-item 'org-mode ws-butler-global-exempt-modes))
+
 (after! org
-  (when (modulep! :editor whitespace -trim)
+  (if (modulep! :editor whitespace -trim)
     (message "Error: Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")))
 
 ;;;###autoload
