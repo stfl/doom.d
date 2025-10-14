@@ -1389,6 +1389,7 @@ formatting as orgzly and avoid merge conflicts due to whitespace difference.
 
 #+begin_src elisp
 (modulep! :editor whitespace -trim)
+(modulep! :editor whitespace -guess)
 #+end_src
 
 
