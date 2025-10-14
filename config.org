@@ -1389,7 +1389,7 @@ formatting as orgzly and avoid merge conflicts due to whitespace difference.
 
 #+begin_src elisp
 (when (modulep! :editor whitespace -trim)
-  (message "Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")
+  (message "Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!"))
 #+end_src
 
 
