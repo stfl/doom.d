@@ -808,7 +808,8 @@ Not added when either:
                       (set-window-configuration wnd))))
       (error "no more than 2 files should be marked"))))
 
-
+(when (modulep! :editor whitespace -trim)
+  (message "Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")
 
 ;;;###autoload
 (defun +org-fix-blank-lines (&optional prefix)
