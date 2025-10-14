@@ -275,7 +275,6 @@
        ;;irc               ; how neckbeards socialize
        ;; everywhere                   ; *leave* Emacs!? You must be joking.
        ;;(rss +org)        ; emacs as an RSS reader
-       ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
        literate
