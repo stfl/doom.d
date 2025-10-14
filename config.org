@@ -706,6 +706,9 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** org-clock
+:LOGBOOK:
+CLOCK: [2025-10-14 Di 12:45]
+:END:
 
 #+begin_src elisp
 (after! org-clock
