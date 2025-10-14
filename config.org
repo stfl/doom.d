@@ -1383,18 +1383,19 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
 #+end_src
 
 ** Orgzly compatability format
+:PROPERTIES:
+:ID:       475960fa-e86b-446c-8c08-ae8156c9c439
+:END:
 
 Ensures blank lines between headings and before contents to ensure the same
 formatting as orgzly and avoid merge conflicts due to whitespace difference.
 
 #+begin_src elisp
 (after! ws-butler
-  (setq! ws-butler-global-mode ())
-  (delete )
+  (cl-callf2 -remove-item 'org-mode ws-butler-global-exempt-modes))
 
-  )
 (after! org
-  (when (modulep! :editor whitespace -trim)
+  (if (modulep! :editor whitespace -trim)
     (message "Error: Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")))
 #+end_src
 
