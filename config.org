@@ -753,13 +753,13 @@ Prompt to continue from the last clock-out time if the gap is
     (interactive "P")
     (let* ((start-time (cadr args))
            (continue (and (not start-time) ;; only try to continue of do not manually set the start-time time
-                 (or (org-clocking-p)
-                     (and org-clock-out-time
-                          (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                              (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                                (stfl/org-time-format-ago org-clock-out-time))))))))
+                          (or (org-clocking-p)
+                              (and org-clock-out-time
+                                   (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                                       (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                                         (stfl/org-time-format-ago org-clock-out-time))))))))
 
-           (org-clock-continuously
+           ;; (org-clock-continuously (and continue )
             ))
       (apply orig-fn args)))
   )
