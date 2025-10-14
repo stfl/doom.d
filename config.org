@@ -763,9 +763,6 @@ Prompt to continue from the last clock-out time if the gap is
 #+end_src
 
 ** org-clock export to csv
-:LOGBOOK:
-CLOCK: [2025-10-14 Di 10:00]
-:END:
 
 #+begin_src elisp :tangle packages.el
 (package! org-clock-csv)
