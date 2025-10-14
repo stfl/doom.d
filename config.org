@@ -1391,11 +1391,9 @@ Ensures blank lines between headings and before contents to ensure the same
 formatting as orgzly and avoid merge conflicts due to whitespace difference.
 
 #+begin_src elisp
-(after! ws-butler
-  (cl-callf2 -remove-item 'org-mode ws-butler-global-exempt-modes))
-
 (after! org
-  (if (modulep! :editor whitespace -trim)
+  (if (modulep! :editor whitespace +trim)
+      (cl-callf2 -remove-item 'org-mode ws-butler-global-exempt-modes))
     (message "Error: Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")))
 #+end_src
 
