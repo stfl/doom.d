@@ -748,16 +748,16 @@ Prompt to continue from the last clock-out time if the gap is
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
     :around #'org-clock-in
     (interactive "P")
-    (let* ((manual-time (cadr args))
+    (let* ((start-time (cadr args))
            (org-clock-continuously
-            (and (not manual-time) ;; only try to continue of do not manually set the clock-in time
+            (and (not start-time) ;; only try to continue of do not manually set the start-time time
                  (or (org-clocking-p)
                      (and org-clock-out-time
                           (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                               (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                                 (stfl/org-time-format-ago org-clock-out-time))))))))
       )
-      (message (format "manual-time %s %s" manual-time (not manual-time)))
+      (message (format "start-time %s %s" start-time (not start-time)))
       (apply orig-fn args)))
   )
 #+end_src
