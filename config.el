@@ -375,7 +375,30 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org-clock
   (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
   (defvar stfl/org-clock-continous-threshold 60)
-  
+
+  (defun stfl/org-read-date-time ()
+    (let ((now (org-current-time org-clock-rounding-minutes t)))
+      (org-read-date t t nil nil now (format-time-string "%H:%M" now))))
+
+  (defun stfl/org-clock-in-at ()
+    (interactive)
+    (let ((time (stfl/org-read-date-time))
+          (org-clock-continuously (org-clocking-p)))
+
+      ;; clocking out when there is current clock running
+      (when (org-clocking-p)
+        (when (> 0 (time-subtract time org-clock-start-time))
+          (error (format "Manually clocking in while another LATER clock is running! \"%s\" started at %s"
+                         org-clock-heading (format-time-string (org-time-stamp-format 'with-time t) org-clock-start-time))))
+
+        (org-clock-out nil nil time))
+
+      (org-clock-in nil time)))
+
+  (defun stfl/org-clock-out-at ()
+    (interactive)
+    (when (org-clocking-p) (org-clock-out nil nil (stfl/org-read-date-time))))
+
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
         (time-subtract (org-current-time org-clock-rounding-minutes t) time))
@@ -396,14 +419,24 @@ Org-mode properties drawer already, keep the headline and don’t insert
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
     :around #'org-clock-in
     (interactive "P")
-    (let ((org-clock-continuously
-           (or (org-clocking-p)
-               (and org-clock-out-time
-                    (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                        (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                          (stfl/org-time-format-ago org-clock-out-time))))))))
-          (apply orig-fn args)))
+    (let* ((start-time (cadr args))
+           (org-clock-continuously
+            (if start-time
+                org-clock-continuously  ;; apply previous value
+              (or (org-clocking-p)
+                  (and org-clock-out-time
+                       (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                           (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                             (stfl/org-time-format-ago org-clock-out-time)))))))))
+      (apply orig-fn args)))
   )
+
+(map! :mode org-mode
+      :map org-mode-map
+      :localleader
+      :prefix "c"
+      :desc "clock IN at time" "I" #'stfl/org-clock-in-at
+      :desc "clock OUT at time" "O" #'stfl/org-clock-out-at))
 
 (use-package org-clock-csv
   :after org
