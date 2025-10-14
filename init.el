@@ -139,28 +139,25 @@
        editorconfig      ; let someone else argue about tabs vs spaces
        ;; ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
-       ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets         ; ...or in Dash docsets locally
         +dictionary
         +offline)
+       llm
        (lsp
         +eglot
         +booster          ; performance improvements for eglot
         +peek)
-       ;;macos             ; MacOS-specific commands
        (magit             ; a git porcelain for Emacs
         ;; +forge
         )
        ;;make              ; run make tasks from Emacs
        (pass +auth)        ; password manager for nerds
        pdf               ; pdf enhancements
-       ;;prodigy           ; FIXME managing external services & code builders
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
-       upload            ; map local to remote projects via ssh/ftp
        tree-sitter
-       llm
+       upload            ; map local to remote projects via ssh/ftp
 
        :lang
        ;;ada
