@@ -750,6 +750,7 @@ Prompt to continue from the last clock-out time if the gap is
     (interactive "P")
     (let* ((manual-time (cadr args))
            (org-clock-continuously
+            (and (not manual-time)
             (or (org-clocking-p)
                 (and org-clock-out-time
                      (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
