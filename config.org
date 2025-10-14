@@ -749,16 +749,13 @@ Prompt to continue from the last clock-out time if the gap is
     :around #'org-clock-in
     (interactive "P")
     (let* ((manual-time? (cadr args))
-          (org-clock-continuously
-           (or (org-clocking-p)
-               (and org-clock-out-time
-                    (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                        (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                          (stfl/org-time-format-ago org-clock-out-time))))))))
-          (apply orig-fn args)))
+           (org-clock-continuously (or (org-clocking-p)
+                (and org-clock-out-time
+                     (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
+                         (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
+                                           (stfl/org-time-format-ago org-clock-out-time))))))))
+      (apply orig-fn args)))
   )
-
-
 #+end_src
 
 ** org-clock export to csv
