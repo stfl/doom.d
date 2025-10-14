@@ -727,7 +727,7 @@ Prompt to continue from the last clock-out time if the gap is
 (after! org-clock
   (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
   (defvar stfl/org-clock-continous-threshold 60)
-  
+
   (defun stfl/org-time-minutes-ago-rounded (time)
     (/ (org-time-convert-to-integer
         (time-subtract (org-current-time org-clock-rounding-minutes t) time))
@@ -748,12 +748,14 @@ Prompt to continue from the last clock-out time if the gap is
     "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
     :around #'org-clock-in
     (interactive "P")
-    (let ((org-clock-continuously
+    (let* (;;(manual-time? )
+           (org-clock-continuously
            (or (org-clocking-p)
                (and org-clock-out-time
                     (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
                         (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                           (stfl/org-time-format-ago org-clock-out-time))))))))
+     (message (format "args: %s" args))
           (apply orig-fn args)))
   )
 
