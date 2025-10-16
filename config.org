@@ -1527,36 +1527,6 @@ I need to disable ws-butler for org-mode buffers.
             'org-mode))
 #+end_src
 
-** Get first day of the month
-
-#+begin_src elisp
-(defun stfl/get-first-day-of-current-month ()
-  "Calculate and return the time value for the first day of the current month.
-
-The function gets the current time, decodes it to extract the
-current year and month, and then creates a new time value for
-the first day of that month at midnight.
-
-The returned value is an Emacs time value (a list), which can be
-used with other time-related functions like `format-time-string'."
-  ;; No need for `(interactive)` as this function is primarily for programmatic use.
-  (let* (;; Get the current time as an Emacs time value.
-         (now (current-time))
-         ;; Decode the time into a list: (sec min hour day month year ...).
-         (decoded-time (decode-time now))
-         ;; Extract the month (5th element, index 4).
-         (month (nth 4 decoded-time))
-         ;; Extract the year (6th element, index 5).
-         (year (nth 5 decoded-time)))
-    ;; Construct a new time value for the first day of the extracted month and year.
-    ;; We set the time to 00:00:00.
-    ;; (encode-time SEC MINUTE HOUR DAY MONTH YEAR)
-    (encode-time 0 0 0 1 month year)))
-
-(defun stfl/month-first-str ()
-  (format-time-string "%Y-%m-%d" (stfl/get-first-day-of-current-month)))
-#+end_src
-
 * [#D] Org Agenda
 ** Key bindings
 
