@@ -385,12 +385,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
     (let ((time (stfl/org-read-date-time))
           (org-clock-continuously (org-clocking-p)))
 
-      ;; clocking out when there is current clock running
       (when (org-clocking-p)
+        ;; Sanity check to avoid negative clock times -> best resolve manually
         (when (> 0 (time-subtract time org-clock-start-time))
           (error (format "Manually clocking in while another LATER clock is running! \"%s\" started at %s"
                          org-clock-heading (format-time-string (org-time-stamp-format 'with-time t) org-clock-start-time))))
-
         (org-clock-out nil nil time))
 
       (org-clock-in nil time)))
