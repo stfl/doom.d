@@ -1552,6 +1552,9 @@ used with other time-related functions like `format-time-string'."
     ;; We set the time to 00:00:00.
     ;; (encode-time SEC MINUTE HOUR DAY MONTH YEAR)
     (encode-time 0 0 0 1 month year)))
+
+(defun stfl/month-first-str ()
+  (format-time-string "%Y-%m-%d" (stfl/get-first-day-of-current-month)))
 #+end_src
 
 * [#D] Org Agenda
