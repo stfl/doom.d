@@ -720,10 +720,11 @@ Prompt to continue from the last clock-out time if the gap is
 
 #+begin_src elisp
 (after! org-clock
-  (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
-  (defvar stfl/org-clock-continous-threshold 60)
+  (setq! org-clock-continuously nil))  ;; org-clock-continuously is handled by the advice
 
 (after! org
+  (defvar stfl/org-clock-continous-threshold 60)
+
   (defun stfl/org-read-date-time ()
     (let ((now (org-current-time org-clock-rounding-minutes t)))
       (org-read-date t t nil nil now (format-time-string "%H:%M" now))))
