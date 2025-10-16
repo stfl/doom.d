@@ -431,9 +431,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                            (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
                                              (stfl/org-time-format-ago org-clock-out-time)))))))))
       (apply orig-fn args)))
-  )
 
-(after! org
   (map! :map org-mode-map
         :localleader
         :prefix "c"
