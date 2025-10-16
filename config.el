@@ -384,6 +384,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
   (defun stfl/org-clock-in-at ()
     (interactive)
+    (require 'org-clock)
     (let ((time (stfl/org-read-date-time))
           (org-clock-continuously (org-clocking-p)))
 
