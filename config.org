@@ -782,7 +782,7 @@ Prompt to continue from the last clock-out time if the gap is
       :localleader
       :prefix "c"
       :desc "clock IN at time" "I" #'stfl/org-clock-in-at
-      :desc "clock OUT at time" "O" #'stfl/org-clock-out-at))
+      :desc "clock OUT at time" "O" #'stfl/org-clock-out-at)
 #+end_src
 
 ** org-clock export to csv
