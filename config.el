@@ -435,7 +435,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
       :localleader
       :prefix "c"
       :desc "clock IN at time" "I" #'stfl/org-clock-in-at
-      :desc "clock OUT at time" "O" #'stfl/org-clock-out-at))
+      :desc "clock OUT at time" "O" #'stfl/org-clock-out-at)
 
 (use-package org-clock-csv
   :after org
