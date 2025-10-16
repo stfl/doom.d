@@ -149,7 +149,7 @@
         +booster          ; performance improvements for eglot
         +peek)
        (magit             ; a git porcelain for Emacs
-        ;; +forge
+        +forge
         )
        ;;make              ; run make tasks from Emacs
        (pass +auth)        ; password manager for nerds
