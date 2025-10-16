@@ -373,7 +373,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
          ))
 
 (after! org-clock
-  (setq! org-clock-continuously nil)  ;; org-clock-continuously is handled by the advice
+  (setq! org-clock-continuously nil))  ;; org-clock-continuously is handled by the advice
+
+(after! org
   (defvar stfl/org-clock-continous-threshold 60)
 
   (defun stfl/org-read-date-time ()
