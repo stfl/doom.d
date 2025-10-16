@@ -731,6 +731,7 @@ Prompt to continue from the last clock-out time if the gap is
 
   (defun stfl/org-clock-in-at ()
     (interactive)
+    (require 'org-clock)
     (let ((time (stfl/org-read-date-time))
           (org-clock-continuously (org-clocking-p)))
 
