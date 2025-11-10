@@ -4449,7 +4449,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
          aidermacs-architect-model "openrouter/anthropic/claude-sonnet-4.5"
          ;; aidermacs-architect-model "openrouter/x-ai/grok-4"
          ;; aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
-         aidermacs-weak-model "openrouter/deepseek/deepseek-r1-0528"
+         aidermacs-weak-model "openrouter/deepseek/deepseek-r1-free"
          ;; aidermacs-backend 'vterm
          aidermacs-backend 'comint
          aidermacs-watch-files t
