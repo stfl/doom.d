@@ -78,7 +78,7 @@
 
 (package! ztree :disable t)
 
-(package! magit-todos :disable t)
+(package! magit-todos)
 
 ;; (package! mailscripts.el
 ;;   :recipe (:host github :repo "spwhitton/mailscripts" :files ("mailscripts.el")))
