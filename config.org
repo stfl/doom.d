@@ -3856,7 +3856,7 @@ display more columns in forge list topic
 *** magit-todos
 
 #+begin_src elisp :tangle packages.el
-(package! magit-todos :disable t)
+(package! magit-todos)
 #+end_src
 
 activate magit-todo to display the TODOs section in magit buffer
