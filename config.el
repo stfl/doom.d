@@ -376,7 +376,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq! org-clock-continuously nil))  ;; org-clock-continuously is handled by the advice
 
 (after! org
-  (defvar stfl/org-clock-continous-threshold 60)
+  (defvar stfl/org-clock-continous-threshold 30)
 
   (defun stfl/org-read-date-time ()
     (let ((now (org-current-time org-clock-rounding-minutes t)))
