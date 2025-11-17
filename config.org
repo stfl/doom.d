@@ -4494,8 +4494,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
 #+begin_src elisp
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
-  :init (stfl/setup-api-keys)
   :config
+  (stfl/setup-api-keys)
   (claude-code-ide-emacs-tools-setup)
   (setq! claude-code-ide-terminal-backend 'eat)
   ) ; Optionally enable Emacs MCP tools
