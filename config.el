@@ -2596,6 +2596,15 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
         )))
 
+(defun stfl/setup-api-keys ()
+  (interactive)
+  (message "Setting up API keys")
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
+  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+  (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
+  (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs")))
+
 
 
 (use-package! copilot
@@ -2810,15 +2819,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package! aidermacs
   :commands (aidermacs-transient-menu)
   :init
-  (add-hook 'aidermacs-before-run-backend-hook
-          (lambda ()
-            (message "Setting up API keys")
-            (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
-            (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
-            (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
-            (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
-            (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs"))
-            ))
+  (add-hook 'aidermacs-before-run-backend-hook #'stfl/setup-api-keys)
   :config
   (setq! aidermacs-program "aider"
          aidermacs-default-chat-mode 'architect
@@ -2842,6 +2843,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
   :config
-  (claude-code-ide-emacs-tools-setup)
+  (stfl/setup-api-keys)
   (setq! claude-code-ide-terminal-backend 'eat)
+  (claude-code-ide-emacs-tools-setup)
   ) ; Optionally enable Emacs MCP tools
