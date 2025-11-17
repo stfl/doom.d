@@ -4169,6 +4169,16 @@ git blame lenses
         )))
 #+end_src
 
+#+begin_src elisp
+(defun stfl/setup-api-keys ()
+  (message "Setting up API keys")
+  (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
+  (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
+  (setenv "GEMINI_API_KEY" (password-store-get "API/Gemini-emacs"))
+  (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
+  (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs")))
+#+end_src
+
 ** Copilot
 :PROPERTIES:
 :ID:       ee6aaae4-4c0e-4eff-b758-72cdb6cc4e4b
