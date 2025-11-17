@@ -4171,6 +4171,7 @@ git blame lenses
 
 #+begin_src elisp
 (defun stfl/setup-api-keys ()
+  (interactive)
   (message "Setting up API keys")
   (setenv "OPENAI_API_KEY" (password-store-get "API/OpenAI-emacs"))
   (setenv "ANTHROPIC_API_KEY" (password-store-get "API/Claude-emacs"))
