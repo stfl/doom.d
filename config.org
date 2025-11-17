@@ -2698,14 +2698,15 @@ use bash when opening a vterm in a tramp dir:
 ** eat
 
 #+begin_src elisp :tangle packages.el
-(package! eat :type git
-       :host codeberg
-       :repo "akib/emacs-eat"
-       :files ("*.el" ("term" "term/*.el") "*.texi"
-               "*.ti" ("terminfo/e" "terminfo/e/*")
-               ("terminfo/65" "terminfo/65/*")
-               ("integration" "integration/*")
-               (:exclude ".dir-locals.el" "*-tests.el")))))
+(package! eat
+  :type git
+  :host codeberg
+  :repo "akib/emacs-eat"
+  :files ("*.el" ("term" "term/*.el") "*.texi"
+          "*.ti" ("terminfo/e" "terminfo/e/*")
+          ("terminfo/65" "terminfo/65/*")
+          ("integration" "integration/*")
+          (:exclude ".dir-locals.el" "*-tests.el")))))
 #+end_src
 
 ** Typst
