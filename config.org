@@ -4496,7 +4496,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands (claude-code-ide-menu)
   :config
   (stfl/setup-api-keys)
-  (claude-code-ide-emacs-tools-setup)
   (setq! claude-code-ide-terminal-backend 'eat)
+  (claude-code-ide-emacs-tools-setup)
   ) ; Optionally enable Emacs MCP tools
 #+end_src
