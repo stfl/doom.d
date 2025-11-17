@@ -4478,4 +4478,3 @@ Reply concisely. Wrap source code in a ```cpp block.")
   (setq! claude-code-ide-terminal-backend 'eat)
   ) ; Optionally enable Emacs MCP tools
 #+end_src
-
