@@ -1903,6 +1903,8 @@ org-default-priority is treated as lower than the same set value"
   (setq! vterm-tramp-shells '(("docker" "/bin/sh")
                               ("ssh" "/bin/bash"))))
 
+(use-package! eat)
+
 (use-package! typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
@@ -2840,4 +2842,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
   :config
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+  (claude-code-ide-emacs-tools-setup)
+  (setq! claude-code-ide-terminal-backend 'eat)
+  ) ; Optionally enable Emacs MCP tools

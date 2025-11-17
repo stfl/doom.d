@@ -27,6 +27,16 @@
 
 (package! vterm :disable t)
 
+(package! eat
+  :type git
+  :host codeberg
+  :repo "akib/emacs-eat"
+  :files ("*.el" ("term" "term/*.el") "*.texi"
+          "*.ti" ("terminfo/e" "terminfo/e/*")
+          ("terminfo/65" "terminfo/65/*")
+          ("integration" "integration/*")
+          (:exclude ".dir-locals.el" "*-tests.el")))))
+
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
