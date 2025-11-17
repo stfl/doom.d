@@ -4474,6 +4474,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
   :config
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+  (claude-code-ide-emacs-tools-setup)
+  (setq! claude-code-ide-terminal-backend 'eat)
+  ) ; Optionally enable Emacs MCP tools
 #+end_src
 
