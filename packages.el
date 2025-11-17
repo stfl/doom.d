@@ -35,7 +35,7 @@
                    "*.ti" ("terminfo/e" "terminfo/e/*")
                    ("terminfo/65" "terminfo/65/*")
                    ("integration" "integration/*")
-                   (:exclude ".dir-locals.el" "*-tests.el"))))))
+                   (:exclude ".dir-locals.el" "*-tests.el"))))
 
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
