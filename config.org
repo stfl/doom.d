@@ -2709,6 +2709,10 @@ use bash when opening a vterm in a tramp dir:
           (:exclude ".dir-locals.el" "*-tests.el")))))
 #+end_src
 
+#+begin_src elisp
+(use-package! eat)
+#+end_src
+
 ** Typst
 
 #+begin_src elisp :tangle packages.el
