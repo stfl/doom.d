@@ -4151,8 +4151,6 @@ git blame lenses
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
        
-       ;; "e" #'elysium-query
-
        "o" #'claude-code-ide-menu
        
        (:prefix ("c" . "Copilot Chat")
