@@ -2944,7 +2944,7 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 #+begin_src elisp
 (use-package! lsp-bridge
-  :disabled t
+  :disabled
   :config
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
          lsp-bridge-enable-inlay-hint t
