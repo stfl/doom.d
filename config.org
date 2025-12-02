@@ -3462,8 +3462,7 @@ manually add adoc-mode to the list.. I don't like that...
 
 #+begin_src elisp
 (after! ispell
-  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir))
-  )
+  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
 #+end_src
 
 ** Proxmox development
