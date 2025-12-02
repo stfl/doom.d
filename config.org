@@ -3458,6 +3458,14 @@ manually add adoc-mode to the list.. I don't like that...
         lsp-ltex-user-rules-path (doom-path doom-user-dir "lsp-ltex")))
 #+end_src
 
+*** ispell
+
+#+begin_src elisp
+(after! ispell
+  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir))
+  )
+#+end_src
+
 ** Proxmox development
 :PROPERTIES:
 :header-args:elisp: :tangle no
