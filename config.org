@@ -4393,7 +4393,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :host "openrouter.ai"
     :endpoint "/api/v1/chat/completions"
     :stream t
-    :key "your-api-key"                   ;can be a function that returns the key
+    :key (password-store-get "API/Gemini-emacs")
     :models '(openai/gpt-3.5-turbo
               mistralai/mixtral-8x7b-instruct
               meta-llama/codellama-34b-instruct
