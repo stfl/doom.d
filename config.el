@@ -2725,10 +2725,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       (setq codeium-command-executable codeium-exe)))
   )
 
-;; (use-package! gptel
-;;   :after password-store
-;;   :commands (gptel gptel-menu)
-;;   :config
 (after! gptel
   (setq! gptel-default-mode 'org-mode
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
@@ -2772,18 +2768,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
 Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
 Reply concisely. Wrap source code in a ```cpp block.")
-
-  ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
-
-;; (after! gptel
-;;   (defadvice! +gptel--rename-buffer (&rest args)
-;;     "rename gptel buffers to a *gptel prefix"
-;;     :filter-return #'gptel
-;;         (unless (string-prefix-p "*gptel" (buffer-name))
-;;           (rename-buffer (generate-new-buffer-name (concat "*gptel " (buffer-name))) t)
-;;           (message "renamed gptel buffer to %s" (buffer-name))))
-;;   )
 
 (use-package! aidermacs
   :commands (aidermacs-transient-menu)
@@ -2802,12 +2787,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
          aidermacs-backend 'comint
          aidermacs-watch-files t
          aidermacs-extra-args '("--thinking-tokens" "8k" "--reasoning-effort" "medium"))
-  (set-popup-rule! "^\\*aidermacs:"
-    :select t
-    :size 0.3
-    :quit nil
-    :ttl nil)
-  )
+  (set-popup-rule! "^\\*aidermacs:" :select t :size 0.3 :quit nil :ttl nil))
 
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
