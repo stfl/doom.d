@@ -2061,7 +2061,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 
 (use-package! lsp-bridge
-  :disabled t
+  :disabled
   :config
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
          lsp-bridge-enable-inlay-hint t
@@ -2844,6 +2844,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands (claude-code-ide-menu)
   :config
   (stfl/setup-api-keys)
-  (setq! claude-code-ide-terminal-backend 'eat)
-  (claude-code-ide-emacs-tools-setup)
-  ) ; Optionally enable Emacs MCP tools
+  (setq! claude-code-ide-terminal-backend 'eat
+         claude-code-ide-switch-tab-on-ediff nil
+         claude-code-ide-focus-claude-after-ediff t)
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
