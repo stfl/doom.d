@@ -4395,7 +4395,6 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
     :stream t
     :key (password-store-get "API/Openrouter-emacs")
     :models '(moonshotai/kimi-k2-thinking
-              moonshotai/kimi-k2-thinking
               ))
 
   (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
