@@ -2744,66 +2744,35 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
-  
+
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
 
   (gptel-make-gemini "Gemini" :stream t
-    :key (password-store-get "API/Gemini-emacs"))
-  
+                     :key (password-store-get "API/Gemini-emacs"))
+
   (gptel-make-anthropic "Claude"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Claude-emacs"))
-  
+
   (gptel-make-perplexity "Perplexity"          ;Any name you want
     :stream t                             ;Streaming responses
     :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
-    
-  ;; Perplexity offers an OpenAI compatible API
-  ;; NOTE https://docs.perplexity.ai/guides/model-cards
-  ;; (gptel-make-openai "Perplexity"         ;Any name you want
-  ;;   :host "api.perplexity.ai"
-  ;;   :key (password-store-get "API/Perplexity-gptel")
-  ;;   :endpoint "/chat/completions"
-  ;;   :stream t
-  ;;   :models '(sonar
-  ;;             sonar-pro
-  ;;             sonar-reasoning
-  ;;             sonar-reasoning-pro
-  ;;             sonar-deep-research	
-  ;;             r1-1776	
-  ;;             ))
 
-  ;; (set-popup-rules!
-  ;;   '(("^\\*ChatGPT\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-  ;;     ("^\\*Perplexity\\*" :select t :quit nil :ttl nil :modeline t :persist t)
-  ;;     ("^\\*Claude\\*"  :select t :quit nil :ttl nil :modeline t :persist t)))
-  
-  (setf (alist-get 'perplexity gptel-directives) "You are Perplxity, a helpful search assistant, living in Emacs.
+  (gptel-make-gh-copilot "Copilot")
 
-Your task is to deliver a concise and accurate response to a user's query, drawing from the given search results. Your answer must be precise, of high-quality, and written by an expert using an unbiased and journalistic tone. It is EXTREMELY IMPORTANT to directly answer the query. NEVER say 'based on the search results' or start your answer with a heading or title. Get straight to the point. Your answer must be written in the same language as the query, even if language preference is different.
+  ;; OpenRouter offers an OpenAI compatible API
+  (gptel-make-openai "OpenRouter"               ;Any name you want
+    :host "openrouter.ai"
+    :endpoint "/api/v1/chat/completions"
+    :stream t
+    :key (password-store-get "API/Openrouter-emacs")
+    :models '(moonshotai/kimi-k2-thinking))
 
-You MUST cite the most relevant search results that answer the query. Do not mention any irrelevant results. You MUST ADHERE to the following instructions for citing search results:
-
-- To cite a search result, enclose its index located above the summary with brackets at the end of the corresponding sentence, for example 'Ice is less dense than water[1][2].'
-or 'Paris is the capital of France[1][4][5].'
-- NO SPACE between the last word and the citation, and ALWAYS use brackets. Only use this format to cite search results. 
-- If you don't know the answer or the premise is incorrect, explain why. If the search results are empty or unhelpful, answer the query as well as you can with existing knowledge.
-- ALWAYS include a References section at the end of your answer. in the format
-  #### References
-  [1] <Title> <link>
-  [2] <Title> <link>
-
-Use markdown to format paragraphs, lists, tables, and quotes whenever possible.
-
-- Use headings level 4 to separate sections of your response, like '#### Header'.
-- Use single new lines for lists and double new lines for paragraphs.
-- Use markdown to render images given in the search results.")
-  
   (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
 Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
 Reply concisely. Wrap source code in a ```cpp block.")
-  
+
   ;; (transient-suffix-put 'gptel-menu (kbd "RET") :key "<f8>")
   )
 
@@ -2824,8 +2793,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
   (setq! aidermacs-program "aider"
          aidermacs-default-chat-mode 'architect
          ;; aidermacs-default-model "openrouter/google/gemini-2.5-pro"
-         aidermacs-default-model "openrouter/anthropic/claude-sonnet-4.5"
-         aidermacs-architect-model "openrouter/anthropic/claude-sonnet-4.5"
+         aidermacs-default-model "anthropic/claude-sonnet-4.5"
+         aidermacs-architect-model "anthropic/claude-opus-4.5"
          ;; aidermacs-architect-model "openrouter/x-ai/grok-4"
          ;; aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
          aidermacs-weak-model "openrouter/deepseek/deepseek-r1-0528"
