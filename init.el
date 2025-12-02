@@ -123,7 +123,7 @@
         +icons)
        (spell             ; tasing you for misspelling mispelling
         +enchant
-        ;; +everywhere
+        +everywhere
         )
        ;; grammar           ; tasing grammar mistake every you make
 
