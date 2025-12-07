@@ -2337,6 +2337,9 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-user-dir "lsp-ltex")))
 
+(after! ispell
+  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
+
 (use-package! ssh-config-mode :defer t)
 
 (use-package! bitbake-ts-mode
@@ -2572,8 +2575,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
        
-       ;; "e" #'elysium-query
-
        "o" #'claude-code-ide-menu
        
        (:prefix ("c" . "Copilot Chat")
