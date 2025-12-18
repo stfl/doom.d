@@ -1732,7 +1732,7 @@ I need to disable ws-butler for org-mode buffers.
                    (org-agenda-start-on-weekday 1)
                    (org-agenda-archives-mode t)
                    (org-agenda-start-with-log-mode '(closed))
-                   (org-agenda-show-log t)
+                   (org-agenda-show-log 'logcheck)
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))))))
         ("rs" "Stuck Projects"
          ((org-ql-block '(stuck-proj)
