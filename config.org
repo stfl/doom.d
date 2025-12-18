@@ -1705,7 +1705,9 @@ I need to disable ws-butler for org-mode buffers.
         ("A" "Agenda Weekly"
          ((agenda ""
                   ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)))))
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-log-mode 1)
+                   ))))
         ("r" . "Review")
         ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT" "WAIT")
