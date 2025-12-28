@@ -2710,7 +2710,15 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src elisp
-(use-package! eat)
+(use-package! eat
+  :config
+  ;; Enable eat with eshell
+  (eat-eshell-mode)
+
+  ;; Use semi-char mode by default for better interaction
+  (setq! eat-term-scrollback-size 50000
+         eat-enable-yank-to-terminal t
+         eat-enable-kill-from-terminal t))
 #+end_src
 
 ** Typst

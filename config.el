@@ -1068,6 +1068,14 @@ exist after each headings's drawers."
          ((agenda ""
                   ((org-agenda-span 'week)
                    (org-agenda-start-on-weekday 1)))))
+        ("l" "Agenda Weekly with Log"
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-archives-mode t)
+                   (org-agenda-start-with-log-mode '(closed))
+                   (org-agenda-show-log 'logcheck)
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))))))
         ("r" . "Review")
         ("rc" "Close open NEXT Actions and WAIT"
          ((org-ql-block '(and (todo "NEXT" "WAIT")
@@ -1087,14 +1095,6 @@ exist after each headings's drawers."
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")
                          (org-super-agenda-groups stfl/priority-groups)))))
-        ("rl" "Agenda Weekly with Log"
-         ((agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)
-                   (org-agenda-archives-mode t)
-                   (org-agenda-start-with-log-mode '(closed))
-                   (org-agenda-show-log t)
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))))))
         ("rs" "Stuck Projects"
          ((org-ql-block '(stuck-proj)
                         ((org-ql-block-header "Stuck Projects")
@@ -1903,7 +1903,15 @@ org-default-priority is treated as lower than the same set value"
   (setq! vterm-tramp-shells '(("docker" "/bin/sh")
                               ("ssh" "/bin/bash"))))
 
-(use-package! eat)
+(use-package! eat
+  :config
+  ;; Enable eat with eshell
+  (eat-eshell-mode)
+
+  ;; Use semi-char mode by default for better interaction
+  (setq! eat-term-scrollback-size 50000
+         eat-enable-yank-to-terminal t
+         eat-enable-kill-from-terminal t))
 
 (use-package! typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
