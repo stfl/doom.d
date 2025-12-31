@@ -235,7 +235,7 @@
         ;; +pyenv
         +poetry
         +uv
-        +pyright      ; (requirs +lsp)     ; NOTE can use basedpyright
+        +pyright)      ; (requirs +lsp)     ; NOTE can use basedpyright
         ;; +conda
         )
        ;;qt                ; the 'cutest' gui framework ever
