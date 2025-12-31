@@ -234,6 +234,7 @@
         +tree-sitter
         ;; +pyenv
         +poetry
+        +uv
         +pyright      ; (requirs +lsp)     ; NOTE can use basedpyright
         ;; +conda
         )
