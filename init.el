@@ -235,51 +235,51 @@
         ;; +pyenv
         +poetry
         +uv
-        +pyright)      ; (requirs +lsp)     ; NOTE can use basedpyright
-        ;; +conda
-        )
-       ;;qt                ; the 'cutest' gui framework ever
-       ;;racket            ; a DSL for DSLs
-       ;; (rest              ; Emacs as a REST client
-       ;;  +jq)
-       ;;rst               ; ReST in peace
-       ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        +lsp
-        +tree-sitter)
-       ;;scala             ; java, but good
-       ;;scheme            ; a fully conniving family of lisps
-       (sh                 ; she sells {ba,z,fi}sh shells on the C xor
-        +lsp
-        +tree-sitter)
-       ;;solidity          ; do you need a blockchain? No.
-       ;;swift             ; who asked for emoji variables?
-       ;;terra             ; Earth and Moon in alignment for performance.
-       (web                ; the tubes
-        +lsp
-        +tree-sitter)
-       (yaml                ; JSON, but readable
-        +lsp
-        +tree-sitter)
-
-       :email
-       ;; (mu4e +gmail +org)
-       ;; (notmuch
-       ;;  +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
-       ;;  +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
-       ;;  )
-       ;;(wanderlust +gmail)
-
-       :app
-       ;; calendar                   ; A dated approach to timetabling
-       ;;emms                       ; Multimedia in Emacs is music to my ears
-       ;;irc               ; how neckbeards socialize
-       ;; everywhere                   ; *leave* Emacs!? You must be joking.
-       ;;(rss +org)        ; emacs as an RSS reader
-
-       :config
-       literate
-       (default
-        +bindings
-        +smartparens)
+        +pyright      ; (requirs +lsp)     ; NOTE can use basedpyright
+       ;; +conda
        )
+;;qt                ; the 'cutest' gui framework ever
+;;racket            ; a DSL for DSLs
+;; (rest              ; Emacs as a REST client
+;;  +jq)
+;;rst               ; ReST in peace
+;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+(rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+ +lsp
+ +tree-sitter)
+;;scala             ; java, but good
+;;scheme            ; a fully conniving family of lisps
+(sh                 ; she sells {ba,z,fi}sh shells on the C xor
+ +lsp
+ +tree-sitter)
+;;solidity          ; do you need a blockchain? No.
+;;swift             ; who asked for emoji variables?
+;;terra             ; Earth and Moon in alignment for performance.
+(web                ; the tubes
+ +lsp
+ +tree-sitter)
+(yaml                ; JSON, but readable
+ +lsp
+ +tree-sitter)
+
+:email
+;; (mu4e +gmail +org)
+;; (notmuch
+;;  +org              ; Enable [[doom-package:org-mime]] for writing HTML emails using org-mode.
+;;  +afew             ; Enable integration with [[https://github.com/afewmail/afew][afew]].
+;;  )
+;;(wanderlust +gmail)
+
+:app
+;; calendar                   ; A dated approach to timetabling
+;;emms                       ; Multimedia in Emacs is music to my ears
+;;irc               ; how neckbeards socialize
+;; everywhere                   ; *leave* Emacs!? You must be joking.
+;;(rss +org)        ; emacs as an RSS reader
+
+:config
+literate
+(default
+ +bindings
+ +smartparens)
+)
