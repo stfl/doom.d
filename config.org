@@ -4453,7 +4453,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
   :config
-  (stfl/setup-api-keys)
+  ;; (stfl/setup-api-keys)
   (setq! claude-code-ide-terminal-backend 'eat
          claude-code-ide-switch-tab-on-ediff nil
          claude-code-ide-focus-claude-after-ediff t)
