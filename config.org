@@ -1541,7 +1541,7 @@ I need to disable ws-butler for org-mode buffers.
 
 #+begin_src elisp :tangle packages.el
 (package! ox-zola
-  :recipe (:host github :repo "theottm/ox-zola")))
+  :recipe (:host github :repo "theottm/ox-zola"))
 #+end_src
 
 * [#D] Org Agenda
