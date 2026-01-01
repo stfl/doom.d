@@ -1545,7 +1545,11 @@ I need to disable ws-butler for org-mode buffers.
 #+end_src
 
 #+begin_src elisp
-(use-package! ox-zola :after ox)
+(use-package ox-zola
+  :ensure t
+  :after ox
+  :config
+  (require 'ox-hugo))
 #+end_src
 
 * [#D] Org Agenda
