@@ -1529,6 +1529,10 @@ I need to disable ws-butler for org-mode buffers.
 
 ** ox-hugo
 
+#+begin_src
+(package! typst-ts-mode
+#+end_src
+
 #+begin_src elisp
 (use-package! ox-hugo :after ox)
 #+end_src
