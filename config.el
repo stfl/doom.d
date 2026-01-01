@@ -919,7 +919,10 @@ exist after each headings's drawers."
 
 (use-package! ox-hugo :after ox)
 
-(use-package! ox-zola :after ox)
+(use-package! ox-zola
+  :after ox
+  :config
+  (require 'ox-hugo))
 
 (map! :after org-agenda
       :map org-agenda-mode-map
