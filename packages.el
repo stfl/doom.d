@@ -24,7 +24,7 @@
 (package! ox-hugo)
 
 (package! ox-zola
-  :recipe (:host github :repo "theottm/ox-zola"))
+  :recipe (:host github :repo "gicrisf/ox-zola"))
 
 (package! org-super-agenda)
 
