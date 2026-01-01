@@ -1529,7 +1529,7 @@ I need to disable ws-butler for org-mode buffers.
 
 ** ox-hugo
 
-#+begin_src
+#+begin_src elisp :tangle packages.el
 (package! ox-hugo)
 #+end_src
 
