@@ -21,6 +21,11 @@
 ;;            :repo "tecosaur/org-pandoc-import"
 ;;            :files ("*.el" "filters" "preprocessors")))
 
+(package! ox-hugo)
+
+(package! ox-zola
+  :recipe (:host github :repo "theottm/ox-zola"))
+
 (package! org-super-agenda)
 
 (package! org-ql)

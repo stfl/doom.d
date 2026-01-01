@@ -917,6 +917,10 @@ exist after each headings's drawers."
   (pushnew! ws-butler-global-exempt-modes
             'org-mode))
 
+(use-package! ox-hugo :after ox)
+
+(use-package! ox-zola :after ox)
+
 (map! :after org-agenda
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
@@ -1964,8 +1968,7 @@ org-default-priority is treated as lower than the same set value"
           out-file
           (format "[[file:%s]]" out-file))))))
 
-(use-package! ox-typst
-  :after org)
+(use-package! ox-typst :after ox)
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
