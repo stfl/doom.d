@@ -2740,7 +2740,7 @@ use bash when opening a vterm in a tramp dir:
            :files (:defaults "*.el")))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
