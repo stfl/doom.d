@@ -1527,6 +1527,12 @@ I need to disable ws-butler for org-mode buffers.
             'org-mode))
 #+end_src
 
+** ox-hugo
+
+#+begin_src elisp
+(use-package! ox-hugo :after ox)
+#+end_src
+
 * [#D] Org Agenda
 ** Key bindings
 
@@ -2796,7 +2802,6 @@ use bash when opening a vterm in a tramp dir:
 #+begin_src elisp
 (use-package! ox-typst :after ox)
 #+end_src
-          
 
 ** pdf-tools
 
