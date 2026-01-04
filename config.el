@@ -2808,7 +2808,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :commands (claude-code-ide-menu)
   :config
   ;; (stfl/setup-api-keys)
-  (setq! claude-code-ide-terminal-backend 'eat
-         claude-code-ide-switch-tab-on-ediff nil
+  (setq! claude-code-ide-terminal-backend 'vterm
+         claude-code-ide-switch-tab-on-ediff t
          claude-code-ide-focus-claude-after-ediff t)
   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
