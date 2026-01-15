@@ -798,6 +798,7 @@ Prompt to continue from the last clock-out time if the gap is
   :commands stfl/org-clock-export)
 
 (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
+(setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap")
 
 (defun stfl/org-clock-csv-row-fmt (plist)
   "Default row formatting function."
@@ -814,8 +815,6 @@ Prompt to continue from the last clock-out time if the gap is
                    (org-clock-csv--read-property plist "ARCHIVE_ITAGS")
                    (org-clock-csv--read-property plist "AP"))
              ","))
-
-(setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap")
 
 (defun stfl/org-clock-export (project)
   (interactive
