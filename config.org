@@ -795,7 +795,7 @@ Prompt to continue from the last clock-out time if the gap is
 #+begin_src elisp
 (use-package org-clock-csv
   :after org
-  :commands stfl/org-clock-export
+  :commands stfl/org-clock-export)
   :config
   (defun stfl/org-clock-csv-row-fmt (plist)
     "Default row formatting function."
