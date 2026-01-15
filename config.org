@@ -795,26 +795,29 @@ Prompt to continue from the last clock-out time if the gap is
 #+begin_src elisp
 (use-package org-clock-csv
   :after org
-  :commands stfl/org-clock-export)
+  :commands stfl/org-clock-export
+  :config
+  (defun stfl/org-clock-csv-row-fmt (plist)
+    "Default row formatting function."
+    (mapconcat #'identity
+               (list (org-clock-csv--escape (plist-get plist ':task))
+                     (org-clock-csv--escape (s-join org-clock-csv-headline-separator (plist-get plist ':parents)))
+                     (org-clock-csv--escape (org-clock-csv--read-property plist "ARCHIVE_OLPATH"))
+                     (org-clock-csv--escape (plist-get plist ':category))
+                     (plist-get plist ':start)
+                     (plist-get plist ':end)
+                     (plist-get plist ':effort)
+                     (plist-get plist ':ishabit)
+                     (plist-get plist ':tags)
+                     (org-clock-csv--read-property plist "ARCHIVE_ITAGS")
+                     (org-clock-csv--read-property plist "AP"))
+               ","))
+  )
+
 
 (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
 (setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap")
 
-(defun stfl/org-clock-csv-row-fmt (plist)
-  "Default row formatting function."
-  (mapconcat #'identity
-             (list (org-clock-csv--escape (plist-get plist ':task))
-                   (org-clock-csv--escape (s-join org-clock-csv-headline-separator (plist-get plist ':parents)))
-                   (org-clock-csv--escape (org-clock-csv--read-property plist "ARCHIVE_OLPATH"))
-                   (org-clock-csv--escape (plist-get plist ':category))
-                   (plist-get plist ':start)
-                   (plist-get plist ':end)
-                   (plist-get plist ':effort)
-                   (plist-get plist ':ishabit)
-                   (plist-get plist ':tags)
-                   (org-clock-csv--read-property plist "ARCHIVE_ITAGS")
-                   (org-clock-csv--read-property plist "AP"))
-             ","))
 
 (setq! org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
 
