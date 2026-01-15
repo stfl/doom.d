@@ -814,19 +814,21 @@ Prompt to continue from the last clock-out time if the gap is
                ","))
   (setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap"
          org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
+
+  (defun stfl/org-clock-export (project)
+    (interactive
+     (list (completing-read "Select project: " stfl/org-gtd-projects)))
+    (let* ((org-agenda-files (list (doom-path org-directory project)
+                                   (doom-path org-directory "archive" project)))
+           (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
+           (filepath (doom-path stfl/org-clock-export-dir filename)))
+      (org-clock-csv-to-file filepath)))
+
+  (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
   )
 
 
-(setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
 
-(defun stfl/org-clock-export (project)
-  (interactive
-   (list (completing-read "Select project: " stfl/org-gtd-projects)))
-  (let* ((org-agenda-files (list (doom-path org-directory project)
-                                 (doom-path org-directory "archive" project)))
-         (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
-         (filepath (doom-path stfl/org-clock-export-dir filename)))
-    (org-clock-csv-to-file filepath)))
 
 (map! :map org-mode-map
       :localleader
