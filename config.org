@@ -816,7 +816,7 @@ Prompt to continue from the last clock-out time if the gap is
                    (org-clock-csv--read-property plist "AP"))
              ","))
 
-(setq! )
+(setq! org-clock-csv-row-fmt stfl/org-clock-csv-row-fmt)
 
 (defun stfl/org-clock-export (project)
   (interactive
