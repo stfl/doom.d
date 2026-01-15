@@ -440,22 +440,42 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package org-clock-csv
   :after org
-  :commands +org-clock-project-csv-to-file)
+  :commands stfl/org-clock-export
+  :config
+  (defun stfl/org-clock-csv-row-fmt (plist)
+    "Default row formatting function."
+    (mapconcat #'identity
+               (list (org-clock-csv--escape (plist-get plist ':task))
+                     (org-clock-csv--escape (s-join org-clock-csv-headline-separator (plist-get plist ':parents)))
+                     (org-clock-csv--escape (org-clock-csv--read-property plist "ARCHIVE_OLPATH"))
+                     (org-clock-csv--escape (plist-get plist ':category))
+                     (plist-get plist ':start)
+                     (plist-get plist ':end)
+                     (plist-get plist ':effort)
+                     (plist-get plist ':ishabit)
+                     (plist-get plist ':tags)
+                     (org-clock-csv--read-property plist "ARCHIVE_ITAGS")
+                     (org-clock-csv--read-property plist "AP"))
+               ","))
+  (setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap"
+         org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
 
-(setq +org-clock-export-dir "~/work/invoice.typ/invoices")
-(defun +org-clock-project-csv-to-file (project)
-  (interactive
-   (list (completing-read "Select project: " stfl/org-gtd-projects)))
-  (let* ((org-agenda-files (list (doom-path org-directory project)
-                                 (doom-path org-directory "archive" project)))
-         (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
-         (filepath (doom-path +org-clock-export-dir filename)))
-    (org-clock-csv-to-file filepath)))
+  (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
 
-(map! :map org-mode-map
-      :localleader
-      :prefix "c"
-      :desc "Export project clock entries" "C" #'+org-clock-project-csv-to-file)
+  (defun stfl/org-clock-export (project)
+    (interactive
+     (list (completing-read "Select project: " stfl/org-gtd-projects)))
+    (let* ((org-agenda-files (list (doom-path org-directory project)
+                                   (doom-path org-directory "archive" project)))
+           (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
+           (filepath (doom-path stfl/org-clock-export-dir filename)))
+      (org-clock-csv-to-file filepath)))
+
+  (map! :map org-mode-map
+        :localleader
+        :prefix "c"
+        :desc "Export project clock entries" "C" #'stfl/org-clock-export)
+  )
 
 (use-package! org-edna
   :after org
