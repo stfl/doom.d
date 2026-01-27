@@ -1019,10 +1019,10 @@ REVIEW should we define any additional tags?
 Roam directory setup
 #+BEGIN_SRC elisp
 (after! org-roam
-  (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-directory org-directory
-        org-roam-db-location (doom-path doom-local-dir "roam.db")
-        org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
+  (setq! org-roam-directory org-directory
+         org-roam-db-location (doom-path doom-local-dir "roam.db")
+         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/")
+  )
 #+END_SRC
 
 do not automatically open the roam side-pane
