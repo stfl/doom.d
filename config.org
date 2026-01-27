@@ -1036,8 +1036,7 @@ customize the sections in the org-roam buffer
 
 #+begin_src elisp
 (after! org-roam-mode
-  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t))
-  )
+  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)))
 #+end_src
 
 #+begin_src elisp
