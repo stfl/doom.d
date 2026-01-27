@@ -591,13 +591,15 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         )))
 
 (after! org-roam
-  (setq org-roam-tag-sources '(prop last-directory)
-        org-roam-directory org-directory
-        org-roam-db-location (doom-path doom-local-dir "roam.db")
-        org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
+  (setq! org-roam-directory org-directory
+         org-roam-db-location (doom-path doom-local-dir "roam.db")
+         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
+
+(after! org-roam-mode
+  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)))
 
 (after! org-roam
   (setq org-roam-dailies-capture-templates
