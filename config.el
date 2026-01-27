@@ -599,7 +599,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq +org-roam-open-buffer-on-find-file nil))
 
 (after! org-roam-mode
-  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)))
+  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)
+  ;; Start with all sections collapsed
+  (add-hook 'org-roam-mode-hook
+            (lambda ()
+              (outline-hide-sublevels 1))))
 
 (after! org-roam
   (setq org-roam-dailies-capture-templates
