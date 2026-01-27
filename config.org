@@ -1017,12 +1017,12 @@ REVIEW should we define any additional tags?
 :END:
 
 Roam directory setup
+
 #+BEGIN_SRC elisp
 (after! org-roam
   (setq! org-roam-directory org-directory
          org-roam-db-location (doom-path doom-local-dir "roam.db")
-         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/")
-  )
+         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
 #+END_SRC
 
 do not automatically open the roam side-pane
@@ -1032,6 +1032,14 @@ do not automatically open the roam side-pane
   (setq +org-roam-open-buffer-on-find-file nil))
 #+end_src
 
+customize the sections in the org-roam buffer
+
+#+begin_src elisp
+(after! org-roam-mode
+  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section))
+  )
+#+end_src
+
 #+begin_src elisp
 (after! org-roam
   (setq org-roam-dailies-capture-templates
@@ -1039,6 +1047,8 @@ do not automatically open the roam side-pane
            entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
            :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 #+end_src
+
+
 
   # ;; (setq org-roam-capture-templates
   # ;;       '(("f" "fleeting" plain (function org-roam-capture--get-point)
