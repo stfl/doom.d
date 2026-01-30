@@ -471,11 +471,17 @@ Org-mode properties drawer already, keep the headline and don’t insert
            (filepath (doom-path stfl/org-clock-export-dir filename)))
       (org-clock-csv-to-file filepath)))
 
-  (map! :map org-mode-map
-        :localleader
-        :prefix "c"
-        :desc "Export project clock entries" "C" #'stfl/org-clock-export)
   )
+
+(map! :map org-mode-map
+    :leader
+    :prefix "n"
+    :desc "Export project clock entries" "E" #'stfl/org-clock-export)
+
+(map! :map org-mode-map
+    :localleader
+    :prefix "c"
+    :desc "Export project clock entries" "C" #'stfl/org-clock-export)
 
 (use-package! org-edna
   :after org
@@ -599,11 +605,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq +org-roam-open-buffer-on-find-file nil))
 
 (after! org-roam-mode
-  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)
-  ;; Start with all sections collapsed
-  (add-hook 'org-roam-mode-hook
-            (lambda ()
-              (outline-hide-sublevels 1))))
+  (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t)))
 
 (after! org-roam
   (setq org-roam-dailies-capture-templates
