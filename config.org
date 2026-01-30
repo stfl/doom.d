@@ -2853,7 +2853,7 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src elisp
-(use-package! ox-typst :after ox)
+(use-package! ox-typst :after org)
 #+end_src
 
 ** pdf-tools
