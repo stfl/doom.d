@@ -826,11 +826,12 @@ Prompt to continue from the last clock-out time if the gap is
            (filepath (doom-path stfl/org-clock-export-dir filename)))
       (org-clock-csv-to-file filepath)))
 
-  (map! :map org-mode-map
-        :localleader
-        :prefix "c"
-        :desc "Export project clock entries" "C" #'stfl/org-clock-export)
   )
+
+(map! :map org-mode-map
+    :localleader
+    :prefix "c"
+    :desc "Export project clock entries" "C" #'stfl/org-clock-export)
 #+end_src
 
 ** Task Dependencies (org-edna)
