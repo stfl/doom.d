@@ -829,8 +829,8 @@ Prompt to continue from the last clock-out time if the gap is
   )
 
 (map! :map org-mode-map
-    :localleader
-    :prefix "c"
+    :leader
+    :prefix "nc"
     :desc "Export project clock entries" "C" #'stfl/org-clock-export)
 #+end_src
 
