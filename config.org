@@ -2956,14 +2956,13 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 		   :prompt "Zoxide: "
 		   :require-match nil
 		   :lookup #'consult--lookup-member
-		   ;; :require-match t
 		   :category 'file
-		   :sort nil)))
+		   :sort t)))
       (if target
 	  (let ((default-directory (concat target "/")))
 	    (call-interactively 'find-file))
 	(call-interactively 'find-file))))
-  )
+)
 #+end_src
 
 * Coding
