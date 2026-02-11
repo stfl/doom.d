@@ -2952,8 +2952,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (defun find-file-with-zoxide ()
     (interactive)
     (let ((target (consult--read
-		   (consult--process-collection (lambda (x) (list "zoxide" "query" "-l" x)))
-		   :prompt "Zoxide  "
+		   (process-lines "zoxide" "query" "-l")
+		   :prompt "Zoxide: "
 		   :require-match nil
 		   :lookup #'consult--lookup-member
 		   ;; :require-match t
