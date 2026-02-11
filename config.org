@@ -2956,7 +2956,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 		   :prompt "Zoxide  "
 		   :require-match nil
 		   :lookup #'consult--lookup-member
-		   :require-match t
+		   ;; :require-match t
 		   :category 'file
 		   :sort nil)))
       (if target
