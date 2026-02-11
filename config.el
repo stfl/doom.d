@@ -2087,8 +2087,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       (if target
 	  (let ((default-directory (concat target "/")))
 	    (call-interactively 'find-file))
-	(call-interactively 'find-file))))
-)
+	(call-interactively 'find-file)))))
 
 (after! flycheck
   (map! :map flycheck-mode-map
