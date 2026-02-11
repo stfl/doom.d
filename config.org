@@ -2934,6 +2934,37 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     "L" #'stfl/upload-unregister-all-remotes)
 #+end_src
 
+** zoxide
+
+#+begin_src elisp
+(when (executable-find "zoxide")
+  (after! dired
+    (add-hook 'dired-mode-hook (lambda ()
+                                 (call-process-shell-command
+                                  (format "zoxide add %s"  dired-directory) nil 0))))
+
+  (add-hook 'find-file-hook (lambda ()
+                              (call-process-shell-command
+                               (format "zoxide add %s"  (file-name-directory buffer-file-name))
+                               nil 0)))
+
+
+  (defun find-file-with-zoxide ()
+    (interactive)
+    (let ((target (consult--read
+		   (consult--process-collection (lambda (x) (list "zoxide" "query" "-l" x)))
+		   :prompt "Zoxide  "
+		   :require-match nil
+		   :lookup #'consult--lookup-member
+		   :require-match t
+		   :category 'file
+		   :sort nil)))
+      (if target
+	  (let ((default-directory (concat target "/")))
+	    (call-interactively 'find-file))
+	(call-interactively 'find-file)))))
+#+end_src
+
 * Coding
 
 #+begin_src elisp
