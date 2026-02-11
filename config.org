@@ -2960,8 +2960,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 		   :sort t)))
       (if target
 	  (let ((default-directory (concat target "/")))
-	    (call-interactively 'find-file))
-	(call-interactively 'find-file))))
+	    (consult-fd))
+	(consult-fd))))
 )
 #+end_src
 
