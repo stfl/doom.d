@@ -2063,6 +2063,33 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     "l" #'stfl/upload-register-mapping
     "L" #'stfl/upload-unregister-all-remotes)
 
+(when (executable-find "zoxide")
+  (after! dired
+    (add-hook 'dired-mode-hook (lambda ()
+                                 (call-process-shell-command
+                                  (format "zoxide add %s"  dired-directory) nil 0))))
+
+  (add-hook 'find-file-hook (lambda ()
+                              (call-process-shell-command
+                               (format "zoxide add %s"  (file-name-directory buffer-file-name))
+                               nil 0)))
+
+
+  (defun find-file-with-zoxide ()
+    (interactive)
+    (let ((target (consult--read
+		   (process-lines "zoxide" "query" "-l")
+		   :prompt "Zoxide: "
+		   :require-match nil
+		   :lookup #'consult--lookup-member
+		   :category 'file
+		   :sort t)))
+      (if target
+	  (let ((default-directory (concat target "/")))
+	    (call-interactively 'find-file))
+	(call-interactively 'find-file))))
+)
+
 (after! flycheck
   (map! :map flycheck-mode-map
         :leader
