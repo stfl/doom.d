@@ -2064,7 +2064,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     "L" #'stfl/upload-unregister-all-remotes)
 
 (when (executable-find "zoxide")
-  (after! dired
+  (with-eval-after-load 'dired
     (add-hook 'dired-mode-hook (lambda ()
                                  (call-process-shell-command
                                   (format "zoxide add %s"  dired-directory) nil 0))))
@@ -2087,7 +2087,10 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       (if target
 	  (let ((default-directory (concat target "/")))
 	    (call-interactively 'find-file))
-	(call-interactively 'find-file)))))
+	(call-interactively 'find-file))))
+
+  (map! )
+  )
 
 (after! flycheck
   (map! :map flycheck-mode-map
