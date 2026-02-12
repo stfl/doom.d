@@ -153,7 +153,7 @@
        ;;make              ; run make tasks from Emacs
        (pass +auth)        ; password manager for nerds
        pdf               ; pdf enhancements
-       ;;terraform         ; infrastructure as code
+       terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        tree-sitter
        upload            ; map local to remote projects via ssh/ftp
