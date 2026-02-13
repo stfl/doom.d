@@ -1665,7 +1665,8 @@ I need to disable ws-butler for org-mode buffers.
        )
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
-                                          "oebb" "@oebb" "#oebb"))
+                                          "oebb" "@oebb" "#oebb"
+                                          "origina"))
 #+end_src
 
 #+begin_src elisp
