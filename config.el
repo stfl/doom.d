@@ -1020,7 +1020,8 @@ exist after each headings's drawers."
        )
 
 (setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
-                                          "oebb" "@oebb" "#oebb"))
+                                          "oebb" "@oebb" "#oebb"
+                                          "origina"))
 
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
@@ -1043,6 +1044,7 @@ exist after each headings's drawers."
                               "versicherung.org"
                               "ikea.org"
                               "oebb.org"
+                              "origina.org"
                               "cafe-glas.org")
       stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
