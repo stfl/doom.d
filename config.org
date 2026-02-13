@@ -1694,6 +1694,7 @@ I need to disable ws-butler for org-mode buffers.
                               "versicherung.org"
                               "ikea.org"
                               "oebb.org"
+                              "origina.org"
                               "cafe-glas.org")
       stfl/org-roam-absolute (doom-path org-directory "roam/"))
 #+end_src
