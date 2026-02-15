@@ -3792,13 +3792,16 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake" nil nil nil nil)))
+#+end_src
+
+#+begin_src elisp
 (use-package bitbake-ts-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode))
-
-  (add-to-list 'treesit-language-source-alist
-               '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake" nil nil nil nil)))
+  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode)))
 #+end_src
 
 Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
