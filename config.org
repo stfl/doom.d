@@ -3351,7 +3351,7 @@ configure alejandra, an alternative nix formatter
 select the formatter for nix
 
 #+begin_src elisp
-(setq-hook! 'nix-ts-mode-hook +format-with 'nixfmt)
+(setq-hook! 'nix-ts-mode-hook +format-with 'alejandra)
 #+end_src
 
 ** MQL
