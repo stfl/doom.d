@@ -2415,9 +2415,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (use-package! ssh-config-mode :defer t)
 
-(with-eval-after-load 'treesit
-  (add-to-list 'treesit-language-source-alist
-               '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake")))
+(add-to-list 'treesit-language-source-alist
+             '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake"))
 
 (use-package bitbake-ts-mode
   :config
