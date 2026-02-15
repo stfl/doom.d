@@ -3798,7 +3798,7 @@ Use the (almost) default keybindings in evil normal-mode
   (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode))
 
   (add-to-list 'treesit-language-source-alist
-               '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake" nil nil nil)))
+               '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake" nil nil nil nil)))
 #+end_src
 
 Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
