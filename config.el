@@ -2415,10 +2415,14 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (use-package! ssh-config-mode :defer t)
 
-(use-package! bitbake-ts-mode
+(use-package bitbake-ts-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode))
+
+  (add-to-list
+   'treesit-language-source-alist
+   '(bitbake "https://github.com/tree-sitter-grammars/tree-sitter-bitbake")))
 
 (after! lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
