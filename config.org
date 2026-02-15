@@ -3800,6 +3800,39 @@ Use the (almost) default keybindings in evil normal-mode
 
 Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
 
+#+begin_src elisp
+(after! lsp-bridge
+  (add-to-list 'lsp-bridge-single-lang-server-mode-list
+               ;; '(bitbake-ts-mode . "bitbake-language-server")
+               '(bitbake-ts-mode . "language-server-bitbake"))
+  (add-to-list 'lsp-bridge-default-mode-hooks 'bitbake-ts-mode-hook t))
+#+end_src
+
+lsp-bridge requires a json config file to configure the language server.
+=NOTE:= the ~:tangle "langserver/<server>.json"~ needs to match the alist above ~(<mode> . <server>)~
+
+#+begin_src js :eval no :tangle "langserver/bitbake-language-server.json"
+{
+    "name": "bitbake-language-server",
+    "languageId": "bitbake",
+    "command": [ "bitbake-language-server" ],
+    "settings": {}
+}
+#+end_src
+
+Alternative bitbake lsp from the vscode-bitbake project.
+
+#+begin_src js :eval no :tangle "langserver/language-server-bitbake.json"
+{
+    "name": "language-server-bitbake",
+    "languageId": "bitbake",
+    "command": [ "/home/stefan/node_modules/language-server-bitbake/out/server.js", "--stdio" ],
+    "settings": {}
+}
+#+end_src
+
+    "command": [ "language-server-bitbake", "--stdio" ],
+
 ** Meson build system
 
 #+begin_src elisp :tangle packages.el
