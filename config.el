@@ -2326,7 +2326,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 
-(setq-hook! 'nix-ts-mode-hook +format-with 'nixfmt)
+(setq-hook! 'nix-ts-mode-hook +format-with 'alejandra)
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
