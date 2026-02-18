@@ -585,7 +585,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org
   (setq org-capture-templates
         `(("n" "capture to inbox" entry
-           (file ,stfl/org-gtd-inbox-absolute)
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-user-dir "templates/template-inbox.org"))
            :empty-lines-after 1)
           ("p" "Project" entry
