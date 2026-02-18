@@ -616,8 +616,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("hw" "Wäsche" entry
            (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
            (file ,(doom-path doom-user-dir "templates/template-wäsche.org")))
-          ))
-  )
+          )))
 #+END_SRC
 
 #+begin_src elisp
