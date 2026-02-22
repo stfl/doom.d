@@ -1597,6 +1597,13 @@ I need to disable ws-butler for org-mode buffers.
   :after org-roam)
 #+end_src
 
+#+begin_src elisp
+(eval-after-load org-roam-vector-search
+  (setq org-roam-semantic-embedding-url "http://localhost:8080")
+  (setq org-roam-semantic-embedding-model "nomic-ai/nomic-embed-text-v1.5"))
+
+#+end_src
+
 * [#D] Org Agenda
 ** Key bindings
 
