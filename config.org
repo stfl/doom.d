@@ -1585,6 +1585,12 @@ I need to disable ws-butler for org-mode buffers.
   (require 'ox-hugo))
 #+end_src
 
+** org-roam-second-brain
+
+#+begin_src elisp :tangle
+
+#+end_src
+
 * [#D] Org Agenda
 ** Key bindings
 
