@@ -1587,8 +1587,9 @@ I need to disable ws-butler for org-mode buffers.
 
 ** org-roam-second-brain
 
-#+begin_src elisp :tangle
-
+#+begin_src elisp :tangle packages.el
+(package! org-roam-second-brain
+  :recipe (:host github :repo "dcruver/org-roam-second-brain"))
 #+end_src
 
 * [#D] Org Agenda
