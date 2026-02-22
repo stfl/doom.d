@@ -1594,7 +1594,9 @@ I need to disable ws-butler for org-mode buffers.
 
 #+begin_src elisp
 (use-package org-roam-second-brain
-  :after org-roam)
+  :after org-roam
+  (require 'org-roam-api)
+  )
 #+end_src
 
 #+begin_src elisp
