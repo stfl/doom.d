@@ -276,7 +276,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org
   (setq org-capture-templates
         `(("n" "capture to inbox" entry
-           (file ,stfl/org-gtd-inbox-absolute)
+           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
            (file ,(doom-path doom-user-dir "templates/template-inbox.org"))
            :empty-lines-after 1)
           ("p" "Project" entry
@@ -307,8 +307,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
           ("hw" "Wäsche" entry
            (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
            (file ,(doom-path doom-user-dir "templates/template-wäsche.org")))
-          ))
-  )
+          )))
 
 (after! org-roam
   (setq! org-roam-capture-templates
@@ -951,6 +950,9 @@ exist after each headings's drawers."
   :after ox
   :config
   (require 'ox-hugo))
+
+(use-package org-roam-second-brain
+  :after org-roam)
 
 (map! :after org-agenda
       :map org-agenda-mode-map
