@@ -1596,7 +1596,6 @@ I need to disable ws-butler for org-mode buffers.
 (use-package org-roam-second-brain
   :after org-roam
   :config
-  (setq org-roam-second-brain-directory (doom-path org-directory "second-brain/")))
 #+end_src
 
 * [#D] Org Agenda
