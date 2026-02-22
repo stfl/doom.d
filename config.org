@@ -1585,7 +1585,9 @@ I need to disable ws-butler for org-mode buffers.
   (require 'ox-hugo))
 #+end_src
 
-** org-roam-second-brain
+** org-roam-ai
+
+
 
 #+begin_src elisp :tangle packages.el
 (package! org-roam-second-brain
