@@ -951,14 +951,6 @@ exist after each headings's drawers."
   :config
   (require 'ox-hugo))
 
-;; (use-package org-roam-second-brain
-;;   :after org-roam
-;;   (require 'org-roam-api))
-
-;; (with-eval-after-load org-roam-vector-search
-;;   (setq org-roam-semantic-embedding-url "http://localhost:58080"
-;;         org-roam-semantic-embedding-model "nomic-ai/nomic-embed-text-v1.5"))
-
 (map! :after org-agenda
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
