@@ -26,8 +26,8 @@
 (package! ox-zola
   :recipe (:host github :repo "gicrisf/ox-zola"))
 
-(package! org-roam-second-brain
-  :recipe (:host github :repo "dcruver/org-roam-second-brain"))
+;; (package! org-roam-second-brain
+;;   :recipe (:host github :repo "dcruver/org-roam-second-brain"))
 
 (package! org-super-agenda)
 
