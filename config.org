@@ -1588,20 +1588,20 @@ I need to disable ws-butler for org-mode buffers.
 ** org-roam-ai
 
 #+begin_src elisp :tangle packages.el
-(package! org-roam-second-brain
-  :recipe (:host github :repo "dcruver/org-roam-second-brain"))
+;; (package! org-roam-second-brain
+;;   :recipe (:host github :repo "dcruver/org-roam-second-brain"))
 #+end_src
 
 #+begin_src elisp
-(use-package org-roam-second-brain
-  :after org-roam
-  (require 'org-roam-api))
+;; (use-package org-roam-second-brain
+;;   :after org-roam
+;;   (require 'org-roam-api))
 #+end_src
 
 #+begin_src elisp
-(with-eval-after-load org-roam-vector-search
-  (setq org-roam-semantic-embedding-url "http://localhost:58080"
-        org-roam-semantic-embedding-model "nomic-ai/nomic-embed-text-v1.5"))
+;; (with-eval-after-load org-roam-vector-search
+;;   (setq org-roam-semantic-embedding-url "http://localhost:58080"
+;;         org-roam-semantic-embedding-model "nomic-ai/nomic-embed-text-v1.5"))
 #+end_src
 
 * [#D] Org Agenda
