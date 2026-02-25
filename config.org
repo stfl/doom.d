@@ -2804,6 +2804,10 @@ use bash when opening a vterm in a tramp dir:
         :desc "Watch" "w" #'typst-ts-watch-mode
         :desc "Menu" "m" #'typst-ts-tmenu)
   (add-hook! 'typst-ts-mode-hook #'lsp!))
+
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(typst "https://github.com/uben0/tree-sitter-typst")))
 #+end_src
 
 #+begin_src elisp
