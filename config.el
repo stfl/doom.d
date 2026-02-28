@@ -1963,6 +1963,10 @@ org-default-priority is treated as lower than the same set value"
         :desc "Menu" "m" #'typst-ts-tmenu)
   (add-hook! 'typst-ts-mode-hook #'lsp!))
 
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(typst "https://github.com/uben0/tree-sitter-typst")))
+
 (after! eglot
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ("tinymist"))))
