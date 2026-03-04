@@ -4568,3 +4568,10 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (package! acp)
 (package! agent-shell)
 #+end_src
+
+#+begin_src elisp
+(require 'acp)
+(require 'agent-shell)
+
+(use-package agent-shell)
+#+end_src
