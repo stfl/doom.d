@@ -2878,3 +2878,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
          claude-code-ide-switch-tab-on-ediff t
          claude-code-ide-focus-claude-after-ediff t)
   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+
+(require 'acp)
+(require 'agent-shell)
+
+(use-package agent-shell)
