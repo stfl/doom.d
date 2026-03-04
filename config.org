@@ -4560,3 +4560,11 @@ Reply concisely. Wrap source code in a ```cpp block.")
          claude-code-ide-focus-claude-after-ediff t)
   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
 #+end_src
+
+** Agent Shell
+
+#+begin_src elisp :tangle packages.el
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
+#+end_src
