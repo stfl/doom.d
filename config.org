@@ -1549,7 +1549,7 @@ Now adding this to a before-save-hook for all org-mode buffers.
   (add-hook 'before-save-hook
             (lambda ()
               (when (and (eq major-mode 'org-mode))
-                (+org-fix-blank-lines 4)))))
+                (stfl/org-fix-blank-lines 4)))))
 #+end_src
 
 Because we need to keep a specific number of newlines at the end of the file,
