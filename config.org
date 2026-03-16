@@ -1454,6 +1454,12 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
   :recipe (:host github :repo "stfl/orgzly-formatter.el"))
 #+end_src
 
+
+#+begin_src elisp
+(use-package orgzly-formatter
+  :hook (org-mode . orgzly-formatter-mode))
+#+end_src
+
 ** ox-hugo
 
 #+begin_src elisp :tangle packages.el
