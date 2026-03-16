@@ -1459,6 +1459,9 @@ From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_confl
   :hook (org-mode . orgzly-formatter-mode))
 #+end_src
 
+orgzly-formatter already removes trailing whitespaces and keeps certain ones in
+specific cases.
+
 #+begin_src elisp
 (with-eval-after-load 'ws-butler
   (add-to-list 'ws-butler-global-exempt-modes 'org-mode))
