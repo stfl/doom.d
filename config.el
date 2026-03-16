@@ -73,12 +73,12 @@
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args (and arg '("--no-ignore")))))
       (consult-fd)))
-  
+
   (defun stfl/projectile-find-file (&optional arg)
     (interactive "P")
     (if arg (stfl/consult-fd arg)
       (projectile-find-file)))
-  
+
   ;; (defun stfl/projectile-find-file (&optional arg)
   ;;   (interactive "P")
   ;;   (let ((projectile-git-fd-args (concat projectile-git-fd-args (and arg " --no-ignore-vcs"))))
@@ -88,7 +88,7 @@
     (interactive "P")
     (let ((consult-fd-args (append consult-fd-args '("--type d") (and arg '("--no-ignore")))))
       (consult-fd)))
-  
+
   (map! :leader
         "SPC" #'stfl/projectile-find-file
         :prefix "f"
@@ -131,7 +131,7 @@
          org-fold-catch-invisible-edits 'show-and-error
          org-ellipsis "…"
          org-indent-indentation-per-level 2)
-  
+
   (auto-fill-mode))
 
 ; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
@@ -870,6 +870,9 @@ Not added when either:
 
 (use-package orgzly-formatter
   :hook (org-mode . orgzly-formatter-mode))
+
+(with-eval-after-load 'ws-butler
+  (add-to-list 'ws-butler-global-exempt-modes 'org-mode))
 
 (use-package! ox-hugo :after ox)
 
@@ -1908,7 +1911,7 @@ org-default-priority is treated as lower than the same set value"
 
 (after! org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
-  
+
   ;; Set up babel support for Typst
   (org-babel-do-load-languages 'org-babel-load-languages '((typst . t)))
 
@@ -2049,7 +2052,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (when (executable-find "emacs-lsp-booster")
   (after! lsp-mode
     (setq! lsp-use-plists t)
-    
+
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
       (let ((orig-result (funcall old-fn cmd test?)))
@@ -2069,14 +2072,14 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
          lsp-bridge-enable-inlay-hint t
          lsp-bridge-enable-hover-diagnostic t
-         lsp-bridge-enable-signature-help nil 
+         lsp-bridge-enable-signature-help nil
          lsp-bridge-enable-auto-format-code nil
          lsp-bridge-enable-org-babel t
          lsp-bridge-log-level 'default
          acm-enable-capf t
          acm-enable-org-roam t
          )
-  
+
   (set-lookup-handlers! 'lsp-bridge-mode
     :definition #'lsp-bridge-peek
     ;; :definition #'lsp-bridge-find-def
@@ -2093,18 +2096,18 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         :g "RET" #'lsp-bridge-peek-jump
         :g "C-SPC" #'lsp-bridge-peek-jump
         :g "ESC" #'lsp-bridge-peek-abort)
-  
+
   (map! :map lsp-bridge-mode-map
         :leader
         :n "c r" #'lsp-bridge-rename
         :n "c a" #'lsp-bridge-code-action
         :n "c f" #'lsp-bridge-code-format
         )
-  
+
   (map! :map acm-mode-map
         :i "C-j" #'acm-select-next
         :i "C-k" #'acm-select-prev)
-  
+
   (acm-mode t)
   (global-lsp-bridge-mode)
   ;; (lsp-bridge-semantic-tokens-mode t)
@@ -2118,7 +2121,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          ;; flyover-levels '(error warning info)  ; Show all levels
          ;; flyover-levels '(error warning)
          flyover-levels '(error)
-         
+
          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
          flyover-background-lightness 35; Adjust background lightness (lower values = darker)
          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
@@ -2126,17 +2129,17 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
          flyover-debug nil ;; Enable debug messages
          ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
-         
+
          ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
          flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
-         
+
          flyover-hide-checker-name t
-         
+
          flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
          ;; flyover-virtual-line-type 'straight-arrow
-         
+
          flyover-line-position-offset 1
-         
+
          flyover-show-at-eol t ;;; show at end of the line instead.
          flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
          flyover-virtual-line-icon " ──► " ;;; default its nil
@@ -2377,7 +2380,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (map! :mode c++-mode
       :map c++-mode-map
-      :localleader 
+      :localleader
       :prefix ("t" "test")
       :n "t" #'run-ctest
       ;; :n "t" #'gtest-run-at-point
@@ -2552,7 +2555,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          ;; blamer-type 'posframe-popup
          ;; blamer-type 'overlay-popup
          blamer-min-offset 40)
-  
+
   ;; (custom-set-faces!
   ;;   `(blamer-face :inherit font-lock-comment-face
   ;;     :slant italic
@@ -2562,7 +2565,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   ;;     ;; :weight semi-light
   ;;     ;; :foreground ,(doom-color 'base5)
   ;;     ))
-  
+
   (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 
 (map!
@@ -2578,12 +2581,12 @@ global mapping list. Updates or replaces any existing mapping for the current fi
        ;; "w" #'gptel-rewrite-menu
        ;; "t" #'gptel-org-set-topic
        ;; "P" #'gptel-org-set-properties
-       
+
        "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
-       
+
        "o" #'claude-code-ide-menu
-       
+
        (:prefix ("c" . "Copilot Chat")
         ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
         "c" #'copilot-chat-display  ;; display copilot chat buffers.
@@ -2627,7 +2630,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
              )
         (copilot-accept-completion)
       (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
-  
+
   ;; Bind the custom function to <tab> in Evil's insert state
   ;; (evil-define-key 'insert 'global (kbd "<tab>") #'+copilot-tab-or-default)
 
@@ -2641,12 +2644,12 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         "C-S-p" #'copilot-previouse-completion
         ;; :i "C-<iso-lefttab>" #'copilot-previouse-completion
         )
-  
+
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
-  
+
   (setq! copilot-indent-offset-warning-disable t
          copilot-max-char-warning-disable t)
-  
+
   (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
   )
 
@@ -2655,7 +2658,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
   :config (setq! copilot-chat-model "claude-3.7-sonnet"
                  copilot-chat-frontend 'org)
-  
+
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
   ;; Or call manually (copilot-chat-insert-commit-message) when in the commit message buffer.
   )
