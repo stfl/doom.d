@@ -21,6 +21,9 @@
 ;;            :repo "tecosaur/org-pandoc-import"
 ;;            :files ("*.el" "filters" "preprocessors")))
 
+(package! orgzly-formatter
+  :recipe (:host github :repo "stfl/orgzly-formatter.el"))
+
 (package! ox-hugo)
 
 (package! ox-zola

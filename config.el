@@ -868,81 +868,8 @@ Not added when either:
                       (set-window-configuration wnd))))
       (error "no more than 2 files should be marked"))))
 
-(after! org
-  (if (modulep! :editor whitespace +trim)
-      (cl-callf2 -remove-item 'org-mode ws-butler-global-exempt-modes)
-    (message "Error: Orgzly compatible formatting requires doom's (:editor whitespace +trim) feature!")))
-
-;;;###autoload
-(defun +org-fix-blank-lines (&optional prefix)
-  "Ensure that blank lines exist between headings and between headings and their contents.
-With prefix, operate on whole buffer. Ensures that blank lines
-exist after each headings's drawers."
-  (interactive "P")
-  (org-map-entries (lambda ()
-                     (let ((heading (org-get-heading t t t t)))
-                       ;; (message "Heading: %s" heading)
-                       (org-with-wide-buffer
-                        ;; `org-map-entries' narrows the buffer, which prevents us from seeing
-                        ;; newlines before the current heading, so we do this part widened.
-                        (cond ((looking-back "^\\*+[^\n]*\n+" nil)
-                               (while (looking-back "\n\n" nil)
-                                 ;; (message "deleting all empty line in empty subtree")
-                                 (backward-char 1)
-                                 (delete-char 1)))
-                              ((looking-back "\n\n\n+" nil)
-                               (while (looking-back "\n\n\n" nil)
-                                 ;; (message "deleting double empty lines")
-                                 (backward-char 1)
-                                 (delete-char 1)))
-                              ((not (looking-back "\n\n" nil))
-                               ;; (message "inserting newline before heading")
-                               (insert "\n"))))
-                       (let ((end (org-entry-end-position)))
-                         ;; (message "Insert blank lines before entry content")
-                         (forward-line)
-                         (if (and (org-at-planning-p)
-                                  (< (point) (point-max)))
-                             ;; Skip planning lines
-                             (forward-line))
-                         ;; FIXME if there are ONLY planning lines, and now drawer, no \n is inserted
-                         (while (re-search-forward org-drawer-regexp end t)
-                           ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
-                           ;; for some reason it doesn't work correctly when operating on hidden text.
-                           ;; This works, taken from `org-agenda-get-some-entry-text'.
-                           (re-search-forward "^[ \t]*:END:.*\n?" end t)
-                           (goto-char (match-end 0)))
-                         (unless (or (= (point) (point-max))
-                                     (org-at-heading-p)
-                                     (looking-at-p "\n"))
-                           ;; (message "Insert after drawer")
-                           (insert "\n"))))
-                     t (if prefix
-                           nil
-                         'tree)))
-  (save-excursion
-    (goto-char (point-max))  ; Move to end of buffer
-    (cond ((looking-back "^\\*+[^\n]*\n+" nil)
-           (while (looking-back "\n\n" nil)
-             (backward-char 1)
-             (delete-char 1)))
-          ((looking-back "\n\n\n+" nil)
-           (while (looking-back "\n\n\n" nil)
-             (backward-char 1)
-             (delete-char 1)))
-          ((not (looking-back "\n\n" nil))
-           (insert "\n"))))
-  (message "Fixed blank lines in org buffer"))
-
-(after! org
-  (add-hook 'before-save-hook
-            (lambda ()
-              (when (and (eq major-mode 'org-mode))
-                (+org-fix-blank-lines 4)))))
-
-(after! ws-butler
-  (pushnew! ws-butler-global-exempt-modes
-            'org-mode))
+(use-package orgzly-formatter
+  :hook (org-mode . orgzly-formatter-mode))
 
 (use-package! ox-hugo :after ox)
 
