@@ -935,7 +935,7 @@ Not added when either:
        org-deadline-warning-days 7
        org-agenda-show-future-repeats t
        org-agenda-skip-deadline-prewarning-if-scheduled t
-       org-agenda-tags-todo-honor-ignore-options 1
+       org-agenda-tags-todo-honor-ignore-options t
        org-agenda-skip-scheduled-delay-if-deadline t
        org-agenda-skip-scheduled-if-deadline-is-shown t
        org-agenda-skip-timestamp-if-deadline-is-shown t
