@@ -655,7 +655,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :CREATED:  %%U
 :date:     [%s]
 :betrag:   %%^{Betrag|0}
-:oegk:     nil
+:svs:      nil
 :generali: nil
 :category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
