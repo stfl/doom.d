@@ -662,7 +662,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 [[file:%s]]
 
-%%? " date title date directory)))
+%%?" date title date directory)))
 )
 #+end_src
 
