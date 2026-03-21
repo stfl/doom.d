@@ -332,12 +332,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
            (directory (stfl/build-versicherung-dir (org-capture-get :root) date title)))
       (org-capture-put :directory directory)
       (add-hook! 'org-capture-after-finalize-hook :local #'stfl/org-capture-versicherung-post)
-      (format "* OEGK [%s] %s
+      (format "* SVS [%s] %s
 :PROPERTIES:
 :CREATED:  %%U
 :date:     [%s]
 :betrag:   %%^{Betrag|0}
-:oegk:     nil
+:svs:      nil
 :generali: nil
 :category: %%^{Kategorie|nil|Arzt|Alternativ|Internet|Psycho|Besonders|Apotheke|Vorsorge|Heilbehelfe|Brille|Transport}
 :END:
