@@ -154,7 +154,7 @@
 - Mention any generated-file updates in your final note.
 
 ## Verification Checklist
-- If you changed `config.org`, run `doom +org tangle config.org` and then `doom sync`.
+- If you changed `config.org`, run `doom +org tangle config.org` and then `doom sync`, and include the updated `config.el` (and `packages.el` if changed) in the commit.
 - If you changed modules or packages, run `doom sync`.
 - If you touched generated files because tangling updated them, verify they came from `config.org` and were not edited by hand.
 - If you changed handwritten Elisp helpers, byte-compile or batch-load the touched file.
