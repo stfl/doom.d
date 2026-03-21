@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Read(//home/stefan/.config/mcp/**)",
-      "mcp__nixos__nix"
+      "mcp__nixos__nix",
+      "Bash(curl:*)"
     ]
   }
 }
