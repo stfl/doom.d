@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/stefan/.config/mcp/**)",
+      "mcp__nixos__nix"
+    ]
+  }
+}
