@@ -2813,3 +2813,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (require 'agent-shell)
 
 (use-package agent-shell)
+
+(after! (org org-mcp)
+  (setq org-mcp-allowed-files
+        (mapcar (lambda (f) (expand-file-name f org-directory))
+                org-agenda-files)))
