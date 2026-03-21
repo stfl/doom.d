@@ -4499,7 +4499,7 @@ After ~doom sync~, run ~M-x mcp-server-lib-install~ in Emacs, then register:
 (use-package org-mcp
   :after org
   :config
-  (custom-set-variables org-mcp-allowed-files
+  (custom-set-variables 'org-mcp-allowed-files
                         (mapcar (lambda (f) (expand-file-name f org-directory))
                                 org-agenda-files)))
 
