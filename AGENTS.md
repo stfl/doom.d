@@ -25,6 +25,13 @@
 - If `doom` is already on `PATH`, that is equivalent.
 - There is no `Makefile`, `package.json`, CI workflow, or dedicated test directory in this repo.
 
+## Git Sync Workflow
+- This config is automatically tracked with git-sync.
+- Before starting an edit session, stop sync with `systemctl --user stop git-sync-doomemacs`.
+- Keep git-sync stopped for the whole edit session so automated syncing does not interfere with in-progress changes.
+- Start git-sync again only after the session's changes have been committed: `systemctl --user start git-sync-doomemacs`.
+- Do not restart git-sync if work is still uncommitted.
+
 ## High-Value Commands
 - Re-tangle the literate config: `~/.config/emacs/bin/doom +org tangle config.org`
 - Sync Doom after module or package changes: `~/.config/emacs/bin/doom sync`
@@ -81,15 +88,17 @@
 - Preserve the repo's direct, pragmatic style over abstract framework-building.
 
 ## Imports and Dependencies
-- Prefer Doom macros such as `after!`, `use-package!`, `map!`, `setq!`, `add-hook!`, and `defadvice!`.
-- Put package-specific configuration inside `after! <package>` or `use-package!` blocks.
-- Use `:after`, `:hook`, `:commands`, and `:init` in `use-package!` the same way existing code does.
+- Prefer plain `with-eval-after-load`, `use-package`, and `setopt` in private config, following recent Doom upstream guidance.
+- Use Doom-specific macros such as `map!`, `add-hook!`, and `defadvice!` where they remain the clearest fit.
+- Use `after!`, `use-package!`, and `setq!` only when there is a repo-specific or Doom-internal reason.
+- Put package-specific configuration inside `with-eval-after-load` or `use-package` blocks unless a Doom-only form is required.
 - Use `require` only when eager loading is actually needed.
 - Add new packages in tangled `package!` blocks, not ad hoc runtime installs.
 - Disabled packages are expressed in `packages.el` as `:disable t`.
 
 ## Formatting Conventions
-- Existing code mixes `setq` and `setq!`; prefer `setq!` for Doom-managed variables and `setq` elsewhere.
+- Prefer `setopt` for customizable variables and `setq` elsewhere.
+- Existing code still contains legacy `setq!`; do not mass-convert it unless the task calls for it.
 - Keep related settings grouped inside one form when it improves readability.
 - Multi-line forms usually place one binding per line.
 - Keybinding blocks are usually grouped with one `map!` per context.
@@ -128,6 +137,7 @@
 - Keep changes local and incremental.
 - Do not perform broad stylistic rewrites.
 - Do not replace Doom macros with vanilla alternatives unless there is a strong repo-specific reason.
+- This repo still contains legacy `after!`, `use-package!`, and `setq!` usage; prefer newer forms in touched code when low-risk, but do not perform broad mechanical rewrites unless requested.
 - When changing literate config, update the Org source first and then regenerate outputs.
 - Mention any generated-file updates in your final note.
 
