@@ -2814,7 +2814,9 @@ Reply concisely. Wrap source code in a ```cpp block.")
 
 (use-package agent-shell)
 
-(after! (org org-mcp)
-  (setq org-mcp-allowed-files
-        (mapcar (lambda (f) (expand-file-name f org-directory))
-                org-agenda-files)))
+(use-package org-mcp
+  :after org
+  :custom (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+  )
+
+(with-eval-after-load 'mcp-server-lib #'mcp-server-lib-start)
