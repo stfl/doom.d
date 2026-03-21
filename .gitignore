@@ -9,3 +9,4 @@
 /yarn.lock
 flycheck_config.el
 node_modules/
+/.claude/settings.local.json
