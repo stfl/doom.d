@@ -4,11 +4,12 @@
 - This repository is a personal Doom Emacs configuration.
 - The main languages are Emacs Lisp and Org.
 - Agents should optimize for small, low-risk changes that fit existing Doom idioms.
+- For configuration work, edit `config.org`, not `config.el`, and finish by running `doom sync`.
 
 ## Repo Snapshot
-- Primary source of truth is `config.org`.
+- Primary source of truth is `config.org`, and agents should default to editing it for configuration changes.
 - `init.el` is hand-maintained and declares enabled Doom modules.
-- `config.el` is a tangled/generated output from the literate config and should usually not be edited directly.
+- `config.el` is a tangled/generated output from the literate config and should never be edited directly.
 - `packages.el` is also driven by tangled `package!` blocks from `config.org`.
 - `custom.el` is Emacs Custom output; avoid manual edits unless the task is explicitly about Custom-managed settings.
 - Extra handwritten files include `my-deft-title.el` and JSON files in `langserver/`.
@@ -33,8 +34,8 @@
 - Do not restart git-sync if work is still uncommitted.
 
 ## High-Value Commands
-- Re-tangle the literate config: `~/.config/emacs/bin/doom +org tangle config.org`
-- Sync Doom after module or package changes: `~/.config/emacs/bin/doom sync`
+- Re-tangle the literate config after editing `config.org`: `~/.config/emacs/bin/doom +org tangle config.org`
+- Run this after config, module, or package changes: `~/.config/emacs/bin/doom sync`
 - Sync and rebuild more aggressively: `~/.config/emacs/bin/doom sync --rebuild`
 - Check environment and common issues: `~/.config/emacs/bin/doom doctor`
 - Launch Doom using this config: `~/.config/emacs/bin/doom emacs`
@@ -42,8 +43,10 @@
 - Inspect Doom CLI help: `~/.config/emacs/bin/doom help`
 
 ## Build / Regeneration Workflow
+- After changing `config.org`, always re-tangle it and then run `~/.config/emacs/bin/doom sync`.
 - After editing `init.el`, run `~/.config/emacs/bin/doom sync`.
 - After editing `package!` declarations, run `~/.config/emacs/bin/doom sync`.
+- Never patch `config.el` by hand to avoid this workflow; regenerate it from `config.org` instead.
 - After editing autoloaded behavior or anything in `config.org`, first run `~/.config/emacs/bin/doom +org tangle config.org`.
 - Because the config explicitly disables automatic literate recompilation, do not assume tangling happens for you.
 - If `config.org` changes produce updates in `config.el`, `packages.el`, or `langserver/*.json`, keep the generated files in sync.
@@ -51,7 +54,7 @@
 
 ## Lint / Validation Commands
 - Basic repository health check: `~/.config/emacs/bin/doom doctor`
-- Validate that the literate config still tangles: `~/.config/emacs/bin/doom +org tangle config.org`
+- Validate that the literate config still tangles before `doom sync`: `~/.config/emacs/bin/doom +org tangle config.org`
 - Byte-compile a single handwritten Elisp file: `emacs --batch -Q -L . -f batch-byte-compile my-deft-title.el`
 - Byte-compile several files: `emacs --batch -Q -L . -f batch-byte-compile init.el config.el my-deft-title.el`
 - Load the config noninteractively when needed: `emacs --batch -Q --load init.el`
@@ -59,8 +62,8 @@
 
 ## Test Commands
 - There is no first-class automated test suite checked into this repo today.
-- Most verification is configuration loading, tangling, and Doom sync success.
-- Minimum validation for typical changes is: tangle, then `doom sync`, then open Doom if the change is user-facing.
+- Most verification is configuration loading, tangling, and `doom sync` success.
+- Minimum validation for typical changes is: update `config.org` if needed, tangle, run `doom sync`, then open Doom if the change is user-facing.
 - If you add ERT tests, keep them in a dedicated test file such as `test/<name>-test.el`.
 - Run all tests in one file: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit t)"`
 - Run a single ERT test by exact name: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit '^test-name$')"`
@@ -73,7 +76,9 @@
 - If a change only affects one helper function, validate that helper directly with one ERT test and byte-compilation.
 
 ## File Editing Priorities
-- Prefer editing `config.org` over `config.el` for settings that are part of the literate config.
+- Always edit `config.org` for literate configuration changes.
+- Never edit `config.el` directly; regenerate it from `config.org` instead.
+- If a setting already lives in `config.org`, update it there even if the generated `config.el` looks easier to patch.
 - Edit `init.el` directly for Doom module selection.
 - Edit `my-deft-title.el` directly; it is a normal handwritten library.
 - Avoid hand-editing `custom.el` unless required by the task.
@@ -136,14 +141,17 @@
 - Read the surrounding block before editing; many sections are tightly coupled.
 - Keep changes local and incremental.
 - Do not perform broad stylistic rewrites.
+- Default to `config.org` for config changes and regenerate derived files instead of patching generated outputs.
+- Treat direct edits to `config.el` as incorrect unless the task is explicitly about generated output debugging.
 - Do not replace Doom macros with vanilla alternatives unless there is a strong repo-specific reason.
 - This repo still contains legacy `after!`, `use-package!`, and `setq!` usage; prefer newer forms in touched code when low-risk, but do not perform broad mechanical rewrites unless requested.
 - When changing literate config, update the Org source first and then regenerate outputs.
 - Mention any generated-file updates in your final note.
 
 ## Verification Checklist
-- If you changed `config.org`, run `doom +org tangle config.org`.
+- If you changed `config.org`, run `doom +org tangle config.org` and then `doom sync`.
 - If you changed modules or packages, run `doom sync`.
+- If you touched generated files because tangling updated them, verify they came from `config.org` and were not edited by hand.
 - If you changed handwritten Elisp helpers, byte-compile or batch-load the touched file.
 - If behavior is interactive, open Doom and smoke-test the exact command or keybinding you changed.
 - If you added tests, include the exact single-test command in your handoff.
