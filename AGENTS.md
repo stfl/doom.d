@@ -33,6 +33,11 @@
 - Start git-sync again only after the session's changes have been committed: `systemctl --user start git-sync-doomemacs`.
 - Do not restart git-sync if work is still uncommitted.
 
+## Commit Workflow
+- Before committing any changes to `config.org`, always run `~/.config/emacs/bin/doom +org tangle config.org` first.
+- Include `config.el` (and `packages.el` if changed) in the same commit as `config.org` so the repo stays consistent.
+- Stage `config.org`, `config.el`, and `packages.el` together; never commit `config.org` alone.
+
 ## High-Value Commands
 - Re-tangle the literate config after editing `config.org`: `~/.config/emacs/bin/doom +org tangle config.org`
 - Run this after config, module, or package changes: `~/.config/emacs/bin/doom sync`
