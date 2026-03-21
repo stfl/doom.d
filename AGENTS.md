@@ -1,0 +1,139 @@
+# AGENTS.md
+
+## Purpose
+- This repository is a personal Doom Emacs configuration.
+- The main languages are Emacs Lisp and Org.
+- Agents should optimize for small, low-risk changes that fit existing Doom idioms.
+
+## Repo Snapshot
+- Primary source of truth is `config.org`.
+- `init.el` is hand-maintained and declares enabled Doom modules.
+- `config.el` is a tangled/generated output from the literate config and should usually not be edited directly.
+- `packages.el` is also driven by tangled `package!` blocks from `config.org`.
+- `custom.el` is Emacs Custom output; avoid manual edits unless the task is explicitly about Custom-managed settings.
+- Extra handwritten files include `my-deft-title.el` and JSON files in `langserver/`.
+
+## External Agent Rules
+- No `.cursorrules` file was found.
+- No files were found under `.cursor/rules/`.
+- No `.github/copilot-instructions.md` file was found.
+- This file is therefore the main agent guidance in the repo.
+
+## Tooling Baseline
+- Emacs version on this machine is `GNU Emacs 30.2`.
+- Doom CLI is available at `~/.config/emacs/bin/doom`.
+- If `doom` is already on `PATH`, that is equivalent.
+- There is no `Makefile`, `package.json`, CI workflow, or dedicated test directory in this repo.
+
+## High-Value Commands
+- Re-tangle the literate config: `~/.config/emacs/bin/doom +org tangle config.org`
+- Sync Doom after module or package changes: `~/.config/emacs/bin/doom sync`
+- Sync and rebuild more aggressively: `~/.config/emacs/bin/doom sync --rebuild`
+- Check environment and common issues: `~/.config/emacs/bin/doom doctor`
+- Launch Doom using this config: `~/.config/emacs/bin/doom emacs`
+- Launch an Elisp REPL: `~/.config/emacs/bin/doom emacs --repl`
+- Inspect Doom CLI help: `~/.config/emacs/bin/doom help`
+
+## Build / Regeneration Workflow
+- After editing `init.el`, run `~/.config/emacs/bin/doom sync`.
+- After editing `package!` declarations, run `~/.config/emacs/bin/doom sync`.
+- After editing autoloaded behavior or anything in `config.org`, first run `~/.config/emacs/bin/doom +org tangle config.org`.
+- Because the config explicitly disables automatic literate recompilation, do not assume tangling happens for you.
+- If `config.org` changes produce updates in `config.el`, `packages.el`, or `langserver/*.json`, keep the generated files in sync.
+- Use `~/.config/emacs/bin/doom sync --rebuild` only when package state, Emacs version, or stale compilation looks suspect.
+
+## Lint / Validation Commands
+- Basic repository health check: `~/.config/emacs/bin/doom doctor`
+- Validate that the literate config still tangles: `~/.config/emacs/bin/doom +org tangle config.org`
+- Byte-compile a single handwritten Elisp file: `emacs --batch -Q -L . -f batch-byte-compile my-deft-title.el`
+- Byte-compile several files: `emacs --batch -Q -L . -f batch-byte-compile init.el config.el my-deft-title.el`
+- Load the config noninteractively when needed: `emacs --batch -Q --load init.el`
+- For risky Emacs Lisp edits, prefer byte-compilation or batch loading before finishing.
+
+## Test Commands
+- There is no first-class automated test suite checked into this repo today.
+- Most verification is configuration loading, tangling, and Doom sync success.
+- Minimum validation for typical changes is: tangle, then `doom sync`, then open Doom if the change is user-facing.
+- If you add ERT tests, keep them in a dedicated test file such as `test/<name>-test.el`.
+- Run all tests in one file: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit t)"`
+- Run a single ERT test by exact name: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit '^test-name$')"`
+- Run tests after loading Doom if the test depends on Doom macros or modules: `~/.config/emacs/bin/doom emacs --repl` or a Doom-aware batch command as needed.
+
+## Single-Test Guidance
+- Prefer ERT for any new automated tests.
+- Name tests so they can be selected by regex without ambiguity.
+- For one failing behavior, create or run one narrowly scoped ERT test instead of a broad batch.
+- If a change only affects one helper function, validate that helper directly with one ERT test and byte-compilation.
+
+## File Editing Priorities
+- Prefer editing `config.org` over `config.el` for settings that are part of the literate config.
+- Edit `init.el` directly for Doom module selection.
+- Edit `my-deft-title.el` directly; it is a normal handwritten library.
+- Avoid hand-editing `custom.el` unless required by the task.
+- Treat `langserver/*.json` as generated if the corresponding Org source block exists in `config.org`.
+
+## Code Style
+- Follow existing Doom Emacs conventions instead of introducing generic Emacs Lisp patterns.
+- Use lexical binding where the file already enables it; do not remove it.
+- Prefer standard Emacs Lisp indentation and alignment.
+- Use spaces for indentation in source; do not introduce hard tabs in code.
+- Keep comments sparse and useful; most current code is minimally commented.
+- Preserve the repo's direct, pragmatic style over abstract framework-building.
+
+## Imports and Dependencies
+- Prefer Doom macros such as `after!`, `use-package!`, `map!`, `setq!`, `add-hook!`, and `defadvice!`.
+- Put package-specific configuration inside `after! <package>` or `use-package!` blocks.
+- Use `:after`, `:hook`, `:commands`, and `:init` in `use-package!` the same way existing code does.
+- Use `require` only when eager loading is actually needed.
+- Add new packages in tangled `package!` blocks, not ad hoc runtime installs.
+- Disabled packages are expressed in `packages.el` as `:disable t`.
+
+## Formatting Conventions
+- Existing code mixes `setq` and `setq!`; prefer `setq!` for Doom-managed variables and `setq` elsewhere.
+- Keep related settings grouped inside one form when it improves readability.
+- Multi-line forms usually place one binding per line.
+- Keybinding blocks are usually grouped with one `map!` per context.
+- Preserve quote style already used in nearby code.
+- Match surrounding whitespace instead of reformatting unrelated code.
+
+## Types and Data Shapes
+- Emacs Lisp in this repo is dynamically typed.
+- Be explicit about expected shapes in docstrings when a function takes complex plist/alist data.
+- Existing code heavily uses lists, plists, alists, markers, and Org elements.
+- When extending data structures, preserve current key names and value formats.
+
+## Naming Conventions
+- Prefix repo-specific functions and variables with `stfl/`.
+- Preserve existing third-party or borrowed prefixes such as `my-deft/` and `ibizaman/`.
+- Use kebab-case for function and variable names.
+- Use `--` for private helpers only when following an existing local pattern.
+- Interactive commands should usually have clear verb-based names.
+
+## Error Handling
+- Use `user-error` for bad interactive input when the user can correct it.
+- Use `error` for invariant violations or truly unexpected states.
+- Use `ignore-errors` or `ignore-error` sparingly and only around best-effort behavior.
+- Preserve existing interactive safety checks instead of silently swallowing failures.
+- If a function mutates user data or Org state, prefer explicit failure over partial silent success.
+
+## Doom / Org Patterns To Preserve
+- Many settings are wrapped in `after! org`, `after! org-roam`, or other package-specific blocks.
+- Keybindings are organized with `:leader`, `:localleader`, `:prefix`, and mode maps.
+- Org code relies heavily on agenda queries, custom commands, capture templates, and property drawers.
+- Org-specific helpers often assume agenda markers, headline context, or inherited properties.
+- When changing Org behavior, watch for interactions with `org-agenda`, `org-roam`, `org-ql`, and `org-super-agenda`.
+
+## Change Strategy For Agents
+- Read the surrounding block before editing; many sections are tightly coupled.
+- Keep changes local and incremental.
+- Do not perform broad stylistic rewrites.
+- Do not replace Doom macros with vanilla alternatives unless there is a strong repo-specific reason.
+- When changing literate config, update the Org source first and then regenerate outputs.
+- Mention any generated-file updates in your final note.
+
+## Verification Checklist
+- If you changed `config.org`, run `doom +org tangle config.org`.
+- If you changed modules or packages, run `doom sync`.
+- If you changed handwritten Elisp helpers, byte-compile or batch-load the touched file.
+- If behavior is interactive, open Doom and smoke-test the exact command or keybinding you changed.
+- If you added tests, include the exact single-test command in your handoff.
