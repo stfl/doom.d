@@ -134,3 +134,6 @@
 (package! shell-maker)
 (package! acp)
 (package! agent-shell)
+
+(package! mcp-server-lib)
+(package! org-mcp)

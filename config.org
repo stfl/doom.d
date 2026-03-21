@@ -4482,3 +4482,23 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package agent-shell)
 #+end_src
 
+** org-mcp
+
+MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Code).
+
+See https://github.com/laurynas-biveinis/org-mcp for setup instructions.
+After ~doom sync~, run ~M-x mcp-server-lib-install~ in Emacs, then register:
+: claude mcp add -s user -t stdio org-mcp -- ~/.emacs.d/emacs-mcp-stdio.sh --server-id=org-mcp --init-function=org-mcp-enable --stop-function=org-mcp-disable
+
+#+begin_src elisp :tangle packages.el
+(package! mcp-server-lib)
+(package! org-mcp)
+#+end_src
+
+#+begin_src elisp
+(after! (org org-mcp)
+  (setq org-mcp-allowed-files
+        (mapcar (lambda (f) (expand-file-name f org-directory))
+                org-agenda-files)))
+#+end_src
+
