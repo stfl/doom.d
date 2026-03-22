@@ -3867,25 +3867,6 @@ display more columns in forge list topic
                       ("Updated" 10 t nill updated nil))))
 #+END_SRC
 
-*** with-editor
-
-# #+BEGIN_SRC elisp
-# (use-package! with-editor
-#   :after magit
-#   :config
-#   (define-key (current-global-map)
-#     [remap async-shell-command] 'with-editor-async-shell-command)
-#   (define-key (current-global-map)
-#     [remap shell-command] 'with-editor-shell-command)
-
-#   (add-hook 'shell-mode-hook  'with-editor-export-editor)
-#   (add-hook 'term-exec-hook   'with-editor-export-editor)
-#   (add-hook 'eshell-mode-hook 'with-editor-export-editor)
-
-#   (add-hook 'shell-mode-hook 'with-editor-export-git-editor)
-# )
-# #+END_SRC
-
 *** magit-todos
 
 #+begin_src elisp :tangle packages.el
