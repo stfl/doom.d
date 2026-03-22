@@ -136,4 +136,4 @@
 (package! agent-shell)
 
 (package! mcp-server-lib)
-(package! org-mcp)
+(package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
