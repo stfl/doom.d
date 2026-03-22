@@ -4466,7 +4466,7 @@ After ~doom sync~, run ~M-x mcp-server-lib-install~ in Emacs, then register:
 
 #+begin_src elisp :tangle packages.el
 (package! mcp-server-lib)
-(package! org-mcp)
+(package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
 #+end_src
 
 #+begin_src elisp
