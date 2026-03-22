@@ -3839,13 +3839,6 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+END_SRC
 
 ** Magit
-*** Enable Gravatars
-
-This will enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
-#+BEGIN_SRC elisp
-;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-#+END_SRC
-
 *** Enable granular diff-highlights for all hunks
 
 By default, changes are highlighted *line-wise* for all but the selected hunk. This
