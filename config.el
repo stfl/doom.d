@@ -2407,8 +2407,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (use-package! ztree)
 
-;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
 (after! magit
   (setq magit-diff-refine-hunk 'all))
 
