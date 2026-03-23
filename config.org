@@ -4474,7 +4474,7 @@ After ~doom sync~, run ~M-x mcp-server-lib-install~ in Emacs, then register:
   :after org
   :custom
   (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  (org-mcp-stored-queries-file "~/.config/doom/org-mcp-stored-queries.el")
+  (org-mcp-stored-queries-file (expand-file-name "org-mcp-stored-queries.el" doom-user-dir))
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
