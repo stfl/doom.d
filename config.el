@@ -2814,7 +2814,9 @@ Reply concisely. Wrap source code in a ```cpp block.")
 
 (use-package org-mcp
   :after org
-  :custom (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+  :custom
+  (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+  (org-mcp-stored-queries-file "~/.config/doom/org-mcp-stored-queries.el")
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
