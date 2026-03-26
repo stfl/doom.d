@@ -11,13 +11,22 @@
      "ac18cc10455c6c26a98354ba8f9d338842d7ecc9ae3d28c205ed154ef20d74ce" default))
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((eval with-eval-after-load 'lsp-mode
+   '((elisp-lint-indent-specs (org-mcp--modify-and-save . 3)
+      (org-mcp--with-uri-prefix-dispatch . 1) (org-mcp--with-org-file . 1)
+      (org-mcp-test--assert-error-and-file . 1)
+      (org-mcp-test--with-enabled . defun) (org-mcp-test--with-config . 1)
+      (org-mcp-test--with-temp-org-file . 2)
+      (org-mcp-test--with-add-todo-setup . 2)
+      (org-mcp-test--with-id-tracking . 2) (org-mcp-test--with-id-setup . 2)
+      (org-mcp-test--get-tag-config-and-check . defun)
+      (mcp-server-lib-ert-with-server . defun))
+     (eval with-eval-after-load 'lsp-mode
       (message "setup lsp-file-watch-ignored-directories for project")
       (add-to-list 'lsp-file-watch-ignored-directories
-       "[/\\\\]\\target-docker\\'")
+                   "[/\\\\]\\target-docker\\'")
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\logs\\'")
       (add-to-list 'lsp-file-watch-ignored-directories
-       "[/\\\\]\\integration_tests\\'")
+                   "[/\\\\]\\integration_tests\\'")
       (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\run\\'"))
      (eval with-eval-after-load 'lsp-mode
       (message "setup lsp-file-watch-ignored-directories for project")
