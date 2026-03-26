@@ -1,6 +1,6 @@
 * PROJ %^{PRIORITY||[#A] |[#B] |[#C] |[#D] |[#E] }%^{Title}
 :PROPERTIES:
-:ID:      %(org-id-new)
+:ID:       %(org-id-new)
 :CREATED:  %U
 :END:
 
@@ -12,3 +12,4 @@
 :END:
 
 %?
+
