@@ -1,10 +1,11 @@
 * OEGK %^{Datum} %^{Title}
 :PROPERTIES:
 :CREATED:  %U
-:oegk:    nil
+:oegk:     nil
 :generali: nil
 :END:
 
 [[file:~/Documents/Finanzielles/Einreichung Versicherung/%{Datum}]]
 
 %?
+
