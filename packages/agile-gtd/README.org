@@ -80,7 +80,6 @@ The workflow uses tags as control signals rather than decoration.
 | SOMEDAY    | Deferred work, hidden from the active backlog |
 | HABIT      | Recurring habit or routine |
 | LASTMILE   | Final-stretch item that deserves extra visibility |
-| DRAG       | Item dragged forward without being finished |
 | #work      | Work item |
 | #personal  | Personal item |
 | @context   | GTD context such as a place, person, or tool |

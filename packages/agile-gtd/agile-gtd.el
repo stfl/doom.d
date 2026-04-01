@@ -39,13 +39,13 @@
 
 (defcustom agile-gtd-priority-symbol-alist
   '((?A . "⛔")
-    (?B . "𐱄")
-    (?C . "▲")
+    (?B . "▲")
+    (?C . "𐱄")
     (?D . "ᐱ")
     (?E . "Ⲷ")
     (?F . "ᐯ")
-    (?G . "▼")
-    (?H . "𐠠")
+    (?G . "𐠠")
+    (?H . "▼")
     (?I . "҉"))
   "Symbols shown by org-modern for GTD priorities."
   :type '(alist :key-type character :value-type string)
@@ -97,11 +97,6 @@
 
 (defcustom agile-gtd-lastmile-tag "LASTMILE"
   "Tag used for nearly finished tasks."
-  :type 'string
-  :group 'agile-gtd)
-
-(defcustom agile-gtd-drag-tag "DRAG"
-  "Tag used for dragged tasks."
   :type 'string
   :group 'agile-gtd)
 
@@ -170,7 +165,7 @@
 
 When nil, derive it from `agile-gtd-priority-default'."
   :type '(choice (const :tag "Derived from default" nil)
-                 character)
+          character)
   :group 'agile-gtd)
 
 (defcustom agile-gtd-backlog-priority-threshold nil
@@ -178,7 +173,7 @@ When nil, derive it from `agile-gtd-priority-default'."
 
 When nil, derive it from `agile-gtd-priority-default'."
   :type '(choice (const :tag "Derived from default" nil)
-                 character)
+          character)
   :group 'agile-gtd)
 
 (defcustom agile-gtd-deadline-fib-offset 3
@@ -281,7 +276,6 @@ When nil, derive it from `agile-gtd-priority-default'."
     (,agile-gtd-someday-tag . ?S)
     (,agile-gtd-habit-tag . ?H)
     (,agile-gtd-lastmile-tag . ?L)
-    (,agile-gtd-drag-tag . ?D)
     (:endgrouptag)
     (:startgrouptag)
     ("Areas" . nil)
@@ -303,7 +297,6 @@ When nil, derive it from `agile-gtd-priority-default'."
         agile-gtd-someday-tag
         agile-gtd-habit-tag
         agile-gtd-lastmile-tag
-        agile-gtd-drag-tag
         "Areas"
         agile-gtd-work-tag
         agile-gtd-personal-tag))
@@ -449,11 +442,7 @@ When nil, derive it from `agile-gtd-priority-default'."
     ("L" "Protocol Link" entry
      (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
      "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-     :empty-lines-after 1)
-    ("h" "Haushalt")
-    ("hw" "Wäsche" entry
-     (file+headline ,(agile-gtd--expand-org-path agile-gtd-todo-file) ,agile-gtd-household-heading)
-     ,(agile-gtd--capture-template-laundry))))
+     :empty-lines-after 1)))
 
 (defun agile-gtd--stuck-projects-setting ()
   "Return the `org-stuck-projects' setting for Agile GTD."
@@ -473,7 +462,7 @@ When nil, derive it from `agile-gtd-priority-default'."
 (defun agile-gtd--deadline-window (priority)
   "Return the deadline window for PRIORITY."
   (1- (agile-gtd--fib (+ agile-gtd-deadline-fib-offset
-                           (- priority 64)))))
+                         (- priority 64)))))
 
 (defun agile-gtd--priority-or-default ()
   "Return the priority at point or the default fallback."
@@ -550,19 +539,19 @@ When nil, derive it from `agile-gtd-priority-default'."
   "Return today groups while hiding primary work items."
   (if agile-gtd-primary-work-tags
       (let ((discard-primary `(:discard (:name "Primary Work"
-                                        :tag ,agile-gtd-primary-work-tags
-                                        :order 40))))
+                                         :tag ,agile-gtd-primary-work-tags
+                                         :order 40))))
         (cons discard-primary (agile-gtd--today-groups)))
     (agile-gtd--today-groups)))
 
 (defun agile-gtd--agenda-day ()
   "Return the base agenda block used by the daily view."
   `(agenda "Agenda"
-           ((org-agenda-use-time-grid t)
-            (org-deadline-warning-days 0)
-            (org-agenda-span '1)
-            (org-super-agenda-groups ,(agile-gtd--today-groups-no-primary-work))
-            (org-agenda-start-day (org-today)))))
+    ((org-agenda-use-time-grid t)
+     (org-deadline-warning-days 0)
+     (org-agenda-span '1)
+     (org-super-agenda-groups ,(agile-gtd--today-groups-no-primary-work))
+     (org-agenda-start-day (org-today)))))
 
 (defun agile-gtd--someday-habit ()
   "Return an org-ql sexp matching someday and habit items."
@@ -829,8 +818,8 @@ With prefix argument DO-SCHEDULE, create a tickler."
                 (max agile-gtd-priority-highest (1- agile-gtd-priority-default)))
                (priority)
                (t (upcase (read-char (format "Show up to priority (%c-%c): "
-                                           org-priority-highest
-                                           org-priority-lowest)))))))
+                                             org-priority-highest
+                                             org-priority-lowest)))))))
     (unless (agile-gtd--priority-in-range-p new-priority)
       (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
     (setq agile-gtd-max-priority-group new-priority)
