@@ -1,5 +1,10 @@
 ;;; agile-gtd.el --- Agile GTD workflow for Org -*- lexical-binding: t; -*-
 
+;; Version: 0.1.0
+;; URL: https://github.com/stfl/doom.d
+;; Package-Requires: ((emacs "30.2") (dash "2.19.1") (org-modern "1.6") (org-ql "0.8") (org-super-agenda "1.3") (ts "0.3"))
+;; Keywords: outlines, calendar, tools
+
 (require 'cl-lib)
 (require 'dash)
 (require 'org)
@@ -303,6 +308,22 @@ When nil, derive it from `agile-gtd-priority-default'."
         agile-gtd-work-tag
         agile-gtd-personal-tag))
 
+(defun agile-gtd--list-prefix-p (prefix list)
+  "Return non-nil when PREFIX matches the start of LIST."
+  (and (<= (length prefix) (length list))
+       (cl-every #'equal prefix (cl-subseq list 0 (length prefix)))))
+
+(defun agile-gtd--delete-sublist (sublist list)
+  "Delete all SUBLIST occurrences from LIST."
+  (let ((result nil)
+        (tail list)
+        (sublist-length (length sublist)))
+    (while tail
+      (if (agile-gtd--list-prefix-p sublist tail)
+          (setq tail (nthcdr sublist-length tail))
+        (push (pop tail) result)))
+    (nreverse result)))
+
 (defun agile-gtd--replace-by-key (current additions)
   "Replace entries in CURRENT whose key matches an entry in ADDITIONS."
   (let ((keys (mapcar #'car additions)))
@@ -527,10 +548,12 @@ When nil, derive it from `agile-gtd-priority-default'."
 
 (defun agile-gtd--today-groups-no-primary-work ()
   "Return today groups while hiding primary work items."
-  (let ((discard-primary `(:discard (:name "Primary Work"
-                                    :tag ,agile-gtd-primary-work-tags
-                                    :order 40))))
-    (cons discard-primary (agile-gtd--today-groups))))
+  (if agile-gtd-primary-work-tags
+      (let ((discard-primary `(:discard (:name "Primary Work"
+                                        :tag ,agile-gtd-primary-work-tags
+                                        :order 40))))
+        (cons discard-primary (agile-gtd--today-groups)))
+    (agile-gtd--today-groups)))
 
 (defun agile-gtd--agenda-day ()
   "Return the base agenda block used by the daily view."
@@ -545,6 +568,13 @@ When nil, derive it from `agile-gtd-priority-default'."
   "Return an org-ql sexp matching someday and habit items."
   `(or (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag)
        (habit)))
+
+(defun agile-gtd--primary-work-query ()
+  "Return an org-ql sexp matching primary work items."
+  (if agile-gtd-primary-work-tags
+      `(tags ,@agile-gtd-primary-work-tags)
+    '(and (tags "__agile-gtd-no-primary-work__")
+          (not (tags "__agile-gtd-no-primary-work__")))))
 
 (defun agile-gtd-not-someday-habit ()
   "Return an org-ql sexp excluding someday and habit items."
@@ -869,9 +899,9 @@ With prefix argument DO-SCHEDULE, create a tickler."
 (org-ql-defpred agile-gtd-primary-work ()
   "Match primary work entries."
   :normalizers ((`(,predicate-names)
-                 (rec `(tags ,@agile-gtd-primary-work-tags))))
+                 (rec `(,@(agile-gtd--primary-work-query)))))
   :preambles ((`(,predicate-names)
-               (rec `(tags ,@agile-gtd-primary-work-tags)))))
+               (rec `(,@(agile-gtd--primary-work-query))))))
 
 (org-ql-defpred agile-gtd-private ()
   "Match private entries."
@@ -957,14 +987,16 @@ With prefix argument DO-SCHEDULE, create a tickler."
 
 (defun agile-gtd--apply-tags ()
   "Apply Agile GTD workflow tags."
-  (setq org-tag-alist
-        (append
-         (cl-remove-if (lambda (entry)
-                         (and (consp entry)
-                              (stringp (car entry))
-                              (member (car entry) (agile-gtd--workflow-tag-names))))
-                       org-tag-alist)
-         (agile-gtd--workflow-tag-alist))))
+  (let* ((workflow-tags (agile-gtd--workflow-tag-alist))
+         (current-tags (agile-gtd--delete-sublist workflow-tags org-tag-alist)))
+    (setq org-tag-alist
+          (append
+           (cl-remove-if (lambda (entry)
+                           (and (consp entry)
+                                (stringp (car entry))
+                                (member (car entry) (agile-gtd--workflow-tag-names))))
+                         current-tags)
+           workflow-tags))))
 
 (defun agile-gtd--apply-refile-targets ()
   "Apply Agile GTD refile target settings."
