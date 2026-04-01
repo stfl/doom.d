@@ -1,0 +1,1020 @@
+;;; agile-gtd.el --- Agile GTD workflow for Org -*- lexical-binding: t; -*-
+
+(require 'cl-lib)
+(require 'dash)
+(require 'org)
+(require 'org-agenda)
+(require 'org-capture)
+(require 'org-element)
+(require 'org-id)
+(require 'org-ql)
+(require 'org-super-agenda)
+(require 'ts)
+
+(defvar org-modern-priority)
+
+(defgroup agile-gtd nil
+  "Agile and GTD helpers for Org mode."
+  :group 'org)
+
+(defcustom agile-gtd-priority-highest ?A
+  "Highest priority used by Agile GTD."
+  :type 'character
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-priority-default ?E
+  "Default priority used by Agile GTD."
+  :type 'character
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-priority-lowest ?I
+  "Lowest priority used by Agile GTD."
+  :type 'character
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-priority-symbol-alist
+  '((?A . "⛔")
+    (?B . "𐱄")
+    (?C . "▲")
+    (?D . "ᐱ")
+    (?E . "Ⲷ")
+    (?F . "ᐯ")
+    (?G . "▼")
+    (?H . "𐠠")
+    (?I . "҉"))
+  "Symbols shown by org-modern for GTD priorities."
+  :type '(alist :key-type character :value-type string)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-priority-face-alist
+  '((?A . (:foreground "red3" :weight bold :height 0.95))
+    (?B . (:foreground "OrangeRed2" :weight bold))
+    (?C . (:foreground "DarkOrange2" :weight bold))
+    (?D . (:foreground "gold3" :weight bold))
+    (?E . (:foreground "OliveDrab1" :weight bold))
+    (?F . (:foreground "SpringGreen3" :weight bold))
+    (?G . (:foreground "cyan4" :weight bold))
+    (?H . (:foreground "DeepSkyBlue4" :weight bold))
+    (?I . (:foreground "LightSteelBlue3" :weight bold)))
+  "Faces used for GTD priorities."
+  :type '(alist :key-type character :value-type plist)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-todo-keywords
+  '((sequence
+     "TODO(t)"
+     "NEXT(n)"
+     "WAIT(w)"
+     "PROJ(p)"
+     "EPIC(e)"
+     "|"
+     "DONE(d@)"
+     "IDEA(i)"
+     "KILL(k@)"))
+  "TODO keyword sequence used by Agile GTD."
+  :type 'sexp
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-todo-repeat-to-state "NEXT"
+  "State repeated tasks should move to."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-someday-tag "SOMEDAY"
+  "Tag used for someday items."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-habit-tag "HABIT"
+  "Tag used for habits."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-lastmile-tag "LASTMILE"
+  "Tag used for nearly finished tasks."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-drag-tag "DRAG"
+  "Tag used for dragged tasks."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-work-tag "#work"
+  "Tag used for work items."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-personal-tag "#personal"
+  "Tag used for personal items."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-primary-work-tags nil
+  "Tags identifying primary work items."
+  :type '(repeat string)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-inbox-file "inbox.org"
+  "Inbox file relative to `org-directory'."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-inbox-orgzly-file "inbox-orgzly.org"
+  "Orgzly inbox file relative to `org-directory'."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-todo-file "todo.org"
+  "Todo file relative to `org-directory'."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-project-files nil
+  "Project files relative to `org-directory'."
+  :type '(repeat string)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-diary-file "diary.org"
+  "Diary file relative to `org-directory'."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-someday-files-glob "gtd/someday/*.org"
+  "Glob relative to `org-directory' used for someday refile targets."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-inbox-heading "Inbox"
+  "Heading used for inbox captures."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-household-heading "Haushalt"
+  "Heading used for household capture templates."
+  :type 'string
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-inbox-tags '("#inbox" "inbox")
+  "Tags treated as inbox items in the agenda."
+  :type '(repeat string)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-max-priority-group nil
+  "Highest visible priority group in agenda commands.
+
+When nil, derive it from `agile-gtd-priority-default'."
+  :type '(choice (const :tag "Derived from default" nil)
+                 character)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-backlog-priority-threshold nil
+  "Priority threshold after which backlog items count as someday.
+
+When nil, derive it from `agile-gtd-priority-default'."
+  :type '(choice (const :tag "Derived from default" nil)
+                 character)
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-deadline-fib-offset 3
+  "Offset used for Fibonacci deadline windows."
+  :type 'integer
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-enable-agenda-files t
+  "Whether `agile-gtd-enable' should manage `org-agenda-files'."
+  :type 'boolean
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-enable-refile-targets t
+  "Whether `agile-gtd-enable' should manage `org-refile-targets'."
+  :type 'boolean
+  :group 'agile-gtd)
+
+(defcustom agile-gtd-enable-org-modern-visuals t
+  "Whether Agile GTD should configure org-modern priority visuals."
+  :type 'boolean
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-active
+  '((t (:inherit (bold font-lock-constant-face org-todo))))
+  "Face for active TODO items."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-idea
+  '((t (:inherit (bold font-lock-constant-face org-todo))))
+  "Face for idea items."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-project
+  '((t (:inherit (bold font-lock-doc-face org-todo))))
+  "Face for projects."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-epic
+  '((t (:inherit (bold org-cite org-todo))))
+  "Face for epics."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-onhold
+  '((t (:inherit (bold warning org-todo))))
+  "Face for waiting items."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-next
+  '((t (:inherit (bold font-lock-keyword-face org-todo))))
+  "Face for next actions."
+  :group 'agile-gtd)
+
+(defface agile-gtd-todo-cancel
+  '((t (:inherit (bold org-done) :foreground "IndianRed3")))
+  "Face for cancelled items."
+  :group 'agile-gtd)
+
+(defun agile-gtd--project-keyword ()
+  "Return the GTD project keyword."
+  "PROJ")
+
+(defun agile-gtd--action-keywords ()
+  "Return the GTD action keywords."
+  '("NEXT" "WAIT"))
+
+(defun agile-gtd-project-keyword ()
+  "Return the public GTD project keyword."
+  (agile-gtd--project-keyword))
+
+(defun agile-gtd-action-keywords ()
+  "Return the public GTD action keywords."
+  (copy-sequence (agile-gtd--action-keywords)))
+
+(defun agile-gtd--priority-range ()
+  "Return the configured priority range."
+  (number-sequence agile-gtd-priority-highest agile-gtd-priority-lowest))
+
+(defun agile-gtd--priority-in-range-p (priority)
+  "Return non-nil when PRIORITY is within the configured priority range."
+  (and (characterp priority)
+       (<= agile-gtd-priority-highest priority agile-gtd-priority-lowest)))
+
+(defun agile-gtd--validate-configuration ()
+  "Validate the current Agile GTD configuration."
+  (unless (<= agile-gtd-priority-highest
+              agile-gtd-priority-default
+              agile-gtd-priority-lowest)
+    (error "Agile GTD priorities must satisfy highest <= default <= lowest"))
+  (dolist (priority (delq nil (list agile-gtd-max-priority-group
+                                    agile-gtd-backlog-priority-threshold)))
+    (unless (agile-gtd--priority-in-range-p priority)
+      (error "Priority %s is outside the configured Agile GTD range"
+             priority))))
+
+(defun agile-gtd--workflow-tag-alist ()
+  "Return the workflow tag definitions managed by Agile GTD."
+  `((:startgrouptag)
+    ("Process" . nil)
+    (:grouptags)
+    (,agile-gtd-someday-tag . ?S)
+    (,agile-gtd-habit-tag . ?H)
+    (,agile-gtd-lastmile-tag . ?L)
+    (,agile-gtd-drag-tag . ?D)
+    (:endgrouptag)
+    (:startgrouptag)
+    ("Areas" . nil)
+    (:grouptags)
+    (,agile-gtd-work-tag . ?$)
+    (,agile-gtd-personal-tag . ?_)
+    (:endgrouptag)))
+
+(defun agile-gtd--merge-tag-alist (current additions)
+  "Merge ADDITIONS into CURRENT without overwriting existing tag names."
+  (let ((result (copy-tree current)))
+    (dolist (entry additions result)
+      (unless (assoc (car entry) result)
+        (setq result (append result (list entry)))))))
+
+(defun agile-gtd--workflow-tag-names ()
+  "Return the workflow tag names managed by Agile GTD."
+  (list "Process"
+        agile-gtd-someday-tag
+        agile-gtd-habit-tag
+        agile-gtd-lastmile-tag
+        agile-gtd-drag-tag
+        "Areas"
+        agile-gtd-work-tag
+        agile-gtd-personal-tag))
+
+(defun agile-gtd--replace-by-key (current additions)
+  "Replace entries in CURRENT whose key matches an entry in ADDITIONS."
+  (let ((keys (mapcar #'car additions)))
+    (append
+     (cl-remove-if (lambda (item)
+                     (member (car-safe item) keys))
+                   current)
+     additions)))
+
+(defun agile-gtd--priority-symbols ()
+  "Return org-modern priority symbols for the configured range."
+  (--keep (when-let ((symbol (alist-get it agile-gtd-priority-symbol-alist)))
+            (cons it symbol))
+          (agile-gtd--priority-range)))
+
+(defun agile-gtd--priority-faces ()
+  "Return `org-priority-faces' data for the configured range."
+  (--keep (when-let ((face (alist-get it agile-gtd-priority-face-alist)))
+            (append (list it) face))
+          (agile-gtd--priority-range)))
+
+(defun agile-gtd--priority-prompt-choices ()
+  "Return the priority choices used in capture templates."
+  (mapconcat (lambda (priority)
+               (format "[#%c]" priority))
+             (agile-gtd--priority-range)
+             " |"))
+
+(defun agile-gtd--expand-org-path (file)
+  "Expand FILE relative to `org-directory'."
+  (expand-file-name file org-directory))
+
+(defun agile-gtd--agenda-files ()
+  "Return the agenda files managed by Agile GTD."
+  (mapcar #'agile-gtd--expand-org-path
+          (append (list agile-gtd-inbox-file
+                        agile-gtd-inbox-orgzly-file
+                        agile-gtd-todo-file)
+                  agile-gtd-project-files)))
+
+(defun agile-gtd--someday-files ()
+  "Return the someday files used for refiling."
+  (file-expand-wildcards (agile-gtd--expand-org-path agile-gtd-someday-files-glob)))
+
+(defun agile-gtd--current-max-priority-group ()
+  "Return the currently active maximum priority group."
+  (or agile-gtd-max-priority-group
+      (max agile-gtd-priority-highest (1- agile-gtd-priority-default))))
+
+(defun agile-gtd--current-backlog-priority-threshold ()
+  "Return the currently active backlog threshold."
+  (or agile-gtd-backlog-priority-threshold
+      (min agile-gtd-priority-lowest (+ agile-gtd-priority-default 2))))
+
+(defun agile-gtd--capture-template-project ()
+  "Return the project capture template."
+  (concat "* PROJ %^{PRIORITY||"
+          (agile-gtd--priority-prompt-choices)
+          " }%^{Title}\n"
+          ":PROPERTIES:\n"
+          ":ID:       %(org-id-new)\n"
+          ":CREATED:  %U\n"
+          ":END:\n\n"
+          "~Goal:~ %^{Goal}\n\n"
+          "** NEXT %^{Next Action}\n"
+          ":PROPERTIES:\n"
+          ":CREATED:  %U\n"
+          ":END:\n\n"
+          "%?\n"))
+
+(defun agile-gtd--capture-template-laundry ()
+  "Return the household laundry capture template."
+  (concat "* PROJ [#"
+          (string agile-gtd-priority-lowest)
+          "] Wäsche waschen\n"
+          "** NEXT Waschmaschine einschalten\n"
+          "SCHEDULED: %^t\n"
+          ":PROPERTIES:\n"
+          ":TRIGGER:  next-sibling todo!(NEXT) scheduled!(\"++3h\")\n"
+          ":END:\n"
+          "** DONE Wäsche aufhängen\n"
+          ":PROPERTIES:\n"
+          ":TRIGGER:  next-sibling todo!(NEXT) scheduled!(\"++2d\")\n"
+          ":END:\n"
+          "** DONE Wäsche abnehmen\n"
+          ":PROPERTIES:\n"
+          ":TRIGGER:  parent todo!(DONE) archive!\n"
+          ":END:\n"))
+
+(defun agile-gtd--protocol-description (description)
+  "Normalize DESCRIPTION for protocol capture links."
+  (let ((text (or description "")))
+    (setq text (replace-regexp-in-string "\\[" "(" text))
+    (replace-regexp-in-string "\\]" ")" text)))
+
+(defun agile-gtd--capture-templates ()
+  "Return the Agile GTD capture templates."
+  `(("n" "capture to inbox" entry
+     (file+headline ,(agile-gtd--expand-org-path agile-gtd-inbox-file) ,agile-gtd-inbox-heading)
+     "* TODO %^{Task}\n:PROPERTIES:\n:CREATED:  %U\n:ID:       %(org-id-uuid)\n:END:\n\n%?\n"
+     :empty-lines-after 1)
+    ("p" "Project" entry
+     (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
+     ,(agile-gtd--capture-template-project)
+     :empty-lines-after 1)
+    ("s" "scheduled" entry
+     (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
+     "* NEXT %^{Task}\nSCHEDULED: %^{Scheduled}t\n:PROPERTIES:\n:CREATED:  %U\n:END:\n\n%?\n"
+     :empty-lines-after 1)
+    ("S" "deadline" entry
+     (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
+     "* NEXT %^{Task}\nDEADLINE: %^{Deadline}t\n:PROPERTIES:\n:CREATED:  %U\n:END:\n\n%?\n"
+     :empty-lines-after 1)
+    ("P" "Protocol" entry
+     (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
+     ,(concat "* %^{Title}\n"
+              "Source: [[%:link][%(agile-gtd--protocol-description \"%:description\")]]\n"
+              ":PROPERTIES:\n"
+              ":CREATED: %U\n"
+              ":END:\n"
+              "#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
+     :empty-lines-after 1)
+    ("L" "Protocol Link" entry
+     (file ,(agile-gtd--expand-org-path agile-gtd-inbox-file))
+     "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
+     :empty-lines-after 1)
+    ("h" "Haushalt")
+    ("hw" "Wäsche" entry
+     (file+headline ,(agile-gtd--expand-org-path agile-gtd-todo-file) ,agile-gtd-household-heading)
+     ,(agile-gtd--capture-template-laundry))))
+
+(defun agile-gtd--stuck-projects-setting ()
+  "Return the `org-stuck-projects' setting for Agile GTD."
+  (list (format "-%s/+%s" agile-gtd-someday-tag (agile-gtd--project-keyword))
+        (agile-gtd--action-keywords)
+        nil
+        ""))
+
+(defun agile-gtd--fib (n)
+  "Return the Nth Fibonacci number for positive N."
+  (cl-labels ((iter (a b count)
+                (if (= count 0)
+                    b
+                  (iter (+ a b) a (1- count)))))
+    (iter 1 0 n)))
+
+(defun agile-gtd--deadline-window (priority)
+  "Return the deadline window for PRIORITY."
+  (1- (agile-gtd--fib (+ agile-gtd-deadline-fib-offset
+                           (- priority 64)))))
+
+(defun agile-gtd--priority-or-default ()
+  "Return the priority at point or the default fallback."
+  (or (org-element-property :priority (org-element-at-point))
+      (+ 0.5 org-priority-default)))
+
+(defun agile-gtd--parent-project-priority-or-default (marker)
+  "Return the parent project priority for MARKER."
+  (org-with-point-at marker
+    (cl-loop minimize (when (equal (agile-gtd--project-keyword)
+                                   (nth 2 (org-heading-components)))
+                        (agile-gtd--priority-or-default))
+             while (and (not (equal (agile-gtd--project-keyword)
+                                    (nth 2 (org-heading-components))))
+                        (org-up-heading-safe)))))
+
+(defun agile-gtd--project-priority= (marker priority)
+  "Return non-nil when MARKER belongs to a project with PRIORITY."
+  (let ((project-priority (agile-gtd--parent-project-priority-or-default marker)))
+    (and project-priority
+         (= project-priority priority))))
+
+(defun agile-gtd-priority-groups ()
+  "Return priority-based org-super-agenda groups."
+  (append
+   `((:tag ,agile-gtd-someday-tag :order 90))
+   (mapcar (lambda (priority)
+             (let ((priority-string (char-to-string priority)))
+               `(:name ,(format "[#%s] Priority %s" priority-string priority-string)
+                 :priority ,priority-string
+                 :order ,priority)))
+           (agile-gtd--priority-range))
+   `((:name "Default Priority"
+      :not :priority))))
+
+(defun agile-gtd-ancestor-priority-groups ()
+  "Return ancestor-priority org-super-agenda groups."
+  (append
+   `((:name "Tickler"
+      :and (:scheduled t :tag ,agile-gtd-someday-tag)
+      :order ,(1+ org-priority-lowest))
+     (:name "Someday"
+      :tag ,agile-gtd-someday-tag
+      :order ,(+ 2 org-priority-lowest)))
+   (mapcar
+    (lambda (priority)
+      (let ((priority-string (char-to-string priority))
+            (until-date (ts-format "%Y-%m-%d"
+                                   (ts-adjust 'day
+                                              (agile-gtd--deadline-window priority)
+                                              (ts-now)))))
+        `(:name ,(format "[#%s] Priority %s" priority-string priority-string)
+          :deadline (before ,until-date)
+          :scheduled (before ,until-date)
+          :priority ,priority-string
+          :pred ((lambda (item)
+                   (agile-gtd--project-priority=
+                    (org-find-text-property-in-string 'org-marker item)
+                    ,priority)))
+          :order ,priority)))
+    (agile-gtd--priority-range))
+   `((:name "Default Priority (Rest)"
+      :anything t
+      :order ,(+ 0.5 org-priority-default)))))
+
+(defun agile-gtd--today-groups ()
+  "Return the org-super-agenda groups used by the today agenda."
+  `((:time-grid t :order 0)
+    (:name "Tickler" :tag ,agile-gtd-someday-tag :order 20)
+    (:name "Habits" :tag ,agile-gtd-habit-tag :habit t :order 90)
+    (:name "Today" :anything t :order 10)))
+
+(defun agile-gtd--today-groups-no-primary-work ()
+  "Return today groups while hiding primary work items."
+  (let ((discard-primary `(:discard (:name "Primary Work"
+                                    :tag ,agile-gtd-primary-work-tags
+                                    :order 40))))
+    (cons discard-primary (agile-gtd--today-groups))))
+
+(defun agile-gtd--agenda-day ()
+  "Return the base agenda block used by the daily view."
+  `(agenda "Agenda"
+           ((org-agenda-use-time-grid t)
+            (org-deadline-warning-days 0)
+            (org-agenda-span '1)
+            (org-super-agenda-groups ,(agile-gtd--today-groups-no-primary-work))
+            (org-agenda-start-day (org-today)))))
+
+(defun agile-gtd--someday-habit ()
+  "Return an org-ql sexp matching someday and habit items."
+  `(or (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag)
+       (habit)))
+
+(defun agile-gtd-not-someday-habit ()
+  "Return an org-ql sexp excluding someday and habit items."
+  `(not ,(agile-gtd--someday-habit)))
+
+(defun agile-gtd-not-sched-or-dead (from)
+  "Return an org-ql sexp excluding scheduled and deadline items from FROM."
+  `(and (not (scheduled :from today))
+        (not (deadline :from ,from))))
+
+(defun agile-gtd--prio-deadline>= (priority)
+  "Return an org-ql sexp for items at or above PRIORITY urgency."
+  `(and (or (priority >= (char-to-string ,priority))
+            (and ,(> (agile-gtd--current-max-priority-group) org-priority-default)
+                 (not (priority)))
+            (ancestors (priority >= (char-to-string ,priority)))
+            (deadline :to ,(agile-gtd--deadline-window priority))
+            (ancestors (deadline :to ,(agile-gtd--deadline-window priority))))))
+
+(defun agile-gtd-agenda-query-actions-prio-higher (priority)
+  "Return an org-ql sexp for action items at or above PRIORITY."
+  `(and (todo ,@(agile-gtd--action-keywords))
+        ,(agile-gtd--prio-deadline>= priority)
+        (not ,(agile-gtd--someday-habit))
+        (not (ancestors (deadline :to 0)))
+        (not (deadline :to 0))
+        (not (scheduled))))
+
+(defun agile-gtd-agenda-query-stuck-projects ()
+  "Return the standard stuck-project query."
+  '(agile-gtd-stuck-proj))
+
+(defun agile-gtd--agenda-custom-commands ()
+  "Return the Agile GTD agenda commands."
+  `(("i" "Inbox"
+     ((org-ql-block `(and (not (done))
+                          (tags ,@agile-gtd-inbox-tags))
+                    ((org-ql-block-header "Inbox")
+                     (org-super-agenda-groups '((:auto-property "CREATED")))))))
+    ("a" "Private Agenda Today"
+     (,(agile-gtd--agenda-day)
+      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
+                          ,(agile-gtd--prio-deadline>= (agile-gtd--current-max-priority-group))
+                          (not ,(agile-gtd--someday-habit))
+                          (not (ancestors (deadline :to 0)))
+                          (not (deadline :to 0))
+                          (not (scheduled))
+                          (not (agile-gtd-primary-work)))
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
+      (org-ql-block '(and (agile-gtd-stuck-proj)
+                          (not (agile-gtd-primary-work)))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+    ("A" "Agenda Weekly"
+     ((agenda ""
+              ((org-agenda-span 'week)
+               (org-agenda-start-on-weekday 1)))))
+    ("l" "Agenda Weekly with Log"
+     ((agenda ""
+              ((org-agenda-span 'week)
+               (org-agenda-start-on-weekday 1)
+               (org-agenda-archives-mode t)
+               (org-agenda-start-with-log-mode '(closed))
+               (org-agenda-show-log 'logcheck)
+               (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))))))
+    ("r" . "Review")
+    ("rc" "Close open NEXT Actions and WAIT"
+     ((org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
+                          (not (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag))
+                          (not (agile-gtd-my-habit))
+                          (or (not (deadline))
+                              (deadline :to "+30")
+                              (ancestors (deadline :to "+30")))
+                          (or (not (scheduled))
+                              (scheduled :to "+30")))
+                    ((org-super-agenda-header-separator "")
+                     (org-deadline-warning-days 30)
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
+                     (org-ql-block-header "Something to do")))
+      (org-ql-block (agile-gtd-agenda-query-stuck-projects)
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+    ("rs" "Stuck Projects"
+     ((org-ql-block '(agile-gtd-stuck-proj)
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+    ("rt" "Tangling TODOs"
+     ((org-ql-block '(agile-gtd-tangling)
+                    ((org-ql-block-header "Tangling TODOs")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+    ("rS" "SOMEDAY"
+     ((org-ql-block `(and (todo ,(agile-gtd--project-keyword))
+                          (or (and (priority <= (char-to-string ,(agile-gtd--current-backlog-priority-threshold)))
+                                   (not (ancestors (priority > (char-to-string ,(agile-gtd--current-backlog-priority-threshold)))))
+                                   (not (children (priority > (char-to-string ,(agile-gtd--current-backlog-priority-threshold))))))
+                              (tags ,agile-gtd-someday-tag)
+                              (children (and (todo ,@(agile-gtd--action-keywords))
+                                             (tags ,agile-gtd-someday-tag))))
+                          (not (scheduled))
+                          (not (habit))
+                          (not (deadline)))
+                    ((org-ql-block-header "Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(list (list :tag agile-gtd-someday-tag :order 10)
+                                                     '(:auto-priority)))))))
+    ("p" . "Private")
+    ("pb" "Backlog"
+     ((org-ql-block '(and (or (todo "PROJ")
+                              (agile-gtd-standalone-next))
+                          (not (agile-gtd-primary-work))
+                          (not (agile-gtd-my-habit)))
+                    ((org-ql-block-header "Backlog")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
+                     (org-dim-blocked-tasks t)))))
+    ("ps" "Stuck Projects"
+     ((org-ql-block '(and (agile-gtd-stuck-proj)
+                          (not (agile-gtd-primary-work)))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ("w" . "Work")
+    ("ww" "Work Agenda Primary"
+     ((org-ql-block '(and (agile-gtd-primary-work)
+                          (not (done))
+                          (or (agile-gtd-my-habit)
+                              (deadline :to today)
+                              (scheduled :to today)
+                              (ts-active :on today)))
+                    ((org-ql-block-header "Today")
+                     (org-super-agenda-groups ,(agile-gtd--today-groups))))
+      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
+                          (not ,(agile-gtd--someday-habit))
+                          (not (ancestors (deadline :to 0)))
+                          (not (deadline :to 0))
+                          (not (scheduled))
+                          (agile-gtd-primary-work))
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
+      (org-ql-block '(and (agile-gtd-stuck-proj)
+                          (agile-gtd-primary-work))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ("wa" "Work Agenda (not primary)"
+     ((org-ql-block '(and (and (agile-gtd-work)
+                               (not (agile-gtd-primary-work)))
+                          (not (done))
+                          (or (agile-gtd-my-habit)
+                              (deadline :to today)
+                              (scheduled :to today)
+                              (ts-active :on today)))
+                    ((org-ql-block-header "Today")
+                     (org-super-agenda-groups ,(agile-gtd--today-groups))))
+      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
+                          ,(agile-gtd--prio-deadline>= org-priority-default)
+                          (not ,(agile-gtd--someday-habit))
+                          (not (ancestors (deadline :to 0)))
+                          (not (deadline :to 0))
+                          (not (scheduled))
+                          (and (agile-gtd-work)
+                               (not (agile-gtd-primary-work))))
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
+      (org-ql-block '(and (agile-gtd-stuck-proj)
+                          (and (agile-gtd-work)
+                               (not (agile-gtd-primary-work))))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ("wb" "Proxmox Backlog"
+     ((org-ql-block '(and (or (todo "PROJ")
+                              (agile-gtd-standalone-next))
+                          (agile-gtd-primary-work))
+                    ((org-ql-block-header "Backlog")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
+                     (org-dim-blocked-tasks t)))
+      (org-ql-block '(and (agile-gtd-stuck-proj)
+                          (not (agile-gtd-primary-work)))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ("wB" "Backlog #work w/ Primary Work"
+     ((org-ql-block '(and (or (todo "PROJ")
+                              (agile-gtd-standalone-next))
+                          (and (agile-gtd-work)
+                               (not (agile-gtd-primary-work))))
+                    ((org-ql-block-header "Backlog")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
+                     (org-dim-blocked-tasks t)))))
+    ("ws" "Stuck Projects"
+     ((org-ql-block '(and (agile-gtd-stuck-proj)
+                          (agile-gtd-work))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))))
+
+(defun agile-gtd--agenda-someday-p ()
+  "Return non-nil when the current agenda item is tagged as someday."
+  (-find (-partial #'string= agile-gtd-someday-tag)
+         (org-get-at-bol 'tags)))
+
+(defun agile-gtd-agenda-set-someday (&optional do-schedule)
+  "Mark the current agenda entry as SOMEDAY.
+
+With prefix argument DO-SCHEDULE, schedule it as a tickler."
+  (interactive "P")
+  (org-agenda-set-tags agile-gtd-someday-tag 'on)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule (unless do-schedule '(4))))
+
+(defun agile-gtd-agenda-set-tickler ()
+  "Mark the current agenda entry as a tickler."
+  (interactive)
+  (agile-gtd-agenda-set-someday '(4)))
+
+(defun agile-gtd-agenda-remove-someday ()
+  "Remove SOMEDAY and scheduling from the current agenda item."
+  (interactive)
+  (unless (agile-gtd--agenda-someday-p)
+    (error "Element has no %s tag" agile-gtd-someday-tag))
+  (org-agenda-set-tags agile-gtd-someday-tag 'off)
+  (ignore-error user-error
+    (org-agenda-priority 'remove))
+  (org-agenda-deadline '(4))
+  (org-agenda-schedule '(4)))
+
+(defun agile-gtd-agenda-toggle-someday (&optional do-schedule)
+  "Toggle SOMEDAY status for the current agenda item.
+
+With prefix argument DO-SCHEDULE, create a tickler."
+  (interactive "P")
+  (if (agile-gtd--agenda-someday-p)
+      (agile-gtd-agenda-remove-someday)
+    (agile-gtd-agenda-set-someday (when do-schedule '(4)))))
+
+(defun agile-gtd-agenda-toggle-tickler ()
+  "Toggle SOMEDAY and ask for a tickler schedule."
+  (interactive)
+  (agile-gtd-agenda-toggle-someday '(4)))
+
+(defun agile-gtd-agenda-show-priorities (&optional priority)
+  "Show agenda items up to PRIORITY."
+  (interactive "P")
+  (let ((new-priority
+         (cond ((equal priority '(4))
+                (max agile-gtd-priority-highest (1- agile-gtd-priority-default)))
+               (priority)
+               (t (upcase (read-char (format "Show up to priority (%c-%c): "
+                                           org-priority-highest
+                                           org-priority-lowest)))))))
+    (unless (agile-gtd--priority-in-range-p new-priority)
+      (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
+    (setq agile-gtd-max-priority-group new-priority)
+    (agile-gtd-refresh)
+    (message "Showing up to priority %c" new-priority)
+    (org-agenda-redo-all)))
+
+(defun agile-gtd-agenda-reset-show-priorities ()
+  "Reset the agenda priority filter."
+  (interactive)
+  (setq agile-gtd-max-priority-group nil)
+  (agile-gtd-refresh)
+  (org-agenda-redo-all))
+
+(defun agile-gtd-agenda-show-more-priorities ()
+  "Expand the agenda to include lower-priority items."
+  (interactive)
+  (setq agile-gtd-max-priority-group
+        (min (1+ (agile-gtd--current-max-priority-group))
+             agile-gtd-priority-lowest))
+  (agile-gtd-refresh)
+  (org-agenda-redo-all))
+
+(defun agile-gtd-agenda-show-less-priorities ()
+  "Restrict the agenda to higher-priority items."
+  (interactive)
+  (setq agile-gtd-max-priority-group
+        (max (1- (agile-gtd--current-max-priority-group))
+             agile-gtd-priority-highest))
+  (agile-gtd-refresh)
+  (org-agenda-redo-all))
+
+(org-ql-defpred agile-gtd-tickler ()
+  "Match entries in the tickler."
+  :normalizers ((`(,predicate-names)
+                 (rec `(and (todo)
+                            (tags-local ,agile-gtd-someday-tag)
+                            (scheduled)))))
+  :preambles ((`(,predicate-names)
+               (rec `(and (todo)
+                          (tags-local ,agile-gtd-someday-tag)
+                          (scheduled))))))
+
+(org-ql-defpred agile-gtd-tickler-proj ()
+  "Match projects in the tickler and pure tickler subtrees."
+  :normalizers ((`(,predicate-names)
+                 (rec `(and (todo ,(agile-gtd--project-keyword))
+                            (or (agile-gtd-tickler)
+                                (and (children (agile-gtd-tickler))
+                                     (not (children (and (todo ,@(agile-gtd--action-keywords))
+                                                         (not (agile-gtd-tickler)))))))))))
+  :preambles ((`(,predicate-names)
+               (rec `(and (todo ,(agile-gtd--project-keyword))
+                          (or (agile-gtd-tickler)
+                              (and (children (agile-gtd-tickler))
+                                   (not (children (and (todo ,@(agile-gtd--action-keywords))
+                                                       (not (agile-gtd-tickler))))))))))))
+
+(org-ql-defpred agile-gtd-work ()
+  "Match work related entries."
+  :normalizers ((`(,predicate-names)
+                 (rec `(tags ,agile-gtd-work-tag))))
+  :preambles ((`(,predicate-names)
+               (rec `(tags ,agile-gtd-work-tag)))))
+
+(org-ql-defpred agile-gtd-primary-work ()
+  "Match primary work entries."
+  :normalizers ((`(,predicate-names)
+                 (rec `(tags ,@agile-gtd-primary-work-tags))))
+  :preambles ((`(,predicate-names)
+               (rec `(tags ,@agile-gtd-primary-work-tags)))))
+
+(org-ql-defpred agile-gtd-private ()
+  "Match private entries."
+  :normalizers ((`(,predicate-names)
+                 (rec `(not (tags ,agile-gtd-work-tag)))))
+  :preambles ((`(,predicate-names)
+               (rec `(not (tags ,agile-gtd-work-tag))))))
+
+(org-ql-defpred (agile-gtd-stuck-proj agile-gtd-stuck) ()
+  "Match stuck projects."
+  :normalizers ((`(,predicate-names)
+                 (rec `(and (todo ,(agile-gtd--project-keyword))
+                            (not (tags ,agile-gtd-someday-tag))
+                            (not (children (todo ,@(agile-gtd--action-keywords))))
+                            (not (agile-gtd-tickler-proj))))))
+  :preambles ((`(,predicate-names)
+               (rec `(and (todo ,(agile-gtd--project-keyword))
+                          (not (tags ,agile-gtd-someday-tag))
+                          (not (children (todo ,@(agile-gtd--action-keywords))))
+                          (not (agile-gtd-tickler-proj)))))))
+
+(org-ql-defpred agile-gtd-standalone-next ()
+  "Match standalone NEXT and WAIT items."
+  :normalizers ((`(,predicate-names)
+                 (rec `(and (todo ,@(agile-gtd--action-keywords))
+                            (not (ancestors (or (todo ,(agile-gtd--project-keyword))
+                                                (done))))))))
+  :preambles ((`(,predicate-names)
+               (rec `(and (todo ,@(agile-gtd--action-keywords))
+                          (not (ancestors (or (todo ,(agile-gtd--project-keyword))
+                                              (done)))))))))
+
+(org-ql-defpred agile-gtd-tangling ()
+  "Match actions whose ancestors are done."
+  :normalizers ((`(,predicate-names)
+                 (rec '(and (todo)
+                            (ancestors (done))))))
+  :preambles ((`(,predicate-names)
+               (rec '(and (todo)
+                          (ancestors (done)))))))
+
+(org-ql-defpred agile-gtd-someday ()
+  "Match SOMEDAY items."
+  :normalizers ((`(,predicate-names)
+                 (rec `(tags ,agile-gtd-someday-tag))))
+  :preambles ((`(,predicate-names)
+               (rec `(tags ,agile-gtd-someday-tag)))))
+
+(org-ql-defpred agile-gtd-my-habit ()
+  "Match habits by tag or style."
+  :normalizers ((`(,predicate-names)
+                 (rec `(or (tags ,agile-gtd-habit-tag)
+                           (habit)))))
+  :preambles ((`(,predicate-names)
+               (rec `(or (tags ,agile-gtd-habit-tag)
+                         (habit))))))
+
+(defun agile-gtd--apply-priorities ()
+  "Apply Agile GTD priority settings."
+  (setq org-priority-highest agile-gtd-priority-highest
+        org-priority-default agile-gtd-priority-default
+        org-priority-lowest agile-gtd-priority-lowest
+        org-priority-faces (agile-gtd--priority-faces)))
+
+(defun agile-gtd--apply-org-modern-visuals ()
+  "Apply Agile GTD org-modern visuals."
+  (when agile-gtd-enable-org-modern-visuals
+    (with-eval-after-load 'org-modern
+      (setq org-modern-priority (agile-gtd--priority-symbols)))))
+
+(defun agile-gtd--apply-todo-keywords ()
+  "Apply Agile GTD TODO keywords and faces."
+  (setq org-todo-keywords agile-gtd-todo-keywords
+        org-todo-repeat-to-state agile-gtd-todo-repeat-to-state
+        org-todo-keyword-faces
+        '(("[-]" . agile-gtd-todo-active)
+          ("NEXT" . agile-gtd-todo-next)
+          ("WAIT" . agile-gtd-todo-onhold)
+          ("IDEA" . agile-gtd-todo-idea)
+          ("PROJ" . agile-gtd-todo-project)
+          ("EPIC" . agile-gtd-todo-epic)
+          ("KILL" . agile-gtd-todo-cancel))))
+
+(defun agile-gtd--apply-tags ()
+  "Apply Agile GTD workflow tags."
+  (setq org-tag-alist
+        (append
+         (cl-remove-if (lambda (entry)
+                         (and (consp entry)
+                              (stringp (car entry))
+                              (member (car entry) (agile-gtd--workflow-tag-names))))
+                       org-tag-alist)
+         (agile-gtd--workflow-tag-alist))))
+
+(defun agile-gtd--apply-refile-targets ()
+  "Apply Agile GTD refile target settings."
+  (when agile-gtd-enable-refile-targets
+    (setq org-refile-targets '((nil :maxlevel . 9)
+                               (org-agenda-files :maxlevel . 4)
+                               (agile-gtd--someday-files :maxlevel . 4))
+          org-refile-use-outline-path 'buffer-name
+          org-outline-path-complete-in-steps nil
+          org-refile-allow-creating-parent-nodes 'confirm)))
+
+(defun agile-gtd--apply-agenda-files ()
+  "Apply Agile GTD agenda file settings."
+  (when agile-gtd-enable-agenda-files
+    (setq org-agenda-diary-file (agile-gtd--expand-org-path agile-gtd-diary-file)
+          org-agenda-files (agile-gtd--agenda-files))))
+
+(defun agile-gtd--apply-capture-templates ()
+  "Apply Agile GTD capture templates."
+  (setq org-capture-templates
+        (agile-gtd--replace-by-key org-capture-templates
+                                   (agile-gtd--capture-templates))))
+
+(defun agile-gtd--apply-agenda-commands ()
+  "Apply Agile GTD agenda commands and groups."
+  (setq org-stuck-projects (agile-gtd--stuck-projects-setting)
+        org-agenda-custom-commands
+        (agile-gtd--replace-by-key org-agenda-custom-commands
+                                   (agile-gtd--agenda-custom-commands)))
+  (org-super-agenda-mode 1)
+  (setq org-super-agenda-header-separator "\n"))
+
+(defun agile-gtd-refresh ()
+  "Refresh all derived Agile GTD configuration."
+  (interactive)
+  (agile-gtd--validate-configuration)
+  (agile-gtd--apply-priorities)
+  (agile-gtd--apply-org-modern-visuals)
+  (agile-gtd--apply-todo-keywords)
+  (agile-gtd--apply-tags)
+  (agile-gtd--apply-agenda-files)
+  (agile-gtd--apply-refile-targets)
+  (agile-gtd--apply-capture-templates)
+  (agile-gtd--apply-agenda-commands))
+
+(defun agile-gtd-enable ()
+  "Enable Agile GTD for the current Org configuration."
+  (interactive)
+  (agile-gtd-refresh))
+
+(provide 'agile-gtd)
+
+;;; agile-gtd.el ends here

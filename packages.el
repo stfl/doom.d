@@ -13,9 +13,6 @@
 (package! ob-mermaid
   :disable t)
 
-(package! org-jira
-  :disable t)
-
 ;; (package! org-pandoc-import
 ;;   :recipe (:host github
 ;;            :repo "tecosaur/org-pandoc-import"

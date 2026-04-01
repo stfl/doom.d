@@ -116,6 +116,9 @@
 
 (setq org-directory "~/.org")
 
+(add-to-list 'load-path (expand-file-name "packages/agile-gtd" doom-user-dir))
+(require 'agile-gtd)
+
 (after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
@@ -147,39 +150,17 @@
     :slant normal :weight regular :underline nil :overline nil :strike-through nil :box nil :inverse-video nil)
   `(org-column-title :height 150 :background ,(doom-color 'base4) :weight bold :underline t))
 
-(after! org-modern
-  (setq! org-modern-priority
-         '((?A . "⛔")
-           (?B . "𐱄")
-           (?C . "▲")
-           (?D . "ᐱ")
-           (?E . "Ⲷ")
-           (?F . "ᐯ")
-           (?G . "▼")
-           (?H . "𐠠")
-           (?I . "҉"))
-         org-priority-faces
-         '((?A :foreground "red3" :weight bold :height .95)
-           (?B :foreground "OrangeRed2" :weight bold)
-           (?C :foreground "DarkOrange2" :weight bold)
-           (?D :foreground "gold3" :weight bold)
-           (?E :foreground "OliveDrab1" :weight bold)
-           (?F :foreground "SpringGreen3" :weight bold)
-           (?G :foreground "cyan4" :weight bold)
-           (?H :foreground "DeepSkyBlue4" :weight bold)
-           (?I :foreground "LightSteelBlue3" :weight bold))))
-
 (after! org
-  (setq! org-tag-faces `(("LASTMILE" . (:foreground ,(doom-color 'red) :strike-through t))
-                         ("HABIT" . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         ("SOMEDAY" . (:slant italic :weight bold))
+  (setq! org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
+                         (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                         (,agile-gtd-someday-tag . (:slant italic :weight bold))
                          ;; ("finance" . (:foreground "goldenrod"))
                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
                          ("#inbox" . (:strike-through t))
                          ("3datax" . (:foreground ,(doom-color 'green)))
                          ("oebb" . (:foreground ,(doom-color 'green)))
                          ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
-                         ("#work" . (:foreground ,(doom-color 'blue)))
+                         (,agile-gtd-work-tag . (:foreground ,(doom-color 'blue)))
                          ;; ("#work" . (:foreground ,(doom-color 'blue)))
                          ("@ikea" . (:foreground ,(doom-color 'yellow)))
                          ("@amazon" . (:foreground ,(doom-color 'yellow)))
@@ -228,21 +209,6 @@
       "c" #'org-cancel-repeater
       )
 
-(after! org
-  (setq org-priority-default ?E)
-  (setq org-priority-lowest ?I))
-
-(defun stfl/build-my-someday-files ()
-  (file-expand-wildcards (doom-path org-directory "gtd/someday/*.org")))
-
-(after! org
-  (setq org-refile-targets '((nil :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 4)
-                             (stfl/build-my-someday-files :maxlevel . 4))
-        org-refile-use-outline-path 'buffer-name
-        org-outline-path-complete-in-steps nil
-        org-refile-allow-creating-parent-nodes 'confirm))
-
 (defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
 (defun stfl/refile-to-roam ()
@@ -273,41 +239,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-(after! org
-  (setq org-capture-templates
-        `(("n" "capture to inbox" entry
-           (file+headline ,stfl/org-gtd-inbox-absolute "Inbox")
-           (file ,(doom-path doom-user-dir "templates/template-inbox.org"))
-           :empty-lines-after 1)
-          ("p" "Project" entry
-           (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-user-dir "templates/template-projects.org"))
-           :empty-lines-after 1)
-          ("s" "scheduled" entry
-           (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-user-dir "templates/template-scheduled.org"))
-           :empty-lines-after 1)
-          ("v" "Versicherung" entry
-           (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
-           (function stfl/org-capture-template-versicherung)
-           :root "~/Documents/Finanzielles/Einreichung Versicherung")
-          ("S" "deadline" entry
-           (file ,stfl/org-gtd-inbox-absolute)
-           (file ,(doom-path doom-user-dir "templates/template-deadline.org"))
-           :empty-lines-after 1)
-          ("P" "Protocol" entry
-           (file ,stfl/org-gtd-inbox-absolute)
-           "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?"
-           :empty-lines-after 1)
-          ("L" "Protocol Link" entry
-           (file ,stfl/org-gtd-inbox-absolute)
-           "* [[%:link][%:description]]\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-           :empty-lines-after 1)
-          ("h" "Haushalt")
-          ("hw" "Wäsche" entry
-           (file+headline ,stfl/org-gtd-todo-absolute "Haushalt")
-           (file ,(doom-path doom-user-dir "templates/template-wäsche.org")))
-          )))
+(setq agile-gtd-primary-work-tags '("3datax" "@3datax" "#3datax"
+                                    "oebb" "@oebb" "#oebb"
+                                    "origina")
+      agile-gtd-project-files '("emacs.org"
+                                "freelance.org"
+                                "geschenke.org"
+                                "media.org"
+                                "projects.org"
+                                "3datax.org"
+                                "pulswerk.org"
+                                 "versicherung.org"
+                                 "ikea.org"
+                                 "oebb.org"
+                                 "origina.org"
+                                 "cafe-glas.org"))
 
 (after! org-roam
   (setq! org-roam-capture-templates
@@ -463,7 +409,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
   (defun stfl/org-clock-export (project)
     (interactive
-     (list (completing-read "Select project: " stfl/org-gtd-projects)))
+     (list (completing-read "Select project: " agile-gtd-project-files)))
     (let* ((org-agenda-files (list (doom-path org-directory project)
                                    (doom-path org-directory "archive" project)))
            (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
@@ -511,39 +457,11 @@ Org-mode properties drawer already, keep the headline and don’t insert
       :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
       )
 
-(after! org
-  (setq! org-todo-keywords
-         '((sequence
-            "TODO(t)"  ; A task that needs doing & is ready to do
-            "NEXT(n)"  ; Task is next to be worked on.
-            "WAIT(w)"  ; Something external is holding up this task
-            "PROJ(p)"  ; Project with multiple task items.
-            "EPIC(e)"  ; A set of Projects
-            "|"
-            "DONE(d@)"  ; Task successfully completed
-            "IDEA(i)"   ; An unconfirmed and unapproved task or notion
-            "KILL(k@)")) ; Task was cancelled, aborted or is no longer applicable
-         org-todo-repeat-to-state "NEXT"))
-
-(custom-declare-face '+org-todo-active  '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-idea    '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
-(custom-declare-face '+org-todo-project '((t (:inherit (bold font-lock-doc-face org-todo)))) "")
-(custom-declare-face '+org-todo-epic    '((t (:inherit (bold org-cite org-todo)))) "")
-(custom-declare-face '+org-todo-onhold  '((t (:inherit (bold warning org-todo)))) "")
-(custom-declare-face '+org-todo-next    '((t (:inherit (bold font-lock-keyword-face org-todo)))) "")
+;; TODO keywords are configured in agile-gtd.
 
 (custom-set-faces!
-  `(+org-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
-  `(+org-todo-idea   :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
-
-(after! org
-  (setq! org-todo-keyword-faces
-         '(("[-]"  . +org-todo-active)
-           ("NEXT" . +org-todo-next)
-           ("WAIT" . +org-todo-onhold)
-           ("IDEA" . +org-todo-idea)
-           ("PROJ" . +org-todo-project)
-           ("EPIC" . +org-todo-epic))))
+  `(agile-gtd-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
+  `(agile-gtd-todo-idea :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
 
 (after! org (setq org-log-state-notes-insert-after-drawers nil))
 
@@ -579,26 +497,26 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         ;; ("@phone" . ?f)
                         (:endgrouptag)
                         (:startgrouptag)
-                        ("Process" . nil)
-                        (:grouptags)
-                        ("SOMEDAY" . ?S)
-                        ;; ("REFILE" . ?R)
-                        ("HABIT" . ?H)
-                        ("LASTMILE" . ?L)
-                        ("DRAG" . ?D)
-                        (:endgrouptag)
-                        (:startgrouptag)
                         ("Areas" . nil)
                         (:grouptags)
-                        ("#work" . ?$)
-                        ("#personal" . ?_)
                         ("emacs" . ?-)
-                        )))
+                        (:endgrouptag)
+                        ))
+  (agile-gtd-enable)
+  (setq org-capture-templates
+        (append
+         (cl-remove-if (lambda (template)
+                         (equal "v" (car-safe template)))
+                       org-capture-templates)
+         `(("v" "Versicherung" entry
+            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
+            (function stfl/org-capture-template-versicherung)
+            :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 
 (after! org-roam
   (setq! org-roam-directory org-directory
          org-roam-db-location (doom-path doom-local-dir "roam.db")
-         org-roam-file-exclude-regexp "\.org/\(?jira\\|\.stversions\)/"))
+         org-roam-file-exclude-regexp "\\.org/\\(?:jira\\|\\.stversions\\)/"))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
@@ -665,67 +583,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
-
-(use-package! org-jira
-  :after org
-  :init (setq org-jira-working-dir (doom-path org-directory "jira/")
-              jiralib-url "https://pulswerk.atlassian.net")
-  ;; (defconst org-jira-progress-issue-flow
-  ;;     '(("To Do" . "In Progress"
-  ;;     ("In Progress" . "Done"))))
-  :config
-  (setq org-jira-jira-status-to-org-keyword-alist '(("To Do" . "TODO")
-                                                    ("Planned" . "NEXT")
-                                                    ("In Progress" . "NEXT")
-                                                    ("Staging" . "DONE")
-                                                    ("Ready" . "DONE")
-                                                    ("Done" . "DONE")
-                                                    ("Released" . "DONE"))
-        org-jira-priority-to-org-priority-alist (list (cons "Highest" ?A)
-                                                      (cons "High" ?C)
-                                                      ;; (cons "Medium" ?E)  ;; no org priority for /default/
-                                                      (cons "Low" ?E)
-                                                      (cons "Lowest" ?F))
-
-        org-jira-custom-jqls '((:jql "
-assignee='Stefan Lendl'
-AND (Sprint in openSprints()
-     OR (Project = MD
-         AND status != Done))
-ORDER BY priority, created DESC
-"
-           :limit 300
-           :filename "active")))
-
-  (map!
-   :map org-mode-map
-   :localleader
-   :prefix ("j" . "Jira")
-   :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql
-   "n" #'org-jira-create-issue
-   "t" #'org-jira-progress-issue
-   "T" #'org-jira-progress-issue-next
-   "a" #'org-jira-assign-issue
-   "r" #'org-jira-refresh-issue
-   "b" #'org-jira-refresh-issues-in-buffer
-   "u" #'org-jira-update-issue
-   "S" #'org-jira-create-subtask
-   "s" #'org-jira-get-subtasks
-   "N" #'org-jira-todo-to-jira
-   (:prefix ("w" . "Worklogs")
-    "c" #'org-jira-update-worklogs-from-org-clocks
-    "u" #'org-jira-update-worklogs
-    "i" #'org-jira-update-worklogs-for-issue)
-   (:prefix ("c" . "Comments")
-    :desc "Add Comment" "c" #'org-jira-add-comment
-    :desc "Update Comment" "u" #'org-jira-update-comment))
-
-  (map!
-   :map org-jira-map
-   :leader
-   (:prefix ("n" . "notes")
-    (:prefix ("j" . "sync")
-     :desc "Get issues from JQL" "j" #'org-jira-get-issues-from-custom-jql))))
 
 (add-transient-hook! #'org-babel-execute-src-block
   (require 'ob-async))
@@ -897,17 +754,17 @@ Not added when either:
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
       :desc "Prioity down" "d" #'org-agenda-priority-down
-      :desc "Someday/Maybe toggle" "s" #'stfl/org-agenda-toggle-someday
-      :desc "Add to Someday/Maybe" "S" #'stfl/org-agenda-set-someday
-      :desc "Tickler toggle" "t" #'stfl/org-agenda-toggle-tickler
-      :desc "Add to Tickler" "T" #'stfl/org-agenda-set-tickler
-      :desc "Remove Someday/Maybe" "r" #'stfl/org-agenda-remove-someday
+      :desc "Someday/Maybe toggle" "s" #'agile-gtd-agenda-toggle-someday
+      :desc "Add to Someday/Maybe" "S" #'agile-gtd-agenda-set-someday
+      :desc "Tickler toggle" "t" #'agile-gtd-agenda-toggle-tickler
+      :desc "Add to Tickler" "T" #'agile-gtd-agenda-set-tickler
+      :desc "Remove Someday/Maybe" "r" #'agile-gtd-agenda-remove-someday
 
       :prefix ("v" . "View up to priority")
-      "v" #'stfl/org-agenda-show-priorities
-      "l" #'stfl/org-agenda-show-less-priorities
-      "m" #'stfl/org-agenda-show-more-priorities
-      "r" #'stfl/org-agenda-reset-show-priorities
+      "v" #'agile-gtd-agenda-show-priorities
+      "l" #'agile-gtd-agenda-show-less-priorities
+      "m" #'agile-gtd-agenda-show-more-priorities
+      "r" #'agile-gtd-agenda-reset-show-priorities
       )
 
 (map! :after org-ql
@@ -944,694 +801,16 @@ Not added when either:
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-stuck-projects '("-SOMEDAY/+PROJ" ("NEXT" "WAIT") ("WAITING") "")
-       org-agenda-sticky t  ;; q key will NOT bury agenda buffers
-       )
-
-(setq stfl/org-agenda-primary-work-tags '("3datax" "@3datax" "#3datax"
-                                          "oebb" "@oebb" "#oebb"
-                                          "origina"))
+       org-agenda-sticky t)
 
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
-(setq stfl/proxmox-support-dir "~/Support/"
-      stfl/org-gtd-inbox "inbox.org"
-      stfl/org-gtd-inbox-orgzly "inbox-orgzly.org"
-      stfl/org-gtd-inbox-absolute (doom-path org-directory stfl/org-gtd-inbox)
-      stfl/org-gtd-todo "todo.org"
-      stfl/org-gtd-todo-absolute (doom-path org-directory stfl/org-gtd-todo)
-      ;; stfl/org-gtd-projects "gtd/projects/"
-      stfl/org-gtd-projects '("emacs.org"
-                              "freelance.org"
-                              "geschenke.org"
-                              "media.org"
-                              "projects.org"
-                              "3datax.org"
-                              "pulswerk.org"
-                              "versicherung.org"
-                              "ikea.org"
-                              "oebb.org"
-                              "origina.org"
-                              "cafe-glas.org")
-      stfl/org-roam-absolute (doom-path org-directory "roam/"))
+(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 
-(after! org
-  (setq org-agenda-diary-file (doom-path org-directory "diary.org")
-        org-agenda-files `(,stfl/org-gtd-inbox
-                           ,stfl/org-gtd-inbox-orgzly
-                           ,stfl/org-gtd-todo
-                           ,@stfl/org-gtd-projects
-                           ;; ,@(file-expand-wildcards (doom-path stfl/proxmox-support-dir "**/*.org"))i
-                           )))
-
-(after! org
-
-(setq stfl/agenda-backlog-prio-threshold (+ 2 org-priority-default))
-
-(setq-default stfl/agenda-max-prio-group ?D)
-;; Priority level until the backlog in today-agenda is shown!
-
-(setq stfl/agenda-deadline-fib-offset 3)
-
-(setq org-agenda-custom-commands
-      `(
-        ;; ("a" "Private Agenda Today"
-        ;;  (,(stfl/agenda-day)
-        ;;   (org-ql-block (stfl/agenda-query-actions-prio-higher stfl/agenda-max-prio-group)
-        ;;                 ((org-ql-block-header "Next Actions")
-        ;;                  ;; (org-agenda-block-separator "\n")
-        ;;                  ;; (org-super-agenda-header-separator "")
-        ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)))
-        ;;   (org-ql-block ((and (stuck-proj)
-        ;;                       (private))
-        ;;                  ((org-ql-block-header "Stuck Projects")
-        ;;                   ;; (org-super-agenda-header-separator "")
-        ;;                   (org-super-agenda-groups stfl/priority-groups)
-        ;;                   )))))
-        ("i" "Inbox"
-         ((org-ql-block '(and (not (done))
-                              (tags "#inbox" "inbox"))
-                        ((org-ql-block-header "Inbox")
-                         (org-super-agenda-groups '((:auto-property "CREATED")))))))
-        ("a" "Private Agenda Today"
-         (,(stfl/agenda-day)
-          (org-ql-block `(and (todo "NEXT" "WAIT")
-                              ,(prio-deadline>= stfl/agenda-max-prio-group)
-                              (not ,(someday-habit))
-                              (not (ancestors (deadline :to 0)))
-                              (not (deadline :to 0))
-                              (not (scheduled))
-                              (not (primary-work)))
-                        ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block '(and (stuck-proj)
-                              (not (primary-work)))
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-groups stfl/priority-groups)))))
-        ("A" "Agenda Weekly"
-         ((agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)))))
-        ("l" "Agenda Weekly with Log"
-         ((agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-on-weekday 1)
-                   (org-agenda-archives-mode t)
-                   (org-agenda-start-with-log-mode '(closed))
-                   (org-agenda-show-log 'logcheck)
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^.*DONE "))))))
-        ("r" . "Review")
-        ("rc" "Close open NEXT Actions and WAIT"
-         ((org-ql-block '(and (todo "NEXT" "WAIT")
-                              (not (tags "SOMEDAY" "HABIT" "org_jira"))
-                              (not (my-habit))
-                              (or (not (deadline))
-                                  (deadline :to "+30")
-                                  (ancestors (deadline :to "+30")))
-                              (or (not (scheduled))
-                                  (scheduled :to "+30")))
-                        ((org-super-agenda-header-separator "")
-                         (org-deadline-warning-days 30)
-                         (stfl/agenda-max-prio-group org-priority-lowest)
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-ql-block-header "Something to do")))
-          (org-ql-block (stfl/agenda-query-stuck-projects)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))))
-        ("rs" "Stuck Projects"
-         ((org-ql-block '(stuck-proj)
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))))
-        ("rt" "Tangling TODOs"
-         ((org-ql-block '(tangling)
-                        ((org-ql-block-header "Tangling TODOs")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/priority-groups)))))
-        ("rS" "SOMEDAY"
-         ((org-ql-block '(and (todo "PROJ")
-                              (or (and (priority <= (char-to-string stfl/agenda-backlog-prio-threshold))
-                                       (not (ancestors (priority > (char-to-string stfl/agenda-backlog-prio-threshold))))
-                                       (not (children (priority > (char-to-string stfl/agenda-backlog-prio-threshold)))))
-                                  (tags "SOMEDAY")
-                                  (children (and (todo "NEXT" "WAIT")
-                                                 (tags "SOMEDAY"))))
-                              (not (scheduled))
-                              (not (habit))
-                              (not (deadline)))
-                        ((org-ql-block-header "Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups '((:tag "SOMEDAY" :order 10)
-                                                    (:auto-priority)
-                                                    ))))))
-        ("p" . "Private")
-        ("pb" "Backlog"
-         ((org-ql-block '(and (or (todo "PROJ")
-                                  (standalone-next))
-                              (not (primary-work))
-                              (not (my-habit)))
-                        ((org-ql-block-header "Backlog")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-dim-blocked-tasks t)))))
-        ("ps" "Stuck Projects"
-         (org-ql-block ((and (stuck-proj)
-                             (not (primary-work)))
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("w" . "Work")
-        ("ww" "Work Agenda Primary"
-         ((org-ql-block '(and (primary-work)
-                              (not (done))
-                              (or (my-habit)
-                                  (deadline :to today)
-                                  (scheduled :to today)
-                                  (ts-active :on today)))
-                        ((org-ql-block-header "Today")
-                         (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
-          (org-ql-block `(and (todo "NEXT" "WAIT")
-                              ;; ,(prio-deadline>= org-priority-default)
-                              (not ,(someday-habit))
-                              (not (ancestors (deadline :to 0)))
-                              (not (deadline :to 0))
-                              (not (scheduled))
-                              (primary-work))
-                        ((org-ql-block-header "Next Actions")
-                         (stfl/agenda-max-prio-group org-default-priority)
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block '(and (stuck-proj)
-                              (primary-work))
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("wa" "Work Agenda (not primary)"
-         ((org-ql-block '(and (and (work) (not (primary-work)))
-                              (not (done))
-                              (or (my-habit)
-                                  (deadline :to today)
-                                  (scheduled :to today)
-                                  (ts-active :on today)))
-                        ((org-ql-block-header "Today")
-                         (org-super-agenda-groups stfl/org-super-agenda-today-groups)))
-          (org-ql-block `(and (todo "NEXT" "WAIT")
-                              ,(prio-deadline>= org-priority-default)
-                              (not ,(someday-habit))
-                              (not (ancestors (deadline :to 0)))
-                              (not (deadline :to 0))
-                              (not (scheduled))
-                              (and (work) (not (primary-work))))
-                        ((org-ql-block-header "Next Actions")
-                         (stfl/agenda-max-prio-group org-default-priority)
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))
-          (org-ql-block '(and (stuck-proj)
-                              (and (work) (not (primary-work))))
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ("wb" "Proxmox Backlog"
-         ((org-ql-block '(and (or (todo "PROJ")
-                                  (standalone-next))
-                              (primary-work))
-                        ((org-ql-block-header "Backlog")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-dim-blocked-tasks t)))
-          (org-ql-block '(and (stuck-proj)
-                              (not (primary-work))
-                              ((org-ql-block-header "Stuck Projects")
-                               (org-super-agenda-header-separator "")
-                               (org-super-agenda-groups stfl/ancestor-priority-groups))))))
-        ;; ("wp" "Backlog Primary Work"
-        ;;  ((org-ql-block '(and (or (todo "PROJ")
-        ;;                           (standalone-next))
-        ;;                       (primary-work))
-        ;;                 ((org-ql-block-header "Backlog")
-        ;;                  (org-super-agenda-groups stfl/ancestor-priority-groups)
-        ;;                  (org-dim-blocked-tasks t)))))
-        ("wB" "Backlog #work w/ Primary Work"
-         ((org-ql-block '(and (or (todo "PROJ")
-                                  (standalone-next))
-                              (and (work)
-                                   (not (primary-work))))
-                        ((org-ql-block-header "Backlog")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)
-                         (org-dim-blocked-tasks t)))))
-        ("ws" "Stuck Projects"
-         (org-ql-block ((and (stuck-proj)
-                             (work))
-                        ((org-ql-block-header "Stuck Projects")
-                         (org-super-agenda-header-separator "")
-                         (org-super-agenda-groups stfl/ancestor-priority-groups)))))
-        ))
-
-) ;; (after! org
-
-(use-package! org-super-agenda
-  :after (org-agenda evil-org-agenda)
-  :config
-  (org-super-agenda-mode)
-  (setq org-super-agenda-header-separator "\n")
-
-  (setq stfl/org-super-agenda-groups
-        '((:name "Today"
-           :deadline past
-           :deadline today
-           :scheduled today
-           :scheduled past)
-          (:name "Next Actions" :todo "NEXT")
-          (:name "Waiting" :todo "WAIT")
-          (:name "Projects"
-           :and (:todo "PROJ"
-                 :children ("NEXT"))
-           :order 5)
-          (:name "Waiting Projects"
-           :and (:todo "PROJ"
-                 :children ("WAIT"))
-           :order 6)
-          (:name "Stuck Projects"   ;; the rest but show before Projects
-           :todo "PROJ"
-           :order 4)))
-
-  ;; Update ‘org-super-agenda-header-map’
-
+(after! org-super-agenda
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
-
-(after! org-super-agenda
-  (setq stfl/priority-groups
-        '((:tag "SOMEDAY" :order 90)
-          (:name "[#A] MUST Do this week (<=2)"
-           :priority "A"
-           ;; :deadline before  ;;TODO requires a date string https://github.com/alphapapa/org-super-agenda#normal-selectors
-           :and (:tag "org_jira"
-                 :property ("status" "In Progress")))
-          (:name "[#B] SHOULD Do this week (<=3)"
-           :priority "B"
-           :and (:tag "org_jira"
-                 :property ("status" "Planned")))
-          (:name "[#C] Optional or consider for next week (<=5)"
-           :priority "C")
-          (:name "[#D] I care a bit more (~8)"
-           :priority "D")
-          (:name "[#E] (~8)"
-           :priority "E")
-          (:name "[#F] Priority -1 (~8)"
-           :order 81
-           :priority "F")
-          (:name "[#G] Priority -2 (~8)"
-           :order 82
-           :priority "G")
-          (:name "[#H] Priority -3"
-           :order 83
-           :priority "H")
-          (:name "[#I] Priority -4 Consider for SOMEDAY"
-           :order 84
-           :priority "I")
-          (:name "Default Priority : reduce as much as possible (<=8)"
-           :not
-           :priority
-           ))))
-
-(after! org-super-agenda
-
-(defun stfl/org-super-agenda-ancestor-priority-or-default<= (item prio)
-  (org-with-point-at (org-find-text-property-in-string 'org-marker item)
-    (<= (stfl/org-min-ancestor-priority-or-default) prio)))
-
-(defun stfl/org-super-agenda-ancestor-priority<= (item prio)
-  (org-with-point-at (org-find-text-property-in-string 'org-marker item)
-    (<= (stfl/org-min-ancestor-priority) prio)))
-
-;; (defun stfl/org-super-agenda-parent-PROJ-priority= (item prio)
-;;   (org-with-point-at (org-find-text-property-in-string 'org-marker item)
-;;     (<= (stfl/org-parent-PROJ-priority-or-adjusted-default) prio)))
-
-(defun stfl/org-PROJ-priority<= (marker prio)
-  (<= (stfl/org-parent-PROJ-priority-or-adjusted-default marker) prio))
-
-(defun stfl/org-PROJ-priority= (marker prio)
-  (let ((proj-prio (stfl/org-parent-PROJ-priority-or-adjusted-default marker)))
-    (when proj-prio
-      (= proj-prio prio))))
-
-(defun stfl/org-parent-PROJ-priority-or-adjusted-default (marker)
-  (org-with-point-at marker
-    (stfl/org-at-point-parent-PROJ-priority-or-adjusted-default)))
-
-(defun fib (n)
-  (fib-iter 1 0 n))
-
-(defun fib-iter (a b count)
-  (if (= count 0)
-      b
-    (fib-iter (+ a b) a (- count 1))))
-
-(setq stfl/ancestor-priority-groups
-      (append
-       `((:name "Tickler"
-          :and (:scheduled t
-                :tag "SOMEDAY")
-          :order ,(+ 1 org-priority-lowest)))      ;; and order in the appropriate position
-       `((:name "Someday"
-          :tag "SOMEDAY"
-          :order ,(+ 2 org-priority-lowest)))      ;; and order in the appropriate position
-       `,(mapcar
-          (lambda (prio)
-            (let ((prio-str (char-to-string prio))
-                  (until-date-str
-                   (ts-format "%Y-%m-%d"
-                              (ts-adjust 'day
-                                         (fib (+ stfl/agenda-deadline-fib-offset (- prio 64)))
-                                         (ts-now)))))
-              `(:name ,(format "[#%s] Priority %s" prio-str prio-str)
-                :deadline (before ,until-date-str)
-                :scheduled (before ,until-date-str)
-                :priority ,prio-str
-                :pred ((lambda (item)
-                         (stfl/org-PROJ-priority=
-                          (org-find-text-property-in-string 'org-marker item)
-                          ,prio)))
-                ;; :pred ((lambda (item))) TODO (stfl/org-PROJ-deadline-before (org-find-text-property-in-string 'org-marker item)
-                ;;              (ts-format "%Y-%m-%d" (ts-adjust 'day (fib (+ stfl/agenda-deadline-fib-offset (- prio 64))) (ts-now)))
-                :order ,prio)))
-          (number-sequence org-priority-highest org-priority-lowest))
-       `((:name "Default Priority (Rest)"
-          :anything t                                ;; catch the rest
-          :order ,(+ 0.5 org-priority-default)))      ;; and order in the appropriate position
-       ))
-
-(defun stfl/org-min-ancestor-priority-or-default ()
-  (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
-           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                      (org-up-heading-safe))))
-
-(defun stfl/org-min-ancestor-priority-or-lowest ()
-  (cl-loop minimize (save-match-data (stfl/org-priority-or-lowest))
-           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                      (org-up-heading-safe))))
-
-(defun stfl/org-priority-or-lowest ()
-  (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
-         (prio (cond (prio-raw prio-raw)
-                     (t org-priority-lowest)))) ;; display empty prio below default
-    prio))
-
-(defun stfl/org-at-point-parent-PROJ-priority-or-adjusted-default ()
-  (cl-loop minimize (when (equal "PROJ" (nth 2 (org-heading-components)))
-                      (stfl/org-priority-or-default))
-           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                      (org-up-heading-safe))))
-
-)
-
-(setq stfl/org-super-agenda-today-groups
-      '((:time-grid t
-               :order 0)
-        (:name "Tickler"
-               :tag "SOMEDAY"
-               :order 20)
-        (:name "Habits"
-               :tag "HABIT"
-               :habit t
-               :order 90)
-        (:name "Today"
-               :anything t
-               :order 10)))
-
-(setq stfl/org-super-agenda-today-groups-no-primary-work
-      (let ((discard-primary `(:discard (:name "Primary Work"
-                                         :tag ,stfl/org-agenda-primary-work-tags
-                                         :order 40))))
-        (cons discard-primary stfl/org-super-agenda-today-groups)))
-
-(defun stfl/org-agenda-set-someday (&optional do-schedule)
-  "Marks the current agenda entry as SOMEDAY
-
-When called with the universial prefix `C-u` asks for a date on which it will be
-relevant again"
-  (interactive "P")
-  (org-agenda-set-tags "SOMEDAY" 'on)
-  (ignore-error user-error
-    (org-agenda-priority 'remove))
-  (org-agenda-deadline '(4))
-  (org-agenda-schedule (unless do-schedule '(4))))
-
-(defun stfl/org-agenda-set-tickler ()
-  "Marks the current agenda entry as SOMEDAY and assign a scheduled date"
-  (interactive)
-  (stfl/org-agenda-set-someday '(4)))
-
-(defun stfl/org-agenda-remove-someday ()
-  "Remove SOMEDAY tag and scheduling from the current element and reintegrate into the Agenda"
-  (interactive)
-  (unless (stfl/org-agenda-someday?)
-    (error "Element has no SOMEDAY tag"))
-  (org-agenda-set-tags "SOMEDAY" 'off)
-  (ignore-error user-error
-    (org-agenda-priority 'remove))
-  (org-agenda-deadline '(4))
-  (org-agenda-schedule '(4)))
-
-(defun stfl/org-agenda-someday? ()
-  (-find (-partial 'string= "SOMEDAY") (org-get-at-bol 'tags)))
-
-(defun stfl/org-agenda-toggle-someday (&optional do-schedule)
-  "Toggle the SOMEDAY status
-
-When called with the universial prefix `C-u` asks for a date on which it will be
-relevant again (Tickler)"
-  (interactive "P")
-  (if (stfl/org-agenda-someday?)
-      (stfl/org-agenda-remove-someday)
-    (stfl/org-agenda-set-someday (when do-schedule '(4)))))
-
-(defun stfl/org-agenda-toggle-tickler ()
-  "Toggle SOMEDAY status and ask for a date when to put on the tickler"
-  (interactive)
-  (stfl/org-agenda-toggle-someday '(4)))
-
-(defun stfl/agenda-query-stuck-projects()
-  '(stuck-proj))
-
-(defun stfl/org-agenda-show-priorities (&optional priority)
-  (interactive "P")
-  (setq-local new (cond ((equal priority '(4)) stfl/agenda-max-prio-group)
-                        (priority)
-                        (t (upcase (read-char (format "Show up to priority (%c-%c): " org-priority-highest org-priority-lowest))))))
-  (when (or (< new org-priority-highest) (> new org-priority-highest))
-    (user-error "Priority must be between org-priority-highest and org-priority-lowest"))
-  (setq stfl/agenda-max-prio-group new)
-  (message "Showing up to priority %c" new)
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-reset-show-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (default-value 'stfl/agenda-max-prio-group))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-more-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (min (1+ stfl/agenda-max-prio-group) org-priority-lowest))
-  (org-agenda-redo-all))
-
-(defun stfl/org-agenda-show-less-priorities ()
-  (interactive)
-  (setq stfl/agenda-max-prio-group (max (1- stfl/agenda-max-prio-group) org-priority-highest))
-  (org-agenda-redo-all))
-
-(defun stfl/agenda-day ()
-  '(agenda "Agenda"
-           ((org-agenda-use-time-grid t)
-            (org-deadline-warning-days 0)
-            (org-agenda-span '1)
-            (org-super-agenda-groups stfl/org-super-agenda-today-groups-no-primary-work)
-            (org-agenda-start-day (org-today)))))
-
-(defun prio-deadline>= (prio)
-  `(and (or (priority >= (char-to-string ,prio))
-            (and ,(> stfl/agenda-max-prio-group org-priority-default)
-                 (not (priority)))  ;; default priority is treated as nil in org-ql
-            (ancestors (priority >= (char-to-string ,prio)))
-            (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-                            (fib        ;; increase the date range of interest with a fibonacci sequance
-                             (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-                                (- prio 64))))) ;; use the priority value
-            (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
-                                                   (- prio 64)))))))))
-
-(defun stfl/agenda-query-actions-prio-higher (prio)
-  `(and (todo "NEXT" "WAIT")
-        ,(prio-deadline>= prio)
-        (not ,(someday-habit))
-        (not (ancestors (deadline :to 0)))
-        (not (deadline :to 0))
-        (not (scheduled))))
-
-(defun someday-habit()
-  '(or (tags "SOMEDAY" "HABIT")
-        (habit)))
-
-(defun not-someday-habit()
-  `(not ,(someday-habit)))
-
-(defun not-sched-or-dead(from)
-  `(and (not (scheduled :from today))
-       (not (deadline :from ,from))))
-
-(defun stfl/org-ql-min-ancestor-priority< (a b)
-  "Return non-nil if A's minimum ancestor priority is higher than B's.
-A and B are Org headline elements.
-org-default-priority is treated as lower than the same set value"
-  (cl-macrolet ((priority (item)
-                          `(org-with-point-at (org-element-property :org-marker ,item)
-                             (stfl/org-min-ancestor-priority))))
-    ;; NOTE: Priorities are numbers in Org elements.
-    ;; This might differ from the priority selector logic.
-    (let ((a-priority (priority a))
-          (b-priority (priority b)))
-      (cond ((and a-priority b-priority)
-             (< a-priority b-priority))
-            (a-priority t)
-            (b-priority nil)))))
-
-
-(defun stfl/org-min-ancestor-priority ()
-  (cl-loop minimize (save-match-data (stfl/org-priority-or-default))
-           while (and (not (equal "PROJ" (nth 2 (org-heading-components))))
-                      (org-up-heading-safe))))
-
-
-(defun stfl/org-priority-or-default ()
-  (let* ((prio-raw (org-element-property :priority (org-element-at-point)))
-         (prio (cond (prio-raw prio-raw)
-                     (t (+ 0.5 org-priority-default))))) ;; display empty prio below default
-    prio))
-
-(after! org-ql
-  (org-ql-defpred tickler ()
-    "match entries in the \"tickler\"."
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo) (tags-local "SOMEDAY") (scheduled)))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
-
-  (org-ql-defpred tickler-proj ()
-    "match PROJ in the \"tickler\" or all children in \"tickler\"."
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "PROJ")
-                              (or (tickler)
-                                  (and (children (tickler))
-                                       (not (children (and (todo "NEXT" "WAIT")
-                                                           (not (tickler)))))))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "PROJ")
-                            (or (tickler)
-                                (and (children (tickler))
-                                     (not (children (and (todo "NEXT" "WAIT")
-                                                         (not (tickler))))))))))))
-
-  (org-ql-defpred work ()
-    "work related entries."
-    :normalizers ((`(,predicate-names)
-                   (rec '(tags "#work"))))
-    :preambles ((`(,predicate-names)
-                 (rec '(tags "#work")))))
-
-  (org-ql-defpred primary-work ()
-    "work related entries."
-    :normalizers ((`(,predicate-names)
-                   (rec `(tags ,@stfl/org-agenda-primary-work-tags))))
-    :preambles ((`(,predicate-names)
-                 (rec `(tags ,@stfl/org-agenda-primary-work-tags)))))
-
-  (org-ql-defpred private ()
-    "Private entries."
-    :normalizers ((`(,predicate-names)
-                   (rec '(not (tags "#work")))))
-    :preambles ((`(,predicate-names)
-                   (rec '(not (tags "#work"))))))
-
-  (org-ql-defpred (stuck-proj stuck) ()
-    "Stuck Project"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "PROJ")
-                              (not (tags "SOMEDAY"))
-                              (not (children (todo "NEXT" "WAIT")))
-                              (not (tickler-proj))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "PROJ")
-                            (not (tags "SOMEDAY"))
-                            (not (children (todo "NEXT" "WAIT")))
-                            (not (tickler-proj)))))))
-
-
-  (org-ql-defpred standalone-next ()
-    "Standalone NEXT Action (or WAIT)"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo "NEXT" "WAIT")
-                              (not (ancestors (or (todo "PROJ")
-                                                  (done))))))))
-    :preambles ((`(,predicate-names)
-                 (rec '(and (todo "NEXT" "WAIT")
-                              (not (ancestors (or (todo "PROJ")
-                                                  (done)))))))))
-
-  (org-ql-defpred tangling ()
-    "Tangling Actions (Ancestors Done)"
-    :normalizers ((`(,predicate-names)
-                   (rec '(and (todo) (ancestors (done))))))
-    :preambles ((`(,predicate-names)
-                   (rec '(and (todo) (ancestors (done)))))))
-
-  (org-ql-defpred someday ()
-    "tagged SOMEDAY"
-    :normalizers ((`(,predicate-names)
-                   (rec '(tags "SOMEDAY"))))
-    :preambles ((`(,predicate-names)
-                 (rec '(tags "SOMEDAY")))))
-
-  (org-ql-defpred my-habit ()
-    "style habit or tag HABIT"
-    :normalizers ((`(,predicate-names)
-                   (rec '(or (tags "HABIT") (habit)))))
-    :preambles ((`(,predicate-names)
-                 (rec '(or (tags "HABIT") (habit))))))
-
-;; (defun prio-deadline>= (prio)
-;;   `(and (or (priority >= (char-to-string ,prio))
-;;             (and ,(> stfl/agenda-max-prio-group org-priority-default)
-;;                  (not (priority)))  ;; default priority is treated as nil in org-ql
-;;             (ancestors (priority >= (char-to-string ,prio)))
-;;             (deadline :to ,(1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
-;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-;;                                 (- prio 64)))) ;; use the priority value
-;;                       )
-;;             (ancestors (deadline :to ,(1- (fib (+ stfl/agenda-deadline-fib-offset
-;;                                                    (- prio 64)))))))))
-
-
-
-;;   (org-ql-defpred prio-deadline ()
-;;     "Priority defined by priority, deadline of entry or ancestors."
-;;     (let ((deadline-limit
-;;            (1-          ;; decrease by 1 to match the org-super-agenda (deadline (before X)) behaviour
-;;                             (fib        ;; increase the date range of interest with a fibonacci sequance
-;;                              (+ stfl/agenda-deadline-fib-offset              ;; start the sequeance at (fib 4)
-;;                                 (- prio 64)))) ;; use the priority value
-;;            ))
-;;     :normalizers ((`(,predicate-names)
-;;                    (rec '
-
-;;                     (and (todo) (tags-local "SOMEDAY") (scheduled))
-
-
-;;                 )))
-;;     :preambles ((`(,predicate-names)
-;;                  (rec '(and (todo) (tags-local "SOMEDAY") (scheduled))))))
-
-)
 
 (after! org-ql
   (setq org-ql-views
@@ -1639,42 +818,42 @@ org-default-priority is treated as lower than the same set value"
                      (list :title "LASTMILE"
                            :buffers-files 'org-agenda-files
                            :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
+                           :super-groups (agile-gtd-ancestor-priority-groups)
                            :query `(and
-                                    (todo "NEXT")
-                                    (tags "LASTMILE")
-                                    ,(not-someday-habit)
-                                    ,(not-sched-or-dead 14))
+                                     (todo "NEXT")
+                                     (tags ,agile-gtd-lastmile-tag)
+                                     ,(agile-gtd-not-someday-habit)
+                                     ,(agile-gtd-not-sched-or-dead 14))
                            :narrow nil))
-               (cons "PROJ Backlock Active"
-                     (list :title "PROJ Backlog"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (todo "PROJ")
-                                        ,(not-someday-habit)
-                                        (not (tickler-proj)))
-                           :narrow nil))
-               (cons "PROJ Backlock #work"
-                     (list :title "#work backlog with tickler"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (or (todo "PROJ")
-                                            (standalone-next))
-                                        (tags "#work")
-                                        ,(not-someday-habit)
-                                        (not (tickler-proj)))
-                           :narrow nil))
-               (cons "PROJ Backlock #work (full)"
-                     (list :title "#work backlog with tickler"
-                           :buffers-files 'org-agenda-files
-                           :sort 'priority
-                           :super-groups #'stfl/ancestor-priority-groups
-                           :query `(and (or (todo "PROJ")
-                                            (standalone-next))
-                                        (tags "#work"))
-                           :narrow nil))
+                (cons "PROJ Backlock Active"
+                      (list :title "PROJ Backlog"
+                            :buffers-files 'org-agenda-files
+                            :sort 'priority
+                            :super-groups (agile-gtd-ancestor-priority-groups)
+                            :query `(and (todo ,(agile-gtd-project-keyword))
+                                         ,(agile-gtd-not-someday-habit)
+                                         (not (agile-gtd-tickler-proj)))
+                            :narrow nil))
+                (cons "PROJ Backlock #work"
+                      (list :title "#work backlog with tickler"
+                            :buffers-files 'org-agenda-files
+                            :sort 'priority
+                            :super-groups (agile-gtd-ancestor-priority-groups)
+                            :query `(and (or (todo ,(agile-gtd-project-keyword))
+                                             (agile-gtd-standalone-next))
+                                         (tags ,agile-gtd-work-tag)
+                                         ,(agile-gtd-not-someday-habit)
+                                         (not (agile-gtd-tickler-proj)))
+                            :narrow nil))
+                (cons "PROJ Backlock #work (full)"
+                      (list :title "#work backlog with tickler"
+                            :buffers-files 'org-agenda-files
+                            :sort 'priority
+                            :super-groups (agile-gtd-ancestor-priority-groups)
+                            :query `(and (or (todo ,(agile-gtd-project-keyword))
+                                             (agile-gtd-standalone-next))
+                                         (tags ,agile-gtd-work-tag))
+                            :narrow nil))
 
                ;;     ("Home and Sarah"
                ;;     :title "Home and Sarah"
