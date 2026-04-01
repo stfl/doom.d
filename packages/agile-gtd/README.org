@@ -1,0 +1,167 @@
+#+title: agile-gtd
+
+* What this package models
+
+=agile-gtd= packages a hybrid Agile + GTD workflow for Org mode.
+It treats Org headings as planning units with explicit execution semantics:
+
+- =EPIC -> PROJ -> NEXT/WAIT= is the normal hierarchy.
+- =NEXT= and =WAIT= can also exist without a project; these are standalone next actions.
+- =TODO= is captured input, not yet clarified or committed.
+- =SOMEDAY= removes an item from the active backlog.
+- =SOMEDAY= plus =SCHEDULED= turns an item into a tickler that resurfaces later.
+- Priorities =A..I= express sprint commitment and backlog depth.
+
+Headings without a TODO keyword are structural headings only.
+
+* States
+
+| Keyword | Meaning |
+|---------+---------|
+| TODO    | Captured input that has not been clarified yet. |
+| NEXT    | Concrete next action that is actionable now. |
+| WAIT    | Open loop waiting on a person, event, or dependency. |
+| PROJ    | Multi-step outcome; should usually own NEXT/WAIT children. |
+| EPIC    | Larger body of work grouping related projects. |
+| IDEA    | Not committed work; kept out of the active execution flow. |
+| DONE    | Completed successfully. |
+| KILL    | Explicitly cancelled; kept for history instead of deleting. |
+
+A project is healthy when it has at least one child in =NEXT= or =WAIT=.
+A project with no such child is stuck.
+
+* Hierarchy and execution
+
+The workflow is built around a simple progression:
+
+#+begin_example
+EPIC
+  PROJ
+    NEXT
+    WAIT
+#+end_example
+
+A =NEXT= or =WAIT= without a =PROJ= ancestor is still valid and is treated as a
+standalone next action.
+
+Repeating tasks are modeled with a scheduled repeat timestamp and
+=:REPEAT_TO_STATE: NEXT= so that marking them =DONE= returns them to =NEXT=.
+
+* Priorities
+
+Priorities run from =A= (highest) to =I= (lowest). The default backlog priority
+is =E=.
+
+| Priority | Meaning |
+|----------+---------|
+| A, B     | Current sprint / must-do now |
+| C, D     | Near-term / elevated urgency |
+| E        | Default backlog |
+| F, G     | Low-priority backlog |
+| H, I     | Deep backlog / maybe later |
+
+Priority is not only local:
+
+- a child action inherits urgency from its parent project for sorting and grouping;
+- a project priority can pull an unprioritized or lower-priority child upward in
+  backlog views;
+- by default, low-end priorities are treated as deep backlog and are hidden from
+  normal today and sprint views.
+
+Deadline urgency is interpreted relative to priority. Higher-priority items
+surface sooner, and the package uses Fibonacci-like deadline windows to do that.
+
+* Tags
+
+The workflow uses tags as control signals rather than decoration.
+
+| Tag        | Meaning |
+|------------+---------|
+| SOMEDAY    | Deferred work, hidden from the active backlog |
+| HABIT      | Recurring habit or routine |
+| LASTMILE   | Final-stretch item that deserves extra visibility |
+| DRAG       | Item dragged forward without being finished |
+| #work      | Work item |
+| #personal  | Personal item |
+| @context   | GTD context such as a place, person, or tool |
+
+Domain- or client-specific tags can be layered on top. =agile-gtd-primary-work-tags=
+marks the subset of work that should appear in primary-work views.
+When files use =#+filetags=, those tags classify every heading in the file.
+
+* Deferred work
+
+There are two important deferred states:
+
+- =SOMEDAY=: the item is intentionally parked and should not clutter active views.
+- Tickler: the item has the =SOMEDAY= tag and a future =SCHEDULED= date. It stays
+  hidden until that date arrives.
+
+Processing a tickler usually means removing =SOMEDAY=, assigning a real
+priority, and optionally adding a deadline.
+
+* Derived concepts
+
+The package exposes org-ql predicates for the workflow's core concepts:
+
+| Predicate                   | Meaning |
+|-----------------------------+---------|
+| =agile-gtd-stuck-proj=      | project with no NEXT/WAIT child |
+| =agile-gtd-standalone-next= | NEXT/WAIT without a project ancestor |
+| =agile-gtd-tickler=         | deferred item with SOMEDAY + SCHEDULED |
+| =agile-gtd-tickler-proj=    | project wholly parked in the tickler |
+| =agile-gtd-someday=         | deferred item |
+| =agile-gtd-my-habit=        | habit by tag or Org habit style |
+| =agile-gtd-tangling=        | task left under a completed ancestor |
+| =agile-gtd-work=            | any work item |
+| =agile-gtd-primary-work=    | primary-work subset |
+| =agile-gtd-private=         | non-work item |
+
+These predicates drive agenda commands and review views.
+
+* Inbox and capture semantics
+
+New input starts in the inbox as =TODO=. Clarification happens later:
+
+- turn it into =NEXT= when it is actionable now;
+- turn it into =PROJ= when it needs multiple steps;
+- turn it into =WAIT= when the next move belongs to someone else;
+- tag it =SOMEDAY= when it is deliberately deferred;
+- keep it as =IDEA= when it is not committed work yet.
+
+The package includes capture templates for inbox items, projects, scheduled
+actions, deadline-driven actions, protocol captures, and a household example.
+
+* Dependencies, history, and time
+
+The workflow expects standard Org metadata to carry process state:
+
+| Property            | Meaning |
+|---------------------+---------|
+| =ID=                | Stable identity |
+| =CREATED=           | Capture or creation time |
+| =TRIGGER=           | org-edna automation for follow-up actions |
+| =BLOCKER=           | org-edna dependency |
+| =REPEAT_TO_STATE=   | Repeat target, usually NEXT |
+| =Effort=            | Estimate, typically in work files |
+
+The LOGBOOK keeps the audit trail: state changes, clock entries, and notes.
+In work contexts, the same tree can also be used with =org-clock= and effort
+estimates for time tracking and reporting.
+
+* What the package configures
+
+=agile-gtd-enable= and =agile-gtd-refresh= install the workflow into Org by
+configuring:
+
+- TODO keywords and faces
+- priority range, faces, and optional org-modern symbols
+- workflow tags
+- inbox and project capture templates
+- agenda files and refile targets
+- org-ql predicates
+- agenda commands for inbox, today, review, stuck projects, and backlog views
+
+The exact file layout is user-configurable through variables such as
+=agile-gtd-inbox-file=, =agile-gtd-todo-file=, and =agile-gtd-project-files=,
+but the semantics above stay the same.
