@@ -150,11 +150,6 @@
   :type 'string
   :group 'agile-gtd)
 
-(defcustom agile-gtd-household-heading "Haushalt"
-  "Heading used for household capture templates."
-  :type 'string
-  :group 'agile-gtd)
-
 (defcustom agile-gtd-inbox-tags '("#inbox" "inbox")
   "Tags treated as inbox items in the agenda."
   :type '(repeat string)
@@ -386,25 +381,6 @@ When nil, derive it from `agile-gtd-priority-default'."
           ":CREATED:  %U\n"
           ":END:\n\n"
           "%?\n"))
-
-(defun agile-gtd--capture-template-laundry ()
-  "Return the household laundry capture template."
-  (concat "* PROJ [#"
-          (string agile-gtd-priority-lowest)
-          "] Wäsche waschen\n"
-          "** NEXT Waschmaschine einschalten\n"
-          "SCHEDULED: %^t\n"
-          ":PROPERTIES:\n"
-          ":TRIGGER:  next-sibling todo!(NEXT) scheduled!(\"++3h\")\n"
-          ":END:\n"
-          "** DONE Wäsche aufhängen\n"
-          ":PROPERTIES:\n"
-          ":TRIGGER:  next-sibling todo!(NEXT) scheduled!(\"++2d\")\n"
-          ":END:\n"
-          "** DONE Wäsche abnehmen\n"
-          ":PROPERTIES:\n"
-          ":TRIGGER:  parent todo!(DONE) archive!\n"
-          ":END:\n"))
 
 (defun agile-gtd--protocol-description (description)
   "Normalize DESCRIPTION for protocol capture links."

@@ -129,7 +129,7 @@ New input starts in the inbox as =TODO=. Clarification happens later:
 - keep it as =IDEA= when it is not committed work yet.
 
 The package includes capture templates for inbox items, projects, scheduled
-actions, deadline-driven actions, protocol captures, and a household example.
+actions, deadline-driven actions, and protocol captures.
 
 * Dependencies, history, and time
 
