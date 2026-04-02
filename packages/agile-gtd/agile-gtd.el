@@ -833,11 +833,7 @@ With prefix argument DO-SCHEDULE, create a tickler."
   :normalizers ((`(,predicate-names)
                  (rec `(and (todo)
                             (tags-local ,agile-gtd-someday-tag)
-                            (scheduled)))))
-  :preambles ((`(,predicate-names)
-               (rec `(and (todo)
-                          (tags-local ,agile-gtd-someday-tag)
-                          (scheduled))))))
+                            (scheduled))))))
 
 (org-ql-defpred agile-gtd-tickler-proj ()
   "Match projects in the tickler and pure tickler subtrees."
@@ -846,34 +842,22 @@ With prefix argument DO-SCHEDULE, create a tickler."
                             (or (agile-gtd-tickler)
                                 (and (children (agile-gtd-tickler))
                                      (not (children (and (todo ,@(agile-gtd--action-keywords))
-                                                         (not (agile-gtd-tickler)))))))))))
-  :preambles ((`(,predicate-names)
-               (rec `(and (todo ,(agile-gtd--project-keyword))
-                          (or (agile-gtd-tickler)
-                              (and (children (agile-gtd-tickler))
-                                   (not (children (and (todo ,@(agile-gtd--action-keywords))
-                                                       (not (agile-gtd-tickler))))))))))))
+                                                         (not (agile-gtd-tickler))))))))))))
 
 (org-ql-defpred agile-gtd-work ()
   "Match work related entries."
   :normalizers ((`(,predicate-names)
-                 (rec `(tags ,agile-gtd-work-tag))))
-  :preambles ((`(,predicate-names)
-               (rec `(tags ,agile-gtd-work-tag)))))
+                 (rec `(tags ,agile-gtd-work-tag)))))
 
 (org-ql-defpred agile-gtd-primary-work ()
   "Match primary work entries."
   :normalizers ((`(,predicate-names)
-                 (rec `(,@(agile-gtd--primary-work-query)))))
-  :preambles ((`(,predicate-names)
-               (rec `(,@(agile-gtd--primary-work-query))))))
+                 (rec `(,@(agile-gtd--primary-work-query))))))
 
 (org-ql-defpred agile-gtd-private ()
   "Match private entries."
   :normalizers ((`(,predicate-names)
-                 (rec `(not (tags ,agile-gtd-work-tag)))))
-  :preambles ((`(,predicate-names)
-               (rec `(not (tags ,agile-gtd-work-tag))))))
+                 (rec `(not (tags ,agile-gtd-work-tag))))))
 
 (org-ql-defpred (agile-gtd-stuck-proj agile-gtd-stuck) ()
   "Match stuck projects."
@@ -881,48 +865,32 @@ With prefix argument DO-SCHEDULE, create a tickler."
                  (rec `(and (todo ,(agile-gtd--project-keyword))
                             (not (tags ,agile-gtd-someday-tag))
                             (not (children (todo ,@(agile-gtd--action-keywords))))
-                            (not (agile-gtd-tickler-proj))))))
-  :preambles ((`(,predicate-names)
-               (rec `(and (todo ,(agile-gtd--project-keyword))
-                          (not (tags ,agile-gtd-someday-tag))
-                          (not (children (todo ,@(agile-gtd--action-keywords))))
-                          (not (agile-gtd-tickler-proj)))))))
+                            (not (agile-gtd-tickler-proj)))))))
 
 (org-ql-defpred agile-gtd-standalone-next ()
   "Match standalone NEXT and WAIT items."
   :normalizers ((`(,predicate-names)
                  (rec `(and (todo ,@(agile-gtd--action-keywords))
                             (not (ancestors (or (todo ,(agile-gtd--project-keyword))
-                                                (done))))))))
-  :preambles ((`(,predicate-names)
-               (rec `(and (todo ,@(agile-gtd--action-keywords))
-                          (not (ancestors (or (todo ,(agile-gtd--project-keyword))
-                                              (done)))))))))
+                                                (done)))))))))
 
 (org-ql-defpred agile-gtd-tangling ()
   "Match actions whose ancestors are done."
   :normalizers ((`(,predicate-names)
                  (rec '(and (todo)
-                            (ancestors (done))))))
-  :preambles ((`(,predicate-names)
-               (rec '(and (todo)
-                          (ancestors (done)))))))
+                            (ancestors (done)))))))
 
 (org-ql-defpred agile-gtd-someday ()
-  "Match SOMEDAY items."
+  "Match SOMEDAY items excluding ticklers."
   :normalizers ((`(,predicate-names)
-                 (rec `(tags ,agile-gtd-someday-tag))))
-  :preambles ((`(,predicate-names)
-               (rec `(tags ,agile-gtd-someday-tag)))))
+                 (rec `(and (tags ,agile-gtd-someday-tag)
+                            (not (agile-gtd-tickler)))))))
 
 (org-ql-defpred agile-gtd-my-habit ()
   "Match habits by tag or style."
   :normalizers ((`(,predicate-names)
                  (rec `(or (tags ,agile-gtd-habit-tag)
-                           (habit)))))
-  :preambles ((`(,predicate-names)
-               (rec `(or (tags ,agile-gtd-habit-tag)
-                         (habit))))))
+                           (habit))))))
 
 (defun agile-gtd--apply-priorities ()
   "Apply Agile GTD priority settings."

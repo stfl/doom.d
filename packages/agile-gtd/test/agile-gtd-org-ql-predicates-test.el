@@ -97,20 +97,20 @@ SCHEDULED: <2026-04-13 Mon .+1d>
   "Run BODY with predicate fixtures in a temporary Org buffer."
   (declare (indent 0) (debug t))
   `(agile-gtd-org-ql-test-with-sandbox
-     (let* ((file (expand-file-name "predicate-fixtures.org" org-directory))
-            (buffer nil))
-       (unwind-protect
-           (progn
-             (with-temp-file file
-               (insert agile-gtd-org-ql-test-data))
-             (setq buffer (find-file-noselect file))
-             (with-current-buffer buffer
-               (org-mode)
-               (agile-gtd-enable)
-               (org-set-regexps-and-options)
-                ,@body))
-         (when (buffer-live-p buffer)
-           (kill-buffer buffer))))))
+    (let* ((file (expand-file-name "predicate-fixtures.org" org-directory))
+           (buffer nil))
+      (unwind-protect
+          (progn
+            (with-temp-file file
+              (insert agile-gtd-org-ql-test-data))
+            (setq buffer (find-file-noselect file))
+            (with-current-buffer buffer
+              (org-mode)
+              (agile-gtd-enable)
+              (org-set-regexps-and-options)
+              ,@body))
+        (when (buffer-live-p buffer)
+          (kill-buffer buffer))))))
 
 (defun agile-gtd-org-ql-test-headings (buffer query)
   "Return headings in BUFFER matching QUERY."
@@ -127,87 +127,94 @@ Runs the query once with preambles enabled and once with them disabled."
 
 (ert-deftest agile-gtd-org-ql-predicates-match-tickler-queries ()
   (agile-gtd-org-ql-test-with-data
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-tickler)
-     '("Tickler project"
-       "Deferred child"
-       "Deferred child with live sibling"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-tickler-proj)
-     '("Tickler project"
-       "Tickler subtree"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(and (heading "Inherited someday child")
-           (agile-gtd-tickler))
-     nil)))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-tickler)
+    '("Tickler project"
+      "Deferred child"
+      "Deferred child with live sibling"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-tickler-proj)
+    '("Tickler project"
+      "Tickler subtree"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (heading "Inherited someday child")
+          (agile-gtd-tickler))
+    nil)))
 
 (ert-deftest agile-gtd-org-ql-predicates-match-stuck-projects ()
   (agile-gtd-org-ql-test-with-data
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-stuck-proj)
-     '("Stuck project"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-stuck)
-     '("Stuck project"))))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-stuck-proj)
+    '("Stuck project"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-stuck)
+    '("Stuck project"))))
 
 (ert-deftest agile-gtd-org-ql-predicates-separate-standalone-and-tangled-actions ()
   (agile-gtd-org-ql-test-with-data
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-standalone-next)
-     '("Standalone next"
-       "Standalone wait"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-tangling)
-     '("Tangled next"))))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-standalone-next)
+    '("Standalone next"
+      "Standalone wait"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-tangling)
+    '("Tangled next"))))
 
 (ert-deftest agile-gtd-org-ql-predicates-classify-work-context ()
   (agile-gtd-org-ql-test-with-data
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(and (todo)
-           (agile-gtd-work))
-     '("Work parent"
-       "Inherited work child"
-       "Primary work child"
-       "Primary work root"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(and (todo)
-           (agile-gtd-primary-work))
-     '("Primary work child"
-       "Primary work root"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(and (heading "Private errand")
-           (agile-gtd-private))
-     '("Private errand"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(and (heading "Work parent")
-           (agile-gtd-private))
-     nil)))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (todo)
+          (agile-gtd-work))
+    '("Work parent"
+      "Inherited work child"
+      "Primary work child"
+      "Primary work root"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (todo)
+          (agile-gtd-primary-work))
+    '("Primary work child"
+      "Primary work root"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (heading "Private errand")
+          (agile-gtd-private))
+    '("Private errand"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (heading "Work parent")
+          (agile-gtd-private))
+    nil)))
 
 (ert-deftest agile-gtd-org-ql-predicates-match-someday-and-habits ()
   (agile-gtd-org-ql-test-with-data
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-someday)
-     '("Tickler project"
-       "Inherited someday child"
-       "Deferred child"
-       "Deferred child with live sibling"
-       "Someday idea"))
-    (agile-gtd-org-ql-test-assert-query
-     buffer
-     '(agile-gtd-my-habit)
-     '("Habit tag item"
-       "Habit style item"))))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-someday)
+    '("Inherited someday child"
+      "Someday idea"))
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (heading "Tickler project")
+          (agile-gtd-someday))
+    nil)
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(and (heading "Deferred child")
+          (agile-gtd-someday))
+    nil)
+   (agile-gtd-org-ql-test-assert-query
+    buffer
+    '(agile-gtd-my-habit)
+    '("Habit tag item"
+      "Habit style item"))))
 
 ;;; agile-gtd-org-ql-predicates-test.el ends here
