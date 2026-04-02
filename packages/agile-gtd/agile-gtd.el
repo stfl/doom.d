@@ -171,11 +171,6 @@ When nil, derive it from `agile-gtd-priority-default'."
           character)
   :group 'agile-gtd)
 
-(defcustom agile-gtd-deadline-fib-offset 3
-  "Offset used for Fibonacci deadline windows."
-  :type 'integer
-  :group 'agile-gtd)
-
 (defcustom agile-gtd-enable-agenda-files t
   "Whether `agile-gtd-enable' should manage `org-agenda-files'."
   :type 'boolean
@@ -427,23 +422,59 @@ When nil, derive it from `agile-gtd-priority-default'."
         nil
         ""))
 
-(defun agile-gtd--fib (n)
-  "Return the Nth Fibonacci number for positive N."
-  (cl-labels ((iter (a b count)
-                (if (= count 0)
-                    b
-                  (iter (+ a b) a (1- count)))))
-    (iter 1 0 n)))
+(defun agile-gtd--prio-rank (priority)
+  "Return numeric rank for PRIORITY character, or nil for nil input."
+  (when priority
+    (pcase priority
+      (?A 1) (?B 11) (?C 21) (?D 31) (?E 41)
+      (?F 51) (?G 61) (?H 71) (?I 81))))
+
+(defun agile-gtd--deadline-rank (days)
+  "Return numeric rank for DAYS until deadline (integer)."
+  (cond
+   ((< days 0)    days)
+   ((= days 0)    -1)
+   ((<= days 2)    0)
+   ((<= days 5)   10)
+   ((<= days 7)   20)
+   ((<= days 11)  30)
+   ((<= days 14)  40)
+   ((<= days 21)  50)
+   ((<= days 30)  60)
+   ((<= days 60)  70)
+   (t            1000)))
+
+(defconst agile-gtd--rank-inf 99999)
+
+(defun agile-gtd--backlog-rank (prio parent-prio dl-delta)
+  "Return numeric backlog rank.
+PRIO and PARENT-PRIO are priority characters or nil.
+DL-DELTA is integer days until deadline or nil."
+  (let* ((own      (or (agile-gtd--prio-rank prio)        agile-gtd--rank-inf))
+         (par      (or (agile-gtd--prio-rank parent-prio) agile-gtd--rank-inf))
+         (dl       (if dl-delta (agile-gtd--deadline-rank dl-delta) agile-gtd--rank-inf))
+         (combined (min own par dl)))
+    (if (>= combined agile-gtd--rank-inf) 45 combined)))
+
+(defconst agile-gtd--priority-deadline-days
+  '((?A . 2) (?B . 5) (?C . 7) (?D . 11) (?E . 14)
+    (?F . 21) (?G . 30) (?H . 60))
+  "Maximum days-until-deadline for each priority level.")
 
 (defun agile-gtd--deadline-window (priority)
-  "Return the deadline window for PRIORITY."
-  (1- (agile-gtd--fib (+ agile-gtd-deadline-fib-offset
-                         (- priority 64)))))
+  "Return the deadline window in days for PRIORITY (hard-coded table)."
+  (or (alist-get priority agile-gtd--priority-deadline-days) 0))
 
 (defun agile-gtd--priority-or-default ()
   "Return the priority at point or the default fallback."
   (or (org-element-property :priority (org-element-at-point))
       (+ 0.5 org-priority-default)))
+
+(defun agile-gtd--direct-parent-priority ()
+  "Return the direct parent heading's priority character, or nil."
+  (save-excursion
+    (when (org-up-heading-safe)
+      (org-element-property :priority (org-element-at-point)))))
 
 (defun agile-gtd--parent-project-priority-or-default (marker)
   "Return the parent project priority for MARKER."
@@ -610,7 +641,7 @@ When nil, derive it from `agile-gtd-priority-default'."
     ("rc" "Close open NEXT Actions and WAIT"
      ((org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
                           (not (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag))
-                          (not (agile-gtd-my-habit))
+                          (not (agile-gtd-habit))
                           (or (not (deadline))
                               (deadline :to "+30")
                               (ancestors (deadline :to "+30")))
@@ -654,7 +685,7 @@ When nil, derive it from `agile-gtd-priority-default'."
      ((org-ql-block '(and (or (todo "PROJ")
                               (agile-gtd-standalone-next))
                           (not (agile-gtd-primary-work))
-                          (not (agile-gtd-my-habit)))
+                          (not (agile-gtd-habit)))
                     ((org-ql-block-header "Backlog")
                      (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
                      (org-dim-blocked-tasks t)))))
@@ -668,7 +699,7 @@ When nil, derive it from `agile-gtd-priority-default'."
     ("ww" "Work Agenda Primary"
      ((org-ql-block '(and (agile-gtd-primary-work)
                           (not (done))
-                          (or (agile-gtd-my-habit)
+                          (or (agile-gtd-habit)
                               (deadline :to today)
                               (scheduled :to today)
                               (ts-active :on today)))
@@ -691,7 +722,7 @@ When nil, derive it from `agile-gtd-priority-default'."
      ((org-ql-block '(and (and (agile-gtd-work)
                                (not (agile-gtd-primary-work)))
                           (not (done))
-                          (or (agile-gtd-my-habit)
+                          (or (agile-gtd-habit)
                               (deadline :to today)
                               (scheduled :to today)
                               (ts-active :on today)))
@@ -886,11 +917,46 @@ With prefix argument DO-SCHEDULE, create a tickler."
                  (rec `(and (tags ,agile-gtd-someday-tag)
                             (not (agile-gtd-tickler)))))))
 
-(org-ql-defpred agile-gtd-my-habit ()
+(org-ql-defpred agile-gtd-habit ()
   "Match habits by tag or style."
   :normalizers ((`(,predicate-names)
                  (rec `(or (tags ,agile-gtd-habit-tag)
                            (habit))))))
+
+(org-ql-defpred agile-gtd-deadline-prio (op priority)
+  "Match entries whose deadline-based priority satisfies OP relative to PRIORITY.
+Example: (agile-gtd-deadline-prio <= ?C) matches items with deadline within 7 days."
+  :body
+  (let* ((element (org-element-at-point))
+         (dl (org-element-property :deadline element)))
+    (when dl
+      (let* ((dl-days (- (time-to-days (org-timestamp-to-time dl))
+                         (time-to-days (current-time))))
+             (dl-rank (agile-gtd--deadline-rank dl-days))
+             (prio-rank (agile-gtd--prio-rank priority)))
+        (when prio-rank
+          (funcall op dl-rank prio-rank))))))
+
+(org-ql-defpred agile-gtd-parent-prio (op priority)
+  "Match entries whose direct parent priority satisfies OP relative to PRIORITY.
+Example: (agile-gtd-parent-prio <= ?C) matches items with parent priority A, B or C."
+  :body
+  (let* ((par-prio (agile-gtd--direct-parent-priority))
+         (par-rank (agile-gtd--prio-rank par-prio))
+         (prio-rank (agile-gtd--prio-rank priority)))
+    (when (and par-rank prio-rank)
+      (funcall op par-rank prio-rank))))
+
+(defun agile-gtd--item-rank ()
+  "Return the virtual priority rank for the Org item at point."
+  (let* ((element (org-element-at-point))
+         (prio (org-element-property :priority element))
+         (parent-prio (agile-gtd--direct-parent-priority))
+         (dl (org-element-property :deadline element))
+         (dl-delta (when dl
+                     (- (time-to-days (org-timestamp-to-time dl))
+                        (time-to-days (current-time))))))
+    (agile-gtd--backlog-rank prio parent-prio dl-delta)))
 
 (defun agile-gtd--apply-priorities ()
   "Apply Agile GTD priority settings."

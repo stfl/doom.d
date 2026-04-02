@@ -213,7 +213,7 @@ Runs the query once with preambles enabled and once with them disabled."
     nil)
    (agile-gtd-org-ql-test-assert-query
     buffer
-    '(agile-gtd-my-habit)
+    '(agile-gtd-habit)
     '("Habit tag item"
       "Habit style item"))))
 
