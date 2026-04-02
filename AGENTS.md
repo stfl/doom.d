@@ -98,6 +98,7 @@
 - Preserve the repo's direct, pragmatic style over abstract framework-building.
 
 ## Imports and Dependencies
+- When inspecting dependency implementations, always prefer the local straight checkouts under `~/.config/emacs/.local/straight/repos/*` as the source of truth.
 - Prefer plain `with-eval-after-load`, `use-package`, and `setopt` in private config, following recent Doom upstream guidance.
 - Use Doom-specific macros such as `map!`, `add-hook!`, and `defadvice!` where they remain the clearest fit.
 - Use `after!`, `use-package!`, and `setq!` only when there is a repo-specific or Doom-internal reason.
