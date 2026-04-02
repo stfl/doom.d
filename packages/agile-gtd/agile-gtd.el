@@ -426,8 +426,15 @@ When nil, derive it from `agile-gtd-priority-default'."
   "Return numeric rank for PRIORITY character, or nil for nil input."
   (when priority
     (pcase priority
-      (?A 1) (?B 11) (?C 21) (?D 31) (?E 41)
-      (?F 51) (?G 61) (?H 71) (?I 81))))
+      (?A 1)
+      (?B 11)
+      (?C 21)
+      (?D 31)
+      (?E 41)
+      (?F 51)
+      (?G 61)
+      (?H 71)
+      (?I 81))))
 
 (defun agile-gtd--deadline-rank (days)
   "Return numeric rank for DAYS until deadline (integer)."
@@ -457,8 +464,14 @@ DL-DELTA is integer days until deadline or nil."
     (if (>= combined agile-gtd--rank-inf) 45 combined)))
 
 (defconst agile-gtd--priority-deadline-days
-  '((?A . 2) (?B . 5) (?C . 7) (?D . 11) (?E . 14)
-    (?F . 21) (?G . 30) (?H . 60))
+  '((?A . 2)
+    (?B . 5)
+    (?C . 7)
+    (?D . 11)
+    (?E . 14)
+    (?F . 21)
+    (?G . 30)
+    (?H . 60))
   "Maximum days-until-deadline for each priority level.")
 
 (defun agile-gtd--deadline-window (priority)
@@ -586,9 +599,8 @@ DL-DELTA is integer days until deadline or nil."
   `(and (or (priority >= (char-to-string ,priority))
             (and ,(> (agile-gtd--current-max-priority-group) org-priority-default)
                  (not (priority)))
-            (ancestors (priority >= (char-to-string ,priority)))
-            (deadline :to ,(agile-gtd--deadline-window priority))
-            (ancestors (deadline :to ,(agile-gtd--deadline-window priority))))))
+            (agile-gtd-parent-prio <= ,priority)
+            (agile-gtd-deadline-prio <= ,priority))))
 
 (defun agile-gtd-agenda-query-actions-prio-higher (priority)
   "Return an org-ql sexp for action items at or above PRIORITY."
