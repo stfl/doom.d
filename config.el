@@ -239,21 +239,18 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-(setq agile-gtd-primary-work-tags '("3datax" "@3datax" "#3datax"
-                                    "oebb" "@oebb" "#oebb"
-                                    "origina")
+(setq agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
+                             (:tag "oebb"    :name "ÖBB"     :key ?o)
+                             (:tag "origina" :name "Origina" :key ?i))
       agile-gtd-project-files '("emacs.org"
                                 "freelance.org"
                                 "geschenke.org"
                                 "media.org"
                                 "projects.org"
-                                "3datax.org"
                                 "pulswerk.org"
-                                 "versicherung.org"
-                                 "ikea.org"
-                                 "oebb.org"
-                                 "origina.org"
-                                 "cafe-glas.org"))
+                                "versicherung.org"
+                                "ikea.org"
+                                "cafe-glas.org"))
 
 (after! org-roam
   (setq! org-roam-capture-templates
