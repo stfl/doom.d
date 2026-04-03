@@ -109,8 +109,8 @@ The workflow uses tags as control signals rather than decoration.
 | #personal  | Personal item |
 | @context   | GTD context such as a place, person, or tool |
 
-Domain- or client-specific tags can be layered on top. =agile-gtd-primary-work-tags=
-marks the subset of work that should appear in primary-work views.
+Domain- or client-specific tags can be layered on top via =agile-gtd-customers=
+(see [[*Customers][Customers]]).
 When files use =#+filetags=, those tags classify every heading in the file.
 
 * Deferred work
@@ -123,6 +123,76 @@ There are two important deferred states:
 
 Processing a tickler usually means removing =SOMEDAY=, assigning a real
 priority, and optionally adding a deadline.
+
+* Customers
+
+Work items all carry =#work=, but different clients or teams can be
+distinguished with customer-specific tags. =agile-gtd-customers= lets you
+declare them once; the package then auto-generates per-customer agenda commands
+and adds the tags to =org-tag-alist=.
+
+Each entry is a plist:
+
+| Key    | Required | Description                                               |
+|--------+----------+-----------------------------------------------------------|
+| =:tag=   | yes      | Org tag string identifying this customer                  |
+| =:name=  | no       | Display name (defaults to =:tag=)                           |
+| =:file=  | no       | Org file relative to =org-directory= (defaults to =:tag=.org) |
+| =:key=   | yes      | Single character for agenda key binding and tag-alist      |
+
+** Configuration example
+
+#+begin_src emacs-lisp
+(setopt agile-gtd-customers
+        '((:tag "acme"   :name "ACME Corp"   :key ?a)
+          (:tag "globex"  :name "Globex Inc"  :key ?g)))
+#+end_src
+
+This generates:
+
+- =wa= — "ACME Corp Agenda" (today + stuck projects + next actions filtered to =acme= tag)
+- =wg= — "Globex Inc Agenda" (same, filtered to =globex= tag)
+- Tag-alist entries: =acme= bound to =a=, =globex= bound to =g=
+
+Customer tags are expected to be applied via =#+filetags= at the file level or
+inherited from a parent heading.
+
+* Agenda commands
+
+The package installs a set of agenda commands under =org-agenda-custom-commands=:
+
+| Key  | Name                     | Description                                     |
+|------+--------------------------+-------------------------------------------------|
+| =i=    | Inbox                    | Unprocessed inbox items grouped by creation date |
+| =a=    | Main Agenda              | Unified daily view: all contexts, priority-grouped |
+| =A=    | Agenda Weekly            | Standard week view                               |
+| =l=    | Agenda Weekly with Log   | Week view with closed-item log                   |
+| =r=    | Review                   | Prefix for review commands                       |
+| =rc=   | Close open actions       | All active NEXT/WAIT within 30 days              |
+| =rs=   | Stuck Projects           | Projects with no NEXT/WAIT child                 |
+| =rt=   | Tangling TODOs           | Actions orphaned under completed ancestors       |
+| =rS=   | SOMEDAY                  | Low-priority and deferred projects               |
+| =p=    | Private                  | Prefix for private (non-work) commands           |
+| =pp=   | Private Agenda Today     | Daily view filtered to non-work items            |
+| =pb=   | Private Backlog          | Backlog filtered to non-work                     |
+| =ps=   | Private Stuck Projects   | Stuck projects filtered to non-work              |
+| =w=    | Work                     | Prefix for work commands                         |
+| =ww=   | Work Agenda Today        | Daily view filtered to =#work= items               |
+| =wb=   | Work Backlog             | Backlog filtered to =#work=                        |
+| =ws=   | Work Stuck Projects      | Stuck projects filtered to =#work=                 |
+| =w<key>= | /Customer/ Agenda       | Per-customer daily view (auto-generated)         |
+
+The composite daily views (=a=, =pp=, =ww=, =w<key>=) show three blocks in order:
+1. Agenda (today's scheduled, deadlined, and time-grid items)
+2. Stuck Projects (flat list, no grouping)
+3. Next Actions (grouped by ancestor priority)
+
+All three blocks are filtered consistently: =pp= excludes =#work= items, =ww=
+includes only =#work= items, and =w<key>= includes only items tagged with the
+customer tag. =a= shows everything unfiltered.
+
+Interactive narrowing by tag is available in any agenda buffer via
+=org-agenda-filter-by-tag= (=\= key).
 
 * Derived concepts
 
@@ -138,7 +208,6 @@ The package exposes org-ql predicates for the workflow's core concepts:
 | =agile-gtd-habit=        | habit by tag or Org habit style |
 | =agile-gtd-tangling=        | task left under a completed ancestor |
 | =agile-gtd-work=            | any work item |
-| =agile-gtd-primary-work=    | primary-work subset |
 | =agile-gtd-private=         | non-work item |
 
 These predicates drive agenda commands and review views.

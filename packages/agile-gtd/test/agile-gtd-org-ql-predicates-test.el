@@ -34,7 +34,7 @@
           (org-priority-lowest ?C)
           (org-priority-faces nil)
           (org-modern-priority nil)
-          (agile-gtd-primary-work-tags '("team"))
+          (agile-gtd-customers nil)
           (agile-gtd-project-files '("projects.org"))
           (agile-gtd-enable-agenda-files t)
           (agile-gtd-enable-refile-targets t)
@@ -179,12 +179,6 @@ Runs the query once with preambles enabled and once with them disabled."
       "Primary work root"))
    (agile-gtd-org-ql-test-assert-query
     buffer
-    '(and (todo)
-          (agile-gtd-primary-work))
-    '("Primary work child"
-      "Primary work root"))
-   (agile-gtd-org-ql-test-assert-query
-    buffer
     '(and (heading "Private errand")
           (agile-gtd-private))
     '("Private errand"))
@@ -216,5 +210,7 @@ Runs the query once with preambles enabled and once with them disabled."
     '(agile-gtd-habit)
     '("Habit tag item"
       "Habit style item"))))
+
+(provide 'agile-gtd-org-ql-predicates-test)
 
 ;;; agile-gtd-org-ql-predicates-test.el ends here

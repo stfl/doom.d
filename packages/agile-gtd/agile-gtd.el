@@ -110,9 +110,14 @@
   :type 'string
   :group 'agile-gtd)
 
-(defcustom agile-gtd-primary-work-tags nil
-  "Tags identifying primary work items."
-  :type '(repeat string)
+(defcustom agile-gtd-customers nil
+  "List of configured work customers.
+Each entry is a plist with:
+  :tag  - org tag string identifying this customer (required)
+  :name - display name (defaults to value of :tag)
+  :file - org file relative to `org-directory' (defaults to :tag \".org\")
+  :key  - single character for agenda key binding and tag-alist (required)"
+  :type '(repeat (plist :key-type keyword :value-type sexp))
   :group 'agile-gtd)
 
 (defcustom agile-gtd-inbox-file "inbox.org"
@@ -257,6 +262,22 @@ When nil, derive it from `agile-gtd-priority-default'."
     (unless (agile-gtd--priority-in-range-p priority)
       (error "Priority %s is outside the configured Agile GTD range"
              priority))))
+
+(defun agile-gtd--customer-tag (c)
+  "Return the tag for customer C."
+  (plist-get c :tag))
+
+(defun agile-gtd--customer-name (c)
+  "Return the display name for customer C."
+  (or (plist-get c :name) (plist-get c :tag)))
+
+(defun agile-gtd--customer-file (c)
+  "Return the org file for customer C."
+  (or (plist-get c :file) (concat (plist-get c :tag) ".org")))
+
+(defun agile-gtd--customer-key (c)
+  "Return the key character for customer C."
+  (plist-get c :key))
 
 (defun agile-gtd--workflow-tag-alist ()
   "Return the workflow tag definitions managed by Agile GTD."
@@ -555,35 +576,23 @@ DL-DELTA is integer days until deadline or nil."
     (:name "Habits" :tag ,agile-gtd-habit-tag :habit t :order 90)
     (:name "Today" :anything t :order 10)))
 
-(defun agile-gtd--today-groups-no-primary-work ()
-  "Return today groups while hiding primary work items."
-  (if agile-gtd-primary-work-tags
-      (let ((discard-primary `(:discard (:name "Primary Work"
-                                         :tag ,agile-gtd-primary-work-tags
-                                         :order 40))))
-        (cons discard-primary (agile-gtd--today-groups)))
-    (agile-gtd--today-groups)))
-
-(defun agile-gtd--agenda-day ()
-  "Return the base agenda block used by the daily view."
+(defun agile-gtd--agenda-day (&optional tag-filter-preset)
+  "Return the base agenda block used by the daily view.
+TAG-FILTER-PRESET, when non-nil, is a list of strings for
+`org-agenda-tag-filter-preset' (e.g. \\='(\"+#work\") or \\='(\"-#work\"))."
   `(agenda "Agenda"
     ((org-agenda-use-time-grid t)
      (org-deadline-warning-days 0)
      (org-agenda-span '1)
-     (org-super-agenda-groups ,(agile-gtd--today-groups-no-primary-work))
-     (org-agenda-start-day (org-today)))))
+     (org-super-agenda-groups ,(agile-gtd--today-groups))
+     (org-agenda-start-day (org-today))
+     ,@(when tag-filter-preset
+         `((org-agenda-tag-filter-preset ',tag-filter-preset))))))
 
 (defun agile-gtd--someday-habit ()
   "Return an org-ql sexp matching someday and habit items."
   `(or (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag)
        (habit)))
-
-(defun agile-gtd--primary-work-query ()
-  "Return an org-ql sexp matching primary work items."
-  (if agile-gtd-primary-work-tags
-      `(tags ,@agile-gtd-primary-work-tags)
-    '(and (tags "__agile-gtd-no-primary-work__")
-          (not (tags "__agile-gtd-no-primary-work__")))))
 
 (defun agile-gtd-not-someday-habit ()
   "Return an org-ql sexp excluding someday and habit items."
@@ -611,9 +620,61 @@ DL-DELTA is integer days until deadline or nil."
         (not (deadline :to 0))
         (not (scheduled))))
 
-(defun agile-gtd-agenda-query-stuck-projects ()
-  "Return the standard stuck-project query."
-  '(agile-gtd-stuck-proj))
+(defun agile-gtd-agenda-query-today-items (&optional tag-filter)
+  "Return org-ql sexp for items due or active today.
+TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
+  (let ((base `(and (not (done))
+                    (or (agile-gtd-habit)
+                        (deadline :to today)
+                        (scheduled :to today)
+                        (ts-active :on today)))))
+    (if tag-filter `(and ,base ,tag-filter) base)))
+
+(defun agile-gtd-agenda-query-next-actions (&optional tag-filter priority)
+  "Return org-ql sexp for next actions at or above PRIORITY.
+TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag.
+PRIORITY defaults to `agile-gtd--current-max-priority-group'."
+  (let* ((prio (or priority (agile-gtd--current-max-priority-group)))
+         (base `(and (todo ,@(agile-gtd--action-keywords))
+                     ,(agile-gtd--prio-deadline>= prio)
+                     (not ,(agile-gtd--someday-habit))
+                     (not (ancestors (deadline :to 0)))
+                     (not (deadline :to 0))
+                     (not (scheduled)))))
+    (if tag-filter `(and ,base ,tag-filter) base)))
+
+(defun agile-gtd-agenda-query-backlog (&optional tag-filter)
+  "Return org-ql sexp for backlog (projects and standalone next actions).
+TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
+  (let ((base `(and (or (todo ,(agile-gtd--project-keyword))
+                        (agile-gtd-standalone-next))
+                    (not (agile-gtd-habit)))))
+    (if tag-filter `(and ,base ,tag-filter) base)))
+
+(defun agile-gtd-agenda-query-stuck-projects (&optional tag-filter)
+  "Return org-ql sexp for stuck projects.
+TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
+  (if tag-filter
+      `(and (agile-gtd-stuck-proj) ,tag-filter)
+    '(agile-gtd-stuck-proj)))
+
+(defun agile-gtd--customer-agenda-commands ()
+  "Return agenda commands for each configured customer."
+  (mapcar
+   (lambda (customer)
+     (let* ((tag  (agile-gtd--customer-tag customer))
+            (name (agile-gtd--customer-name customer))
+            (key  (char-to-string (agile-gtd--customer-key customer)))
+            (filt `(tags ,tag)))
+       `(,(concat "w" key) ,(format "%s Agenda" name)
+         (,(agile-gtd--agenda-day (list (concat "+" tag)))
+          (org-ql-block ,(agile-gtd-agenda-query-stuck-projects filt)
+                        ((org-ql-block-header "Stuck Projects")
+                         (org-super-agenda-header-separator "")))
+          (org-ql-block ,(agile-gtd-agenda-query-next-actions filt)
+                        ((org-ql-block-header "Next Actions")
+                         (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))))
+   agile-gtd-customers))
 
 (defun agile-gtd--agenda-custom-commands ()
   "Return the Agile GTD agenda commands."
@@ -622,21 +683,14 @@ DL-DELTA is integer days until deadline or nil."
                           (tags ,@agile-gtd-inbox-tags))
                     ((org-ql-block-header "Inbox")
                      (org-super-agenda-groups '((:auto-property "CREATED")))))))
-    ("a" "Private Agenda Today"
+    ("a" "Main Agenda"
      (,(agile-gtd--agenda-day)
-      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
-                          ,(agile-gtd--prio-deadline>= (agile-gtd--current-max-priority-group))
-                          (not ,(agile-gtd--someday-habit))
-                          (not (ancestors (deadline :to 0)))
-                          (not (deadline :to 0))
-                          (not (scheduled))
-                          (not (agile-gtd-primary-work)))
-                    ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
-      (org-ql-block '(and (agile-gtd-stuck-proj)
-                          (not (agile-gtd-primary-work)))
+      (org-ql-block ,(agile-gtd-agenda-query-stuck-projects)
                     ((org-ql-block-header "Stuck Projects")
-                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+                     (org-super-agenda-header-separator "")))
+      (org-ql-block ,(agile-gtd-agenda-query-next-actions)
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
     ("A" "Agenda Weekly"
      ((agenda ""
               ((org-agenda-span 'week)
@@ -693,95 +747,44 @@ DL-DELTA is integer days until deadline or nil."
                      (org-super-agenda-groups ,(list (list :tag agile-gtd-someday-tag :order 10)
                                                      '(:auto-priority)))))))
     ("p" . "Private")
-    ("pb" "Backlog"
-     ((org-ql-block '(and (or (todo "PROJ")
-                              (agile-gtd-standalone-next))
-                          (not (agile-gtd-primary-work))
-                          (not (agile-gtd-habit)))
+    ("pp" "Private Agenda Today"
+     (,(agile-gtd--agenda-day (list (concat "-" agile-gtd-work-tag)))
+      (org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")))
+      (org-ql-block ,(agile-gtd-agenda-query-next-actions '(agile-gtd-private))
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ("pb" "Private Backlog"
+     ((org-ql-block ,(agile-gtd-agenda-query-backlog '(agile-gtd-private))
                     ((org-ql-block-header "Backlog")
                      (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
                      (org-dim-blocked-tasks t)))))
-    ("ps" "Stuck Projects"
-     ((org-ql-block '(and (agile-gtd-stuck-proj)
-                          (not (agile-gtd-primary-work)))
+    ("ps" "Private Stuck Projects"
+     ((org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")
                      (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
     ("w" . "Work")
-    ("ww" "Work Agenda Primary"
-     ((org-ql-block '(and (agile-gtd-primary-work)
-                          (not (done))
-                          (or (agile-gtd-habit)
-                              (deadline :to today)
-                              (scheduled :to today)
-                              (ts-active :on today)))
-                    ((org-ql-block-header "Today")
-                     (org-super-agenda-groups ,(agile-gtd--today-groups))))
-      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
-                          (not ,(agile-gtd--someday-habit))
-                          (not (ancestors (deadline :to 0)))
-                          (not (deadline :to 0))
-                          (not (scheduled))
-                          (agile-gtd-primary-work))
+    ("ww" "Work Agenda Today"
+     (,(agile-gtd--agenda-day (list (concat "+" agile-gtd-work-tag)))
+      (org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-work))
+                    ((org-ql-block-header "Stuck Projects")
+                     (org-super-agenda-header-separator "")))
+      (org-ql-block ,(agile-gtd-agenda-query-next-actions '(agile-gtd-work))
                     ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
-      (org-ql-block '(and (agile-gtd-stuck-proj)
-                          (agile-gtd-primary-work))
-                    ((org-ql-block-header "Stuck Projects")
-                     (org-super-agenda-header-separator "")
                      (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
-    ("wa" "Work Agenda (not primary)"
-     ((org-ql-block '(and (and (agile-gtd-work)
-                               (not (agile-gtd-primary-work)))
-                          (not (done))
-                          (or (agile-gtd-habit)
-                              (deadline :to today)
-                              (scheduled :to today)
-                              (ts-active :on today)))
-                    ((org-ql-block-header "Today")
-                     (org-super-agenda-groups ,(agile-gtd--today-groups))))
-      (org-ql-block `(and (todo ,@(agile-gtd--action-keywords))
-                          ,(agile-gtd--prio-deadline>= org-priority-default)
-                          (not ,(agile-gtd--someday-habit))
-                          (not (ancestors (deadline :to 0)))
-                          (not (deadline :to 0))
-                          (not (scheduled))
-                          (and (agile-gtd-work)
-                               (not (agile-gtd-primary-work))))
-                    ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))
-      (org-ql-block '(and (agile-gtd-stuck-proj)
-                          (and (agile-gtd-work)
-                               (not (agile-gtd-primary-work))))
-                    ((org-ql-block-header "Stuck Projects")
-                     (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
-    ("wb" "Proxmox Backlog"
-     ((org-ql-block '(and (or (todo "PROJ")
-                              (agile-gtd-standalone-next))
-                          (agile-gtd-primary-work))
-                    ((org-ql-block-header "Backlog")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
-                     (org-dim-blocked-tasks t)))
-      (org-ql-block '(and (agile-gtd-stuck-proj)
-                          (not (agile-gtd-primary-work)))
-                    ((org-ql-block-header "Stuck Projects")
-                     (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
-    ("wB" "Backlog #work w/ Primary Work"
-     ((org-ql-block '(and (or (todo "PROJ")
-                              (agile-gtd-standalone-next))
-                          (and (agile-gtd-work)
-                               (not (agile-gtd-primary-work))))
+    ("wb" "Work Backlog"
+     ((org-ql-block ,(agile-gtd-agenda-query-backlog '(agile-gtd-work))
                     ((org-ql-block-header "Backlog")
                      (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))
                      (org-dim-blocked-tasks t)))))
-    ("ws" "Stuck Projects"
-     ((org-ql-block '(and (agile-gtd-stuck-proj)
-                          (agile-gtd-work))
+    ("ws" "Work Stuck Projects"
+     ((org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-work))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))))
+                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+    ,@(agile-gtd--customer-agenda-commands)))
 
 (defun agile-gtd--agenda-someday-p ()
   "Return non-nil when the current agenda item is tagged as someday."
@@ -892,11 +895,6 @@ With prefix argument DO-SCHEDULE, create a tickler."
   :normalizers ((`(,predicate-names)
                  (rec `(tags ,agile-gtd-work-tag)))))
 
-(org-ql-defpred agile-gtd-primary-work ()
-  "Match primary work entries."
-  :normalizers ((`(,predicate-names)
-                 (rec `(,@(agile-gtd--primary-work-query))))))
-
 (org-ql-defpred agile-gtd-private ()
   "Match private entries."
   :normalizers ((`(,predicate-names)
@@ -997,17 +995,26 @@ Example: (agile-gtd-parent-prio <= ?C) matches items with parent priority A, B o
           ("KILL" . agile-gtd-todo-cancel))))
 
 (defun agile-gtd--apply-tags ()
-  "Apply Agile GTD workflow tags."
+  "Apply Agile GTD workflow tags and customer tags."
   (let* ((workflow-tags (agile-gtd--workflow-tag-alist))
+         (customer-tag-names (mapcar #'agile-gtd--customer-tag agile-gtd-customers))
+         (managed-names (append (agile-gtd--workflow-tag-names) customer-tag-names))
          (current-tags (agile-gtd--delete-sublist workflow-tags org-tag-alist)))
     (setq org-tag-alist
           (append
            (cl-remove-if (lambda (entry)
                            (and (consp entry)
                                 (stringp (car entry))
-                                (member (car entry) (agile-gtd--workflow-tag-names))))
+                                (member (car entry) managed-names)))
                          current-tags)
-           workflow-tags))))
+           workflow-tags))
+    ;; Customer tags
+    (dolist (customer agile-gtd-customers)
+      (let ((tag (agile-gtd--customer-tag customer))
+            (key (agile-gtd--customer-key customer)))
+        (when (and tag key)
+          (cl-pushnew (cons tag key) org-tag-alist
+                      :test (lambda (a b) (equal (car a) (car b)))))))))
 
 (defun agile-gtd--apply-refile-targets ()
   "Apply Agile GTD refile target settings."

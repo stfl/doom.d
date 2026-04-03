@@ -31,7 +31,7 @@
           (org-priority-lowest ?C)
           (org-priority-faces nil)
           (org-modern-priority nil)
-          (agile-gtd-primary-work-tags '("team"))
+          (agile-gtd-customers nil)
           (agile-gtd-project-files '("projects.org"))
           (agile-gtd-enable-agenda-files t)
           (agile-gtd-enable-refile-targets t)
@@ -81,16 +81,6 @@
       (should (equal org-tag-alist expected))
       (agile-gtd-refresh)
       (should (equal org-tag-alist expected)))))
-
-(ert-deftest agile-gtd-refresh-handles-empty-primary-work-tags ()
-  (agile-gtd-test-with-sandbox
-    (let ((agile-gtd-primary-work-tags nil))
-      (agile-gtd-refresh)
-      (should (equal (agile-gtd--primary-work-query)
-                     '(and (tags "__agile-gtd-no-primary-work__")
-                           (not (tags "__agile-gtd-no-primary-work__")))))
-      (should (equal (agile-gtd--today-groups-no-primary-work)
-                     (agile-gtd--today-groups))))))
 
 (ert-deftest agile-gtd-capture-templates-include-priority-and-protocol-support ()
   (agile-gtd-test-with-sandbox
