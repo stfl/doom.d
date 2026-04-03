@@ -360,13 +360,20 @@ When nil, derive it from `agile-gtd-priority-default'."
   "Expand FILE relative to `org-directory'."
   (expand-file-name file org-directory))
 
+(defun agile-gtd--customer-files ()
+  "Return the list of customer files derived from `agile-gtd-customers'."
+  (mapcar #'agile-gtd--customer-file agile-gtd-customers))
+
 (defun agile-gtd--agenda-files ()
   "Return the agenda files managed by Agile GTD."
   (mapcar #'agile-gtd--expand-org-path
-          (append (list agile-gtd-inbox-file
-                        agile-gtd-inbox-orgzly-file
-                        agile-gtd-todo-file)
-                  agile-gtd-project-files)))
+          (cl-remove-duplicates
+           (append (list agile-gtd-inbox-file
+                         agile-gtd-inbox-orgzly-file
+                         agile-gtd-todo-file)
+                   agile-gtd-project-files
+                   (agile-gtd--customer-files))
+           :test #'equal)))
 
 (defun agile-gtd--someday-files ()
   "Return the someday files used for refiling."
