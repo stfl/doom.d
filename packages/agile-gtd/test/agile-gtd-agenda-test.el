@@ -26,6 +26,12 @@ DEADLINE: <2026-04-06 Mon>
 
 * PROJ Stuck private
 ** TODO Notes only
+
+* TODO Inbox item one :#inbox:
+
+* TODO Inbox item two :inbox:
+
+* DONE Finished inbox :#inbox:
 "
   "Org data for agenda query tests.")
 
@@ -151,6 +157,24 @@ DEADLINE: <2026-04-06 Mon>
                 (cdr (assoc "No priority private" ranked))))
      ;; No-priority default rank 45 should be highest
      (should (= 45 (cdr (assoc "No priority private" ranked)))))))
+
+;;; Inbox query tests
+
+(ert-deftest agile-gtd-agenda-query-inbox-returns-sexp ()
+  "Inbox query returns a well-formed sexp."
+  (let ((query (agile-gtd-agenda-query-inbox)))
+    (should (listp query))
+    (should (eq 'and (car query)))))
+
+(ert-deftest agile-gtd-agenda-query-inbox-matches ()
+  "Inbox query matches undone inbox-tagged items, excludes done ones."
+  (agile-gtd-agenda-test-with-data
+   (let* ((query (agile-gtd-agenda-query-inbox))
+          (headings (agile-gtd-org-ql-test-headings buffer query)))
+     (should (member "Inbox item one" headings))
+     (should (member "Inbox item two" headings))
+     (should-not (member "Finished inbox" headings))
+     (should-not (member "Work high-prio" headings)))))
 
 ;;; Customer agenda command tests
 

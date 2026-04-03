@@ -1993,6 +1993,12 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :custom
   (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (org-mcp-stored-queries-file (expand-file-name "org-mcp-stored-queries.el" doom-user-dir))
+  (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
+                                 (rank . agile-gtd--item-rank)))
+  (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
+  (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
+  (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
+  (org-mcp-query-sort-fn    #'agile-gtd--item-rank)
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))

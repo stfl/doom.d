@@ -650,6 +650,11 @@ PRIORITY defaults to `agile-gtd--current-max-priority-group'."
                      (not (scheduled)))))
     (if tag-filter `(and ,base ,tag-filter) base)))
 
+(defun agile-gtd-agenda-query-inbox ()
+  "Return org-ql sexp for inbox items."
+  `(and (not (done))
+        (tags ,@agile-gtd-inbox-tags)))
+
 (defun agile-gtd-agenda-query-backlog (&optional tag-filter)
   "Return org-ql sexp for backlog (projects and standalone next actions).
 TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
