@@ -591,7 +591,7 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings for
     ((org-agenda-use-time-grid t)
      (org-deadline-warning-days 0)
      (org-agenda-span '1)
-     (org-super-agenda-groups ,(agile-gtd--today-groups))
+     (org-super-agenda-groups ',(agile-gtd--today-groups))
      (org-agenda-start-day (org-today))
      ,@(when tag-filter-preset
          `((org-agenda-tag-filter-preset ',tag-filter-preset))))))
