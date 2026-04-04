@@ -312,4 +312,89 @@ without signalling an error."
     (should groups-pair)
     (should (listp (eval (cadr groups-pair) t)))))
 
+;;; Agenda buffer integration tests
+
+(defun agile-gtd-agenda-integration-test-org-data ()
+  "Return org data for agenda integration tests.
+Uses today's date so the scheduled item appears in the day block."
+  (concat "* NEXT [#A] High priority action\n\n"
+          "* NEXT [#C] Medium priority action\n\n"
+          "* PROJ Stuck project\n"
+          "** TODO Notes only\n\n"
+          ;; This item has a schedule so it appears in the day agenda block
+          ;; but NOT in the Next Actions block (excluded by `not (scheduled)').
+          "* NEXT [#B] Scheduled today\n"
+          (format "SCHEDULED: <%s>\n" (format-time-string "%Y-%m-%d %a"))))
+
+(defmacro agile-gtd-agenda-test-build-view (cmd-key &rest body)
+  "Build org agenda for CMD-KEY in a fresh sandbox.
+BODY executes with `agenda-text' bound to the resulting agenda buffer's text."
+  (declare (indent 1) (debug t))
+  `(agile-gtd-org-ql-test-with-sandbox
+    (let* ((agile-gtd-project-files '("agenda-integration.org"))
+           (file (expand-file-name "agenda-integration.org" org-directory))
+           (org-agenda-window-setup 'current-window))
+      (with-temp-file file
+        (insert (agile-gtd-agenda-integration-test-org-data)))
+      (agile-gtd-enable)
+      (unwind-protect
+          (save-window-excursion
+            (org-agenda nil ,cmd-key)
+            (let* ((buf (get-buffer org-agenda-buffer-name))
+                   (agenda-text (with-current-buffer buf (buffer-string))))
+              ,@body))
+        (when-let ((buf (get-buffer org-agenda-buffer-name)))
+          (kill-buffer buf))))))
+
+(ert-deftest agile-gtd-agenda-main-view-all-sections-populated ()
+  "Main Agenda ('a') builds with all three blocks populated by test items."
+  (agile-gtd-agenda-test-build-view "a"
+    ;; Day agenda block: today-scheduled item appears
+    (ert-info ("Day block")
+      (should (string-match-p "Scheduled today" agenda-text)))
+    ;; Stuck Projects block: header present and stuck item present
+    (ert-info ("Stuck Projects block")
+      (should (string-match-p "Stuck Projects" agenda-text))
+      (should (string-match-p "Stuck project" agenda-text)))
+    ;; Next Actions block: header present and unscheduled priority items present
+    (ert-info ("Next Actions block")
+      (should (string-match-p "Next Actions" agenda-text))
+      (should (string-match-p "High priority action" agenda-text))
+      (should (string-match-p "Medium priority action" agenda-text)))))
+
+(ert-deftest agile-gtd-agenda-main-view-section-order ()
+  "In Main Agenda ('a'): Stuck Projects section precedes Next Actions."
+  (agile-gtd-agenda-test-build-view "a"
+    (let ((stuck-pos (string-match "Stuck Projects" agenda-text))
+          (next-pos  (string-match "Next Actions"   agenda-text)))
+      (should stuck-pos)
+      (should next-pos)
+      (should (< stuck-pos next-pos)))))
+
+(ert-deftest agile-gtd-agenda-main-view-scheduled-excluded-from-next-actions ()
+  "Scheduled items do not appear under the Next Actions section."
+  (agile-gtd-agenda-test-build-view "a"
+    (let ((next-pos (string-match "Next Actions" agenda-text)))
+      (should next-pos)
+      ;; The substring from the Next Actions header onward must not
+      ;; contain the scheduled-today item.
+      (should-not
+       (string-match-p "Scheduled today"
+                        (substring agenda-text next-pos))))))
+
+(ert-deftest agile-gtd-agenda-stuck-projects-view-populated ()
+  "Stuck Projects view ('rs') shows stuck items."
+  (agile-gtd-agenda-test-build-view "rs"
+    (should (string-match-p "Stuck Projects" agenda-text))
+    (should (string-match-p "Stuck project" agenda-text))))
+
+(ert-deftest agile-gtd-agenda-private-view-sections-populated ()
+  "Private Agenda ('pp') contains private items in all its blocks."
+  (agile-gtd-agenda-test-build-view "pp"
+    ;; No items are tagged with work-tag so all items are private.
+    (should (string-match-p "Next Actions" agenda-text))
+    (should (string-match-p "High priority action" agenda-text))
+    (should (string-match-p "Stuck Projects" agenda-text))
+    (should (string-match-p "Stuck project" agenda-text))))
+
 ;;; agile-gtd-agenda-test.el ends here
