@@ -787,7 +787,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
                     ((org-ql-block-header "Next Actions")
                      (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))))))
     ("wb" "Work Backlog"
-     ((org-ql-block ,(agile-gtd-agenda-query-backlog '(agile-gtd-work))
+     ((org-ql-block ',(agile-gtd-agenda-query-backlog '(agile-gtd-work))
                     ((org-ql-block-header "Backlog")
                      (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))
                      (org-dim-blocked-tasks t)))))
