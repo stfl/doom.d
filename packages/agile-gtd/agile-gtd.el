@@ -697,10 +697,10 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
                      (org-super-agenda-groups '((:auto-property "CREATED")))))))
     ("a" "Main Agenda"
      (,(agile-gtd--agenda-day)
-      (org-ql-block ,(agile-gtd-agenda-query-stuck-projects)
+      (org-ql-block ',(agile-gtd-agenda-query-stuck-projects)
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-      (org-ql-block ,(agile-gtd-agenda-query-next-actions)
+      (org-ql-block ',(agile-gtd-agenda-query-next-actions)
                     ((org-ql-block-header "Next Actions")
                      (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))))))
     ("A" "Agenda Weekly"
