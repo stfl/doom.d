@@ -215,9 +215,10 @@ DEADLINE: <2026-04-06 Mon>
   "Walk agenda command TREE and collect all values bound to settings KEY."
   (let (results)
     (cl-labels ((walk (node)
-                  (when (consp node)
-                    (if (and (eq (car node) key) (cdr node))
-                        (push (cadr node) results)
+                  (when (proper-list-p node)
+                    (if (eq (car node) key)
+                        (when (cdr node)
+                          (push (cadr node) results))
                       (mapc #'walk node)))))
       (walk tree))
     results))
