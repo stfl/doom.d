@@ -146,7 +146,8 @@
        (lsp
         +eglot
         +booster          ; performance improvements for eglot
-        +peek)
+        ;; +peek
+        )
        (magit             ; a git porcelain for Emacs
         +forge
         )
