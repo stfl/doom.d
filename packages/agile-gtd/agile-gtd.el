@@ -13,6 +13,7 @@
 (require 'org-element)
 (require 'org-id)
 (require 'org-ql)
+(require 'org-ql-search)
 (require 'org-super-agenda)
 (require 'ts)
 
