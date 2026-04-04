@@ -761,10 +761,10 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
     ("p" . "Private")
     ("pp" "Private Agenda Today"
      (,(agile-gtd--agenda-day (list (concat "-" agile-gtd-work-tag)))
-      (org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
+      (org-ql-block ',(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-      (org-ql-block ,(agile-gtd-agenda-query-next-actions '(agile-gtd-private))
+      (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-private))
                     ((org-ql-block-header "Next Actions")
                      (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))))))
     ("pb" "Private Backlog"
