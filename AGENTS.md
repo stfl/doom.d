@@ -34,7 +34,8 @@
 - Do not restart git-sync if work is still uncommitted.
 
 ## Commit Workflow
-- Before committing any changes to `config.org`, always run `~/.config/emacs/bin/doom +org tangle config.org` first.
+- Before committing any changes to `config.org`, always run `~/.config/emacs/bin/doom sync` first — this is what actually regenerates `config.el` (via the literate module tangle hook).
+- `doom +org tangle config.org` only updates explicitly-targeted blocks (`packages.el`, JSON files); it does NOT update `config.el`.
 - Include `config.el` (and `packages.el` if changed) in the same commit as `config.org` so the repo stays consistent.
 - Stage `config.org`, `config.el`, and `packages.el` together; never commit `config.org` alone.
 
@@ -48,11 +49,11 @@
 - Inspect Doom CLI help: `~/.config/emacs/bin/doom help`
 
 ## Build / Regeneration Workflow
-- After changing `config.org`, always re-tangle it and then run `~/.config/emacs/bin/doom sync`.
+- After changing `config.org`, run `~/.config/emacs/bin/doom sync` — this retangles `config.org` to `config.el` and syncs packages.
+- `doom +org tangle config.org` only tangles blocks with explicit `:tangle` targets (e.g. `packages.el`, JSON files); it does NOT produce `config.el`.
 - After editing `init.el`, run `~/.config/emacs/bin/doom sync`.
 - After editing `package!` declarations, run `~/.config/emacs/bin/doom sync`.
 - Never patch `config.el` by hand to avoid this workflow; regenerate it from `config.org` instead.
-- After editing autoloaded behavior or anything in `config.org`, first run `~/.config/emacs/bin/doom +org tangle config.org`.
 - Because the config explicitly disables automatic literate recompilation, do not assume tangling happens for you.
 - If `config.org` changes produce updates in `config.el`, `packages.el`, or `langserver/*.json`, keep the generated files in sync.
 - Use `~/.config/emacs/bin/doom sync --rebuild` only when package state, Emacs version, or stale compilation looks suspect.
@@ -64,6 +65,14 @@
 - Byte-compile several files: `emacs --batch -Q -L . -f batch-byte-compile init.el config.el my-deft-title.el`
 - Load the config noninteractively when needed: `emacs --batch -Q --load init.el`
 - For risky Emacs Lisp edits, prefer byte-compilation or batch loading before finishing.
+
+## Debugging Startup Errors
+- **`doom doctor` is the primary debug tool** for config loading errors — run it and check for lines marked `x`:
+  `~/.config/emacs/bin/doom doctor 2>&1 | grep -A15 " x "`
+- It reports runtime errors with backtraces, including the exact void symbol and call stack.
+- Do NOT try to batch-load `config.el` directly — Doom macros (`doom!`, `after!`, etc.) are undefined without the framework.
+- **`after!` load-order bugs**: if a variable used inside `(after! pkg ...)` is defined later in config.el, it works in interactive Emacs (pkg loads after config) but fails in `doom doctor` (pkg may already be loaded, so the body runs immediately). Fix by defining the variable before the `after!` block, or by adding the dependency to the `after!` condition: `(after! (pkg-a pkg-b) ...)`.
+- When `doom doctor` reports `Symbol's value as variable is void`, check whether the symbol is defined later in config.el than it is used inside an `after!` body.
 
 ## Test Commands
 - There is no first-class automated test suite checked into this repo today.
