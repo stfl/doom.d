@@ -751,8 +751,8 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
                           (not (deadline)))
                     ((org-ql-block-header "Projects")
                      (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(list (list :tag agile-gtd-someday-tag :order 10)
-                                                     '(:auto-priority)))))))
+                     (org-super-agenda-groups ',(list (list :tag agile-gtd-someday-tag :order 10)
+                                                      '(:auto-priority)))))))
     ("p" . "Private")
     ("pp" "Private Agenda Today"
      (,(agile-gtd--agenda-day (list (concat "-" agile-gtd-work-tag)))
