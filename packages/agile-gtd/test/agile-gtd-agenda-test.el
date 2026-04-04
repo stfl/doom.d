@@ -254,6 +254,50 @@ form so that org-agenda can eval it without triggering 'Invalid function'."
      (dolist (val vals)
        (should (listp (eval val t)))))))
 
+(defun agile-gtd-test--collect-ql-block-queries (tree)
+  "Walk agenda command TREE collecting org-ql-block query arguments."
+  ;; Each org-ql-block form is (org-ql-block QUERY SETTINGS).
+  ;; QUERY is (cadr form).
+  (let (results)
+    (cl-labels ((walk (node)
+                  (when (proper-list-p node)
+                    (if (eq (car node) 'org-ql-block)
+                        (when (cdr node)
+                          (push (cadr node) results))
+                      (mapc #'walk node)))))
+      (walk tree))
+    results))
+
+(ert-deftest agile-gtd-agenda-ql-block-queries-are-quoted ()
+  "Every org-ql-block query in the agenda commands is a quoted or
+nested-backquote form — never a bare evaluated list that would call
+org-ql predicates outside of any heading context."
+  (agile-gtd-agenda-test-with-data
+   (let* ((cmds (agile-gtd--agenda-custom-commands))
+          (queries (agile-gtd-test--collect-ql-block-queries cmds)))
+     (should (> (length queries) 0))
+     (dolist (q queries)
+       ;; Acceptable forms: (quote ...), (backquote ...), symbol, or a
+       ;; bare function-call form like (agile-gtd-agenda-query-stuck-projects)
+       ;; whose car is a known function (call-at-eval-time pattern).
+       (should (or (symbolp q)
+                   ;; (quote ...) — quoted at define-time
+                   (and (consp q) (eq 'quote (car q)))
+                   ;; nested backquote — expanded at agenda-build-time
+                   (and (consp q) (eq '\` (car q)))
+                   ;; bare function call like (func) — eval calls func
+                   (and (consp q) (symbolp (car q)) (fboundp (car q)))))))))
+
+(ert-deftest agile-gtd-agenda-ql-block-queries-eval-to-sexps ()
+  "Every org-ql-block query evaluates to a proper list (org-ql sexp)
+without signalling an error."
+  (agile-gtd-agenda-test-with-data
+   (let* ((cmds (agile-gtd--agenda-custom-commands))
+          (queries (agile-gtd-test--collect-ql-block-queries cmds)))
+     (should (> (length queries) 0))
+     (dolist (q queries)
+       (should (listp (eval q t)))))))
+
 (ert-deftest agile-gtd-agenda-today-groups-has-time-grid ()
   "The today agenda groups include a :time-grid entry."
   (let* ((groups (agile-gtd--today-groups))
