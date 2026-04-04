@@ -949,6 +949,9 @@ With prefix argument DO-SCHEDULE, create a tickler."
 (org-ql-defpred agile-gtd-deadline-prio (op priority)
   "Match entries whose deadline-based priority satisfies OP relative to PRIORITY.
 Example: (agile-gtd-deadline-prio <= ?C) matches items with deadline within 7 days."
+  :normalizers
+  ((`(,predicate-names ,(and (or '= '< '> '<= '>=) comparator) ,prio)
+    `(agile-gtd-deadline-prio ',comparator ,prio)))
   :body
   (let* ((element (org-element-at-point))
          (dl (org-element-property :deadline element)))
@@ -963,6 +966,9 @@ Example: (agile-gtd-deadline-prio <= ?C) matches items with deadline within 7 da
 (org-ql-defpred agile-gtd-parent-prio (op priority)
   "Match entries whose direct parent priority satisfies OP relative to PRIORITY.
 Example: (agile-gtd-parent-prio <= ?C) matches items with parent priority A, B or C."
+  :normalizers
+  ((`(,predicate-names ,(and (or '= '< '> '<= '>=) comparator) ,prio)
+    `(agile-gtd-parent-prio ',comparator ,prio)))
   :body
   (let* ((par-prio (agile-gtd--direct-parent-priority))
          (par-rank (agile-gtd--prio-rank par-prio))
