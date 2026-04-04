@@ -209,4 +209,62 @@ DEADLINE: <2026-04-06 Mon>
      (agile-gtd-refresh)
      (should (= 1 (cl-count "acme" org-tag-alist :key #'car-safe :test #'equal))))))
 
+;;; Agenda custom command structure tests
+
+(defun agile-gtd-test--collect-settings-values (tree key)
+  "Walk agenda command TREE and collect all values bound to settings KEY."
+  (let (results)
+    (cl-labels ((walk (node)
+                  (when (consp node)
+                    (if (and (eq (car node) key) (cdr node))
+                        (push (cadr node) results)
+                      (mapc #'walk node)))))
+      (walk tree))
+    results))
+
+(ert-deftest agile-gtd-agenda-custom-commands-is-list ()
+  "agile-gtd--agenda-custom-commands returns a non-empty list."
+  (agile-gtd-agenda-test-with-data
+   (let ((cmds (agile-gtd--agenda-custom-commands)))
+     (should (listp cmds))
+     (should (> (length cmds) 0)))))
+
+(ert-deftest agile-gtd-agenda-super-groups-are-quoted ()
+  "Every org-super-agenda-groups value in the agenda commands is a quoted
+form so that org-agenda can eval it without triggering 'Invalid function'."
+  (agile-gtd-agenda-test-with-data
+   (let* ((cmds (agile-gtd--agenda-custom-commands))
+          (vals (agile-gtd-test--collect-settings-values
+                 cmds 'org-super-agenda-groups)))
+     (should (> (length vals) 0))
+     (dolist (val vals)
+       ;; Each value must be either (quote ...) or a plain symbol —
+       ;; never a bare list that would error when eval'd by org-agenda.
+       (should (or (symbolp val)
+                   (and (consp val) (eq 'quote (car val)))))))))
+
+(ert-deftest agile-gtd-agenda-super-groups-eval-to-lists ()
+  "Every org-super-agenda-groups value evaluates to a proper list."
+  (agile-gtd-agenda-test-with-data
+   (let* ((cmds (agile-gtd--agenda-custom-commands))
+          (vals (agile-gtd-test--collect-settings-values
+                 cmds 'org-super-agenda-groups)))
+     (should (> (length vals) 0))
+     (dolist (val vals)
+       (should (listp (eval val t)))))))
+
+(ert-deftest agile-gtd-agenda-today-groups-has-time-grid ()
+  "The today agenda groups include a :time-grid entry."
+  (let* ((groups (agile-gtd--today-groups))
+         (has-time-grid (cl-some (lambda (g) (plist-get g :time-grid)) groups)))
+    (should has-time-grid)))
+
+(ert-deftest agile-gtd-agenda-day-block-super-groups-evaluable ()
+  "The agenda day block's org-super-agenda-groups value evaluates to a list."
+  (let* ((block (agile-gtd--agenda-day))
+         (settings (nth 2 block))
+         (groups-pair (assq 'org-super-agenda-groups settings)))
+    (should groups-pair)
+    (should (listp (eval (cadr groups-pair) t)))))
+
 ;;; agile-gtd-agenda-test.el ends here
