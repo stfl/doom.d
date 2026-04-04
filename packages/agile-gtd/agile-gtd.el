@@ -732,7 +732,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
      ((org-ql-block '(agile-gtd-stuck-proj)
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(agile-gtd-priority-groups))))))
+                     (org-super-agenda-groups ',(agile-gtd-priority-groups))))))
     ("rt" "Tangling TODOs"
      ((org-ql-block '(agile-gtd-tangling)
                     ((org-ql-block-header "Tangling TODOs")
