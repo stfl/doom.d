@@ -337,6 +337,10 @@ BODY executes with `agenda-text' bound to the resulting agenda buffer's text."
       (with-temp-file file
         (insert (agile-gtd-agenda-integration-test-org-data)))
       (agile-gtd-enable)
+      ;; agile-gtd-enable adds inbox/todo/etc. files that don't exist in
+      ;; the sandbox.  Override org-agenda-files to only our test fixture
+      ;; so org-agenda doesn't prompt about missing files.
+      (setq org-agenda-files (list file))
       (unwind-protect
           (save-window-excursion
             (org-agenda nil ,cmd-key)
