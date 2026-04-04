@@ -252,6 +252,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                                 "ikea.org"
                                 "cafe-glas.org"))
 
+(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
   (setq! org-roam-capture-templates
          `(("d" "default" plain "%?"
@@ -804,9 +805,7 @@ Not added when either:
   (setq org-enforce-todo-checkbox-dependencies nil
         org-enforce-todo-dependencies nil))
 
-(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
-
-(after! org-super-agenda
+(after! (org-super-agenda evil-org-agenda)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 
 (after! org-ql

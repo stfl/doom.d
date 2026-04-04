@@ -553,6 +553,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+END_SRC
 
 #+begin_src elisp
+(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
   (setq! org-roam-capture-templates
          `(("d" "default" plain "%?"
@@ -1405,12 +1406,6 @@ specific cases.
         org-enforce-todo-dependencies nil))
 #+end_src
 
-** Agenda Files
-
-#+begin_src elisp
-(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
-#+end_src
-
 ** Agenda Custom Commands
 :PROPERTIES:
 :ID:       d7086f3e-df0a-48ba-af95-1af25a49ca06
@@ -1428,7 +1423,7 @@ Agile GTD agenda custom commands live in ~agile-gtd~.
 #+end_src
 
 #+begin_src elisp
-(after! org-super-agenda
+(after! (org-super-agenda evil-org-agenda)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 #+end_src
 
@@ -3598,10 +3593,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
 ** org-mcp
 
 MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Code).
-
-See https://github.com/laurynas-biveinis/org-mcp for setup instructions.
-After ~doom sync~, run ~M-x mcp-server-lib-install~ in Emacs, then register:
-: claude mcp add -s user -t stdio org-mcp -- ~/.emacs.d/emacs-mcp-stdio.sh --server-id=org-mcp --init-function=org-mcp-enable --stop-function=org-mcp-disable
 
 #+begin_src elisp :tangle packages.el
 (package! mcp-server-lib)
