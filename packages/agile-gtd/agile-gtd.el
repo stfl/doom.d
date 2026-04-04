@@ -680,7 +680,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
                          (org-super-agenda-header-separator "")))
           (org-ql-block ,(agile-gtd-agenda-query-next-actions filt)
                         ((org-ql-block-header "Next Actions")
-                         (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))))
+                         (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))))))))
    agile-gtd-customers))
 
 (defun agile-gtd--agenda-custom-commands ()
