@@ -771,7 +771,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
      ((org-ql-block ,(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")
-                     (org-super-agenda-groups ,(agile-gtd-ancestor-priority-groups))))))
+                     (org-super-agenda-groups ',(agile-gtd-ancestor-priority-groups))))))
     ("w" . "Work")
     ("ww" "Work Agenda Today"
      (,(agile-gtd--agenda-day (list (concat "+" agile-gtd-work-tag)))
