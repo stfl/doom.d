@@ -605,11 +605,6 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings for
   "Return an org-ql sexp excluding someday and habit items."
   `(not ,(agile-gtd--someday-habit)))
 
-(defun agile-gtd-not-sched-or-dead (from)
-  "Return an org-ql sexp excluding scheduled and deadline items from FROM."
-  `(and (not (scheduled :from today))
-        (not (deadline :from ,from))))
-
 (defun agile-gtd--prio-deadline>= (priority)
   "Return an org-ql sexp for items at or above PRIORITY urgency."
   `(and (or (priority >= (char-to-string ,priority))
