@@ -793,28 +793,14 @@ Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
 (add-hook! 'org-mode-hook #'org-edna-mode)
 #+END_SRC
 
-Some functions to quickly add TRIGGER and BLOCKER properties
+Helper commands to wire tasks into sequential dependency chains (defined in ~agile-gtd~).
 #+BEGIN_SRC elisp
-(defun stfl/trigger-next-sibling-NEXT ()
-  (interactive)
-  (org-entry-put nil "TRIGGER" "next-sibling todo!(NEXT)"))
-
-(defun stfl/blocker-previous-sibling ()
-  (interactive)
-  (org-entry-put nil "BLOCKER" "previous-sibling"))
-
-(defun stfl/trigger-next-and-blocker-previous ()
-  (interactive)
-  (stfl/trigger-next-sibling-NEXT)
-  (stfl/blocker-previous-sibling))
-
 (map! :after org
       :map org-mode-map
       :localleader
       :prefix ("d" . "date/dateline/dependencies")
-      :desc "next-sibling NEXT" "n" 'stfl/trigger-next-sibling-NEXT
-      :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
-      )
+      :desc "next-sibling NEXT"          "n" #'agile-gtd-trigger-next-sibling
+      :desc "trigger NEXT and block prev" "b" #'agile-gtd-chain-task)
 #+END_SRC
 
 ** Todo keywords

@@ -434,26 +434,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (add-hook! 'org-mode-hook #'org-edna-mode)
 
-(defun stfl/trigger-next-sibling-NEXT ()
-  (interactive)
-  (org-entry-put nil "TRIGGER" "next-sibling todo!(NEXT)"))
-
-(defun stfl/blocker-previous-sibling ()
-  (interactive)
-  (org-entry-put nil "BLOCKER" "previous-sibling"))
-
-(defun stfl/trigger-next-and-blocker-previous ()
-  (interactive)
-  (stfl/trigger-next-sibling-NEXT)
-  (stfl/blocker-previous-sibling))
-
 (map! :after org
       :map org-mode-map
       :localleader
       :prefix ("d" . "date/dateline/dependencies")
-      :desc "next-sibling NEXT" "n" 'stfl/trigger-next-sibling-NEXT
-      :desc "trigger NEXT and block prev" "b" 'stfl/trigger-next-and-blocker-previous
-      )
+      :desc "next-sibling NEXT"          "n" #'agile-gtd-trigger-next-sibling
+      :desc "trigger NEXT and block prev" "b" #'agile-gtd-chain-task)
 
 ;; TODO keywords are configured in agile-gtd.
 
