@@ -460,33 +460,35 @@ When nil, derive it from `agile-gtd-priority-default'."
         ""))
 
 (defun agile-gtd--prio-rank (priority)
-  "Return numeric rank for PRIORITY character, or nil for nil input."
-  (when priority
-    (pcase priority
-      (?A 1)
-      (?B 11)
-      (?C 21)
-      (?D 31)
-      (?E 41)
-      (?F 51)
-      (?G 61)
-      (?H 71)
-      (?I 81))))
+  "Return numeric rank for PRIORITY character, or nil if out of the configured range.
+Rank starts at 1 for `agile-gtd-priority-highest' and increases by 10 per step,
+so the effective maximum is determined by `agile-gtd-priority-lowest'."
+  (when (agile-gtd--priority-in-range-p priority)
+    (+ (* 10 (- priority agile-gtd-priority-highest)) 1)))
+
+(defconst agile-gtd--priority-deadline-days
+  '((?A . 2)
+    (?B . 5)
+    (?C . 7)
+    (?D . 11)
+    (?E . 14)
+    (?F . 21)
+    (?G . 30)
+    (?H . 60))
+  "Maximum days-until-deadline for each priority level.")
 
 (defun agile-gtd--deadline-rank (days)
-  "Return numeric rank for DAYS until deadline (integer)."
+  "Return numeric rank for DAYS until deadline (integer).
+Thresholds are derived from `agile-gtd--priority-deadline-days': each priority
+maps to the floor of its rank band, `(* 10 (- prio agile-gtd-priority-highest))'.
+Overdue (negative) returns DAYS itself; today returns -1; beyond all thresholds returns 1000."
   (cond
-   ((< days 0)    days)
-   ((= days 0)    -1)
-   ((<= days 2)    0)
-   ((<= days 5)   10)
-   ((<= days 7)   20)
-   ((<= days 11)  30)
-   ((<= days 14)  40)
-   ((<= days 21)  50)
-   ((<= days 30)  60)
-   ((<= days 60)  70)
-   (t            1000)))
+   ((< days 0) days)
+   ((= days 0) -1)
+   (t (or (cl-loop for (prio . threshold) in agile-gtd--priority-deadline-days
+                   when (<= days threshold)
+                   return (* 10 (- prio agile-gtd-priority-highest)))
+          1000))))
 
 (defconst agile-gtd--rank-inf 99999)
 
@@ -507,17 +509,6 @@ DL-DELTA is integer days until deadline or nil."
          (dl       (if dl-delta (agile-gtd--deadline-rank dl-delta) agile-gtd--rank-inf))
          (combined (min own par dl)))
     (if (>= combined agile-gtd--rank-inf) (agile-gtd--rank-default) combined)))
-
-(defconst agile-gtd--priority-deadline-days
-  '((?A . 2)
-    (?B . 5)
-    (?C . 7)
-    (?D . 11)
-    (?E . 14)
-    (?F . 21)
-    (?G . 30)
-    (?H . 60))
-  "Maximum days-until-deadline for each priority level.")
 
 (defun agile-gtd--deadline-window (priority)
   "Return the deadline window in days for PRIORITY (hard-coded table)."
@@ -654,7 +645,7 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings like
      (org-agenda-start-day (org-today))
      ,@(when tag-filter-preset
          `((org-agenda-skip-function
-                         ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
+            ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
 
 
 (defun agile-gtd-agenda-query-next-actions (&optional tag-filter priority hide-today)
@@ -711,7 +702,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
           (org-ql-block ',(agile-gtd-agenda-query-stuck-projects filt)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")))
-           (org-ql-block ',(agile-gtd-agenda-query-next-actions filt nil t)
+          (org-ql-block ',(agile-gtd-agenda-query-next-actions filt nil t)
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups ',(agile-gtd-rank-groups))))))))
    agile-gtd-customers))
@@ -728,9 +719,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects)
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-       (org-ql-block ',(agile-gtd-agenda-query-next-actions nil nil t)
-                      ((org-ql-block-header "Next Actions")
-                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+      (org-ql-block ',(agile-gtd-agenda-query-next-actions nil nil t)
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("A" "Agenda Weekly"
      ((agenda ""
               ((org-agenda-span 'week)
@@ -792,9 +783,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-       (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-private) nil t)
-                     ((org-ql-block-header "Next Actions")
-                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+      (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-private) nil t)
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("pb" "Private Backlog"
      ((org-ql-block ',(agile-gtd-agenda-query-backlog '(agile-gtd-private))
                     ((org-ql-block-header "Backlog")
@@ -811,9 +802,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects '(agile-gtd-work))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-       (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-work) nil t)
-                     ((org-ql-block-header "Next Actions")
-                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+      (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-work) nil t)
+                    ((org-ql-block-header "Next Actions")
+                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("wb" "Work Backlog"
      ((org-ql-block ',(agile-gtd-agenda-query-backlog '(agile-gtd-work))
                     ((org-ql-block-header "Backlog")
@@ -1053,6 +1044,54 @@ An entry qualifies when any of the following hold:
                      (- (time-to-days (org-timestamp-to-time dl))
                         (time-to-days (current-time))))))
     (agile-gtd--backlog-rank prio parent-prio dl-delta)))
+
+(defun agile-gtd--rank-to-prio-char (rank)
+  "Return the priority character for numeric RANK, or nil if beyond the lowest priority.
+Ranks below 1 (including negatives) clamp to `agile-gtd-priority-highest'.
+This is the inverse of `agile-gtd--prio-rank'."
+  (let* ((offset (/ (max (1- rank) 0) 10))
+         (prio   (+ agile-gtd-priority-highest offset)))
+    (when (<= prio agile-gtd-priority-lowest)
+      prio)))
+
+(defun agile-gtd--rank-describe ()
+  "Display rank breakdown for the Org item at point."
+  (let* ((element     (org-element-at-point))
+         (prio        (org-element-property :priority element))
+         (parent-prio (agile-gtd--direct-parent-priority))
+         (dl          (org-element-property :deadline element))
+         (dl-delta    (when dl
+                        (- (time-to-days (org-timestamp-to-time dl))
+                           (time-to-days (current-time)))))
+         (rank        (agile-gtd--backlog-rank prio parent-prio dl-delta))
+         (prio-str    (if prio (char-to-string prio) "none"))
+         (par-str     (if parent-prio (char-to-string parent-prio) "none"))
+         (dl-str      (if dl-delta
+                          (let* ((dl-rank  (agile-gtd--deadline-rank dl-delta))
+                                 (dl-pchar (agile-gtd--rank-to-prio-char dl-rank))
+                                 (sign     (if (>= dl-delta 0) "+" ""))
+                                 (band     (if dl-pchar
+                                               (format " (%c)" dl-pchar)
+                                             " (overdue)")))
+                            (format "%s%dd%s" sign dl-delta band))
+                        "none")))
+    (message "Rank: %d  (Priority: %s  Parent Priority: %s  Deadline: %s)"
+             rank prio-str par-str dl-str)))
+
+;;;###autoload
+(defun agile-gtd-rank ()
+  "Display the rank breakdown for the Org heading at point."
+  (interactive)
+  (agile-gtd--rank-describe))
+
+;;;###autoload
+(defun agile-gtd-agenda-rank ()
+  "Display the rank breakdown for the agenda item at point."
+  (interactive)
+  (when-let ((marker (or (org-get-at-bol 'org-marker)
+                         (org-get-at-bol 'org-hd-marker))))
+    (org-with-point-at marker
+      (agile-gtd--rank-describe))))
 
 (defun agile-gtd--apply-priorities ()
   "Apply Agile GTD priority settings."
