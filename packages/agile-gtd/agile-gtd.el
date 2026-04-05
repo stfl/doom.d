@@ -2,7 +2,7 @@
 
 ;; Version: 0.1.0
 ;; URL: https://github.com/stfl/doom.d
-;; Package-Requires: ((emacs "30.2") (dash "2.19.1") (org-modern "1.6") (org-ql "0.8") (org-super-agenda "1.3") (ts "0.3"))
+;; Package-Requires: ((emacs "30.2") (dash "2.19.1") (org-modern "1.6") (org-ql "0.8") (org-super-agenda "1.3") (ts "0.3") (org-edna "1.1.2"))
 ;; Keywords: outlines, calendar, tools
 
 (require 'cl-lib)
