@@ -561,7 +561,8 @@ DL-DELTA is integer days until deadline or nil."
                  :order ,priority)))
            (agile-gtd--priority-range))
    `((:name "Default Priority"
-      :not :priority))))
+      :anything t
+      :order ,(+ 0.5 org-priority-default)))))
 
 (defun agile-gtd-ancestor-priority-groups ()
   "Return ancestor-priority org-super-agenda groups."
@@ -677,7 +678,7 @@ The returned sexp can be used as `org-agenda-skip-function'."
   "Return the base agenda block used by the daily view.
 TAG-FILTER-PRESET, when non-nil, is a list of strings like
 \\='(\"+#work\") or \\='(\"-#work\") used to restrict which entries appear."
-  `(agenda "Agenda"
+  `(agenda "Agenda" ;; FIXME rename to Today
     ((org-agenda-use-time-grid t)
      (org-deadline-warning-days 0)
      (org-agenda-span '1)
@@ -700,15 +701,6 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings like
             (agile-gtd-parent-prio <= ,priority)
             (agile-gtd-deadline-prio <= ,priority))))
 
-(defun agile-gtd-agenda-query-actions-prio-higher (priority)
-  "Return an org-ql sexp for action items at or above PRIORITY."
-  `(and (todo ,@(agile-gtd--action-keywords))
-        ,(agile-gtd--prio-deadline>= priority)
-        (not ,(agile-gtd--someday-habit))
-        (not (ancestors (deadline :to 0)))
-        (not (deadline :to 0))
-        (not (scheduled))))
-
 (defun agile-gtd-agenda-query-today-items (&optional tag-filter)
   "Return org-ql sexp for items due or active today.
 TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
@@ -727,6 +719,7 @@ PRIORITY defaults to `agile-gtd--current-max-priority-group'."
          (base `(and (todo ,@(agile-gtd--action-keywords))
                      ,(agile-gtd--prio-deadline>= prio)
                      (not ,(agile-gtd--someday-habit))
+                     (not (agile-gtd-blocked))
                      (not (ancestors (deadline :to 0)))
                      (not (deadline :to 0))
                      (not (scheduled)))))
@@ -742,7 +735,8 @@ PRIORITY defaults to `agile-gtd--current-max-priority-group'."
 TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
   (let ((base `(and (or (todo ,(agile-gtd--project-keyword))
                         (agile-gtd-standalone-next))
-                    (not (agile-gtd-habit)))))
+                    (not (agile-gtd-habit))
+                    (not (agile-gtd-blocked)))))
     (if tag-filter `(and ,base ,tag-filter) base)))
 
 (defun agile-gtd-agenda-query-stuck-projects (&optional tag-filter)
@@ -1056,6 +1050,28 @@ Example: (agile-gtd-parent-prio <= ?C) matches items with parent priority A, B o
          (prio-rank (agile-gtd--prio-rank priority)))
     (when (and par-rank prio-rank)
       (funcall op par-rank prio-rank))))
+
+(org-ql-defpred agile-gtd-blocked ()
+  "Match entries that are blocked (via `org-entry-blocked-p').
+Integrates with org-edna when `org-edna-mode' is active via `org-blocker-hook'."
+  :body
+  (org-entry-blocked-p))
+
+(defun agile-gtd-trigger-next-sibling ()
+  "Set TRIGGER on the current task to advance the next sibling to NEXT."
+  (interactive)
+  (org-entry-put nil "TRIGGER" "next-sibling todo!(NEXT)"))
+
+(defun agile-gtd-blocker-previous-sibling ()
+  "Set BLOCKER on the current task to wait for the previous sibling."
+  (interactive)
+  (org-entry-put nil "BLOCKER" "previous-sibling"))
+
+(defun agile-gtd-chain-task ()
+  "Set both TRIGGER and BLOCKER to wire this task into a sequential chain."
+  (interactive)
+  (agile-gtd-trigger-next-sibling)
+  (agile-gtd-blocker-previous-sibling))
 
 (defun agile-gtd--item-rank ()
   "Return the virtual priority rank for the Org item at point."

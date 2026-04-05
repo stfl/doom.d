@@ -205,10 +205,11 @@ The package exposes org-ql predicates for the workflow's core concepts:
 | =agile-gtd-tickler=         | deferred item with SOMEDAY + SCHEDULED |
 | =agile-gtd-tickler-proj=    | project wholly parked in the tickler |
 | =agile-gtd-someday=         | deferred item |
-| =agile-gtd-habit=        | habit by tag or Org habit style |
+| =agile-gtd-habit=           | habit by tag or Org habit style |
 | =agile-gtd-tangling=        | task left under a completed ancestor |
 | =agile-gtd-work=            | any work item |
 | =agile-gtd-private=         | non-work item |
+| =agile-gtd-blocked=         | task with an unsatisfied org-edna BLOCKER dependency |
 
 These predicates drive agenda commands and review views.
 
@@ -227,12 +228,51 @@ New input starts in the inbox as =TODO=. Clarification happens later:
 The package includes capture templates for inbox items, projects, scheduled
 actions, deadline-driven actions, and protocol captures.
 
-* Dependencies, history, and time
+* Task dependencies
+
+Sequential steps inside a project can be chained using org-edna's =TRIGGER= and =BLOCKER=
+properties.
+
+The common pattern is:
+
+#+begin_example
+* PROJ Build release
+** NEXT Write changelog
+   :PROPERTIES:
+   :TRIGGER: next-sibling todo!(NEXT)
+   :END:
+** TODO Tag commit
+   :PROPERTIES:
+   :BLOCKER: previous-sibling
+   :END:
+** TODO Publish
+   :PROPERTIES:
+   :BLOCKER: previous-sibling
+   :END:
+#+end_example
+
+- =TRIGGER: next-sibling todo!(NEXT)= — when this task is marked =DONE=, the next sibling
+  automatically becomes =NEXT=.
+- =BLOCKER: previous-sibling= — this task stays blocked until the previous sibling is =DONE=.
+
+Blocked tasks are excluded from next-action, daily, and backlog views by =agile-gtd=.
+
+The =agile-gtd-blocked= predicate (see [[*Derived concepts][Derived concepts]]) can be used
+in custom org-ql queries to match or exclude blocked items.
+
+Helper commands in =org-mode= buffers (=SPC m d=):
+
+| Key   | Command                          | Effect                              |
+|-------+----------------------------------+-------------------------------------|
+| =d n= | =agile-gtd-trigger-next-sibling= | Set TRIGGER on current task         |
+| =d b= | =agile-gtd-chain-task=           | Set TRIGGER + BLOCKER (chain step)  |
+
+* Metadata and history
 
 The workflow expects standard Org metadata to carry process state:
 
-| Property        | Meaning                                   |
-|-----------------+-------------------------------------------|
+| Property          | Meaning                                   |
+|-------------------+-------------------------------------------|
 | =ID=              | Stable identity                           |
 | =CREATED=         | Capture or creation time                  |
 | =TRIGGER=         | org-edna automation for follow-up actions |

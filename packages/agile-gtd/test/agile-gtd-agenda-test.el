@@ -6,6 +6,7 @@
 (require 'org-capture)
 (require 'org-modern)
 (require 'org-ql)
+(require 'org-edna)
 (require 'agile-gtd)
 
 ;; Reuse the sandbox and helpers from predicates tests
@@ -32,6 +33,13 @@ DEADLINE: <2026-04-06 Mon>
 * TODO Inbox item two :inbox:
 
 * DONE Finished inbox :#inbox:
+
+* NEXT [#A] Blocking action
+
+* NEXT [#A] Blocked action
+:PROPERTIES:
+:BLOCKER:  previous-sibling
+:END:
 "
   "Org data for agenda query tests.")
 
@@ -143,6 +151,26 @@ DEADLINE: <2026-04-06 Mon>
      ;; Private backlog should include private projects and standalone actions
      (should (member "Stuck private" private-headings))
      (should-not (member "Stuck work" private-headings)))))
+
+(ert-deftest agile-gtd-agenda-query-next-actions-excludes-blocked ()
+  "Next-actions query excludes entries whose BLOCKER is unsatisfied."
+  (agile-gtd-agenda-test-with-data
+   (let ((org-blocker-hook (list #'org-edna-blocker-function)))
+     (let* ((query    (agile-gtd-agenda-query-next-actions))
+            (headings (agile-gtd-org-ql-test-headings buffer query)))
+       ;; Blocked action has BLOCKER: previous-sibling (Blocking action is NEXT)
+       (should-not (member "Blocked action" headings))
+       ;; The blocker itself has no BLOCKER property and must still appear
+       (should (member "Blocking action" headings))))))
+
+(ert-deftest agile-gtd-agenda-query-backlog-excludes-blocked ()
+  "Backlog query excludes entries whose BLOCKER is unsatisfied."
+  (agile-gtd-agenda-test-with-data
+   (let ((org-blocker-hook (list #'org-edna-blocker-function)))
+     (let* ((query    (agile-gtd-agenda-query-backlog))
+            (headings (agile-gtd-org-ql-test-headings buffer query)))
+       (should-not (member "Blocked action" headings))
+       (should (member "Blocking action" headings))))))
 
 (ert-deftest agile-gtd-agenda-actions-work-private-split ()
   "Action items split correctly between work and private via direct predicates."

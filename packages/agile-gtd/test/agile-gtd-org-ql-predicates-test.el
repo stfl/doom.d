@@ -6,6 +6,7 @@
 (require 'org-capture)
 (require 'org-modern)
 (require 'org-ql)
+(require 'org-edna)
 (require 'agile-gtd)
 
 (defmacro agile-gtd-org-ql-test-with-sandbox (&rest body)
@@ -90,6 +91,23 @@ SCHEDULED: <2026-04-13 Mon .+1d>
 :PROPERTIES:
 :STYLE:    habit
 :END:
+
+* PROJ Sequential tasks
+** NEXT Step one
+   :PROPERTIES:
+   :TRIGGER: next-sibling todo!(NEXT)
+   :END:
+** NEXT Step two
+   :PROPERTIES:
+   :BLOCKER: previous-sibling
+   :END:
+
+* PROJ Completed chain
+** DONE Finished step
+** NEXT Unblocked step
+   :PROPERTIES:
+   :BLOCKER: previous-sibling
+   :END:
 "
   "Org data used to exercise Agile GTD org-ql predicates.")
 
@@ -210,6 +228,26 @@ Runs the query once with preambles enabled and once with them disabled."
     '(agile-gtd-habit)
     '("Habit tag item"
       "Habit style item"))))
+
+(ert-deftest agile-gtd-org-ql-predicates-blocked ()
+  "agile-gtd-blocked matches entries with unsatisfied BLOCKER, not satisfied ones."
+  (agile-gtd-org-ql-test-with-data
+   (let ((org-blocker-hook (list #'org-edna-blocker-function)))
+     ;; Step two is blocked: previous sibling (Step one) is NEXT, not done
+     (agile-gtd-org-ql-test-assert-query
+      buffer
+      '(agile-gtd-blocked)
+      '("Step two"))
+     ;; Unblocked step: previous sibling (Finished step) is DONE
+     (agile-gtd-org-ql-test-assert-query
+      buffer
+      '(and (heading "Unblocked step") (agile-gtd-blocked))
+      nil)
+     ;; Item with no BLOCKER property is never blocked
+     (agile-gtd-org-ql-test-assert-query
+      buffer
+      '(and (heading "Standalone next") (agile-gtd-blocked))
+      nil))))
 
 (provide 'agile-gtd-org-ql-predicates-test)
 
