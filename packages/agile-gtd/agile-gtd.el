@@ -584,10 +584,29 @@ DL-DELTA is integer days until deadline or nil."
     (:name "Habits" :tag ,agile-gtd-habit-tag :habit t :order 90)
     (:name "Today" :anything t :order 10)))
 
+(defun agile-gtd--agenda-skip-form (filter-preset)
+  "Return a skip sexp implementing FILTER-PRESET tag filtering.
+FILTER-PRESET is a list of strings like \\='(\"+#work\") or \\='(\"-#work\").
+Each entry starts with + to require the tag or - to exclude it.
+The returned sexp can be used as `org-agenda-skip-function'."
+  (let* ((conditions
+          (mapcar
+           (lambda (entry)
+             (let ((exclude (string-prefix-p "-" entry))
+                   (tag (substring entry 1)))
+               (if exclude
+                   `(member ,tag (org-get-tags))
+                 `(not (member ,tag (org-get-tags))))))
+           filter-preset))
+         (combined (if (cdr conditions)
+                       `(or ,@conditions)
+                     (car conditions))))
+    `(when ,combined (org-entry-end-position))))
+
 (defun agile-gtd--agenda-day (&optional tag-filter-preset)
   "Return the base agenda block used by the daily view.
-TAG-FILTER-PRESET, when non-nil, is a list of strings for
-`org-agenda-tag-filter-preset' (e.g. \\='(\"+#work\") or \\='(\"-#work\"))."
+TAG-FILTER-PRESET, when non-nil, is a list of strings like
+\\='(\"+#work\") or \\='(\"-#work\") used to restrict which entries appear."
   `(agenda "Agenda"
     ((org-agenda-use-time-grid t)
      (org-deadline-warning-days 0)
@@ -595,7 +614,8 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings for
      (org-super-agenda-groups ',(agile-gtd--today-groups))
      (org-agenda-start-day (org-today))
      ,@(when tag-filter-preset
-         `((org-agenda-tag-filter-preset ',tag-filter-preset))))))
+         `((org-agenda-skip-function
+            ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
 
 (defun agile-gtd--someday-habit ()
   "Return an org-ql sexp matching someday and habit items."

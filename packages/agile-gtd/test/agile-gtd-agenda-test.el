@@ -316,14 +316,17 @@ without signalling an error."
 
 (defun agile-gtd-agenda-integration-test-org-data ()
   "Return org data for agenda integration tests.
-Uses today's date so the scheduled item appears in the day block."
+Uses today's date so the scheduled items appear in the day block."
   (concat "* NEXT [#A] High priority action\n\n"
           "* NEXT [#C] Medium priority action\n\n"
           "* PROJ Stuck project\n"
           "** TODO Notes only\n\n"
-          ;; This item has a schedule so it appears in the day agenda block
-          ;; but NOT in the Next Actions block (excluded by `not (scheduled)').
+          ;; Scheduled today: appears in day block but NOT in Next Actions
+          ;; (excluded by `not (scheduled)').  No work tag → private only.
           "* NEXT [#B] Scheduled today\n"
+          (format "SCHEDULED: <%s>\n" (format-time-string "%Y-%m-%d %a"))
+          ;; Work item scheduled today: appears in day block in work views only.
+          "* NEXT [#A] Work item today :#work:\n"
           (format "SCHEDULED: <%s>\n" (format-time-string "%Y-%m-%d %a"))))
 
 (defmacro agile-gtd-agenda-test-build-view (cmd-key &rest body)
@@ -395,10 +398,41 @@ BODY executes with `agenda-text' bound to the resulting agenda buffer's text."
 (ert-deftest agile-gtd-agenda-private-view-sections-populated ()
   "Private Agenda ('pp') contains private items in all its blocks."
   (agile-gtd-agenda-test-build-view "pp"
-    ;; No items are tagged with work-tag so all items are private.
     (should (string-match-p "Next Actions" agenda-text))
     (should (string-match-p "High priority action" agenda-text))
     (should (string-match-p "Stuck Projects" agenda-text))
     (should (string-match-p "Stuck project" agenda-text))))
+
+;;; Today-block tag-filter tests
+
+(ert-deftest agile-gtd-agenda-day-block-tag-filter-uses-skip-function ()
+  "Agenda day block with tag filter uses org-agenda-skip-function,
+not the broken org-agenda-tag-filter-preset (which has no effect in
+compound commands because org-agenda-prepare runs before lprops bind)."
+  (let* ((block (agile-gtd--agenda-day '("+#work")))
+         (settings (nth 2 block))
+         (skip-pair (assq 'org-agenda-skip-function settings))
+         (preset-pair (assq 'org-agenda-tag-filter-preset settings)))
+    (should skip-pair)
+    (should-not preset-pair)
+    ;; Value must be a quoted form: (quote (when ...))
+    (should (and (consp (cadr skip-pair))
+                 (eq 'quote (car (cadr skip-pair)))))))
+
+(ert-deftest agile-gtd-agenda-private-today-excludes-work-items ()
+  "Private Agenda ('pp') today block excludes work-tagged items."
+  (agile-gtd-agenda-test-build-view "pp"
+    ;; Non-work item scheduled today must appear
+    (should (string-match-p "Scheduled today" agenda-text))
+    ;; Work-tagged item must not appear anywhere in the private view
+    (should-not (string-match-p "Work item today" agenda-text))))
+
+(ert-deftest agile-gtd-agenda-work-today-includes-only-work-items ()
+  "Work Agenda ('ww') today block shows work items, excludes non-work ones."
+  (agile-gtd-agenda-test-build-view "ww"
+    ;; Work item scheduled today must appear
+    (should (string-match-p "Work item today" agenda-text))
+    ;; Non-work scheduled item must not appear in the work view
+    (should-not (string-match-p "Scheduled today" agenda-text))))
 
 ;;; agile-gtd-agenda-test.el ends here
