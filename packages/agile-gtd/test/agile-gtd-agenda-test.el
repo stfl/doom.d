@@ -75,27 +75,23 @@ DEADLINE: <2026-04-06 Mon>
     (should (eq 'and (car filtered)))))
 
 (ert-deftest agile-gtd-query-next-actions-uses-sprint-prio-threshold ()
-  "Next-actions query uses `agile-gtd-sprint-prio-threshold' as priority cut-off."
+  "Next-actions query uses `agile-gtd-sprint-prio-threshold' as priority cut-off.
+The query contains `(agile-gtd-prio-deadline PRIO)' where PRIO equals the
+current max priority group."
   ;; Default threshold C
   (let* ((agile-gtd-max-priority-group nil)
          (agile-gtd-sprint-prio-threshold ?C)
          (org-priority-default ?E)
-         (query     (agile-gtd-agenda-query-next-actions))
-         (inner-and (nth 2 query))
-         (or-clause (cadr inner-and)))
+         (query (agile-gtd-agenda-query-next-actions)))
     (should (= (agile-gtd--current-max-priority-group) ?C))
-    (should (member `(priority >= (char-to-string ,?C)) or-clause))
-    (should (member `(agile-gtd-deadline-prio <= ,?C) or-clause)))
+    (should (member `(agile-gtd-prio-deadline ,?C) (cdr query))))
   ;; Alternate threshold B — confirms threshold is not hard-coded
   (let* ((agile-gtd-max-priority-group nil)
          (agile-gtd-sprint-prio-threshold ?B)
          (org-priority-default ?E)
-         (query     (agile-gtd-agenda-query-next-actions))
-         (inner-and (nth 2 query))
-         (or-clause (cadr inner-and)))
+         (query (agile-gtd-agenda-query-next-actions)))
     (should (= (agile-gtd--current-max-priority-group) ?B))
-    (should (member `(priority >= (char-to-string ,?B)) or-clause))
-    (should (member `(agile-gtd-deadline-prio <= ,?B) or-clause))))
+    (should (member `(agile-gtd-prio-deadline ,?B) (cdr query)))))
 
 (ert-deftest agile-gtd-agenda-query-backlog-returns-sexp ()
   "Backlog query returns a well-formed sexp with and without filter."
@@ -199,6 +195,26 @@ DEADLINE: <2026-04-06 Mon>
                 (cdr (assoc "No priority private" ranked))))
      ;; No-priority default rank (agile-gtd--rank-default) should be highest
      (should (= (agile-gtd--rank-default) (cdr (assoc "No priority private" ranked)))))))
+
+(ert-deftest agile-gtd-agenda-next-actions-sort-by-rank ()
+  "org-ql-select :sort 'agile-gtd--item-rank< yields items in ascending rank order."
+  (agile-gtd-agenda-test-with-data
+   (let* ((sorted (org-ql-select buffer
+                    (agile-gtd-agenda-query-next-actions)
+                    :sort 'agile-gtd--item-rank<))
+          (rank-map (org-ql-select buffer
+                      (agile-gtd-agenda-query-next-actions)
+                      :action (lambda ()
+                                (cons (org-get-heading t t t t)
+                                      (agile-gtd--item-rank)))))
+          (sorted-headings
+           (mapcar (lambda (el) (org-element-property :raw-value el)) sorted))
+          (sorted-ranks
+           (mapcar (lambda (h) (cdr (assoc h rank-map))) sorted-headings)))
+     (should sorted-ranks)
+     (cl-loop for (r1 r2) on sorted-ranks
+              while r2
+              do (should (<= r1 r2))))))
 
 ;;; Inbox query tests
 

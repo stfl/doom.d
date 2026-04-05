@@ -1045,6 +1045,22 @@ An entry qualifies when any of the following hold:
                         (time-to-days (current-time))))))
     (agile-gtd--backlog-rank prio parent-prio dl-delta)))
 
+(defun agile-gtd--item-rank< (a b)
+  "Return non-nil if element A has a lower rank than element B.
+A and B are Org elements as returned by `org-ql-select'.
+Lower rank means higher priority.  Use as `:sort' arg to `org-ql-select'
+or `org-ql-search'."
+  (cl-flet ((rank-of (el)
+               (let ((buf (get-buffer (org-element-property :buffer el)))
+                     (pos (org-element-property :begin el)))
+                 (when (and buf pos)
+                   (with-current-buffer buf
+                     (save-excursion
+                       (goto-char pos)
+                       (agile-gtd--item-rank)))))))
+    (< (or (rank-of a) agile-gtd--rank-inf)
+       (or (rank-of b) agile-gtd--rank-inf))))
+
 (defun agile-gtd--rank-to-prio-char (rank)
   "Return the priority character for numeric RANK, or nil if beyond the lowest priority.
 Ranks below 1 (including negatives) clamp to `agile-gtd-priority-highest'.
