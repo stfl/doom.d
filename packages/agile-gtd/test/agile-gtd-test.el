@@ -106,12 +106,6 @@
 
 (ert-deftest agile-gtd-query-helpers-return-stable-sexps ()
   (agile-gtd-test-with-sandbox
-    (should (equal (agile-gtd-not-someday-habit)
-                   '(not (or (tags "SOMEDAY" "HABIT")
-                             (habit)))))
-    (should (equal (agile-gtd-not-sched-or-dead 14)
-                   '(and (not (scheduled :from today))
-                         (not (deadline :from 14)))))
     (should (equal (agile-gtd-agenda-query-stuck-projects)
                    '(agile-gtd-stuck-proj)))
     (should (equal (agile-gtd-action-keywords)
