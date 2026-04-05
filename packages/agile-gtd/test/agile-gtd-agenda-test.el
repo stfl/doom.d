@@ -486,4 +486,124 @@ compound commands because org-agenda-prepare runs before lprops bind)."
     ;; Non-work scheduled item must not appear in the work view
     (should-not (string-match-p "Scheduled today" agenda-text))))
 
+;;; hide-today parameter tests
+
+(defun agile-gtd-agenda-test-hide-today-data ()
+  "Return org data for hide-today parameter tests.
+Uses relative dates so scheduled/deadline items are testable."
+  (let ((today (format-time-string "%Y-%m-%d %a"))
+        (yesterday (format-time-string "%Y-%m-%d %a"
+                     (time-subtract (current-time) (days-to-time 1))))
+        (tomorrow (format-time-string "%Y-%m-%d %a"
+                    (time-add (current-time) (days-to-time 1)))))
+    (concat
+     "* NEXT [#A] Plain next action\n\n"
+     "* NEXT [#A] Scheduled today\n"
+     (format "SCHEDULED: <%s>\n\n" today)
+     "* NEXT [#A] Deadline today\n"
+     (format "DEADLINE: <%s>\n\n" today)
+     "* NEXT [#A] Scheduled yesterday (overdue)\n"
+     (format "SCHEDULED: <%s>\n\n" yesterday)
+     "* NEXT [#A] Deadline yesterday (overdue)\n"
+     (format "DEADLINE: <%s>\n\n" yesterday)
+     "* NEXT [#A] Scheduled tomorrow (future)\n"
+     (format "SCHEDULED: <%s>\n\n" tomorrow)
+     "* NEXT [#A] Someday item :SOMEDAY:\n\n"
+     "* NEXT [#A] Tickler today :SOMEDAY:\n"
+     (format "SCHEDULED: <%s>\n\n" today)
+     "* NEXT [#A] Tickler future :SOMEDAY:\n"
+     (format "SCHEDULED: <%s>\n\n" tomorrow)
+     "* NEXT [#A] Habit item :HABIT:\n\n")))
+
+(defmacro agile-gtd-agenda-test-hide-today-data-do (&rest body)
+  "Run BODY with hide-today test fixtures in a temporary Org buffer."
+  (declare (indent 0) (debug t))
+  `(agile-gtd-org-ql-test-with-sandbox
+    (let* ((file (expand-file-name "hide-today-fixtures.org" org-directory))
+           (buffer nil))
+      (unwind-protect
+          (progn
+            (with-temp-file file
+              (insert (agile-gtd-agenda-test-hide-today-data)))
+            (setq buffer (find-file-noselect file))
+            (with-current-buffer buffer
+              (org-mode)
+              (agile-gtd-enable)
+              (org-set-regexps-and-options)
+              ,@body))
+        (when (buffer-live-p buffer)
+          (kill-buffer buffer))))))
+
+(ert-deftest agile-gtd-next-actions-default-includes-today-and-overdue ()
+  "hide-today nil (default): scheduled/deadline today and overdue items appear."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions))))
+      (should (member "Plain next action" headings))
+      (should (member "Scheduled today" headings))
+      (should (member "Deadline today" headings))
+      (should (member "Scheduled yesterday (overdue)" headings))
+      (should (member "Deadline yesterday (overdue)" headings)))))
+
+(ert-deftest agile-gtd-next-actions-default-excludes-future-scheduled ()
+  "hide-today nil (default): future-scheduled items are excluded."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions))))
+      (should-not (member "Scheduled tomorrow (future)" headings)))))
+
+(ert-deftest agile-gtd-next-actions-hide-today-excludes-all-scheduled-and-deadline ()
+  "hide-today t: all scheduled and deadline items are excluded."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions nil nil t))))
+      (should (member "Plain next action" headings))
+      (should-not (member "Scheduled today" headings))
+      (should-not (member "Deadline today" headings))
+      (should-not (member "Scheduled yesterday (overdue)" headings))
+      (should-not (member "Deadline yesterday (overdue)" headings))
+      (should-not (member "Scheduled tomorrow (future)" headings)))))
+
+(ert-deftest agile-gtd-next-actions-excludes-someday ()
+  "Someday items are excluded regardless of hide-today."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((default-headings (agile-gtd-org-ql-test-headings
+                              buffer (agile-gtd-agenda-query-next-actions)))
+          (hide-today-headings (agile-gtd-org-ql-test-headings
+                                 buffer (agile-gtd-agenda-query-next-actions nil nil t))))
+      (should-not (member "Someday item" default-headings))
+      (should-not (member "Someday item" hide-today-headings)))))
+
+(ert-deftest agile-gtd-next-actions-default-shows-tickler-today ()
+  "hide-today nil (default): tickler items scheduled today appear (not someday)."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions))))
+      (should (member "Tickler today" headings))
+      (should-not (member "Tickler future" headings)))))
+
+(ert-deftest agile-gtd-next-actions-hide-today-excludes-tickler ()
+  "hide-today t: tickler items are excluded (they are scheduled)."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions nil nil t))))
+      (should-not (member "Tickler today" headings))
+      (should-not (member "Tickler future" headings)))))
+
+(ert-deftest agile-gtd-next-actions-includes-habits ()
+  "Habit items are included (filtered by priority like everything else)."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((headings (agile-gtd-org-ql-test-headings
+                     buffer (agile-gtd-agenda-query-next-actions))))
+      (should (member "Habit item" headings)))))
+
+(ert-deftest agile-gtd-next-actions-default-matches-explicit-nil ()
+  "Calling with no hide-today arg is equivalent to explicit nil."
+  (agile-gtd-agenda-test-hide-today-data-do
+    (let ((default-headings (agile-gtd-org-ql-test-headings
+                             buffer (agile-gtd-agenda-query-next-actions)))
+          (explicit-headings (agile-gtd-org-ql-test-headings
+                              buffer (agile-gtd-agenda-query-next-actions nil nil nil))))
+      (should (equal default-headings explicit-headings)))))
+
 ;;; agile-gtd-agenda-test.el ends here

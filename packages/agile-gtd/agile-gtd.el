@@ -614,9 +614,7 @@ hi per priority P: (+ (* 10 (/ (prio-rank P) 10)) 9) — uniform formula."
                   prio-group)
           (list prio-group))))
     (agile-gtd--priority-range))
-   `((:name "Default Priority (Rest)"
-      :not (:priority t)
-      :order 990))))
+   `((:name "Not Grouped" :anything t :order 9999))))
 
 (defun agile-gtd--today-groups ()
   "Return the org-super-agenda groups used by the today agenda."
@@ -658,10 +656,6 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings like
          `((org-agenda-skip-function
             ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
 
-(defun agile-gtd--someday-habit ()
-  "Return an org-ql sexp matching someday and habit items."
-  `(or (tags ,agile-gtd-someday-tag ,agile-gtd-habit-tag)
-       (habit)))
 
 (defun agile-gtd--prio-deadline>= (priority)
   "Return an org-ql sexp for items at or above PRIORITY urgency."
@@ -681,18 +675,24 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
                         (ts-active :on today)))))
     (if tag-filter `(and ,base ,tag-filter) base)))
 
-(defun agile-gtd-agenda-query-next-actions (&optional tag-filter priority)
+(defun agile-gtd-agenda-query-next-actions (&optional tag-filter priority hide-today)
   "Return org-ql sexp for next actions at or above PRIORITY.
 TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag.
-PRIORITY defaults to `agile-gtd--current-max-priority-group'."
+PRIORITY defaults to `agile-gtd--current-max-priority-group'.
+HIDE-TODAY, when non-nil, excludes items with any deadline or
+schedule (the agenda-view behaviour where today items appear in a
+separate section).  When nil (the default), items scheduled or due
+today or overdue are included.  Future-scheduled items are always
+excluded."
   (let* ((prio (or priority (agile-gtd--current-max-priority-group)))
          (base `(and (todo ,@(agile-gtd--action-keywords))
                      ,(agile-gtd--prio-deadline>= prio)
-                     (not ,(agile-gtd--someday-habit))
+                     (not (agile-gtd-someday))
                      (not (agile-gtd-blocked))
-                     (not (ancestors (deadline :to 0)))
-                     (not (deadline :to 0))
-                     (not (scheduled)))))
+                     ,@(if hide-today
+                           '((not (deadline :to 0))
+                             (not (scheduled)))
+                         '((not (scheduled :from +1)))))))
     (if tag-filter `(and ,base ,tag-filter) base)))
 
 (defun agile-gtd-agenda-query-inbox ()
@@ -729,7 +729,7 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
           (org-ql-block ',(agile-gtd-agenda-query-stuck-projects filt)
                         ((org-ql-block-header "Stuck Projects")
                          (org-super-agenda-header-separator "")))
-          (org-ql-block ',(agile-gtd-agenda-query-next-actions filt)
+           (org-ql-block ',(agile-gtd-agenda-query-next-actions filt nil t)
                         ((org-ql-block-header "Next Actions")
                          (org-super-agenda-groups ',(agile-gtd-rank-groups))))))))
    agile-gtd-customers))
@@ -746,9 +746,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects)
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-      (org-ql-block ',(agile-gtd-agenda-query-next-actions)
-                    ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+       (org-ql-block ',(agile-gtd-agenda-query-next-actions nil nil t)
+                      ((org-ql-block-header "Next Actions")
+                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("A" "Agenda Weekly"
      ((agenda ""
               ((org-agenda-span 'week)
@@ -810,9 +810,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects '(agile-gtd-private))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-      (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-private))
-                    ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+       (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-private) nil t)
+                     ((org-ql-block-header "Next Actions")
+                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("pb" "Private Backlog"
      ((org-ql-block ',(agile-gtd-agenda-query-backlog '(agile-gtd-private))
                     ((org-ql-block-header "Backlog")
@@ -829,9 +829,9 @@ TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
       (org-ql-block ',(agile-gtd-agenda-query-stuck-projects '(agile-gtd-work))
                     ((org-ql-block-header "Stuck Projects")
                      (org-super-agenda-header-separator "")))
-      (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-work))
-                    ((org-ql-block-header "Next Actions")
-                     (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
+       (org-ql-block ',(agile-gtd-agenda-query-next-actions '(agile-gtd-work) nil t)
+                     ((org-ql-block-header "Next Actions")
+                      (org-super-agenda-groups ',(agile-gtd-rank-groups))))))
     ("wb" "Work Backlog"
      ((org-ql-block ',(agile-gtd-agenda-query-backlog '(agile-gtd-work))
                     ((org-ql-block-header "Backlog")

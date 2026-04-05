@@ -98,14 +98,14 @@
   (agile-gtd-test-with-sandbox
     (let ((groups (agile-gtd-rank-groups)))
       ;; 3 fixed-prefix + (length range) prio-groups + 1 extra Default split
-      ;; + 1 trailing "Default Priority (Rest)"
+      ;; + 1 trailing "Not Grouped" catch-all
       (should (= (length groups)
                  (+ 5 (length (agile-gtd--priority-range)))))
       (should (equal (plist-get (nth 0 groups) :name) "Tickler"))
       (should (equal (plist-get (nth 1 groups) :name) "Someday"))
       (should (equal (plist-get (nth 2 groups) :name) "Today & Overdue"))
       (should (equal (plist-get (car (last groups)) :name)
-                     "Default Priority (Rest)")))))
+                     "Not Grouped")))))
 
 (ert-deftest agile-gtd-query-helpers-return-stable-sexps ()
   (agile-gtd-test-with-sandbox
