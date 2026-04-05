@@ -1813,7 +1813,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
   (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
-  (org-mcp-query-sort-fn    #'agile-gtd--item-rank)
+  (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
