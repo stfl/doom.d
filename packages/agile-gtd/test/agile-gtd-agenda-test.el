@@ -64,15 +64,6 @@ DEADLINE: <2026-04-06 Mon>
 
 ;;; Structure tests — verify query functions return well-formed sexps
 
-(ert-deftest agile-gtd-agenda-query-today-items-returns-sexp ()
-  "Today items query returns a well-formed sexp."
-  (let ((query (agile-gtd-agenda-query-today-items)))
-    (should (listp query))
-    (should (eq 'and (car query))))
-  (let ((filtered (agile-gtd-agenda-query-today-items '(agile-gtd-work))))
-    (should (listp filtered))
-    (should (eq 'and (car filtered)))))
-
 (ert-deftest agile-gtd-agenda-query-next-actions-returns-sexp ()
   "Next actions query returns a well-formed sexp with and without filter."
   (let ((query (agile-gtd-agenda-query-next-actions)))

@@ -654,26 +654,8 @@ TAG-FILTER-PRESET, when non-nil, is a list of strings like
      (org-agenda-start-day (org-today))
      ,@(when tag-filter-preset
          `((org-agenda-skip-function
-            ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
+                         ',(agile-gtd--agenda-skip-form tag-filter-preset)))))))
 
-
-(defun agile-gtd--prio-deadline>= (priority)
-  "Return an org-ql sexp for items at or above PRIORITY urgency."
-  `(and (or (priority >= (char-to-string ,priority))
-            (and ,(> (agile-gtd--current-max-priority-group) org-priority-default)
-                 (not (priority)))
-            (agile-gtd-parent-prio <= ,priority)
-            (agile-gtd-deadline-prio <= ,priority))))
-
-(defun agile-gtd-agenda-query-today-items (&optional tag-filter)
-  "Return org-ql sexp for items due or active today.
-TAG-FILTER, when non-nil, is `and'-ed in to narrow by tag."
-  (let ((base `(and (not (done))
-                    (or (agile-gtd-habit)
-                        (deadline :to today)
-                        (scheduled :to today)
-                        (ts-active :on today)))))
-    (if tag-filter `(and ,base ,tag-filter) base)))
 
 (defun agile-gtd-agenda-query-next-actions (&optional tag-filter priority hide-today)
   "Return org-ql sexp for next actions at or above PRIORITY.
@@ -686,7 +668,7 @@ today or overdue are included.  Future-scheduled items are always
 excluded."
   (let* ((prio (or priority (agile-gtd--current-max-priority-group)))
          (base `(and (todo ,@(agile-gtd--action-keywords))
-                     ,(agile-gtd--prio-deadline>= prio)
+                     (agile-gtd-prio-deadline ,prio)
                      (not (agile-gtd-someday))
                      (not (agile-gtd-blocked))
                      ,@(if hide-today
@@ -1026,6 +1008,24 @@ Example: (agile-gtd-parent-prio <= ?C) matches items with parent priority A, B o
 Integrates with org-edna when `org-edna-mode' is active via `org-blocker-hook'."
   :body
   (org-entry-blocked-p))
+
+(org-ql-defpred agile-gtd-prio-deadline (priority)
+  "Match entries at or above PRIORITY urgency.
+An entry qualifies when any of the following hold:
+- its own priority is >= PRIORITY
+- it has no explicit priority and the current sprint threshold
+  is more generous than `org-priority-default'
+- its direct parent's priority qualifies
+- its deadline urgency qualifies"
+  :normalizers
+  ((`(,predicate-names ,prio)
+    (let ((include-no-prio (> (agile-gtd--current-max-priority-group)
+                              org-priority-default)))
+      (rec `(or (priority >= ,(char-to-string prio))
+                ,@(when include-no-prio
+                    '((not (priority))))
+                (agile-gtd-parent-prio <= ,prio)
+                (agile-gtd-deadline-prio <= ,prio)))))))
 
 (defun agile-gtd-trigger-next-sibling ()
   "Set TRIGGER on the current task to advance the next sibling to NEXT."
