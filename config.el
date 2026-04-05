@@ -1807,7 +1807,7 @@ Reply concisely. Wrap source code in a ```cpp block.")
   :after org
   :custom
   (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  (org-mcp-stored-queries-file (expand-file-name "org-mcp-stored-queries.el" doom-user-dir))
+  (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
                                  (rank . agile-gtd--item-rank)))
   (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
