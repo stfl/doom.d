@@ -19,3 +19,5 @@
 (depends-on "org-ql" "0.8")
 (depends-on "org-super-agenda" "1.3")
 (depends-on "ts")
+
+(script "test" "eask test ert test/agile-gtd-test.el test/agile-gtd-rank-test.el test/agile-gtd-org-ql-predicates-test.el test/agile-gtd-agenda-test.el")

@@ -43,7 +43,7 @@
                  (nil ?B   nil  11)
                  (?C  ?D   nil  21)
                  (?D  ?C   nil  21)
-                 (nil nil  nil  45)
+                 (nil nil  nil  49)
                  (nil ?F   nil  51)
                  (?F  ?G   nil  51)
                  (nil nil  -10 -10)

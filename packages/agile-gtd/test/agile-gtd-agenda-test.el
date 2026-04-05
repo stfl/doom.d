@@ -75,6 +75,29 @@ DEADLINE: <2026-04-06 Mon>
     ;; Filtered query wraps with an outer `and'
     (should (eq 'and (car filtered)))))
 
+(ert-deftest agile-gtd-query-next-actions-uses-sprint-prio-threshold ()
+  "Next-actions query uses `agile-gtd-sprint-prio-threshold' as priority cut-off."
+  ;; Default threshold C
+  (let* ((agile-gtd-max-priority-group nil)
+         (agile-gtd-sprint-prio-threshold ?C)
+         (org-priority-default ?E)
+         (query     (agile-gtd-agenda-query-next-actions))
+         (inner-and (nth 2 query))
+         (or-clause (cadr inner-and)))
+    (should (= (agile-gtd--current-max-priority-group) ?C))
+    (should (member `(priority >= (char-to-string ,?C)) or-clause))
+    (should (member `(agile-gtd-deadline-prio <= ,?C) or-clause)))
+  ;; Alternate threshold B — confirms threshold is not hard-coded
+  (let* ((agile-gtd-max-priority-group nil)
+         (agile-gtd-sprint-prio-threshold ?B)
+         (org-priority-default ?E)
+         (query     (agile-gtd-agenda-query-next-actions))
+         (inner-and (nth 2 query))
+         (or-clause (cadr inner-and)))
+    (should (= (agile-gtd--current-max-priority-group) ?B))
+    (should (member `(priority >= (char-to-string ,?B)) or-clause))
+    (should (member `(agile-gtd-deadline-prio <= ,?B) or-clause))))
+
 (ert-deftest agile-gtd-agenda-query-backlog-returns-sexp ()
   "Backlog query returns a well-formed sexp with and without filter."
   (let ((query (agile-gtd-agenda-query-backlog)))
@@ -155,8 +178,8 @@ DEADLINE: <2026-04-06 Mon>
      ;; Deadline item should get a rank from deadline (3 days out = rank 10)
      (should (< (cdr (assoc "Work with deadline" ranked))
                 (cdr (assoc "No priority private" ranked))))
-     ;; No-priority default rank 45 should be highest
-     (should (= 45 (cdr (assoc "No priority private" ranked)))))))
+     ;; No-priority default rank (agile-gtd--rank-default) should be highest
+     (should (= (agile-gtd--rank-default) (cdr (assoc "No priority private" ranked)))))))
 
 ;;; Inbox query tests
 

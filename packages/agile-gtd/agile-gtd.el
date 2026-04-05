@@ -169,6 +169,14 @@ When nil, derive it from `agile-gtd-priority-default'."
           character)
   :group 'agile-gtd)
 
+(defcustom agile-gtd-sprint-prio-threshold ?C
+  "Default priority threshold for the next-actions (sprint) view.
+Items at this priority or above (including via parent or deadline) appear
+in the next-actions query.  `agile-gtd-max-priority-group' overrides this
+interactively."
+  :type 'character
+  :group 'agile-gtd)
+
 (defcustom agile-gtd-backlog-priority-threshold nil
   "Priority threshold after which backlog items count as someday.
 
@@ -383,7 +391,7 @@ When nil, derive it from `agile-gtd-priority-default'."
 (defun agile-gtd--current-max-priority-group ()
   "Return the currently active maximum priority group."
   (or agile-gtd-max-priority-group
-      (max agile-gtd-priority-highest (1- agile-gtd-priority-default))))
+      agile-gtd-sprint-prio-threshold))
 
 (defun agile-gtd--current-backlog-priority-threshold ()
   "Return the currently active backlog threshold."
@@ -482,6 +490,14 @@ When nil, derive it from `agile-gtd-priority-default'."
 
 (defconst agile-gtd--rank-inf 99999)
 
+(defun agile-gtd--rank-default ()
+  "Return the rank for items with no explicit priority, deadline, or parent.
+Computed as the top of the 10-wide band for `agile-gtd-priority-default':
+  floor(prio-rank(default) / 10) * 10 + 9.
+With default ?E (rank 41) this yields 49, sitting between E (40..48) and F (50+)."
+  (let ((r (agile-gtd--prio-rank agile-gtd-priority-default)))
+    (+ (* 10 (/ r 10)) 9)))
+
 (defun agile-gtd--backlog-rank (prio parent-prio dl-delta)
   "Return numeric backlog rank.
 PRIO and PARENT-PRIO are priority characters or nil.
@@ -490,7 +506,7 @@ DL-DELTA is integer days until deadline or nil."
          (par      (or (agile-gtd--prio-rank parent-prio) agile-gtd--rank-inf))
          (dl       (if dl-delta (agile-gtd--deadline-rank dl-delta) agile-gtd--rank-inf))
          (combined (min own par dl)))
-    (if (>= combined agile-gtd--rank-inf) 45 combined)))
+    (if (>= combined agile-gtd--rank-inf) (agile-gtd--rank-default) combined)))
 
 (defconst agile-gtd--priority-deadline-days
   '((?A . 2)
@@ -576,6 +592,60 @@ DL-DELTA is integer days until deadline or nil."
    `((:name "Default Priority (Rest)"
       :anything t
       :order ,(+ 0.5 org-priority-default)))))
+
+(defun agile-gtd--rank-for-item (item)
+  "Return the effective backlog rank for agenda ITEM string, or nil."
+  (when-let ((marker (org-find-text-property-in-string 'org-marker item)))
+    (org-with-point-at marker
+      (agile-gtd--item-rank))))
+
+(defun agile-gtd-rank-groups ()
+  "Return rank-mark org-super-agenda groups.
+Groups use upper-bound rank checks; first-match semantics means no lower
+bound is needed per group.
+
+Sequence: Tickler | Someday | Today&Overdue(≤0) | A(≤9) | B(≤19) | C(≤29)
+| D(≤39) | Default(=49) | E(≤49) | F(≤59) | G(≤69) | H(≤79) | I | Rest.
+
+Default group precedes E so rank `(agile-gtd--rank-default)' (49 by default)
+is consumed before E's (≤49) check; E then effectively captures 40..48.
+hi per priority P: (+ (* 10 (/ (prio-rank P) 10)) 9) — uniform formula."
+  (append
+   `((:name "Tickler"
+      :and (:scheduled t :tag ,agile-gtd-someday-tag)
+      :order 1000)
+     (:name "Someday"
+      :tag ,agile-gtd-someday-tag
+      :order 1100)
+     (:name "Today & Overdue"
+      :pred (lambda (item)
+              (when-let ((rank (agile-gtd--rank-for-item item)))
+                (<= rank 0)))
+      :order 0))
+   (cl-mapcan
+    (lambda (prio)
+      (let* ((r    (agile-gtd--prio-rank prio))
+             (hi   (unless (= prio agile-gtd-priority-lowest)
+                     (+ (* 10 (/ r 10)) 9)))
+             (name (format "[#%c] Priority %c" prio prio))
+             (prio-group
+              `(:name ,name
+                :pred (lambda (item)
+                        (when-let ((rank (agile-gtd--rank-for-item item)))
+                          ,(if hi `(<= rank ,hi) t)))
+                :order ,r)))
+        (if (= prio agile-gtd-priority-default)
+            (list `(:name "Default Priority"
+                    :pred (lambda (item)
+                            (when-let ((rank (agile-gtd--rank-for-item item)))
+                              (= rank ,(agile-gtd--rank-default))))
+                    :order ,(agile-gtd--rank-default))
+                  prio-group)
+          (list prio-group))))
+    (agile-gtd--priority-range))
+   `((:name "Default Priority (Rest)"
+      :not (:priority t)
+      :order 990))))
 
 (defun agile-gtd--today-groups ()
   "Return the org-super-agenda groups used by the today agenda."
