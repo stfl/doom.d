@@ -572,9 +572,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :END:
 
 #+begin_src elisp
-#+END_SRC
-
-#+begin_src elisp
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
   (setq! org-roam-capture-templates
