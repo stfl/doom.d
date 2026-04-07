@@ -572,15 +572,16 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :END:
 
 #+begin_src elisp
-(setq org-capture-templates
-      (append
-       (cl-remove-if (lambda (template)
-                       (equal "v" (car-safe template)))
-                     org-capture-templates)
-       `(("v" "Versicherung" entry
-          (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
-          (function stfl/org-capture-template-versicherung)
-          :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
+(with-eval-after-load org
+  (setq org-capture-templates
+        (append
+         (cl-remove-if (lambda (template)
+                         (equal "v" (car-safe template)))
+                       org-capture-templates)
+         `(("v" "Versicherung" entry
+            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
+            (function stfl/org-capture-template-versicherung)
+            :root "~/Documents/Finanzielles/Einreichung Versicherung"))))))
 #+end_src
 
 #+begin_src elisp
