@@ -154,11 +154,16 @@
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   :config
-  (setq org-mcp-allowed-files
-        (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (if mcp-server-lib--running
-              (message "org-mcp: MCP server already running, skipping start")
-            (mcp-server-lib-start)))
+      (message "org-mcp: MCP server already running, skipping start")
+    (mcp-server-lib-start)))
+
+;; Set org-mcp-allowed-files after agile-gtd-enable has populated org-agenda-files.
+;; Must be a separate (after! org …) block registered AFTER the use-package forms
+;; above so it fires as a later hook — after agile-gtd-enable completes.
+(with-eval-after-load 'org
+  (setopt org-mcp-allowed-files
+          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files)))
 
 (after! org
   (setq! org-auto-align-tags nil

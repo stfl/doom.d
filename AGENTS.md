@@ -11,7 +11,7 @@
 - `init.el` is hand-maintained and declares enabled Doom modules.
 - `config.el` is a tangled/generated output from the literate config and should never be edited directly.
 - `packages.el` is also driven by tangled `package!` blocks from `config.org`.
-- `custom.el` is Emacs Custom output; avoid manual edits unless the task is explicitly about Custom-managed settings.
+- `custom.el` is Emacs Custom output; avoid manual edits to this file!
 - Extra handwritten files include `my-deft-title.el` and JSON files in `langserver/`.
 
 ## External Agent Rules
