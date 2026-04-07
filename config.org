@@ -3413,7 +3413,7 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
 (package! org-mcp
   :recipe (
            :local-repo "~/work/org-mcp" :build (:not compile)
-           :host github :repo "stfl/org-mcp"
+           ;; :host github :repo "stfl/org-mcp"
            ))
 #+end_src
 
