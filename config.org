@@ -791,9 +791,7 @@ Prompt to continue from the last clock-out time if the gap is
                                    (doom-path org-directory "archive" project)))
            (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
            (filepath (doom-path stfl/org-clock-export-dir filename)))
-      (org-clock-csv-to-file filepath)))
-
-  )
+      (org-clock-csv-to-file filepath))))
 
 (map! :map org-mode-map
     :leader
