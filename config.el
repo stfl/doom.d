@@ -9,8 +9,8 @@
   (find-file (expand-file-name "config.org" doom-user-dir)))
 
 (define-key! help-map
-  "dc" #'stfl/goto-private-config-file
-  "dC" #'doom/open-private-config)
+      "dc" #'stfl/goto-private-config-file
+      "dC" #'doom/open-private-config)
 
 ;; (global-auto-revert-mode 1)
 (setq undo-limit 80000000
@@ -110,7 +110,7 @@
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
   '(lsp-bridge-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
-  )
+)
 
 (setq! tab-width 4)
 
@@ -128,17 +128,17 @@
 (use-package! agile-gtd
   :after org
   :custom (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
-                                 (:tag "oebb"    :name "ÖBB"     :key ?o)
-                                 (:tag "origina" :name "Origina" :key ?i));f
-                               (agile-gtd-project-files '("emacs.org"
-                                                          "freelance.org"
-                                                          "geschenke.org"
-                                                          "media.org"
-                                                          "projects.org"
-                                                          "pulswerk.org"
-                                                          "versicherung.org"
-                                                          "ikea.org"
-                                                          "cafe-glas.org")))
+                             (:tag "oebb"    :name "ÖBB"     :key ?o)
+                             (:tag "origina" :name "Origina" :key ?i));f
+      (agile-gtd-project-files '("emacs.org"
+                                "freelance.org"
+                                "geschenke.org"
+                                "media.org"
+                                "projects.org"
+                                "pulswerk.org"
+                                "versicherung.org"
+                                "ikea.org"
+                                "cafe-glas.org")))
   :config (agile-gtd-enable)
   )
 
@@ -153,7 +153,7 @@
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   (org-mcp-allowed-files
-   (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+        (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
@@ -167,7 +167,7 @@
 
   (auto-fill-mode))
 
-                                        ; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
+; (custom-declare-face 'org-checkbox-statistics-todo '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
 
 (custom-set-faces!
   '(org-document-title :foreground "#c678dd" :weight bold :height 1.8)
@@ -316,7 +316,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 [[file:%s]]
 
 %%?" date title date directory)))
-  )
+)
 
 (after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
 
@@ -442,14 +442,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (org-clock-csv-to-file filepath))))
 
 (map! :map org-mode-map
-      :leader
-      :prefix "n"
-      :desc "Export project clock entries" "E" #'stfl/org-clock-export)
+    :leader
+    :prefix "n"
+    :desc "Export project clock entries" "E" #'stfl/org-clock-export)
 
 (map! :map org-mode-map
-      :localleader
-      :prefix "c"
-      :desc "Export project clock entries" "C" #'stfl/org-clock-export)
+    :localleader
+    :prefix "c"
+    :desc "Export project clock entries" "C" #'stfl/org-clock-export)
 
 (use-package! org-edna
   :after org
@@ -544,7 +544,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;;           org-roam-ui-open-on-start nil))
 
 (after! org-gcal
-  ;; (use-package! org-gcal
+;; (use-package! org-gcal
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
@@ -560,20 +560,20 @@ Org-mode properties drawer already, keep the headline and don’t insert
  :map org-mode-map
  :leader
  (:prefix ("n" . "notes")
-          (:prefix ("j" . "sync")
-           :desc "sync Google Calendar" "g" #'org-gcal-sync)))
+  (:prefix ("j" . "sync")
+   :desc "sync Google Calendar" "g" #'org-gcal-sync)))
 
 (map!
  :after (org org-gcal)
  :map org-mode-map
  :localleader
  :prefix ("C" . "Google Calendar")
- :desc "sync Google Calendar" "g" #'org-gcal-sync
- "S" #'org-gcal-sync-buffer
- "p" #'org-gcal-post-at-point
- "d" #'org-gcal-delete-at-point
- "f" #'org-gcal-fetch
- "F" #'org-gcal-fetch-buffer)
+   :desc "sync Google Calendar" "g" #'org-gcal-sync
+   "S" #'org-gcal-sync-buffer
+   "p" #'org-gcal-post-at-point
+   "d" #'org-gcal-delete-at-point
+   "f" #'org-gcal-fetch
+   "F" #'org-gcal-fetch-buffer)
 
 (use-package! ob-mermaid
   :after org
@@ -683,35 +683,35 @@ Not added when either:
 
 ;; (after! org
 (setq!
- ;; org-agenda-dim-blocked-tasks t
- org-agenda-dim-blocked-tasks 'invisible
- org-agenda-use-time-grid t
- ;; org-agenda-hide-tags-regexp "\\w+"
- ;; org-agenda-compact-blocks t
- ;; org-agenda-block-separator ?\n
- org-agenda-block-separator ?-
- org-agenda-tags-column 0
- org-agenda-skip-scheduled-if-done t
- org-agenda-skip-unavailable-files t
- org-agenda-skip-deadline-if-done t
- org-agenda-skip-timestamp-if-done t
- org-agenda-window-setup 'current-window
- org-agenda-start-on-weekday nil
- org-agenda-span 'day
- org-agenda-start-day "-0d"
- org-deadline-warning-days 7
- org-agenda-show-future-repeats t
- org-agenda-skip-deadline-prewarning-if-scheduled t
- org-agenda-tags-todo-honor-ignore-options t
- org-agenda-skip-scheduled-delay-if-deadline t
- org-agenda-skip-scheduled-if-deadline-is-shown t
- org-agenda-skip-timestamp-if-deadline-is-shown t
- ;; org-agenda-todo-ignore-with-date nil
- ;; org-agenda-todo-ignore-deadlines nil
- ;; org-agenda-todo-ignore-timestamp nil
- org-agenda-todo-list-sublevels t
- org-agenda-include-deadlines t
- org-agenda-sticky t)
+       ;; org-agenda-dim-blocked-tasks t
+       org-agenda-dim-blocked-tasks 'invisible
+       org-agenda-use-time-grid t
+       ;; org-agenda-hide-tags-regexp "\\w+"
+       ;; org-agenda-compact-blocks t
+       ;; org-agenda-block-separator ?\n
+       org-agenda-block-separator ?-
+       org-agenda-tags-column 0
+       org-agenda-skip-scheduled-if-done t
+       org-agenda-skip-unavailable-files t
+       org-agenda-skip-deadline-if-done t
+       org-agenda-skip-timestamp-if-done t
+       org-agenda-window-setup 'current-window
+       org-agenda-start-on-weekday nil
+       org-agenda-span 'day
+       org-agenda-start-day "-0d"
+       org-deadline-warning-days 7
+       org-agenda-show-future-repeats t
+       org-agenda-skip-deadline-prewarning-if-scheduled t
+       org-agenda-tags-todo-honor-ignore-options t
+       org-agenda-skip-scheduled-delay-if-deadline t
+       org-agenda-skip-scheduled-if-deadline-is-shown t
+       org-agenda-skip-timestamp-if-deadline-is-shown t
+       ;; org-agenda-todo-ignore-with-date nil
+       ;; org-agenda-todo-ignore-deadlines nil
+       ;; org-agenda-todo-ignore-timestamp nil
+       org-agenda-todo-list-sublevels t
+       org-agenda-include-deadlines t
+       org-agenda-sticky t)
 
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
@@ -910,10 +910,10 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (setq! ssh-deploy-async 1))
 
 (map! :map ssh-deploy-menu-map
-      :leader
-      :prefix "r"
-      "l" #'stfl/upload-register-mapping
-      "L" #'stfl/upload-unregister-all-remotes)
+    :leader
+    :prefix "r"
+    "l" #'stfl/upload-register-mapping
+    "L" #'stfl/upload-unregister-all-remotes)
 
 (when (executable-find "zoxide")
   (with-eval-after-load 'dired
@@ -1062,15 +1062,15 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          flyover-virtual-line-icon " ──► " ;;; default its nil
          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
-  )
+)
 
 (map! (:when (modulep! :editor format)
-        :v "g Q" '+format/region
-        :v "SPC =" '+format/region
-        :leader
-        :desc "Format Buffer" "=" #'+format/buffer
-        (:prefix ("b" "+buffer")
-         :desc "Format Buffer" "f" #'+format/buffer)))
+       :v "g Q" '+format/region
+       :v "SPC =" '+format/region
+       :leader
+       :desc "Format Buffer" "=" #'+format/buffer
+       (:prefix ("b" "+buffer")
+        :desc "Format Buffer" "f" #'+format/buffer)))
 
 (after! (lsp-mode php-mode)
   (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
@@ -1132,12 +1132,12 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (after! (python-mode dap-mode)
   (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
-                               (list :type "python-test-at-point  "
-                                     :args ""
-                                     :program nil
-                                     :module "pytest"
-                                     :request "launch"
-                                     :name "Python :: Run pytest (at point)")))
+                             (list :type "python-test-at-point  "
+                                   :args ""
+                                   :program nil
+                                   :module "pytest"
+                                   :request "launch"
+                                   :name "Python :: Run pytest (at point)")))
 
 (map! :mode rustic-mode
       :map rustic-mode-map
@@ -1150,11 +1150,11 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (after! lsp-rust
   (setq! lsp-rust-analyzer-binding-mode-hints t
-         ;;        lsp-rust-analyzer-display-chaining-hints t
-         ;;        lsp-rust-analyzer-display-closure-return-type-hints t
+  ;;        lsp-rust-analyzer-display-chaining-hints t
+  ;;        lsp-rust-analyzer-display-closure-return-type-hints t
          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
-         ;;        lsp-rust-analyzer-display-parameter-hints t
-         ;;        lsp-rust-analyzer-hide-named-constructor t
+  ;;        lsp-rust-analyzer-display-parameter-hints t
+  ;;        lsp-rust-analyzer-hide-named-constructor t
          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
          )
   )
@@ -1370,12 +1370,12 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         mu4e-compose-context-policy 'always-ask)
 
   (setq mu4e-maildir-shortcuts
-        '((:key ?g :maildir "/gmail/Inbox"   )
-          (:key ?p :maildir "/pulswerk/INBOX")
-          (:key ?u :maildir "/gmail/Categories/Updates")
-          (:key ?j :maildir "/pulswerk/Jira"  )
-          (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
-          ))
+    '((:key ?g :maildir "/gmail/Inbox"   )
+      (:key ?p :maildir "/pulswerk/INBOX")
+      (:key ?u :maildir "/gmail/Categories/Updates")
+      (:key ?j :maildir "/pulswerk/Jira"  )
+      (:key ?l :maildir "/pulswerk/Gitlab" :hide t)
+      ))
 
   (setq mu4e-bookmarks
         '(
@@ -1396,7 +1396,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (after! mu4e-alert
   (setq mu4e-alert-interesting-mail-query
-        "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
+           "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
 
 (after! mu4e
   (setq mu4e-headers-fields
@@ -1417,10 +1417,10 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (appendq! mu4e-header-info-custom
             '((:folder .
                (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
-                      (lambda (msg)
-                        (+mu4e-colorize-str
-                         (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
-                         '+mu4e-header--folder-colors)))))))
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
 
 (after! mu4e
   (setq sendmail-program "/usr/bin/msmtp"
@@ -1484,43 +1484,43 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 
 (map!
- ;; "C-c a" #'aidermacs-transient-menu
- :leader
- (:prefix ("j" . "AI")
-          ;; "m" #'gptel-menu
-          ;; "j" #'gptel
-          ;; "C-g" #'gptel-abort
-          ;; "C-c" #'gptel-abort
-          ;; :desc "Toggle context" "C" #'gptel-add
-          ;; "s" #'gptel-system-prompt
-          ;; "w" #'gptel-rewrite-menu
-          ;; "t" #'gptel-org-set-topic
-          ;; "P" #'gptel-org-set-properties
+      ;; "C-c a" #'aidermacs-transient-menu
+      :leader
+      (:prefix ("j" . "AI")
+       ;; "m" #'gptel-menu
+       ;; "j" #'gptel
+       ;; "C-g" #'gptel-abort
+       ;; "C-c" #'gptel-abort
+       ;; :desc "Toggle context" "C" #'gptel-add
+       ;; "s" #'gptel-system-prompt
+       ;; "w" #'gptel-rewrite-menu
+       ;; "t" #'gptel-org-set-topic
+       ;; "P" #'gptel-org-set-properties
 
-          "a" #'aidermacs-transient-menu
-          ;; "a" #'aider-transient-menu
+       "a" #'aidermacs-transient-menu
+       ;; "a" #'aider-transient-menu
 
-          "o" #'claude-code-ide-menu
+       "o" #'claude-code-ide-menu
 
-          (:prefix ("c" . "Copilot Chat")
-                   ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
-                   "c" #'copilot-chat-display  ;; display copilot chat buffers.
-                   "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
-                   "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
-                   "r" #'copilot-chat-review  ;; ask copilot to review selected code.
-                   "d" #'copilot-chat-doc  ;; ask copilot to document selected code.
-                   "f" #'copilot-chat-fix  ;; ask copilot to fix selected code.
-                   "o" #'copilot-chat-optimize  ;; ask copilot to optimize selected code.
-                   "t" #'copilot-chat-test  ;; ask copilot to write tests for selected code.
-                   ;; :n "" #'copilot-chat-custom-prompt-selection  ;; ask for a prompt in minibuffer and pastes selection after it before sending it to copilot.
-                   "b" #'copilot-chat-add-current-buffer  ;; add current buffer to copilot chat. Its content will be sent with every request.
-                   "B" #'copilot-chat-del-current-buffer  ;; remove current buffer.
-                   "l" #'copilot-chat-list  ;; open buffer list.
-                   ;; "" #'copilot-chat-prompt-history-previous  ;; insert previous prompt from history in prompt buffer.
-                   ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
-                   "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
-                   "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-                   )))
+       (:prefix ("c" . "Copilot Chat")
+        ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
+        "c" #'copilot-chat-display  ;; display copilot chat buffers.
+        "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
+        "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
+        "r" #'copilot-chat-review  ;; ask copilot to review selected code.
+        "d" #'copilot-chat-doc  ;; ask copilot to document selected code.
+        "f" #'copilot-chat-fix  ;; ask copilot to fix selected code.
+        "o" #'copilot-chat-optimize  ;; ask copilot to optimize selected code.
+        "t" #'copilot-chat-test  ;; ask copilot to write tests for selected code.
+        ;; :n "" #'copilot-chat-custom-prompt-selection  ;; ask for a prompt in minibuffer and pastes selection after it before sending it to copilot.
+        "b" #'copilot-chat-add-current-buffer  ;; add current buffer to copilot chat. Its content will be sent with every request.
+        "B" #'copilot-chat-del-current-buffer  ;; remove current buffer.
+        "l" #'copilot-chat-list  ;; open buffer list.
+        ;; "" #'copilot-chat-prompt-history-previous  ;; insert previous prompt from history in prompt buffer.
+        ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
+        "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
+        "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
+        )))
 
 (defun stfl/setup-api-keys ()
   (interactive)
