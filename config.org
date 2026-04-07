@@ -918,6 +918,8 @@ REVIEW should we define any additional tags?
                         (:endgrouptag)
                         ))
   (agile-gtd-enable)
+  (setopt org-mcp-allowed-files
+          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (setq org-capture-templates
         (append
          (cl-remove-if (lambda (template)
