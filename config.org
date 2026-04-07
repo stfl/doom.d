@@ -3397,8 +3397,8 @@ Reply concisely. Wrap source code in a ```cpp block.")
 #+begin_src elisp :tangle packages.el
 ;; Local dev — switch to GitHub recipe once published:
 (package! agile-gtd
-  ;; :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
-    :recipe (:host github :repo "stfl/agile-gtd"))
+  :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
+    ;; :recipe (:host github :repo "stfl/agile-gtd"))
 #+end_src
 
 ** org-mcp
