@@ -3411,8 +3411,8 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
 (package! mcp-server-lib)
 (package! org-mcp
   :recipe
-  (:local-repo "~/work/org-mcp" :build (:not compile)))
-  ;; (:host github :repo "stfl/org-mcp")))
+  ;; (:local-repo "~/work/org-mcp" :build (:not compile)))
+  (:host github :repo "stfl/org-mcp")))
 #+end_src
 
 #+begin_src elisp
