@@ -125,7 +125,7 @@
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
-(use-package! agile-gtd
+(use-package agile-gtd
   :after org
   :custom
   (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
