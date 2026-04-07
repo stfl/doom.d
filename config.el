@@ -129,7 +129,7 @@
   :after org)
 
 (use-package org-mcp
-  :after (org . agile-gtd)
+  :after (org agile-gtd)
   :custom
   (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
