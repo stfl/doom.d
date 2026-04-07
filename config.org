@@ -465,7 +465,7 @@ Automatically saving all org-buffers when emacs is idle for 30 seconds.
 (after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 #+END_SRC
 
-** Orgmode Startup
+** org-mode Startup
 :PROPERTIES:
 :ID:       fadd0d57-a6dd-4d17-ab0c-784b5159b7ed
 :END:
