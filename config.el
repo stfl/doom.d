@@ -116,8 +116,6 @@
 
 (setq org-directory "~/.org")
 
-(require 'agile-gtd)
-
 (after! org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
@@ -126,6 +124,24 @@
 (after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
 
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
+
+(use-package! agile-gtd
+  :after org)
+
+(use-package org-mcp
+  :after (org . agile-gtd)
+  :custom
+  (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+  (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
+  (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
+                                 (rank . agile-gtd--item-rank)))
+  (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
+  (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
+  (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
+  (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
+  :config (if mcp-server-lib--running
+              (message "org-mcp: MCP server already running, skipping start")
+            (mcp-server-lib-start)))
 
 (after! org
   (setq! org-auto-align-tags nil
@@ -197,7 +213,6 @@
       :map org-mode-map
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
-      "F" #'+org-fix-blank-lines
       "N" #'org-add-note
 
       :prefix ("l" . "links")
@@ -608,12 +623,6 @@ Not added when either:
 
   (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
 
-;; (after! org
-;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
-;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
-;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-;;   )
-
 ;; (use-package! org-pandoc-import :after org)
 
 (after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
@@ -625,88 +634,6 @@ Not added when either:
 (after! org-tree-slide
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
-
-(map! :after org
-      :map org-mode-map
-      :leader
-      (:prefix ("n" . "notes")
-       (:prefix ("j" . "sync")
-        :desc "resolve syncthing conflicts" "c" #'stfl/resolve-orgzly-syncthing
-        )))
-
-(defun stfl/resolve-orgzly-syncthing ()
-  (interactive)
-  (let ((org-startup-folded 'showeverything)
-        (org-inhibit-startup t)
-        (org-hide-drawer-startup nil))
-    (ibizaman/syncthing-resolve-conflicts org-directory)))
-
-(defun ibizaman/syncthing-resolve-conflicts (directory)
-  "Resolve all conflicts under given DIRECTORY."
-  (interactive "D")
-  (let* ((all (ibizaman/syncthing--get-sync-conflicts directory))
-         (chosen (ibizaman/syncthing--pick-a-conflict all)))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-
-(defun ibizaman/syncthing-show-conflicts-dired (directory)
-  "Open dired buffer at DIRECTORY showing all syncthing conflicts."
-  (interactive "D")
-  (find-name-dired directory "*.sync-conflict-*"))
-
-(defun ibizaman/syncthing-resolve-conflict-dired (&optional arg)
-  "Resolve conflict of first marked file in dired or close to point with ARG."
-  (interactive "P")
-  (let ((chosen (car (dired-get-marked-files nil arg))))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-(defun ibizaman/syncthing-resolve-conflict (conflict)
-  "Resolve CONFLICT file using ediff."
-  (let* ((normal (ibizaman/syncthing--get-normal-filename conflict)))
-    (ibizaman/ediff-files
-     (list conflict normal)
-     `(lambda ()
-        (when (y-or-n-p "Delete conflict file? ")
-          (kill-buffer (get-file-buffer ,conflict))
-          (delete-file ,conflict))))))
-
-(defun ibizaman/syncthing--get-sync-conflicts (directory)
-  "Return a list of all sync conflict files in a DIRECTORY."
-  (seq-filter (lambda (o) (not (string-match "\\.stversions" o))) (directory-files-recursively directory "\\.sync-conflict-")))
-
-(defvar ibizaman/syncthing--conflict-history nil
-  "Completion conflict history")
-
-(defun ibizaman/syncthing--pick-a-conflict (conflicts)
-  "Let user choose the next conflict from CONFLICTS to investigate."
-  (completing-read "Choose the conflict to investigate: " conflicts
-                   nil t nil ibizaman/syncthing--conflict-history))
-
-(defun ibizaman/syncthing--get-normal-filename (conflict)
-  "Get non-conflict filename matching the given CONFLICT."
-  (replace-regexp-in-string "\\.sync-conflict-.*\\(\\..*\\)$" "\\1" conflict))
-
-(defun ibizaman/ediff-files (&optional files quit-hook)
-  (interactive)
-  (lexical-let ((files (or files (dired-get-marked-files)))
-                (quit-hook quit-hook)
-                (wnd (current-window-configuration)))
-    (if (<= (length files) 2)
-        (let ((file1 (car files))
-              (file2 (if (cdr files)
-                         (cadr files)
-                       (read-file-name
-                        "file: "
-                        (dired-dwim-target-directory)))))
-          (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (when quit-hook (funcall quit-hook))
-                      (set-window-configuration wnd))))
-      (error "no more than 2 files should be marked"))))
 
 (use-package orgzly-formatter
   :hook (org-mode . orgzly-formatter-mode))
@@ -1801,18 +1728,3 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (require 'agent-shell)
 
 (use-package agent-shell)
-
-(use-package org-mcp
-  :after org
-  :custom
-  (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
-  (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
-                                 (rank . agile-gtd--item-rank)))
-  (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
-  (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
-  (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
-  (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
-  :config (if mcp-server-lib--running
-              (message "org-mcp: MCP server already running, skipping start")
-            (mcp-server-lib-start)))
