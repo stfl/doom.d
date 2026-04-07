@@ -126,12 +126,24 @@
 (after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 
 (use-package! agile-gtd
-  :after org)
+  :after org
+  :custom (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
+                             (:tag "oebb"    :name "ÖBB"     :key ?o)
+                             (:tag "origina" :name "Origina" :key ?i));f
+      (agile-gtd-project-files '("emacs.org"
+                                "freelance.org"
+                                "geschenke.org"
+                                "media.org"
+                                "projects.org"
+                                "pulswerk.org"
+                                "versicherung.org"
+                                "ikea.org"
+                                "cafe-glas.org")))
+  )
 
 (use-package org-mcp
   :after (org agile-gtd)
   :custom
-  (org-mcp-allowed-files (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
                                  (rank . agile-gtd--item-rank)))
@@ -253,18 +265,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-(setq agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
-                             (:tag "oebb"    :name "ÖBB"     :key ?o)
-                             (:tag "origina" :name "Origina" :key ?i))
-      agile-gtd-project-files '("emacs.org"
-                                "freelance.org"
-                                "geschenke.org"
-                                "media.org"
-                                "projects.org"
-                                "pulswerk.org"
-                                "versicherung.org"
-                                "ikea.org"
-                                "cafe-glas.org"))
+
 
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
@@ -501,6 +502,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
                         (:endgrouptag)
                         ))
   (agile-gtd-enable)
+  (setopt org-mcp-allowed-files
+          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   (setq org-capture-templates
         (append
          (cl-remove-if (lambda (template)
