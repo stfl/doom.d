@@ -508,13 +508,6 @@ From here we load some extra key bindings that I use often
       )
 #+END_SRC
 
-** Priorities
-:PROPERTIES:
-:ID:       f5c0a2a6-070e-480e-8c72-888da9416f25
-:END:
-
-The priority range and org-modern visualization are configured in ~agile-gtd~.
-
 ** Refiling
 :PROPERTIES:
 :ID:       b1208906-9e44-4a2e-a21c-e169a7e3486c
