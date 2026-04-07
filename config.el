@@ -127,19 +127,19 @@
 
 (use-package agile-gtd
   :after org
-  :custom
-  (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
-                         (:tag "oebb"    :name "ÖBB"     :key ?o)
-                         (:tag "origina" :name "Origina" :key ?i)))
-  (agile-gtd-project-files '("emacs.org"
-                              "freelance.org"
-                              "geschenke.org"
-                              "media.org"
-                              "projects.org"
-                              "pulswerk.org"
-                              "versicherung.org"
-                              "ikea.org"
-                              "cafe-glas.org"))
+  :config
+  (setq agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
+                              (:tag "oebb"    :name "ÖBB"     :key ?o)
+                              (:tag "origina" :name "Origina" :key ?i))
+        agile-gtd-project-files '("emacs.org"
+                                  "freelance.org"
+                                  "geschenke.org"
+                                  "media.org"
+                                  "projects.org"
+                                  "pulswerk.org"
+                                  "versicherung.org"
+                                  "ikea.org"
+                                  "cafe-glas.org"))
   :config (agile-gtd-enable)
   )
 
