@@ -572,6 +572,18 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :END:
 
 #+begin_src elisp
+(setq org-capture-templates
+      (append
+       (cl-remove-if (lambda (template)
+                       (equal "v" (car-safe template)))
+                     org-capture-templates)
+       `(("v" "Versicherung" entry
+          (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
+          (function stfl/org-capture-template-versicherung)
+          :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
+#+end_src
+
+#+begin_src elisp
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
   (setq! org-roam-capture-templates
@@ -916,15 +928,6 @@ REVIEW should we define any additional tags?
                       ))
 (setopt org-mcp-allowed-files
         (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-(setq org-capture-templates
-      (append
-       (cl-remove-if (lambda (template)
-                       (equal "v" (car-safe template)))
-                     org-capture-templates)
-       `(("v" "Versicherung" entry
-          (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
-          (function stfl/org-capture-template-versicherung)
-          :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 #+END_SRC
 
 ** org-roam
