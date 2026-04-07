@@ -277,7 +277,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
          `(("v" "Versicherung" entry
             (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
             (function stfl/org-capture-template-versicherung)
-            :root "~/Documents/Finanzielles/Einreichung Versicherung"))))))
+            :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
