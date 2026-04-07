@@ -397,9 +397,10 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
   (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
-  (org-mcp-allowed-files
+  :config
+  (setq org-mcp-allowed-files
         (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  :config (if mcp-server-lib--running
+  (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
 #+end_src
