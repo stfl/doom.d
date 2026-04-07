@@ -132,5 +132,17 @@
 (package! acp)
 (package! agent-shell)
 
+;; Local dev — switch to GitHub recipe once published:
+(package! agile-gtd
+  :recipe (:local-repo "~/work/agile-gtd"
+           :files ("*.el")
+           :build (:not compile)))
+;; (package! agile-gtd :recipe (:host github :repo "stfl/agile-gtd"))
+
 (package! mcp-server-lib)
-(package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
+;; Local dev — switch to GitHub recipe once published:
+(package! org-mcp
+  :recipe (:local-repo "~/work/org-mcp"
+           :files ("*.el")
+           :build (:not compile)))
+;; (package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))

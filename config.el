@@ -116,7 +116,6 @@
 
 (setq org-directory "~/.org")
 
-(add-to-list 'load-path (expand-file-name "packages/agile-gtd" doom-user-dir))
 (require 'agile-gtd)
 
 (after! org-id

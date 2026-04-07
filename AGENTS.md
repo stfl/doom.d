@@ -48,6 +48,22 @@
 - Launch an Elisp REPL: `~/.config/emacs/bin/doom emacs --repl`
 - Inspect Doom CLI help: `~/.config/emacs/bin/doom help`
 
+## Local Package Development
+- `agile-gtd` is developed at `~/work/agile-gtd` and `org-mcp` at `~/work/org-mcp`.
+- Both are wired into Doom via `package!` `:local-repo` recipes in `config.org` (in the `** agile-gtd` and `** org-mcp` sections).
+- straight.el symlinks their `.el` files into the build directory, so `doom emacs --batch` finds them automatically without any manual load-path setup.
+- `:build (:not compile)` is set for both — edits to `.el` files in the local repos are live on the next Emacs session (or `eval-buffer`) without rerunning `doom sync`.
+- To switch a package from local dev to the published GitHub version, swap the commented/uncommented `package!` line in `config.org`, run `doom +org tangle config.org`, then `doom sync -u`.
+
+## Batch Eval With Doom Packages
+- `doom emacs --batch` works out of the box for all Doom-managed packages including `agile-gtd` and `org-mcp`.
+- Example:
+  ```bash
+  ~/.config/emacs/bin/doom emacs --batch -l /path/to/script.el
+  ```
+- For quick one-off evaluation in the running Emacs session, use `emacsclient --eval '(...)'`.
+- When writing test scripts, put Elisp in a temp file and pass it via `-l` rather than fighting shell quoting with `--eval`.
+
 ## Build / Regeneration Workflow
 - After changing `config.org`, run `~/.config/emacs/bin/doom sync` — this retangles `config.org` to `config.el` and syncs packages.
 - `doom +org tangle config.org` only tangles blocks with explicit `:tangle` targets (e.g. `packages.el`, JSON files); it does NOT produce `config.el`.

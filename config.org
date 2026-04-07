@@ -327,7 +327,6 @@ Org directory
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(add-to-list 'load-path (expand-file-name "packages/agile-gtd" doom-user-dir))
 (require 'agile-gtd)
 #+END_SRC
 
@@ -3393,13 +3392,29 @@ Reply concisely. Wrap source code in a ```cpp block.")
 (use-package agent-shell)
 #+end_src
 
+** agile-gtd
+
+#+begin_src elisp :tangle packages.el
+;; Local dev — switch to GitHub recipe once published:
+(package! agile-gtd
+  :recipe (:local-repo "~/work/agile-gtd"
+           :files ("*.el")
+           :build (:not compile)))
+;; (package! agile-gtd :recipe (:host github :repo "stfl/agile-gtd"))
+#+end_src
+
 ** org-mcp
 
 MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Code).
 
 #+begin_src elisp :tangle packages.el
 (package! mcp-server-lib)
-(package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
+;; Local dev — switch to GitHub recipe once published:
+(package! org-mcp
+  :recipe (:local-repo "~/work/org-mcp"
+           :files ("*.el")
+           :build (:not compile)))
+;; (package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
 #+end_src
 
 #+begin_src elisp
