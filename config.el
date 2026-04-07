@@ -140,11 +140,11 @@
                                   "versicherung.org"
                                   "ikea.org"
                                   "cafe-glas.org"))
-  :config (agile-gtd-enable)
+  (agile-gtd-enable)
   )
 
 (use-package org-mcp
-  :after agile-gtd
+  :after (org agile-gtd)
   :custom
   (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
