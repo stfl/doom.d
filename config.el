@@ -127,23 +127,24 @@
 
 (use-package! agile-gtd
   :after org
-  :custom (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
-                             (:tag "oebb"    :name "ÖBB"     :key ?o)
-                             (:tag "origina" :name "Origina" :key ?i));f
-      (agile-gtd-project-files '("emacs.org"
-                                "freelance.org"
-                                "geschenke.org"
-                                "media.org"
-                                "projects.org"
-                                "pulswerk.org"
-                                "versicherung.org"
-                                "ikea.org"
-                                "cafe-glas.org")))
+  :custom
+  (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
+                         (:tag "oebb"    :name "ÖBB"     :key ?o)
+                         (:tag "origina" :name "Origina" :key ?i)))
+  (agile-gtd-project-files '("emacs.org"
+                              "freelance.org"
+                              "geschenke.org"
+                              "media.org"
+                              "projects.org"
+                              "pulswerk.org"
+                              "versicherung.org"
+                              "ikea.org"
+                              "cafe-glas.org"))
   :config (agile-gtd-enable)
   )
 
 (use-package org-mcp
-  :after (org agile-gtd)
+  :after agile-gtd
   :custom
   (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
@@ -152,9 +153,10 @@
   (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
-  (org-mcp-allowed-files
+  :config
+  (setq org-mcp-allowed-files
         (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  :config (if mcp-server-lib--running
+  (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
 
