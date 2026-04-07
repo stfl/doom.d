@@ -388,7 +388,7 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
 
 #+begin_src elisp
 (use-package org-mcp
-  :after (org agile-gtd)
+  :after agile-gtd
   :custom
   (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
