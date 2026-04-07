@@ -28,9 +28,7 @@
 
 ## Git Sync Workflow
 - This config is automatically tracked with git-sync.
-- Before starting an edit session, stop sync with `systemctl --user stop git-sync-doomemacs`.
 - Keep git-sync stopped for the whole edit session so automated syncing does not interfere with in-progress changes.
-- Start git-sync again only after the session's changes have been committed: `systemctl --user start git-sync-doomemacs`.
 - Do not restart git-sync if work is still uncommitted.
 
 ## Commit Workflow
@@ -126,7 +124,6 @@
 - When inspecting dependency implementations, always prefer the local straight checkouts under `~/.config/emacs/.local/straight/repos/*` as the source of truth.
 - Prefer plain `with-eval-after-load`, `use-package`, and `setopt` in private config, following recent Doom upstream guidance.
 - Use Doom-specific macros such as `map!`, `add-hook!`, and `defadvice!` where they remain the clearest fit.
-- Use `after!`, `use-package!`, and `setq!` only when there is a repo-specific or Doom-internal reason.
 - Put package-specific configuration inside `with-eval-after-load` or `use-package` blocks unless a Doom-only form is required.
 - Use `require` only when eager loading is actually needed.
 - Add new packages in tangled `package!` blocks, not ad hoc runtime installs.
@@ -180,8 +177,7 @@
 - Mention any generated-file updates in your final note.
 
 ## Verification Checklist
-- If you changed `config.org`, run `doom +org tangle config.org` and then `doom sync`, and include the updated `config.el` (and `packages.el` if changed) in the commit.
-- If you changed modules or packages, run `doom sync`.
+- After a change, run `doom sync`, and include the updated `config.el` (and `packages.el` if changed) in the commit.
 - If you touched generated files because tangling updated them, verify they came from `config.org` and were not edited by hand.
 - If you changed handwritten Elisp helpers, byte-compile or batch-load the touched file.
 - If behavior is interactive, open Doom and smoke-test the exact command or keybinding you changed.
