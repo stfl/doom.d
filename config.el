@@ -139,6 +139,7 @@
                                 "versicherung.org"
                                 "ikea.org"
                                 "cafe-glas.org")))
+  :config (agile-gtd-enable)
   )
 
 (use-package org-mcp
@@ -151,6 +152,8 @@
   (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
+  (org-mcp-allowed-files
+        (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
   :config (if mcp-server-lib--running
               (message "org-mcp: MCP server already running, skipping start")
             (mcp-server-lib-start)))
@@ -265,7 +268,16 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-
+(with-eval-after-load org
+  (setq org-capture-templates
+        (append
+         (cl-remove-if (lambda (template)
+                         (equal "v" (car-safe template)))
+                       org-capture-templates)
+         `(("v" "Versicherung" entry
+            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
+            (function stfl/org-capture-template-versicherung)
+            :root "~/Documents/Finanzielles/Einreichung Versicherung"))))))
 
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (after! org-roam
@@ -479,40 +491,27 @@ Org-mode properties drawer already, keep the headline and don’t insert
         org-hierarchical-todo-statistics nil
         ))
 
-(after! org
-  (setq org-tag-alist '((:startgrouptag)
-                        ("Context" . nil)
-                        (:grouptags)
-                        ;; ("@home" . ?h)
-                        ;; ("@office". ?o)
-                        ("@sarah" . ?s)
-                        ("@lena" . ?l)
-                        ;; ("@kg" . ?k)
-                        ("@jg" . ?j)
-                        ("@mfg" . ?m)
-                        ;; ("@robert" . ?r)
-                        ;; ("@baudock_meeting" . ?b)
-                        ;; ("@PC" . ?p)
-                        ;; ("@phone" . ?f)
-                        (:endgrouptag)
-                        (:startgrouptag)
-                        ("Areas" . nil)
-                        (:grouptags)
-                        ("emacs" . ?-)
-                        (:endgrouptag)
-                        ))
-  (agile-gtd-enable)
-  (setopt org-mcp-allowed-files
-          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  (setq org-capture-templates
-        (append
-         (cl-remove-if (lambda (template)
-                         (equal "v" (car-safe template)))
-                       org-capture-templates)
-         `(("v" "Versicherung" entry
-            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
-            (function stfl/org-capture-template-versicherung)
-            :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
+(setq org-tag-alist '((:startgrouptag)
+                      ("Context" . nil)
+                      (:grouptags)
+                      ;; ("@home" . ?h)
+                      ;; ("@office". ?o)
+                      ("@sarah" . ?s)
+                      ("@lena" . ?l)
+                      ;; ("@kg" . ?k)
+                      ("@jg" . ?j)
+                      ("@mfg" . ?m)
+                      ;; ("@robert" . ?r)
+                      ;; ("@baudock_meeting" . ?b)
+                      ;; ("@PC" . ?p)
+                      ;; ("@phone" . ?f)
+                      (:endgrouptag)
+                      (:startgrouptag)
+                      ("Areas" . nil)
+                      (:grouptags)
+                      ("emacs" . ?-)
+                      (:endgrouptag)
+                      ))
 
 (after! org-roam
   (setq! org-roam-directory org-directory
