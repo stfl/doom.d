@@ -3412,7 +3412,6 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
 ;; Local dev — switch to GitHub recipe once published:
 (package! org-mcp
   :recipe (:local-repo "~/work/org-mcp"
-           :files ("*.el")
            :build (:not compile)))
 ;; (package! org-mcp :recipe (:host github :repo "stfl/org-mcp"))
 #+end_src
