@@ -1138,20 +1138,6 @@ https://emacs.stackexchange.com/a/44923/30180
   (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
 #+END_SRC
 
-** Org Emphasis
-:PROPERTIES:
-:ID:       c8b37906-ad3a-4891-9234-6c8627fb4d61
-:END:
-
-Allow emphasis like *bold* or /italic/ also inside a *Wo/*rd/
-#+begin_src elisp
-;; (after! org
-;;   (setcar org-emphasis-regexp-components "-[:space:]('\"{[:alpha:]")                     ; post
-;;   (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]-[:space:].,:!?;'\")}\\[") ; pre
-;;   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-;;   )
-#+end_src
-
 ** Org Pandoc Import
 
 https://github.com/tecosaur/org-pandoc-import
@@ -1190,100 +1176,6 @@ https://github.com/doomemacs/doomemacs/issues/7058
 (after! org-tree-slide
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
-#+end_src
-
-** Resolve syncthing conflicts
-:PROPERTIES:
-:ID:       38ca0220-550b-4e62-a42c-a4008c72a59b
-:END:
-
-From https://www.reddit.com/r/emacs/comments/bqqqra/quickly_find_syncthing_conflicts_and_resolve_them/
-/In termux, you also need to pkg install diffutils./
-
-#+begin_src elisp
-(map! :after org
-      :map org-mode-map
-      :leader
-      (:prefix ("n" . "notes")
-       (:prefix ("j" . "sync")
-        :desc "resolve syncthing conflicts" "c" #'stfl/resolve-orgzly-syncthing
-        )))
-#+end_src
-
-#+begin_src elisp
-(defun stfl/resolve-orgzly-syncthing ()
-  (interactive)
-  (let ((org-startup-folded 'showeverything)
-        (org-inhibit-startup t)
-        (org-hide-drawer-startup nil))
-    (ibizaman/syncthing-resolve-conflicts org-directory)))
-
-(defun ibizaman/syncthing-resolve-conflicts (directory)
-  "Resolve all conflicts under given DIRECTORY."
-  (interactive "D")
-  (let* ((all (ibizaman/syncthing--get-sync-conflicts directory))
-         (chosen (ibizaman/syncthing--pick-a-conflict all)))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-
-(defun ibizaman/syncthing-show-conflicts-dired (directory)
-  "Open dired buffer at DIRECTORY showing all syncthing conflicts."
-  (interactive "D")
-  (find-name-dired directory "*.sync-conflict-*"))
-
-(defun ibizaman/syncthing-resolve-conflict-dired (&optional arg)
-  "Resolve conflict of first marked file in dired or close to point with ARG."
-  (interactive "P")
-  (let ((chosen (car (dired-get-marked-files nil arg))))
-    (ibizaman/syncthing-resolve-conflict chosen)))
-
-(defun ibizaman/syncthing-resolve-conflict (conflict)
-  "Resolve CONFLICT file using ediff."
-  (let* ((normal (ibizaman/syncthing--get-normal-filename conflict)))
-    (ibizaman/ediff-files
-     (list conflict normal)
-     `(lambda ()
-        (when (y-or-n-p "Delete conflict file? ")
-          (kill-buffer (get-file-buffer ,conflict))
-          (delete-file ,conflict))))))
-
-(defun ibizaman/syncthing--get-sync-conflicts (directory)
-  "Return a list of all sync conflict files in a DIRECTORY."
-  (seq-filter (lambda (o) (not (string-match "\\.stversions" o))) (directory-files-recursively directory "\\.sync-conflict-")))
-
-(defvar ibizaman/syncthing--conflict-history nil
-  "Completion conflict history")
-
-(defun ibizaman/syncthing--pick-a-conflict (conflicts)
-  "Let user choose the next conflict from CONFLICTS to investigate."
-  (completing-read "Choose the conflict to investigate: " conflicts
-                   nil t nil ibizaman/syncthing--conflict-history))
-
-(defun ibizaman/syncthing--get-normal-filename (conflict)
-  "Get non-conflict filename matching the given CONFLICT."
-  (replace-regexp-in-string "\\.sync-conflict-.*\\(\\..*\\)$" "\\1" conflict))
-
-(defun ibizaman/ediff-files (&optional files quit-hook)
-  (interactive)
-  (lexical-let ((files (or files (dired-get-marked-files)))
-                (quit-hook quit-hook)
-                (wnd (current-window-configuration)))
-    (if (<= (length files) 2)
-        (let ((file1 (car files))
-              (file2 (if (cdr files)
-                         (cadr files)
-                       (read-file-name
-                        "file: "
-                        (dired-dwim-target-directory)))))
-          (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (when quit-hook (funcall quit-hook))
-                      (set-window-configuration wnd))))
-      (error "no more than 2 files should be marked"))))
 #+end_src
 
 ** Orgzly compatability format
