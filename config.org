@@ -326,18 +326,6 @@ Org directory
 (setq org-directory "~/.org")
 #+END_SRC
 
-#+BEGIN_SRC elisp
-(require 'agile-gtd)
-#+END_SRC
-
-
-# Add a when condition that only adjust settings when certain features are enabled... This depends on where i'm running Emacs from (eg: Terminla, X11 or native).
-# #+BEGIN_SRC elisp
-# (when (require 'org-superstar nil 'noerror)
-#   (setq org-superstar-headline-bullets-list '("◉" "●" "○")
-#         org-superstar-item-bullet-alist nil))
-# #+END_SRC
-
 always generate an id for a link
 
 #+BEGIN_SRC elisp
