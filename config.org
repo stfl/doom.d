@@ -497,7 +497,6 @@ From here we load some extra key bindings that I use often
       :map org-mode-map
       :localleader
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
-      "F" #'+org-fix-blank-lines
       "N" #'org-add-note
 
       :prefix ("l" . "links")
