@@ -904,7 +904,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 :ID:       37ad2d09-7250-443e-9bbd-26c3b4305b72
 :END:
 
-REVIEW should we define any additional tags?
+
 #+BEGIN_SRC elisp
 (setq org-tag-alist '((:startgrouptag)
                       ("Context" . nil)
