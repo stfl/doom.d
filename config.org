@@ -574,7 +574,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :END:
 
 #+begin_src elisp
-(with-eval-after-load org
+(with-eval-after-load 'org
   (setq org-capture-templates
         (append
          (cl-remove-if (lambda (template)
