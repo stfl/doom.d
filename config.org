@@ -904,7 +904,6 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 :ID:       37ad2d09-7250-443e-9bbd-26c3b4305b72
 :END:
 
-
 #+BEGIN_SRC elisp
 (setq org-tag-alist '((:startgrouptag)
                       ("Context" . nil)
@@ -927,8 +926,6 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
                       ("emacs" . ?-)
                       (:endgrouptag)
                       ))
-(setopt org-mcp-allowed-files
-        (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
 #+END_SRC
 
 ** org-roam
