@@ -357,7 +357,7 @@ also rebuild that via org-roam
 #+end_src
 
 #+begin_src elisp
-(use-package agile-gtd
+(use-package! agile-gtd
   :after org
   :custom
   (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
