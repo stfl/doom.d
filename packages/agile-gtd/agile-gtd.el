@@ -1049,15 +1049,16 @@ An entry qualifies when any of the following hold:
   "Return non-nil if element A has a lower rank than element B.
 A and B are Org elements as returned by `org-ql-select'.
 Lower rank means higher priority.  Use as `:sort' arg to `org-ql-select'
-or `org-ql-search'."
+or `org-ql-search'.
+\nThis is a 2-argument comparison function compatible with `-sort'."
   (cl-flet ((rank-of (el)
-               (let ((buf (get-buffer (org-element-property :buffer el)))
-                     (pos (org-element-property :begin el)))
-                 (when (and buf pos)
-                   (with-current-buffer buf
-                     (save-excursion
-                       (goto-char pos)
-                       (agile-gtd--item-rank)))))))
+              (let ((buf (get-buffer (org-element-property :buffer el)))
+                    (pos (org-element-property :begin el)))
+                (when (and buf pos)
+                  (with-current-buffer buf
+                    (save-excursion
+                      (goto-char pos)
+                      (agile-gtd--item-rank)))))))
     (< (or (rank-of a) agile-gtd--rank-inf)
        (or (rank-of b) agile-gtd--rank-inf))))
 
