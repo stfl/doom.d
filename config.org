@@ -1413,13 +1413,6 @@ specific cases.
         org-enforce-todo-dependencies nil))
 #+end_src
 
-** Agenda Custom Commands
-:PROPERTIES:
-:ID:       d7086f3e-df0a-48ba-af95-1af25a49ca06
-:END:
-
-Agile GTD agenda custom commands live in ~agile-gtd~.
-
 ** org super agenda
 :PROPERTIES:
 :ID:       e2830ec6-a2f9-4778-9bb2-f6d130ef61d2
@@ -1462,11 +1455,6 @@ Mark an agenda entry
 
 These commands are provided by ~agile-gtd~.
 
-** My Query helpers
-
-some helper functions
-These helpers are provided by ~agile-gtd~.
-
 ** org-ql
 :PROPERTIES:
 :ID:       617698c9-8d19-4dd5-a13f-541fa6a8c343
@@ -1477,10 +1465,6 @@ These helpers are provided by ~agile-gtd~.
 #+end_src
 
 Agile GTD requires ~org-ql~ directly from the module.
-
-** [#D] org-ql custom predicates
-
-These predicates are defined by ~agile-gtd~.
 
 ** Recurring Checkboxes org-checklist
 
