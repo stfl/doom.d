@@ -268,7 +268,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line)
       (kill-line))))
 
-(with-eval-after-load org
+(with-eval-after-load 'org
   (setq org-capture-templates
         (append
          (cl-remove-if (lambda (template)
@@ -439,9 +439,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                                    (doom-path org-directory "archive" project)))
            (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
            (filepath (doom-path stfl/org-clock-export-dir filename)))
-      (org-clock-csv-to-file filepath)))
-
-  )
+      (org-clock-csv-to-file filepath))))
 
 (map! :map org-mode-map
     :leader
