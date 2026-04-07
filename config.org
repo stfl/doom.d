@@ -896,38 +896,38 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 REVIEW should we define any additional tags?
 #+BEGIN_SRC elisp
 (setq org-tag-alist '((:startgrouptag)
-                    ("Context" . nil)
-                    (:grouptags)
-                    ;; ("@home" . ?h)
-                    ;; ("@office". ?o)
-                    ("@sarah" . ?s)
-                    ("@lena" . ?l)
-                    ;; ("@kg" . ?k)
-                    ("@jg" . ?j)
-                    ("@mfg" . ?m)
-                    ;; ("@robert" . ?r)
-                    ;; ("@baudock_meeting" . ?b)
-                    ;; ("@PC" . ?p)
-                    ;; ("@phone" . ?f)
-                    (:endgrouptag)
-                    (:startgrouptag)
-                    ("Areas" . nil)
-                    (:grouptags)
-                    ("emacs" . ?-)
-                    (:endgrouptag)
-                    ))
-  (agile-gtd-enable)
-  (setopt org-mcp-allowed-files
-          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
-  (setq org-capture-templates
-        (append
-         (cl-remove-if (lambda (template)
-                         (equal "v" (car-safe template)))
-                       org-capture-templates)
-         `(("v" "Versicherung" entry
-            (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
-            (function stfl/org-capture-template-versicherung)
-            :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
+                      ("Context" . nil)
+                      (:grouptags)
+                      ;; ("@home" . ?h)
+                      ;; ("@office". ?o)
+                      ("@sarah" . ?s)
+                      ("@lena" . ?l)
+                      ;; ("@kg" . ?k)
+                      ("@jg" . ?j)
+                      ("@mfg" . ?m)
+                      ;; ("@robert" . ?r)
+                      ;; ("@baudock_meeting" . ?b)
+                      ;; ("@PC" . ?p)
+                      ;; ("@phone" . ?f)
+                      (:endgrouptag)
+                      (:startgrouptag)
+                      ("Areas" . nil)
+                      (:grouptags)
+                      ("emacs" . ?-)
+                      (:endgrouptag)
+                      ))
+(agile-gtd-enable)
+(setopt org-mcp-allowed-files
+        (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files))
+(setq org-capture-templates
+      (append
+       (cl-remove-if (lambda (template)
+                       (equal "v" (car-safe template)))
+                     org-capture-templates)
+       `(("v" "Versicherung" entry
+          (file+headline ,(doom-path org-directory "versicherung.org") "Einreichungen")
+          (function stfl/org-capture-template-versicherung)
+          :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 #+END_SRC
 
 ** org-roam
