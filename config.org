@@ -359,7 +359,7 @@ also rebuild that via org-roam
 #+begin_src elisp
 (use-package agile-gtd
   :after org
-  :custom
+  :init
   (agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
                          (:tag "oebb"    :name "ÖBB"     :key ?o)
                          (:tag "origina" :name "Origina" :key ?i)))
