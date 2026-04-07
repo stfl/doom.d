@@ -53,14 +53,45 @@
 - `:build (:not compile)` is set for both — edits to `.el` files in the local repos are live on the next Emacs session (or `eval-buffer`) without rerunning `doom sync`.
 - To switch a package from local dev to the published GitHub version, swap the commented/uncommented `package!` line in `config.org`, run `doom +org tangle config.org`, then `doom sync -u`.
 
-## Batch Eval With Doom Packages
-- `doom emacs --batch` works out of the box for all Doom-managed packages including `agile-gtd` and `org-mcp`.
-- Example:
-  ```bash
-  ~/.config/emacs/bin/doom emacs --batch -l /path/to/script.el
-  ```
-- For quick one-off evaluation in the running Emacs session, use `emacsclient --eval '(...)'`.
-- When writing test scripts, put Elisp in a temp file and pass it via `-l` rather than fighting shell quoting with `--eval`.
+## Inspecting the Running Emacs Session (read-only)
+
+Use `emacsclient` to query the live Emacs state without touching the session:
+
+```bash
+emacsclient -e '(length org-agenda-files)'
+emacsclient -e 'org-mcp-allowed-files'
+emacsclient -e '(featurep (quote agile-gtd))'
+```
+
+**Keep emacsclient calls read-only.** Do not use it to call `setq`, `load`, or any mutating form — that would silently change the running session. Use it only to read variable values, check feature flags, or inspect state.
+
+When writing multi-expression queries, put the Elisp in a temp file and load it:
+```bash
+emacsclient -e "(load-file \"/tmp/query.el\")"
+```
+
+## Loading the Full Doom Config in a Batch Sandbox
+
+To run tests or verify config changes without a running Emacs, use the checked-in bootstrap script at `test/bootstrap.el`. It drives the Doom init chain manually, bypassing the `noninteractive` check that normally skips user config in batch mode.
+
+```bash
+emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l /tmp/your-test.el 2>/dev/null
+```
+
+Write temporary test scripts to `/tmp/` — do not leave scratch `.el` files in the repo. After bootstrap, `(require 'org)` fires all `eval-after-load 'org` hooks (agile-gtd, org-mcp, etc.) exactly as in interactive Emacs. Use `(message ...)` for output — it goes to stderr, so redirect with `2>&1` or `2>/tmp/out.txt` to capture it.
+
+**Critical constraint — do NOT set `DOOMPROFILE` in the environment.** When `DOOMPROFILE` is set, `doom-data-dir` switches to `~/.local/share/doom/` and `doom-profile-init-file` resolves to a non-existent path. Leave `DOOMPROFILE` unset so `doom-profile` stays `nil` and `doom-data-dir` stays at `.local/etc/` where the generated init lives.
+
+## Batch Options That Do NOT Load User Config
+
+These commands are commonly tried but do not load `config.el`:
+
+| Command | Why it fails |
+|---|---|
+| `doom emacs --batch -l script.el` | Uses `-q` internally; no early-init, no packages on load-path, no user config |
+| `emacs --init-directory ~/.config/emacs --batch -l script.el` | `doom-initialize (not noninteractive)` takes the CLI path, skipping user config |
+| `emacs --init-directory ... --batch --eval '(require (quote org))'` | `--eval` with shell-special chars breaks argument parsing; use `-l` instead |
+| `doom emacs --repl` | Minimal Doom CLI Emacs; `doom-user-dir` is empty, no user config |
 
 ## Build / Regeneration Workflow
 - After changing `config.org`, run `~/.config/emacs/bin/doom sync` — this retangles `config.org` to `config.el` and syncs packages.
@@ -84,7 +115,7 @@
 - **`doom doctor` is the primary debug tool** for config loading errors — run it and check for lines marked `x`:
   `~/.config/emacs/bin/doom doctor 2>&1 | grep -A15 " x "`
 - It reports runtime errors with backtraces, including the exact void symbol and call stack.
-- Do NOT try to batch-load `config.el` directly — Doom macros (`doom!`, `after!`, etc.) are undefined without the framework.
+- Do NOT try to batch-load `config.el` directly — Doom macros (`doom!`, `after!`, etc.) are undefined without the framework. Use the bootstrap sequence in "Loading the Full Doom Config in a Batch Sandbox" instead.
 - **`after!` load-order bugs**: if a variable used inside `(after! pkg ...)` is defined later in config.el, it works in interactive Emacs (pkg loads after config) but fails in `doom doctor` (pkg may already be loaded, so the body runs immediately). Fix by defining the variable before the `after!` block, or by adding the dependency to the `after!` condition: `(after! (pkg-a pkg-b) ...)`.
 - When `doom doctor` reports `Symbol's value as variable is void`, check whether the symbol is defined later in config.el than it is used inside an `after!` body.
 
@@ -95,7 +126,7 @@
 - If you add ERT tests, keep them in a dedicated test file such as `test/<name>-test.el`.
 - Run all tests in one file: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit t)"`
 - Run a single ERT test by exact name: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit '^test-name$')"`
-- Run tests after loading Doom if the test depends on Doom macros or modules: `~/.config/emacs/bin/doom emacs --repl` or a Doom-aware batch command as needed.
+- Run tests after loading Doom if the test depends on Doom macros or modules: use the bootstrap sequence (`emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l /tmp/test-file.el`).
 
 ## Single-Test Guidance
 - Prefer ERT for any new automated tests.
