@@ -372,7 +372,7 @@ also rebuild that via org-roam
                                   "versicherung.org"
                                   "ikea.org"
                                   "cafe-glas.org"))
-  (agile-gtd-enable)
+  :config (agile-gtd-enable)
   )
 #+end_src
 
