@@ -352,8 +352,8 @@ also rebuild that via org-roam
 #+begin_src elisp :tangle packages.el
 ;; Local dev — switch to GitHub recipe once published:
 (package! agile-gtd
-  :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
-  ;; :recipe (:host github :repo "stfl/agile-gtd.el"))
+  ;; :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
+  :recipe (:host github :repo "stfl/agile-gtd.el"))
 #+end_src
 
 #+begin_src elisp
