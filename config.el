@@ -128,18 +128,20 @@
 (use-package agile-gtd
   :after org
   :config
-  (setq agile-gtd-customers '((:tag "3datax"  :name "3datax"  :key ?3)
-                              (:tag "oebb"    :name "ÖBB"     :key ?o)
-                              (:tag "origina" :name "Origina" :key ?i))
-        agile-gtd-project-files '("emacs.org"
-                                  "freelance.org"
-                                  "geschenke.org"
-                                  "media.org"
-                                  "projects.org"
-                                  "pulswerk.org"
-                                  "versicherung.org"
-                                  "ikea.org"
-                                  "cafe-glas.org"))
+  ;; Additional agenda files not managed by agile-gtd projects
+  (setq org-agenda-files (mapcar (lambda (f) (expand-file-name f org-directory))
+                                 '("geschenke.org"
+                                   "media.org"
+                                   "projects.org"
+                                   "versicherung.org"
+                                   "ikea.org"
+                                   "cafe-glas.org")))
+  (setq agile-gtd-projects '((:tag "3datax"  :name "3datax"    :key ?3)
+                              (:tag "oebb"    :name "ÖBB"       :key ?o)
+                              (:tag "origina" :name "Origina"   :key ?i)
+                              (:tag "pulswerk" :file "pulswerk.org" :key ?p)
+                              (:tag "freelance" :file "freelance.org")
+                              (:tag "emacs"     :file "emacs.org")))
   (agile-gtd-enable)
   )
 
