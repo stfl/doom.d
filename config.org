@@ -361,12 +361,13 @@ also rebuild that via org-roam
   :after org
   :config
   ;; Additional agenda files not managed by agile-gtd projects
-  (setq org-agenda-files '("geschenke.org"
-                            "media.org"
-                            "projects.org"
-                            "versicherung.org"
-                            "ikea.org"
-                            "cafe-glas.org"))
+  (setq org-agenda-files (mapcar (lambda (f) (expand-file-name f org-directory))
+                                 '("geschenke.org"
+                                   "media.org"
+                                   "projects.org"
+                                   "versicherung.org"
+                                   "ikea.org"
+                                   "cafe-glas.org")))
   (setq agile-gtd-projects '((:tag "3datax"  :name "3datax"    :key ?3)
                               (:tag "oebb"    :name "ÖBB"       :key ?o)
                               (:tag "origina" :name "Origina"   :key ?i)
