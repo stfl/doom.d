@@ -2243,6 +2243,14 @@ small exercises. The exercises can can be solved locally.
       "p" #'jest-popup)
 #+end_src
 
+** JSON
+
+Associate =.jsonc= files with =jsonc-mode= (shipped by the =json-mode= package, handles =//= and =/* */= comments). The module already handles =.json= → =json-ts-mode= via tree-sitter.
+
+#+begin_src elisp
+(add-to-list 'auto-mode-alist '("\\.jsonc\\'" . jsonc-mode))
+#+end_src
+
 ** Perl
 
 always use the better cperl-mode instead of perl-mode.
