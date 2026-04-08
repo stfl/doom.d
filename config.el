@@ -130,7 +130,8 @@
   :config
   ;; Additional agenda files not managed by agile-gtd projects
   (setq org-agenda-files (mapcar (lambda (f) (expand-file-name f org-directory))
-                                 '("geschenke.org"
+                                 '("inbox-orgzly.org"
+                                   "geschenke.org"
                                    "media.org"
                                    "projects.org"
                                    "versicherung.org"
