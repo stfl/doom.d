@@ -137,12 +137,11 @@
                                    "versicherung.org"
                                    "ikea.org"
                                    "cafe-glas.org")))
-  (setq agile-gtd-projects '((:tag "3datax"  :name "3datax"    :key ?3)
-                              (:tag "oebb"    :name "ÖBB"       :key ?o)
+  (setq agile-gtd-projects '((:tag "oebb"    :name "ÖBB"       :key ?o)
                               (:tag "origina" :name "Origina"   :key ?i)
-                              (:tag "pulswerk" :file "pulswerk.org" :key ?p)
-                              (:tag "freelance" :file "freelance.org")
-                              (:tag "emacs"     :file "emacs.org")))
+                              (:tag "pulswerk" :name "Pulswerk" :key ?p)
+                              (:tag "freelance" :name "Freelance")
+                              (:tag "emacs"     :name "Emacs")))
   (agile-gtd-enable)
   )
 
@@ -1234,6 +1233,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       "k" #'jest-file-dwim
       "m" #'jest-repeat
       "p" #'jest-popup)
+
+(add-to-list 'auto-mode-alist '("\\.jsonc\\'" . jsonc-mode))
 
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
