@@ -2,8 +2,8 @@
 
 ;; Local dev — switch to GitHub recipe once published:
 (package! agile-gtd
-  ;; :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
-  :recipe (:host github :repo "stfl/agile-gtd.el"))
+  :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
+  ;; :recipe (:host github :repo "stfl/agile-gtd.el"))
 
 (package! mcp-server-lib)
 (package! org-mcp
