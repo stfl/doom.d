@@ -930,11 +930,6 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
                       ;; ("@PC" . ?p)
                       ;; ("@phone" . ?f)
                       (:endgrouptag)
-                      (:startgrouptag)
-                      ("Areas" . nil)
-                      (:grouptags)
-                      ("emacs" . ?-)
-                      (:endgrouptag)
                       ))
 #+END_SRC
 

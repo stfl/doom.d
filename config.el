@@ -514,11 +514,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ;; ("@PC" . ?p)
                       ;; ("@phone" . ?f)
                       (:endgrouptag)
-                      (:startgrouptag)
-                      ("Areas" . nil)
-                      (:grouptags)
-                      ("emacs" . ?-)
-                      (:endgrouptag)
                       ))
 
 (after! org-roam
