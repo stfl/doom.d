@@ -26,11 +26,6 @@
 - If `doom` is already on `PATH`, that is equivalent.
 - There is no `Makefile`, `package.json`, CI workflow, or dedicated test directory in this repo.
 
-## Git Sync Workflow
-- This config is automatically tracked with git-sync.
-- Keep git-sync stopped for the whole edit session so automated syncing does not interfere with in-progress changes.
-- Do not restart git-sync if work is still uncommitted.
-
 ## Commit Workflow
 - Before committing any changes to `config.org`, always run `~/.config/emacs/bin/doom sync` first — this is what actually regenerates `config.el` (via the literate module tangle hook).
 - `doom +org tangle config.org` only updates explicitly-targeted blocks (`packages.el`, JSON files); it does NOT update `config.el`.
