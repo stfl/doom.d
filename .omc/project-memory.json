@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1775686589125,
+  "projectRoot": "/home/stefan/.config/doom",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "test"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "langserver": {
+      "path": "langserver",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775686589123,
+      "keyFiles": [
+        "bitbake-language-server.json",
+        "language-server-bitbake.json"
+      ]
+    },
+    "lsp-ltex": {
+      "path": "lsp-ltex",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775686589123,
+      "keyFiles": [
+        "stored-dictionary"
+      ]
+    },
+    "snippets": {
+      "path": "snippets",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1775686589123,
+      "keyFiles": []
+    },
+    "templates": {
+      "path": "templates",
+      "purpose": null,
+      "fileCount": 8,
+      "lastAccessed": 1775686589125,
+      "keyFiles": [
+        "clocktable.org",
+        "template-deadline.org",
+        "template-inbox.org",
+        "template-projects.org",
+        "template-proxmox-support.org"
+      ]
+    },
+    "test": {
+      "path": "test",
+      "purpose": "Test files",
+      "fileCount": 1,
+      "lastAccessed": 1775686589125,
+      "keyFiles": [
+        "bootstrap.el"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}
