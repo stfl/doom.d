@@ -1,16 +1,13 @@
 ---
 active: true
-iteration: 3
+iteration: 4
 max_iterations: 500
-completion_promise: "VERIFIED"
+completion_promise: "DONE"
 initial_completion_promise: "DONE"
-verification_attempt_id: "6babf5b7-2408-40ce-a23a-74c896a14ee8"
-verification_session_id: "ses_290734ec9ffe0xPnhAArQNV8C1"
-started_at: "2026-04-08T23:43:43.288Z"
+started_at: "2026-04-09T00:17:10.816Z"
 session_id: "ses_2908507f6ffekhQK31MRhgYxpQ"
 ultrawork: true
-verification_pending: true
 strategy: "continue"
-message_count_at_start: 0
+message_count_at_start: 88
 ---
 configure a recent json mode with comment support. currently it opend js-json-mode. There is also js-ts-mode installed. What is the best and modern way for json in emacs
