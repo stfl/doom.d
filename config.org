@@ -2983,7 +2983,7 @@ git blame lenses
        ;; "t" #'gptel-org-set-topic
        ;; "P" #'gptel-org-set-properties
 
-       "a" #'aidermacs-transient-menu
+       ;; "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
 
        "o" #'claude-code-ide-menu
