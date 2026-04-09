@@ -1234,13 +1234,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       "m" #'jest-repeat
       "p" #'jest-popup)
 
-(after! json-mode
-  ;; JSON-with-comments files → jsonc-mode
-  (dolist (pat '("\\.jsonc\\'"
-                 "[./]tsconfig\\.json\\'"
-                 "[./]jsconfig\\.json\\'"
-                 "\\.code-workspace\\'"))
-    (add-to-list 'auto-mode-alist (cons pat 'jsonc-mode))))
+(add-to-list 'auto-mode-alist '("\\.jsonc\\'" . json-ts-mode))
 
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 

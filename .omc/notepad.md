@@ -8,6 +8,12 @@
 <!-- Session notes. Auto-pruned after 7 days. -->
 ### 2026-04-08 23:40
 omo 3.16 fix: oh-my-openagent.jsonc needs to be symlinked to dotfiles oh-my-opencode.jsonc. Package renamed from oh-my-opencode to oh-my-openagent, so the config filename changed too. Old oh-my-openagent.jsonc was a regular file with outdated config, not symlinked to dotfiles.
+### 2026-04-09 00:28
+omo 3.16 config issue resolved: removed manually created oh-my-openagent.jsonc. Config now managed by home-manager via oh-my-opencode.jsonc symlink. Note: Plugin has known bug #1538 where UI-selected model always overrides config file settings.
+
+
+## 2026-04-08 23:40
+omo 3.16 fix: oh-my-openagent.jsonc needs to be symlinked to dotfiles oh-my-opencode.jsonc. Package renamed from oh-my-opencode to oh-my-openagent, so the config filename changed too. Old oh-my-openagent.jsonc was a regular file with outdated config, not symlinked to dotfiles.
 
 
 ## MANUAL

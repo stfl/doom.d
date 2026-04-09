@@ -2246,16 +2246,10 @@ small exercises. The exercises can can be solved locally.
 ** JSON
 
 The =:lang json= module handles =.json= → =json-ts-mode= via tree-sitter.
-For files that use JSON with comments (=//=, =/* */=), map them to =jsonc-mode= (shipped by the =json-mode= package).
+=json-ts-mode= natively supports =//= and =/* */= comments, so =.jsonc= files can use it too.
 
 #+begin_src elisp
-(after! json-mode
-  ;; JSON-with-comments files → jsonc-mode
-  (dolist (pat '("\\.jsonc\\'"
-                 "[./]tsconfig\\.json\\'"
-                 "[./]jsconfig\\.json\\'"
-                 "\\.code-workspace\\'"))
-    (add-to-list 'auto-mode-alist (cons pat 'jsonc-mode))))
+(add-to-list 'auto-mode-alist '("\\.jsonc\\'" . json-ts-mode))
 #+end_src
 
 ** Perl
