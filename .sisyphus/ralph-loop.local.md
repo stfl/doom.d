@@ -5,6 +5,7 @@ max_iterations: 500
 completion_promise: "VERIFIED"
 initial_completion_promise: "DONE"
 verification_attempt_id: "6babf5b7-2408-40ce-a23a-74c896a14ee8"
+verification_session_id: "ses_290734ec9ffe0xPnhAArQNV8C1"
 started_at: "2026-04-08T23:43:43.288Z"
 session_id: "ses_2908507f6ffekhQK31MRhgYxpQ"
 ultrawork: true
