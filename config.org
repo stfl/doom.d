@@ -3238,36 +3238,6 @@ Reply concisely. Wrap source code in a ```cpp block.")
   )
 #+end_src
 
-** Aidermacs
-
-#+begin_src elisp :tangle packages.el
-(package! aidermacs
-    :recipe (:host github
-             :repo "MatthewZMD/aidermacs"
-             :files ("*.el")))
-#+end_src
-
-#+begin_src elisp
-(use-package! aidermacs
-  :commands (aidermacs-transient-menu)
-  :init
-  (add-hook 'aidermacs-before-run-backend-hook #'stfl/setup-api-keys)
-  :config
-  (setq! aidermacs-program "aider"
-         aidermacs-default-chat-mode 'architect
-         ;; aidermacs-default-model "openrouter/google/gemini-2.5-pro"
-         aidermacs-default-model "anthropic/claude-sonnet-4.5"
-         aidermacs-architect-model "anthropic/claude-opus-4.5"
-         ;; aidermacs-architect-model "openrouter/x-ai/grok-4"
-         ;; aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
-         aidermacs-weak-model "openrouter/deepseek/deepseek-r1-0528"
-         ;; aidermacs-backend 'vterm
-         aidermacs-backend 'comint
-         aidermacs-watch-files t
-         aidermacs-extra-args '("--thinking-tokens" "8k" "--reasoning-effort" "medium"))
-  (set-popup-rule! "^\\*aidermacs:" :select t :size 0.3 :quit nil :ttl nil))
-#+end_src
-
 ** Claude Code IDE
 
 #+begin_src elisp :tangle packages.el

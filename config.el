@@ -1503,7 +1503,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
        ;; "t" #'gptel-org-set-topic
        ;; "P" #'gptel-org-set-properties
 
-       "a" #'aidermacs-transient-menu
+       ;; "a" #'aidermacs-transient-menu
        ;; "a" #'aider-transient-menu
 
        "o" #'claude-code-ide-menu
@@ -1701,25 +1701,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
 Reply concisely. Wrap source code in a ```cpp block.")
   )
-
-(use-package! aidermacs
-  :commands (aidermacs-transient-menu)
-  :init
-  (add-hook 'aidermacs-before-run-backend-hook #'stfl/setup-api-keys)
-  :config
-  (setq! aidermacs-program "aider"
-         aidermacs-default-chat-mode 'architect
-         ;; aidermacs-default-model "openrouter/google/gemini-2.5-pro"
-         aidermacs-default-model "anthropic/claude-sonnet-4.5"
-         aidermacs-architect-model "anthropic/claude-opus-4.5"
-         ;; aidermacs-architect-model "openrouter/x-ai/grok-4"
-         ;; aidermacs-weak-model "openrouter/google/gemini-2.5-flash"
-         aidermacs-weak-model "openrouter/deepseek/deepseek-r1-0528"
-         ;; aidermacs-backend 'vterm
-         aidermacs-backend 'comint
-         aidermacs-watch-files t
-         aidermacs-extra-args '("--thinking-tokens" "8k" "--reasoning-effort" "medium"))
-  (set-popup-rule! "^\\*aidermacs:" :select t :size 0.3 :quit nil :ttl nil))
 
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
