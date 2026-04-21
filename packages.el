@@ -40,6 +40,9 @@
 
 (package! org-ql)
 
+(package! age
+  :recipe (:host github :repo "anticomputer/age.el"))
+
 (package! vterm :disable t)
 
 (package! eat

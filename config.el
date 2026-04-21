@@ -747,6 +747,15 @@ Not added when either:
 
 ;; (setq! auth-sources 'password-store)
 
+(use-package! age
+  :demand t
+  :custom
+  (age-default-identity "~/.ssh/id_ed25519_stfl")
+  (age-default-recipient
+   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINGSjWr1X80phoVLQDpXyn26SAPytikVdGyTK1ifYxR6 s@stfl.dev")
+  :config
+  (age-file-enable))
+
 ;; (use-package! define-word
 ;;   :after org
 ;;   :config
@@ -1577,7 +1586,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (use-package copilot-chat
   :after org
   :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
-  :config (setq! copilot-chat-model "claude-3.7-sonnet"
+  :config (setq! copilot-chat-model "claude-4.6-sonnet"
                  copilot-chat-frontend 'org)
 
   ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
@@ -1697,10 +1706,20 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     :key (password-store-get "API/Openrouter-emacs")
     :models '(moonshotai/kimi-k2-thinking))
 
-  (setf (alist-get 'cpp gptel-directives) "You are an expert C++ developer using C++20. ONLY use C++20 features availible in gcc12.
-Do not use concepts. For functions, methods and variables use the style 'auto method() -> RetType'
-Reply concisely. Wrap source code in a ```cpp block.")
+  ;; Z.ai offers an OpenAI compatible API for GLM models
+  (gptel-make-openai "Z.ai"
+    :host "api.z.ai"
+    :endpoint "/api/paas/v4/chat/completions"
+    :stream t
+    :key (password-store-get "API/zai")
+    :models '(glm-5.1 glm-4.6 glm-4.5 glm-4.5-air))
   )
+
+(use-package! gptel-magit
+  :hook (magit-mode . gptel-magit-install)
+  :config
+  (setq gptel-magit-backend (gptel-get-backend "Z.ai")
+        gptel-magit-model 'glm-5.1))
 
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
