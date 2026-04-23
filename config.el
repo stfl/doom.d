@@ -137,13 +137,13 @@
                                    "versicherung.org"
                                    "ikea.org"
                                    "cafe-glas.org")))
-  (setq agile-gtd-projects '((:tag "oebb"    :name "ÖBB"       :key ?o)
-                              (:tag "origina" :name "Origina"   :key ?i)
-                              (:tag "pulswerk" :name "Pulswerk" :key ?p)
-                              (:tag "freelance" :name "Freelance")
-                              (:tag "emacs"     :name "Emacs")))
-  (agile-gtd-enable)
-  )
+  (setq agile-gtd-projects '((:tag "oebb"      :name "ÖBB"      :key ?o)
+                             (:tag "origina"   :name "Origina"  :key ?i)
+                             (:tag "pulswerk"  :name "Pulswerk" :key ?p)
+                             (:tag "freelance" :name "Freelance")
+                             (:tag "homelab"   :name "Homelab")
+                             (:tag "emacs"     :name "Emacs")))
+  (agile-gtd-enable))
 
 (use-package org-mcp
   :after (org agile-gtd)
@@ -1546,8 +1546,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
   (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs")))
 
-
-
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :after prog-mode
@@ -1667,17 +1665,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   )
 
 (after! gptel
-  (setq! gptel-default-mode 'org-mode
-         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (password-store-get "API/OpenAI-emacs")
-         ;; gptel-model 'gpt-4o
-         gptel-model 'gemini-pro
-         ;; 'gpt-4.5-preview
-         gptel-log-level 'info
-         ;; gptel-use-curl nil
-         gptel-use-curl t
-         gptel-stream t)
-
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -1713,13 +1700,42 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     :stream t
     :key (password-store-get "API/zai")
     :models '(glm-5.1 glm-4.6 glm-4.5 glm-4.5-air))
+
+  ;; Kimi Code subscription API (requires KimiCLI User-Agent)
+  (gptel-make-openai "Kimi"
+    :host "api.kimi.com"
+    :endpoint "/coding/v1/chat/completions"
+    :stream t
+    :key (password-store-get "API/moonshot")
+    :header (lambda (_info)
+              (when-let* ((key (gptel--get-api-key)))
+                `(("Authorization" . ,(concat "Bearer " key))
+                  ("User-Agent" . "KimiCLI/1.38.0"))))
+    :models '((kimi-for-coding
+               :description "Kimi K2.6 for coding (thinking enabled)"
+               :context-window 256)
+              (kimi-for-coding-fast
+               :description "Kimi K2.6 for coding (thinking disabled)"
+               :context-window 256
+               :request-params (:model "kimi-for-coding" :thinking (:type "disabled")))))
+
+  (setq! gptel-default-mode 'org-mode
+         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
+         gptel-api-key (password-store-get "API/OpenAI-emacs")
+         ;; gptel-model 'gpt-4o
+         gptel-backend (gptel-get-backend "Kimi")
+         gptel-model 'kimi-for-coding
+         gptel-log-level 'info
+         ;; gptel-use-curl nil
+         gptel-use-curl t
+         gptel-stream t)
   )
 
 (use-package! gptel-magit
   :hook (magit-mode . gptel-magit-install)
   :config
-  (setq gptel-magit-backend (gptel-get-backend "Z.ai")
-        gptel-magit-model 'glm-5.1))
+  (setq gptel-magit-backend (gptel-get-backend "Kimi")
+        gptel-magit-model 'kimi-for-coding-fast))
 
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)

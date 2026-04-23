@@ -130,8 +130,6 @@
            :repo "Exafunction/codeium.el")
   :disable t)
 
-;; (package! gptel)
-
 (package! claude-code-ide
   :recipe (:host github
            :repo "manzaltu/claude-code-ide.el"))
