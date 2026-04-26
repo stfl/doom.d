@@ -148,7 +148,6 @@
 (use-package org-mcp
   :after (org agile-gtd)
   :custom
-  (org-mcp-stored-queries-file nil) ;; FIXME rework the stored query functionality
   (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
                                  (rank . agile-gtd--item-rank)))
   (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
