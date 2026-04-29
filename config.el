@@ -1747,6 +1747,30 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (use-package! gptel-magit
   :hook (magit-mode . gptel-magit-install)
   :config
+  (setq gptel-magit-commit-prompt
+        (concat gptel-magit-prompt-conventional-commits
+                "\n\n"
+                "Repo-specific conventions:\n"
+                "- The user message will start with a `Current branch: <name>` line. Inspect that branch name to decide whether a Jira ticket prefix applies.\n"
+                "- If the branch matches `<ABC>-<N>-...` or `feature/<ABC>-<N>-...` (case-insensitive — `<N>` is the Jira ticket number), the commit subject MUST start with `<ABC>-<N>: ` followed by the conventional-commits type, e.g. `DRB-123: feat(parser): support nested arrays`.\n"
+                "- If the branch does NOT follow this convention, do NOT add any DRB prefix; use the conventional-commits format unchanged."))
+
+  ;; Prepend the current branch to the diff so the LLM can detect a DRB-<N>
+  ;; ticket from the branch name. gptel-magit otherwise only sends the diff.
+  (defun stfl/gptel-magit--inject-branch (orig-fn callback)
+    "Around-advice for `gptel-magit--generate' that prepends branch context."
+    (cl-letf* ((orig-output (symbol-function 'magit-git-output))
+               ((symbol-function 'magit-git-output)
+                (lambda (&rest args)
+                  (let ((output (apply orig-output args)))
+                    (if (and (stringp (car args)) (string= (car args) "diff"))
+                        (concat (format "Current branch: %s\n\n"
+                                        (or (magit-get-current-branch) "(detached)"))
+                                output)
+                      output)))))
+      (funcall orig-fn callback)))
+  (advice-add 'gptel-magit--generate :around #'stfl/gptel-magit--inject-branch)
+
   (setq gptel-magit-backend (gptel-get-backend "Kimi")
         gptel-magit-model 'kimi-for-coding-fast))
 
