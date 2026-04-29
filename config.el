@@ -1,5 +1,5 @@
 (setq user-full-name "Stefan Lendl"
-      user-mail-address "ste.lendl@gmail.com")
+      user-mail-address "contact@stfl.dev")
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
@@ -145,6 +145,14 @@
                              (:tag "emacs"     :name "Emacs")))
   (agile-gtd-enable))
 
+(use-package mcp-server-lib
+  :custom
+  (mcp-server-lib-install-directory (expand-file-name "bin/" doom-emacs-dir))
+  :config
+  (require 'mcp-server-lib-commands)
+  (unless (file-exists-p (mcp-server-lib--installed-script-path))
+    (mcp-server-lib-install)))
+
 (use-package org-mcp
   :after (org agile-gtd)
   :custom
@@ -155,6 +163,8 @@
   (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   :config
+  (unless (file-exists-p (org-mcp--installed-script-path))
+    (org-mcp-install))
   (if mcp-server-lib--running
       (message "org-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
@@ -425,7 +435,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
     (mapconcat #'identity
                (list (org-clock-csv--escape (plist-get plist ':task))
                      (org-clock-csv--escape (s-join org-clock-csv-headline-separator (plist-get plist ':parents)))
-                     (org-clock-csv--escape (org-clock-csv--read-property plist "ARCHIVE_OLPATH"))
+                     (org-clock-csv--escape (org-clock-csv--read-property plist "ARCHIVE_OLPATH")) ; archive_parent
                      (org-clock-csv--escape (plist-get plist ':category))
                      (plist-get plist ':start)
                      (plist-get plist ':end)
@@ -433,16 +443,17 @@ Org-mode properties drawer already, keep the headline and don’t insert
                      (plist-get plist ':ishabit)
                      (plist-get plist ':tags)
                      (org-clock-csv--read-property plist "ARCHIVE_ITAGS")
-                     (org-clock-csv--read-property plist "AP"))
+                     (org-clock-csv--read-property plist "AP")
+                     (org-clock-csv--read-property plist "TICKET"))
                ","))
-  (setq! org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap"
-         org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
+  (setq org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap,ticket"
+        org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
 
   (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
 
   (defun stfl/org-clock-export (project)
     (interactive
-     (list (completing-read "Select project: " agile-gtd-project-files)))
+     (list (completing-read "Select project: " (agile-gtd-project-files))))
     (let* ((org-agenda-files (list (doom-path org-directory project)
                                    (doom-path org-directory "archive" project)))
            (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
@@ -450,14 +461,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (org-clock-csv-to-file filepath))))
 
 (map! :map org-mode-map
-    :leader
-    :prefix "n"
-    :desc "Export project clock entries" "E" #'stfl/org-clock-export)
+      :leader
+      :prefix "n"
+      :desc "Export project clock entries" "E" #'stfl/org-clock-export)
 
 (map! :map org-mode-map
-    :localleader
-    :prefix "c"
-    :desc "Export project clock entries" "C" #'stfl/org-clock-export)
+      :localleader
+      :prefix "c"
+      :desc "Export project clock entries" "C" #'stfl/org-clock-export)
 
 (use-package! org-edna
   :after org
@@ -1337,6 +1348,9 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   :defer t)
 
 (use-package! ztree)
+
+(with-eval-after-load 'git-commit
+  (setq git-commit-summary-max-length 100))
 
 (after! magit
   (setq magit-diff-refine-hunk 'all))

@@ -7,7 +7,8 @@
 
 (package! mcp-server-lib)
 (package! org-mcp
-  :recipe (:host github :repo "stfl/org-mcp"))
+  :recipe (:host github :repo "stfl/org-mcp"
+           :files (:defaults "org-mcp-stdio.sh")))
   ;; :recipe  (:local-repo "~/work/org-mcp" :build (:not compile)))
 
 (package! org-clock-csv)
