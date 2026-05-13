@@ -200,6 +200,20 @@
   `(org-column-title :height 150 :background ,(doom-color 'base4) :weight bold :underline t))
 
 (after! org
+  (setq! org-agenda-clock-consistency-checks
+         `(:max-duration "8:00"
+           :min-duration 0
+           :max-gap "0:05"
+           :gap-ok-around ("4:00")
+           :default-face nil ;; ((:background "DarkRed") (:foreground "white"))
+           :overlap-face ((:background "DarkRed") (:foreground "white"))
+           :gap-face ((:foreground ,(doom-color 'dark-cyan)))
+           :no-end-time-face nil
+           :long-face nil
+           :short-face nil))
+  )
+
+(after! org
   (setq! org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
                          (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
                          (,agile-gtd-someday-tag . (:slant italic :weight bold))
