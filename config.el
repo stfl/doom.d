@@ -1674,13 +1674,19 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     :key (password-store-get "API/Openrouter-emacs")
     :models '(moonshotai/kimi-k2-thinking))
 
-  ;; Z.ai offers an OpenAI compatible API for GLM models
+  ;; Z.ai offers an OpenAI compatible API for GLM models.
+  ;; Coding-plan keys MUST use /api/coding/paas/v4 — the general /api/paas/v4
+  ;; endpoint returns error 1113 ("insufficient balance") for coding-plan keys.
   (gptel-make-openai "Z.ai"
     :host "api.z.ai"
-    :endpoint "/api/paas/v4/chat/completions"
+    :endpoint "/api/coding/paas/v4/chat/completions"
     :stream t
     :key (password-store-get "API/zai")
-    :models '(glm-5.1 glm-4.6 glm-4.5 glm-4.5-air))
+    :models '(glm-5.1 glm-4.7 glm-5-turbo glm-4.5-air
+              (glm-5.1-fast
+               :description "GLM 5.1 (thinking disabled)"
+               :context-window 200
+               :request-params (:model "glm-5.1" :thinking (:type "disabled")))))
 
   ;; Kimi Code subscription API (requires KimiCLI User-Agent)
   (gptel-make-openai "Kimi"
@@ -1704,8 +1710,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
          gptel-api-key (password-store-get "API/OpenAI-emacs")
          ;; gptel-model 'gpt-4o
-         gptel-backend (gptel-get-backend "Kimi")
-         gptel-model 'kimi-for-coding
+         gptel-backend (gptel-get-backend "Z.ai")
+         gptel-model 'glm-5.1
          gptel-log-level 'info
          ;; gptel-use-curl nil
          gptel-use-curl t
@@ -1739,8 +1745,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       (funcall orig-fn callback)))
   (advice-add 'gptel-magit--generate :around #'stfl/gptel-magit--inject-branch)
 
-  (setq gptel-magit-backend (gptel-get-backend "Kimi")
-        gptel-magit-model 'kimi-for-coding-fast))
+  (setq gptel-magit-backend (gptel-get-backend "Z.ai")
+        gptel-magit-model 'glm-5.1-fast))
 
 (use-package! claude-code-ide
   :commands (claude-code-ide-menu)
