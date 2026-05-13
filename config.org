@@ -369,12 +369,13 @@ also rebuild that via org-roam
                                    "versicherung.org"
                                    "ikea.org"
                                    "cafe-glas.org")))
-  (setq agile-gtd-projects '((:tag "oebb"      :name "ÖBB"      :key ?o)
-                             (:tag "origina"   :name "Origina"  :key ?i)
-                             (:tag "pulswerk"  :name "Pulswerk" :key ?p)
-                             (:tag "freelance" :name "Freelance")
-                             (:tag "homelab"   :name "Homelab")
-                             (:tag "emacs"     :name "Emacs")))
+  (setq agile-gtd-projects '((:tag "oebb"       :name "ÖBB"        :key ?o)
+                             (:tag "origina"    :name "Origina"    :key ?i)
+                             (:tag "momentedge" :name "MomentEdge" :key ?m)
+                             (:tag "pulswerk"   :name "Pulswerk"   :key ?p)
+                             (:tag "freelance"  :name "Freelance")
+                             (:tag "homelab"    :name "Homelab")
+                             (:tag "emacs"      :name "Emacs")))
   (agile-gtd-enable))
 #+end_src
 
