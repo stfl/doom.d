@@ -191,13 +191,13 @@
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-        (javascript         ; all(hope(abandon(ye(who(enter(here))))))
-         +lsp
-         +tree-sitter)
-        (json                ; At JSON's end, all things are possible.
-         +lsp
-         +tree-sitter)
-        ;;julia             ; a better, faster MATLAB
+       (javascript         ; all(hope(abandon(ye(who(enter(here))))))
+        +lsp
+        +tree-sitter)
+       (json                ; At JSON's end, all things are possible.
+        +lsp
+        +tree-sitter)
+       ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        ;;latex             ; writing papers in Emacs has never been so fun
        ;;lean
@@ -250,7 +250,8 @@
        ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust               ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         +lsp
-        +tree-sitter)
+        ;; +tree-sitter
+        )
        ;;scala             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
        (sh                 ; she sells {ba,z,fi}sh shells on the C xor
