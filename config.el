@@ -1007,53 +1007,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 
-(use-package! lsp-bridge
-  :disabled
-  :config
-  (setq! lsp-bridge-user-langserver-dir (doom-path doom-user-dir "langserver")
-         lsp-bridge-enable-inlay-hint t
-         lsp-bridge-enable-hover-diagnostic t
-         lsp-bridge-enable-signature-help nil
-         lsp-bridge-enable-auto-format-code nil
-         lsp-bridge-enable-org-babel t
-         lsp-bridge-log-level 'default
-         acm-enable-capf t
-         acm-enable-org-roam t
-         )
-
-  (set-lookup-handlers! 'lsp-bridge-mode
-    :definition #'lsp-bridge-peek
-    ;; :definition #'lsp-bridge-find-def
-    :references #'lsp-bridge-find-references
-    :documentation #'lsp-bridge-popup-documentation
-    :implementations #'lsp-bridge-find-impl
-    :type-definition #'lsp-bridge-find-type-def)
-
-  (map! :map lsp-bridge-peek-keymap
-        :g "C-j" #'lsp-bridge-peek-list-next-line
-        :g "C-k" #'lsp-bridge-peek-list-prev-line
-        :g "C-S-j" #'lsp-bridge-peek-file-content-next-line
-        :g "C-S-k" #'lsp-bridge-peek-file-content-prev-line
-        :g "RET" #'lsp-bridge-peek-jump
-        :g "C-SPC" #'lsp-bridge-peek-jump
-        :g "ESC" #'lsp-bridge-peek-abort)
-
-  (map! :map lsp-bridge-mode-map
-        :leader
-        :n "c r" #'lsp-bridge-rename
-        :n "c a" #'lsp-bridge-code-action
-        :n "c f" #'lsp-bridge-code-format
-        )
-
-  (map! :map acm-mode-map
-        :i "C-j" #'acm-select-next
-        :i "C-k" #'acm-select-prev)
-
-  (acm-mode t)
-  (global-lsp-bridge-mode)
-  ;; (lsp-bridge-semantic-tokens-mode t)
-  )
-
 (use-package! flyover
   :disabled
   :after flycheck
