@@ -1336,7 +1336,7 @@ specific cases.
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-agenda-sticky t)
+       org-agenda-sticky nil)
 #+end_src
 
 #+begin_src elisp

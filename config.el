@@ -740,7 +740,7 @@ Not added when either:
        ;; org-agenda-todo-ignore-timestamp nil
        org-agenda-todo-list-sublevels t
        org-agenda-include-deadlines t
-       org-agenda-sticky t)
+       org-agenda-sticky nil)
 
 (after! org
   (setq org-enforce-todo-checkbox-dependencies nil
