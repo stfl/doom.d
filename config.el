@@ -110,6 +110,13 @@
   `(magit-branch-current  :foreground ,(doom-color 'blue) :box t)
   '(lsp-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
   '(lsp-bridge-inlay-hint-face :height 0.85 :italic t :inherit font-lock-comment-face)
+
+  ;; Subtle dark-red wavy underline for misspellings (blend red into bg so it
+  ;; reads as a muted alarm, not a bright distraction). Mirrors the doom-themes
+  ;; idiom of using `doom-blend' against `bg' for grayed-out variants.
+  `(spell-fu-incorrect-face
+    :foreground unspecified :background unspecified :inherit unspecified
+    :underline (:style wave :color ,(doom-blend 'red 'bg 0.5)))
 )
 
 (setq! tab-width 4)
