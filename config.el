@@ -214,7 +214,7 @@
           :max-gap "0:05"
           :gap-ok-around ("4:00")
           :default-face nil ;; ((:background "DarkRed") (:foreground "white"))
-          :overlap-face ((:background "DarkRed") (:foreground "white"))
+          :overlap-face ((:foreground ,(doom-color 'error)))
           :gap-face ((:foreground ,(doom-color 'dark-cyan)))
           :no-end-time-face ((:foreground ,(doom-color 'warning)))
           :long-face nil
