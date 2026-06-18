@@ -1487,6 +1487,9 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
   (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 
+(use-package! beads
+  :commands (beads beads-list beads-project-list beads-activity))
+
 (map!
       ;; "C-c a" #'aidermacs-transient-menu
       :leader

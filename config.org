@@ -2989,6 +2989,24 @@ git blame lenses
   (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 #+end_src
 
+** beads.el
+
+https://github.com/ChristianTietze/beads.el
+
+Emacs interface to the [[https://github.com/steveklabnik/beads][Beads]] git-backed issue tracker.
+Sources live under =lisp/= in the upstream repo.
+
+#+begin_src elisp :tangle packages.el
+(package! beads
+  :recipe (:host github :repo "ChristianTietze/beads.el"
+           :files ("lisp/*.el")))
+#+end_src
+
+#+begin_src elisp
+(use-package! beads
+  :commands (beads beads-list beads-project-list beads-activity))
+#+end_src
+
 * AI
 
 #+begin_src elisp
