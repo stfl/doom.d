@@ -158,7 +158,7 @@
   (mcp-server-lib-install-directory (expand-file-name "bin/" doom-emacs-dir))
   :config
   (require 'mcp-server-lib-commands)
-  (unless (file-exists-p (mcp-server-lib--installed-script-path))
+  (unless (file-exists-p (mcp-server-lib-installed-script-path))
     (mcp-server-lib-install)))
 
 (use-package org-mcp
