@@ -117,7 +117,7 @@
 (package! blamer)
 
 (package! beads
-  :recipe (:host github :repo "ChristianTietze/beads.el"
+  :recipe (:host github :repo "r0man/beads.el"
            :files ("lisp/*.el")))
 
 (package! copilot

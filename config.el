@@ -1487,8 +1487,39 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
   (add-hook! org-mode-hook (λ! (blamer-mode 0))))
 
+(defvar stfl/beads-dolt-port nil
+  "TCP port of a running Dolt SQL server for `bd', or nil.
+Leave nil to let `bd' use the embedded Dolt store under `.beads/'.
+Set to a port number only when `.beads' auto-discovery / embedded Dolt
+does not work and `bd' must connect to a shared Dolt server instead.")
+
 (use-package! beads
-  :commands (beads beads-list beads-project-list beads-activity))
+  :commands (beads beads-issue-at-point)
+  :config
+  (when stfl/beads-dolt-port
+    (setopt beads-dolt-port stfl/beads-dolt-port))
+  ;; beads.el ships no evil integration, and its view buffers are
+  ;; read-only Magit-style modes with single-letter keymaps (a c d e g k
+  ;; n p q …) that evil normal/motion state shadows.  Open every beads
+  ;; view buffer in Emacs state so the keys work without toggling
+  ;; holy-mode; the `M-x beads' transient menu is state-agnostic and
+  ;; works regardless.
+  (when (modulep! :editor evil)
+    (defun stfl/beads--evil-emacs-state-h ()
+      "Use evil Emacs state in the current beads view buffer."
+      (when (string-prefix-p "beads-" (symbol-name major-mode))
+        ;; Register the mode so evil keeps choosing Emacs state for later
+        ;; buffers, and switch this buffer now if evil is already live here.
+        (evil-set-initial-state major-mode 'emacs)
+        (when (bound-and-true-p evil-local-mode)
+          (evil-emacs-state))))
+    ;; Every read-only beads view derives from `special-mode'
+    ;; (`tabulated-list-mode' and the dashboard's `vui-mode' both derive
+    ;; from it), and `define-derived-mode' runs parent mode hooks — so this
+    ;; single hook catches every present and future beads view, fires only
+    ;; for special-mode buffers (not every mode change), and structurally
+    ;; never touches the `text-mode' editing buffers (compose, prompt-edit).
+    (add-hook 'special-mode-hook #'stfl/beads--evil-emacs-state-h)))
 
 (map!
       ;; "C-c a" #'aidermacs-transient-menu
@@ -1539,7 +1570,11 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs")))
 
 (use-package! copilot
-  :hook (prog-mode . copilot-mode)
+  ;; copilot-nes-mode = Next Edit Suggestions; needs copilot-mode in the same
+  ;; buffer (NES reuses copilot-mode's language server). TAB accepts / C-g
+  ;; dismisses a pending NES edit; those bindings only bind while one is pending.
+  :hook ((prog-mode . copilot-mode)
+         (prog-mode . copilot-nes-mode))
   :after prog-mode
   :config
   ;; Define the custom function that either accepts the completion or does the default behavior
@@ -1571,6 +1606,15 @@ global mapping list. Updates or replaces any existing mapping for the current fi
          copilot-max-char-warning-disable t)
 
   (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
+
+  ;; Use the Nix-provided language server (modules/dev/default.nix:
+  ;; llm-agents.copilot-language-server) instead of the npm copy
+  ;; copilot-install-server drops into copilot-install-dir. An absolute path
+  ;; takes the highest-precedence branch of `copilot-server-executable', so it
+  ;; ignores exec-path and never falls back to a self-installed server.
+  ;; /run/current-system/sw/bin is a stable symlink that nixos-rebuild updates,
+  ;; so this keeps tracking the system package across upgrades.
+  (setq copilot-server-executable "/run/current-system/sw/bin/copilot-language-server")
   )
 
 (use-package copilot-chat
