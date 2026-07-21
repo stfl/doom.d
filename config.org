@@ -2736,6 +2736,30 @@ display more columns in forge list topic
                       ("Updated" 10 t nill updated nil))))
 #+END_SRC
 
+*** forge-azure
+
+Azure DevOps backend for forge, so ÖBB pull requests are reviewable from magit.
+
+#+begin_src elisp :tangle packages.el
+(package! forge-azure
+  :recipe (:host github
+           :repo "dakra/forge-azure"))
+#+end_src
+
+Authenticates with the PAT in password-store at =OEBB/dev.azure.com= — the same
+entry =~/work/oebb/.envrc= feeds to the az CLI. auth-source-pass matches an
+entry by its trailing path segment, so the leaf name is what binds it to host
+=dev.azure.com=; the directory above it is free. Entra ID auth is not an
+option: there is no ~az login~ session, only the PAT. The matching username
+comes from =azure.user= in git config, set globally from =oebb.nix=.
+
+#+begin_src elisp
+(use-package! forge-azure
+  :after forge
+  :config
+  (setq forge-azure-auth 'pat))
+#+end_src
+
 *** magit-todos
 
 #+begin_src elisp :tangle packages.el

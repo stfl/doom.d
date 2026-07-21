@@ -1340,6 +1340,11 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
+(use-package! forge-azure
+  :after forge
+  :config
+  (setq forge-azure-auth 'pat))
+
 (use-package! magit-todos
   :after magit
   :config

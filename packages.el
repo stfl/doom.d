@@ -107,6 +107,10 @@
 
 (package! ztree :disable t)
 
+(package! forge-azure
+  :recipe (:host github
+           :repo "dakra/forge-azure"))
+
 (package! magit-todos)
 
 ;; (package! mailscripts.el
