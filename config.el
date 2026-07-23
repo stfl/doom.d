@@ -261,7 +261,7 @@
 (map! :after org
       :map org-mode-map
       :leader
-      :prefix ("n" . "notes")
+      :prefix "n"
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
       )
 
@@ -271,11 +271,11 @@
       :desc "Revert all org buffers" "R" #'org-revert-all-org-buffers
       "N" #'org-add-note
 
-      :prefix ("l" . "links")
+      :prefix "l"
       "o" #'org-open-at-point
       "g" #'eos/org-add-ids-to-headlines-in-file
 
-      :prefix ("d" . "dates/deadlines")
+      :prefix "d"
       "c" #'org-cancel-repeater
       )
 
@@ -504,7 +504,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (map! :after org
       :map org-mode-map
       :localleader
-      :prefix ("d" . "date/dateline/dependencies")
+      :prefix "d"
       :desc "next-sibling NEXT"          "n" #'agile-gtd-trigger-next-sibling
       :desc "trigger NEXT and block prev" "b" #'agile-gtd-chain-task)
 
@@ -596,7 +596,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
  :after (org org-gcal)
  :map org-mode-map
  :leader
- (:prefix ("n" . "notes")
+ (:prefix "n"
   (:prefix ("j" . "sync")
    :desc "sync Google Calendar" "g" #'org-gcal-sync)))
 
@@ -685,7 +685,7 @@ Not added when either:
   :config
   (require 'ox-hugo))
 
-(map! :after org-agenda
+(map! :after (org org-agenda)
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
@@ -697,7 +697,7 @@ Not added when either:
       "o" #'org-agenda-set-property
       "s" #'org-toggle-sticky-agenda
 
-      :prefix ("p" . "priorities")
+      :prefix "p"
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
       :desc "Prioity down" "d" #'org-agenda-priority-down
@@ -1003,7 +1003,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (map! :after lsp-mode
       :map lsp-mode-map
       :leader
-      :prefix ("c" . "+code")
+      :prefix "c"
       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
 
 (after! lsp-mode
@@ -1068,7 +1068,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
        :v "SPC =" '+format/region
        :leader
        :desc "Format Buffer" "=" #'+format/buffer
-       (:prefix ("b" "+buffer")
+       (:prefix "b"
         :desc "Format Buffer" "f" #'+format/buffer)))
 
 (after! (lsp-mode php-mode)
@@ -1222,7 +1222,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (map! :after rjsx-mode
       :map rjsx-mode-map
       :localleader
-      :prefix ("t" "test")
+      :prefix ("t" . "test")
       "f" #'jest-file
       "t" #'jest-function
       "k" #'jest-file-dwim
@@ -1299,7 +1299,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (map! :mode c++-mode
       :map c++-mode-map
       :localleader
-      :prefix ("t" "test")
+      :prefix ("t" . "test")
       :n "t" #'run-ctest
       ;; :n "t" #'gtest-run-at-point
       ;; :n "T" #'gtest-run

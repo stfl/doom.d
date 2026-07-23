@@ -11,13 +11,31 @@
 ;; and doom-profile-init-file resolves to a non-existent path.
 
 (setq user-emacs-directory (expand-file-name "~/.config/emacs/"))
+
 ;; Loads doom.el: sets doom-user-dir, doom-profile=nil, doom-data-dir → .local/etc/
 (load (expand-file-name "lisp/doom" user-emacs-directory) nil t nil 'must-suffix)
-;; Initialize as interactive: registers doom-start machinery and profile-init advice
-(doom-initialize t)
-;; Load the profile init (defines doom-startup, module autoloads, load-path)
-(doom-load (doom-profile-init-file doom-profile) t)
-;; Run doom-startup: loads all module configs and user config.el
-(doom-startup)
+
+;; Registers the `doom-profile' cl-defstruct. `doom--profile' normalizes a
+;; profile struct into a (NAME . REF) key only when `cl-struct-p' recognizes it;
+;; without the struct class registered it hands the struct through and the
+;; directory helpers fail on (car PROFILE).
+(require 'doom-profiles)
+
+;; `noninteractive' must be nil for the duration of startup. The generated
+;; profile init file guards its module-context cache with
+;; (static-unless noninteractive ...) — the setplist forms that `modulep!'
+;; consults to resolve bare flags such as (modulep! +keybinds). That macro is
+;; expanded when the init file is loaded, so with `noninteractive' non-nil the
+;; cache is omitted, every bare `modulep!' returns nil, and modules silently
+;; skip parts of themselves — :doom compat never loads +keybinds.el, leaving
+;; `map!' and `define-key!' undefined.
+;;
+;; doom-initialize's first argument is the profile id; nil selects the default
+;; profile. It also loads the profile init file, which defines `doom-startup'.
+(let ((noninteractive nil))
+  (doom-initialize nil t)
+  ;; Loads all module configs and user config.el
+  (doom-startup))
+
 ;; Trigger doom-after-init-hook (incremental package loading etc.)
 (doom-finalize)
