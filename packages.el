@@ -60,11 +60,16 @@
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
            :files (:defaults "*.el")
+           ;; TEMPORARY WORKAROUND — tracked as stfl/doom.d#2.
+           ;;
            ;; Emacs 31's `loaddefs-generate' copies the `define-compilation-mode'
            ;; form into the autoloads file verbatim rather than reducing it to an
            ;; autoload stub, so loading the autoloads fails with a void
            ;; `define-compilation-mode' before `compile' is available. Emit an
-           ;; explicit stub instead. Tracked upstream as meow_king/typst-ts-mode#103.
+           ;; explicit stub instead.
+           ;;
+           ;; Upstream is on Codeberg and the bug is reported but unfixed:
+           ;;   https://codeberg.org/meow_king/typst-ts-mode/issues/103
            :pre-build ("perl" "-0pi" "-e"
                        "s/;;;###autoload\\n\\(define-compilation-mode ([^\\s()]+)/;;;###autoload (autoload \\x27$1 \\x22typst-ts-compile\\x22 nil t)\\n(define-compilation-mode $1/g"
                        "typst-ts-compile.el")))
