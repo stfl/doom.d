@@ -32,6 +32,21 @@
 - Include `config.el` (and `packages.el` if changed) in the same commit as `config.org` so the repo stays consistent.
 - Stage `config.org`, `config.el`, and `packages.el` together; never commit `config.org` alone.
 
+## Issue Tracking
+- Issues for this repo live as GitHub issues on `stfl/doom.d`: `gh issue create --repo stfl/doom.d ...`.
+- Do not track this repo's work in the `dotfiles` beads database, or in any other repo's tracker.
+- The split is by subject, not by which directory you happen to be in: Doom/Emacs/Org/package work goes to `stfl/doom.d` GitHub issues; NixOS, Home Manager, host, and system-level work stays in the `dotfiles` beads database (`bd create` from `~/.config/dotfiles`).
+- When a task spans both, file it where the fix lands and cross-reference the other tracker by ID.
+- Use an issue for anything deferred: temporary pins or forks, upstream PRs to follow, and workarounds to revert.
+- When a workaround lands in `config.org`, reference the issue number in a comment next to it so the two stay linked.
+
+### `stfl/doom.d` is a PUBLIC repository
+- **Never put sensitive information in a GitHub issue on this repo.** Once published it is public permanently, and deleting the issue does not reliably remove it from caches, mirrors, or notification emails.
+- Sensitive means, non-exhaustively: credentials, API keys, tokens, PATs, private keys; internal or LAN IP addresses, DNS topology, and VPN/Tailscale configuration; employer or client names, internal project and repository identifiers; machine hostnames; absolute paths that expose a username; personal contact details.
+- Keep issues scoped to what a stranger reading the public config needs: the Emacs/Doom behaviour, the upstream package, the reproduction, the fix.
+- Refer to paths generically (`~/.config/doom`, `<straight>/build-*/`) instead of pasting absolute local paths.
+- If something genuinely cannot be described without sensitive detail, it does not belong in this tracker — raise it with the user instead of sanitising it into uselessness.
+
 ## High-Value Commands
 - Re-tangle the literate config after editing `config.org`: `~/.config/emacs/bin/doom +org tangle config.org`
 - Run this after config, module, or package changes: `~/.config/emacs/bin/doom sync`
