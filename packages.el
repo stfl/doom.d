@@ -59,7 +59,15 @@
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
-           :files (:defaults "*.el")))
+           :files (:defaults "*.el")
+           ;; Emacs 31's `loaddefs-generate' copies the `define-compilation-mode'
+           ;; form into the autoloads file verbatim rather than reducing it to an
+           ;; autoload stub, so loading the autoloads fails with a void
+           ;; `define-compilation-mode' before `compile' is available. Emit an
+           ;; explicit stub instead. Tracked upstream as meow_king/typst-ts-mode#103.
+           :pre-build ("perl" "-0pi" "-e"
+                       "s/;;;###autoload\\n\\(define-compilation-mode ([^\\s()]+)/;;;###autoload (autoload \\x27$1 \\x22typst-ts-compile\\x22 nil t)\\n(define-compilation-mode $1/g"
+                       "typst-ts-compile.el")))
 
 (package! ox-typst)
 
@@ -120,9 +128,24 @@
 
 (package! blamer)
 
+;; TEMPORARY FORK — revert to r0man/beads.el once PR #66 lands.
+;; Tracked as stfl/doom.d#1.
+;;
+;; On Emacs 31, loading beads-autoloads.el fails with a void
+;; `transient-define-prefix'. `beads' and `beads-more-menu' carry a bare
+;; `;;;###autoload' cookie on their `transient-define-prefix' form, and
+;; Emacs 31 only reduces such a form to an autoload stub when the defining
+;; macro is *loaded* while autoloads are generated — straight merely
+;; autoloads transient, so `loaddefs-generate' copies the raw form instead.
+;; The fork emits explicit autoload stubs, matching the idiom beads already
+;; uses in its other command files.
+;;
+;;   PR: https://github.com/r0man/beads.el/pull/66
 (package! beads
-  :recipe (:host github :repo "r0man/beads.el"
-           :files ("lisp/*.el")))
+  :recipe (:host github :repo "stfl/beads.el"
+           :branch "fix/emacs31-transient-autoloads"
+           :files ("lisp/*.el"))
+  :pin "bc78afb38483b1edbdd1953c81384fffa56f544a")
 
 (package! copilot
   :recipe (:host github
