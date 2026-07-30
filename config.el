@@ -757,6 +757,16 @@ Not added when either:
 (after! (org-super-agenda evil-org-agenda)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
 
+(defun stfl/org-checkbox-intermediate ()
+  "Set the checkbox at point to the intermediate state [-]."
+  (interactive)
+  (org-toggle-checkbox '(16)))
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :desc "Toggle checkbox [-]" "X" #'stfl/org-checkbox-intermediate)
+
 (after! org-contrib
   (require 'org-checklist))
 

@@ -1409,6 +1409,25 @@ These commands are provided by ~agile-gtd~.
 
 Agile GTD requires ~org-ql~ directly from the module.
 
+** Intermediate checkbox state
+
+Doom binds ~SPC m x~ to ~org-toggle-checkbox~, which flips =[ ]= ↔ =[X]=. ~SPC m X~
+sits next to it and sets the intermediate =[-]=. Plain ~org-toggle-checkbox~
+only reaches that state through a double prefix argument, which is awkward
+under evil where ~C-u~ scrolls.
+
+#+begin_src elisp
+(defun stfl/org-checkbox-intermediate ()
+  "Set the checkbox at point to the intermediate state [-]."
+  (interactive)
+  (org-toggle-checkbox '(16)))
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :desc "Toggle checkbox [-]" "X" #'stfl/org-checkbox-intermediate)
+#+end_src
+
 ** Recurring Checkboxes org-checklist
 
 #+begin_src elisp
