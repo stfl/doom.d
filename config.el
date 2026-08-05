@@ -488,11 +488,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
       :prefix "n"
       :desc "Export project clock entries" "E" #'stfl/org-clock-export)
 
-(map! :map org-mode-map
-      :localleader
-      :prefix "c"
-      :desc "Export project clock entries" "C" #'stfl/org-clock-export)
-
 (use-package! org-edna
   :after org
   ;; :hook org-mode-hook  ;; load package after hook
