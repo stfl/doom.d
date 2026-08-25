@@ -20,6 +20,8 @@
 (setq auto-save-default t)
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 
+(setq calendar-week-start-day 1)
+
 (when (executable-find "brave")
   (setq! browse-url-browser-function 'browse-url-chromium
          browse-url-chromium-program "brave"))
@@ -150,7 +152,8 @@
                              (:tag "pulswerk"   :name "Pulswerk"   :key ?p)
                              (:tag "freelance"  :name "Freelance")
                              (:tag "homelab"    :name "Homelab")
-                             (:tag "emacs"      :name "Emacs")))
+                             (:tag "emacs"      :name "Emacs")
+                             (:tag "glas"       :name "Café Glas"  :file "cafe-glas.org")))
   (agile-gtd-enable))
 
 (use-package mcp-server-lib

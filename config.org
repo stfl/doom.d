@@ -68,6 +68,21 @@ bind it to ~SPC h d c~
 (run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
 #+END_SRC
 
+** Calendar
+
+Start the week on Monday, matching the =de_AT= locale; Emacs defaults to Sunday.
+This governs how the calendar is drawn — =M-x calendar=, the =org-read-date=
+popup, and anything else built on the calendar grid.
+
+Org's clock ranges are independent of this variable: =org-clock-special-range=
+never reads =calendar-week-start-day=, and takes its week start from the
+=:wstart= parameter, which =org-clocktable-defaults= already sets to =1=
+(Monday). So clocktable and clockmatrix weekly reports are unaffected either way.
+
+#+BEGIN_SRC elisp
+(setq calendar-week-start-day 1)
+#+END_SRC
+
 ** Open External Browser
 
 Use Brave browser if availible. The default should actually respect the $BROWSER env
@@ -382,7 +397,8 @@ also rebuild that via org-roam
                              (:tag "pulswerk"   :name "Pulswerk"   :key ?p)
                              (:tag "freelance"  :name "Freelance")
                              (:tag "homelab"    :name "Homelab")
-                             (:tag "emacs"      :name "Emacs")))
+                             (:tag "emacs"      :name "Emacs")
+                             (:tag "glas"       :name "Café Glas"  :file "cafe-glas.org")))
   (agile-gtd-enable))
 #+end_src
 
