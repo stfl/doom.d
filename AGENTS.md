@@ -47,6 +47,22 @@
 - Refer to paths generically (`~/.config/doom`, `<straight>/build-*/`) instead of pasting absolute local paths.
 - If something genuinely cannot be described without sensitive detail, it does not belong in this tracker — raise it with the user instead of sanitising it into uselessness.
 
+## Agent skills
+
+Configuration the engineering skills read. Edit `docs/agents/*.md` directly to change any of it; re-run `/setup-matt-pocock-skills` only to switch issue trackers or restart from scratch.
+
+### Issue tracker
+
+GitHub issues on `stfl/doom.d`. See `## Issue Tracking` above for the public-repo sensitivity rules and the doom/dotfiles split — those constrain anything a skill publishes. Mechanics in `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical roles, each label string equal to its name. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at the repo root, both created lazily. See `docs/agents/domain.md`.
+
 ## High-Value Commands
 - Re-tangle the literate config after editing `config.org`: `~/.config/emacs/bin/doom +org tangle config.org`
 - Run this after config, module, or package changes: `~/.config/emacs/bin/doom sync`
