@@ -755,15 +755,15 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
          ))
 #+end_src
 
-Prompt to continue from the last clock-out time if the gap is
+Clocking in and out at a time read from the minibuffer. Continuation from the
+last clock-out is =org-clock-projects='s, scoped to a project.
 
 #+begin_src elisp
 (after! org-clock
-  (setq! org-clock-continuously nil))  ;; org-clock-continuously is handled by the advice
+  ;; Continuation is decided per project by `org-clock-projects'.
+  (setq! org-clock-continuously nil))
 
 (after! org
-  (defvar stfl/org-clock-continous-threshold 30)
-
   (defun stfl/org-read-date-time ()
     (let ((now (org-current-time org-clock-rounding-minutes t)))
       (org-read-date t t nil nil now (format-time-string "%H:%M" now))))
@@ -787,42 +787,56 @@ Prompt to continue from the last clock-out time if the gap is
     (interactive)
     (when (org-clocking-p) (org-clock-out nil nil (stfl/org-read-date-time))))
 
-  (defun stfl/org-time-minutes-ago-rounded (time)
-    (/ (org-time-convert-to-integer
-        (time-subtract (org-current-time org-clock-rounding-minutes t) time))
-       60))
-
-  (defun stfl/org-time-minutes-ago (time)
-    (/ (org-time-convert-to-integer
-        (time-subtract (org-current-time) time))
-       60))
-
-  (defun stfl/org-time-format-ago (time)
-    (format "%s (-%dm) (~%dm)"
-            (format-time-string (org-time-stamp-format 'with-time t) time)
-            (stfl/org-time-minutes-ago time)
-            (stfl/org-time-minutes-ago-rounded time)))
-
-  (defadvice! stfl/org-clock-continue? (orig-fn &rest args)
-    "Prompt to continue on clock on clock out time if longer than `stfl/org-clock-continous-threshold`."
-    :around #'org-clock-in
-    (interactive "P")
-    (let* ((start-time (cadr args))
-           (org-clock-continuously
-            (if start-time
-                org-clock-continuously  ;; apply previous value
-              (or (org-clocking-p)
-                  (and org-clock-out-time
-                       (or (< (stfl/org-time-minutes-ago org-clock-out-time) stfl/org-clock-continous-threshold)
-                           (y-or-n-p (format "You stopped another clock at %s; start this one from then? "
-                                             (stfl/org-time-format-ago org-clock-out-time)))))))))
-      (apply orig-fn args)))
-
   (map! :map org-mode-map
         :localleader
         :prefix "c"
         :desc "clock IN at time" "I" #'stfl/org-clock-in-at
         :desc "clock OUT at time" "O" #'stfl/org-clock-out-at))
+#+end_src
+
+** org-clock-projects
+
+Per-project parallel Org clocks: each project file owns at most one open clock
+and its own last clock-out time, so time spent bouncing between engagements is
+recorded as it happens and continuation never bridges from one client to
+another. Dormant until a project is created.
+
+#+begin_src elisp :tangle packages.el
+;; Local dev — switch to the GitHub recipe once published; see stfl/doom.d#4.
+(package! org-clock-projects
+  :recipe (:local-repo "~/work/org-clock-projects" :build (:not compile)))
+  ;; :recipe (:host github :repo "stfl/org-clock-projects"))
+#+end_src
+
+With parallel clocks, dangling clock lines are the normal state. Org's
+automatic resolution otherwise prompts about every other project on each
+clock-in made while no clock is running.
+
+#+begin_src elisp
+(after! org-clock
+  (setq! org-clock-auto-clock-resolution nil))
+
+(use-package org-clock-projects
+  :after (org-clock agile-gtd)
+  :config
+  ;; The project list is agile-gtd's, so it is not maintained twice.
+  (setq org-clock-projects-files-function #'agile-gtd-project-files)
+  (org-clock-projects-mode 1))
+
+(map! :after org-clock-projects
+      :map org-mode-map
+      :localleader
+      :prefix "c"
+      :desc "fork clock into this project" "p" #'org-clock-projects-fork
+      :desc "clock out ALL projects"       "a" #'org-clock-projects-clock-out-all
+      :desc "clear clock project"          "P" #'org-clock-projects-clear)
+
+;; Replaces Doom's `org-clock-goto', degrading to it when fewer than two
+;; clocks are open.
+(map! :after org-clock-projects
+      :leader
+      :prefix "n"
+      :desc "Switch running org-clock" "o" #'org-clock-projects-switch)
 #+end_src
 
 ** org-clock export to csv

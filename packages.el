@@ -11,6 +11,11 @@
            :files (:defaults "org-mcp-stdio.sh")))
   ;; :recipe  (:local-repo "~/work/org-mcp" :build (:not compile)))
 
+;; Local dev — switch to the GitHub recipe once published; see stfl/doom.d#4.
+(package! org-clock-projects
+  :recipe (:local-repo "~/work/org-clock-projects" :build (:not compile)))
+  ;; :recipe (:host github :repo "stfl/org-clock-projects"))
+
 (package! org-clock-csv)
 
 (package! org-edna)
