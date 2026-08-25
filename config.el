@@ -378,7 +378,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
         ))
 
 (after! org-clock
-  (setq! org-clock-rounding-minutes 15  ;; Org clock should clock in and out rounded to 5 minutes.
+  (setq! org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
          org-time-stamp-rounding-minutes '(0 15)
          org-duration-format 'h:mm  ;; format hours and don't Xd (days)
          org-clock-report-include-clocking-task t  ;; include current task in the clocktable

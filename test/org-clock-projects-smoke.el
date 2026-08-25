@@ -76,6 +76,9 @@
                  (format "got %s" bound)))))
 
 (message "\n=== %d failure(s) ===" opc-smoke-failures)
+;; Exit non-zero so a failure is visible to something other than a human
+;; reading the output.
+(kill-emacs (min opc-smoke-failures 1))
 
 (provide 'org-clock-projects-smoke)
 ;;; org-clock-projects-smoke.el ends here
