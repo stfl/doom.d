@@ -802,10 +802,10 @@ recorded as it happens and continuation never bridges from one client to
 another. Dormant until a project is created.
 
 #+begin_src elisp :tangle packages.el
-;; Local dev — switch to the GitHub recipe once published; see stfl/doom.d#4.
+;; Swap the two recipes to develop against the local checkout.
 (package! org-clock-projects
-  :recipe (:local-repo "~/work/org-clock-projects" :build (:not compile)))
-  ;; :recipe (:host github :repo "stfl/org-clock-projects"))
+  ;; :recipe (:local-repo "~/work/org-clock-projects" :build (:not compile)))
+  :recipe (:host github :repo "stfl/org-clock-projects"))
 #+end_src
 
 With parallel clocks, dangling clock lines are the normal state. Org's
