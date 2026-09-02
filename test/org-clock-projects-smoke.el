@@ -38,7 +38,7 @@
            (format "%d records" (length opc-records)))
 
 ;; Café Glas is the project whose tag, name and file base all differ — the case
-;; that tells a record apart from the bare file name it used to be.
+;; that tells a record apart from a bare file name.
 (let ((glas (seq-find (lambda (r) (equal (plist-get r :tag) "glas")) opc-records)))
   (opc-check "records carry tag, name and file separately"
              (and (equal (plist-get glas :name) "Café Glas")
