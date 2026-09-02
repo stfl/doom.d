@@ -15,7 +15,9 @@
 (package! org-clock-projects
   ;; :recipe (:local-repo "~/work/org-clock-projects" :build (:not compile)))
   :recipe (:host github :repo "stfl/org-clock-projects"))
-
+;; org-clock-projects requires org-clock-csv for the export, so the dependency
+;; is pinned beside what depends on it; the row format it writes through is
+;; configured under "org-clock-csv row format" below.
 (package! org-clock-csv)
 
 (package! org-edna)

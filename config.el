@@ -425,9 +425,15 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package org-clock-projects
   :after (org-clock agile-gtd)
+  :custom
+  ;; The project list is agile-gtd's, so it is not maintained twice. Records
+  ;; rather than bare files, because each consumer wants a different field of
+  ;; them: the tag selects clock entries, the name labels the prompt, the file
+  ;; base names the CSV.
+  (org-clock-projects-projects-function #'agile-gtd-project-records)
+  ;; Where the Typst invoice build looks for its CSVs.
+  (org-clock-projects-export-directory "~/work/invoice.typ/invoices")
   :config
-  ;; The project list is agile-gtd's, so it is not maintained twice.
-  (setq org-clock-projects-files-function #'agile-gtd-project-files)
   (org-clock-projects-mode 1))
 
 (map! :after org-clock-projects
@@ -445,12 +451,20 @@ Org-mode properties drawer already, keep the headline and don’t insert
       :prefix "n"
       :desc "Switch running org-clock" "o" #'org-clock-projects-switch)
 
+;; The check is the export's dry run: it reports what the export refuses to
+;; write over. So the pair sits on one key, the reading half lowercase and the
+;; writing half capital, the way Doom's own <leader> n bindings pair.
+(map! :after org-clock-projects
+      :leader
+      :prefix "n"
+      :desc "Check project clock data"    "e" #'org-clock-projects-check
+      :desc "Export project clock to CSV" "E" #'org-clock-projects-export)
+
 (use-package org-clock-csv
   :after org
-  :commands stfl/org-clock-export
   :config
   (defun stfl/org-clock-csv-row-fmt (plist)
-    "Default row formatting function."
+    "Return the CSV row for the clock entry PLIST."
     (mapconcat #'identity
                (list (org-clock-csv--escape (plist-get plist ':task))
                      (org-clock-csv--escape (s-join org-clock-csv-headline-separator (plist-get plist ':parents)))
@@ -466,23 +480,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                      (org-clock-csv--read-property plist "TICKET"))
                ","))
   (setq org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap,ticket"
-        org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt)
-
-  (setq stfl/org-clock-export-dir "~/work/invoice.typ/invoices")
-
-  (defun stfl/org-clock-export (project)
-    (interactive
-     (list (completing-read "Select project: " (agile-gtd-project-files))))
-    (let* ((org-agenda-files (list (doom-path org-directory project)
-                                   (doom-path org-directory "archive" project)))
-           (filename (format "%s-org-clock-%s.csv" (format-time-string "%Y-%m") (file-name-base project)))
-           (filepath (doom-path stfl/org-clock-export-dir filename)))
-      (org-clock-csv-to-file filepath))))
-
-(map! :map org-mode-map
-      :leader
-      :prefix "n"
-      :desc "Export project clock entries" "E" #'stfl/org-clock-export)
+        org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt))
 
 (use-package! org-edna
   :after org
