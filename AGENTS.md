@@ -148,8 +148,11 @@ These commands are commonly tried but do not load `config.el`:
 - When `doom doctor` reports `Symbol's value as variable is void`, check whether the symbol is defined later in config.el than it is used inside an `after!` body.
 
 ## Test Commands
-- There is no first-class automated test suite checked into this repo today.
-- Most verification is configuration loading, tangling, and `doom sync` success.
+- Two harnesses live under `test/`, both driven through `test/bootstrap.el`:
+  - `test/org-clock-projects-smoke.el` checks the *wiring* — that the configuration hands `org-clock-projects` the resolver, settings and keys it expects. It touches no Org data.
+  - `test/org-clock-projects-live.el` checks the *behaviour* against the real Org corpus: it exports the previous month for a real project into a temporary directory and compares the result against an oracle built by text search over the same `CLOCK:` lines, and against Org's own clocktable total. It writes nothing outside `$TMPDIR`.
+  - Run either with `emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l ~/.config/doom/test/<file>`; both exit non-zero on failure.
+- Beyond those, verification is configuration loading, tangling, and `doom sync` success.
 - Minimum validation for typical changes is: update `config.org` if needed, tangle, run `doom sync`, then open Doom if the change is user-facing.
 - If you add ERT tests, keep them in a dedicated test file such as `test/<name>-test.el`.
 - Run all tests in one file: `emacs --batch -Q -L . -l ert -l test/<name>-test.el --eval "(ert-run-tests-batch-and-exit t)"`
