@@ -980,14 +980,32 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 		   :require-match nil
 		   :lookup #'consult--lookup-member
 		   :category 'file
-		   :sort t)))
+		   :sort nil)))
       (if target
 	  (let ((default-directory (concat target "/")))
 	    (call-interactively 'find-file))
 	(call-interactively 'find-file))))
 
-  (map! )
+  (map! :leader :prefix "f" :desc "Find file in zoxide dir" "z" #'find-file-with-zoxide)
   )
+
+(defun consult-dir--zoxide-dirs ()
+  "Return zoxide's known directories, most frecent first."
+  (mapcar #'file-name-as-directory
+          (process-lines "zoxide" "query" "--list")))
+
+(defvar consult-dir--source-zoxide
+  `(:name     "Zoxide dirs"
+    :narrow   ?z
+    :category file
+    :face     consult-file
+    :history  file-name-history
+    :enabled  ,(lambda () (executable-find "zoxide"))
+    :items    ,#'consult-dir--zoxide-dirs)
+  "Zoxide directory source for `consult-dir'.")
+
+(after! consult-dir
+  (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
 
 (after! flycheck
   (map! :map flycheck-mode-map
