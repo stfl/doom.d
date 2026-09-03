@@ -182,6 +182,12 @@ hide that."
     (opc-live-answering (list (plist-get opc-live-record :name) period)
       (org-clock-projects-export arg))))
 
+(defun opc-live-path ()
+  "Return the file the period's export is expected to land at."
+  (expand-file-name (format "%s-org-clock-%s.csv" opc-live-label
+                            (file-name-base (plist-get opc-live-record :file)))
+                    opc-live-directory))
+
 (defun opc-live-rows (path)
   "Return PATH's data lines, the header dropped."
   (with-temp-buffer
@@ -219,9 +225,7 @@ hide that."
   ;; the moment this runs and not of the exporter.  What the checks would have
   ;; said is asserted through the check command below, where it is the subject.
   (opc-live-export opc-live-label '(16))
-  (let ((path (expand-file-name (format "%s-org-clock-%s.csv" opc-live-label
-                                        (file-name-base (plist-get opc-live-record :file)))
-                                opc-live-directory)))
+  (let ((path (opc-live-path)))
     (opc-live-check "named for the period and the project file"
                     (file-exists-p path) (file-name-nondirectory path))
     (when (file-exists-p path)
@@ -253,10 +257,7 @@ hide that."
 (opc-live-checking "the relative key names the same month"
   (opc-live-export "lastmonth" '(16))
   (opc-live-check "lastmonth resolves to the previous month"
-                  (file-exists-p
-                   (expand-file-name (format "%s-org-clock-%s.csv" opc-live-label
-                                             (file-name-base (plist-get opc-live-record :file)))
-                                     opc-live-directory))))
+                  (file-exists-p (opc-live-path))))
 
 (opc-live-checking "a bare day is refused"
   (let ((refused (condition-case err
@@ -272,10 +273,7 @@ hide that."
 ;; agenda file is read, so it can only ever find more.
 (opc-live-checking "the wide scan holds everything the narrow one did"
   (opc-live-export opc-live-label '(64))
-  (let* ((path (expand-file-name (format "%s-org-clock-%s.csv" opc-live-label
-                                         (file-name-base (plist-get opc-live-record :file)))
-                                 opc-live-directory))
-         (wide (opc-live-rows path)))
+  (let ((wide (opc-live-rows (opc-live-path))))
     (opc-live-check "the narrow rows are a subset of the wide ones"
                     (seq-every-p (lambda (row) (member row wide)) opc-live-narrow)
                     (format "%d wide, %d narrow" (length wide) (length opc-live-narrow)))))

@@ -94,16 +94,18 @@
 (opc-check "clock-out advice installed"
            (advice-member-p #'org-clock-projects--clock-out-advice 'org-clock-out))
 
-;; The advice and the exporter the package absorbed must be gone from the config.
+;; The continuation advice and the exporter are the package's, so the
+;; configuration must define neither: two definitions of the same behaviour
+;; resolve by load order.
 (dolist (sym '(stfl/org-clock-continue? stfl/org-clock-continous-threshold
                stfl/org-time-minutes-ago stfl/org-time-minutes-ago-rounded
                stfl/org-time-format-ago
                stfl/org-clock-export stfl/org-clock-export-dir))
-  (opc-check (format "%s no longer defined" sym)
+  (opc-check (format "%s is not defined here" sym)
              (not (or (fboundp sym) (boundp sym)))))
-;; ...while the ones that stayed behind still work.
+;; ...while the helpers this configuration owns are its own to define.
 (dolist (sym '(stfl/org-clock-in-at stfl/org-clock-out-at stfl/org-read-date-time))
-  (opc-check (format "%s still defined" sym) (fboundp sym)))
+  (opc-check (format "%s is defined here" sym) (fboundp sym)))
 
 (with-temp-buffer
   (org-mode)
