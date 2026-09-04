@@ -145,6 +145,7 @@
                                    "projects.org"
                                    "versicherung.org"
                                    "ikea.org"
+                                   "emacs.org"
                                    "cafe-glas.org")))
   (setq agile-gtd-projects '((:tag "oebb"       :name "ÖBB"        :key ?o)
                              (:tag "origina"    :name "Origina"    :key ?i)
@@ -152,7 +153,7 @@
                              (:tag "pulswerk"   :name "Pulswerk"   :key ?p)
                              (:tag "freelance"  :name "Freelance")
                              (:tag "homelab"    :name "Homelab")
-                             (:tag "emacs"      :name "Emacs")
+                             ;; (:tag "emacs"      :name "Emacs")
                              (:tag "glas"       :name "Café Glas"  :file "cafe-glas.org")))
   (agile-gtd-enable))
 
