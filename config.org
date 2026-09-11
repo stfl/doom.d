@@ -1315,14 +1315,15 @@ specific cases.
 ** Key bindings
 
 Three chord families act on the agenda line under point and on the view around
-it. Vertical moves the item's priority, horizontal its TODO state, and meta the
-width of the view:
+it. Both vertical pairs run along the priority axis, and up means toward =A= in
+each: a higher priority for the item, a narrower range for the view. Horizontal
+is the TODO state.
 
-| Chord           | Acts on        | Effect                              |
-|-----------------+----------------+-------------------------------------|
-| ~C-S-k~ ~C-S-j~ | the item       | priority up / down                  |
-| ~C-S-h~ ~C-S-l~ | the item       | TODO state back / forward           |
-| ~M-h~ ~M-l~     | the whole view | narrower / wider ~agile-gtd~ range  |
+| Chord           | Acts on        | Effect                             |
+|-----------------+----------------+------------------------------------|
+| ~C-S-k~ ~C-S-j~ | the item       | priority up / down                 |
+| ~C-M-k~ ~C-M-j~ | the whole view | narrower / wider ~agile-gtd~ range |
+| ~C-S-h~ ~C-S-l~ | the item       | TODO state back / forward          |
 
 ~C-S-h~ and ~C-S-l~ take the keys ~evil-org-agenda~ gives
 ~org-agenda-todo-previousset~ and ~-nextset~. Those step between TODO keyword
@@ -1348,8 +1349,8 @@ exactly, including where it stops at the ends.
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
       :desc "TODO state back" "C-S-h" #'stfl/org-agenda-todo-backward
       :desc "TODO state forward" "C-S-l" #'stfl/org-agenda-todo-forward
-      :desc "Narrower view range" "M-h" #'agile-gtd-agenda-narrower-range
-      :desc "Wider view range" "M-l" #'agile-gtd-agenda-wider-range
+      :desc "Narrower view range" "C-M-k" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "C-M-j" #'agile-gtd-agenda-wider-range
 
       :localleader
       "N" #'org-agenda-add-note

@@ -691,8 +691,8 @@ Not added when either:
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
       :desc "TODO state back" "C-S-h" #'stfl/org-agenda-todo-backward
       :desc "TODO state forward" "C-S-l" #'stfl/org-agenda-todo-forward
-      :desc "Narrower view range" "M-h" #'agile-gtd-agenda-narrower-range
-      :desc "Wider view range" "M-l" #'agile-gtd-agenda-wider-range
+      :desc "Narrower view range" "C-M-k" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "C-M-j" #'agile-gtd-agenda-wider-range
 
       :localleader
       "N" #'org-agenda-add-note
