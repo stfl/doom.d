@@ -675,10 +675,24 @@ Not added when either:
   :config
   (require 'ox-hugo))
 
+(defun stfl/org-agenda-todo-forward ()
+  "Move the agenda item at point forward in its TODO keyword sequence."
+  (interactive)
+  (org-agenda-todo 'right))
+
+(defun stfl/org-agenda-todo-backward ()
+  "Move the agenda item at point back in its TODO keyword sequence."
+  (interactive)
+  (org-agenda-todo 'left))
+
 (map! :after (org org-agenda)
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
+      :desc "TODO state back" "C-S-h" #'stfl/org-agenda-todo-backward
+      :desc "TODO state forward" "C-S-l" #'stfl/org-agenda-todo-forward
+      :desc "Narrower view range" "M-h" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "M-l" #'agile-gtd-agenda-wider-range
 
       :localleader
       "N" #'org-agenda-add-note
@@ -687,7 +701,7 @@ Not added when either:
       "o" #'org-agenda-set-property
       "s" #'org-toggle-sticky-agenda
 
-      :prefix "p"
+      :prefix ("p" . "Priority and view range")
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
       :desc "Prioity down" "d" #'org-agenda-priority-down
@@ -696,12 +710,9 @@ Not added when either:
       :desc "Tickler toggle" "t" #'agile-gtd-agenda-toggle-tickler
       :desc "Add to Tickler" "T" #'agile-gtd-agenda-set-tickler
       :desc "Remove Someday/Maybe" "r" #'agile-gtd-agenda-remove-someday
-
-      :prefix ("v" . "View up to priority")
-      "v" #'agile-gtd-agenda-show-priorities
-      "l" #'agile-gtd-agenda-show-less-priorities
-      "m" #'agile-gtd-agenda-show-more-priorities
-      "r" #'agile-gtd-agenda-reset-show-priorities
+      :desc "View range" "v" #'agile-gtd-agenda-set-range
+      :desc "Narrower view range" "n" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "w" #'agile-gtd-agenda-wider-range
       )
 
 (map! :after org-ql

@@ -1314,11 +1314,42 @@ specific cases.
 * [#D] Org Agenda
 ** Key bindings
 
+Three chord families act on the agenda line under point and on the view around
+it. Vertical moves the item's priority, horizontal its TODO state, and meta the
+width of the view:
+
+| Chord           | Acts on        | Effect                              |
+|-----------------+----------------+-------------------------------------|
+| ~C-S-k~ ~C-S-j~ | the item       | priority up / down                  |
+| ~C-S-h~ ~C-S-l~ | the item       | TODO state back / forward           |
+| ~M-h~ ~M-l~     | the whole view | narrower / wider ~agile-gtd~ range  |
+
+~C-S-h~ and ~C-S-l~ take the keys ~evil-org-agenda~ gives
+~org-agenda-todo-previousset~ and ~-nextset~. Those step between TODO keyword
+/sequences/, and this configuration declares exactly one, so they have nothing
+to step to. Stepping within the sequence is what an Org buffer's ~H~ and ~L~ do,
+and delegating to ~org-agenda-todo~ with a directional argument reproduces that
+exactly, including where it stops at the ends.
+
 #+begin_src elisp
+(defun stfl/org-agenda-todo-forward ()
+  "Move the agenda item at point forward in its TODO keyword sequence."
+  (interactive)
+  (org-agenda-todo 'right))
+
+(defun stfl/org-agenda-todo-backward ()
+  "Move the agenda item at point back in its TODO keyword sequence."
+  (interactive)
+  (org-agenda-todo 'left))
+
 (map! :after (org org-agenda)
       :map org-agenda-mode-map
       :desc "Prioity up" "C-S-k" #'org-agenda-priority-up
       :desc "Prioity down" "C-S-j" #'org-agenda-priority-down
+      :desc "TODO state back" "C-S-h" #'stfl/org-agenda-todo-backward
+      :desc "TODO state forward" "C-S-l" #'stfl/org-agenda-todo-forward
+      :desc "Narrower view range" "M-h" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "M-l" #'agile-gtd-agenda-wider-range
 
       :localleader
       "N" #'org-agenda-add-note
@@ -1327,7 +1358,7 @@ specific cases.
       "o" #'org-agenda-set-property
       "s" #'org-toggle-sticky-agenda
 
-      :prefix "p"
+      :prefix ("p" . "Priority and view range")
       :desc "Prioity" "p" #'org-agenda-priority
       :desc "Prioity up" "u" #'org-agenda-priority-up
       :desc "Prioity down" "d" #'org-agenda-priority-down
@@ -1336,18 +1367,23 @@ specific cases.
       :desc "Tickler toggle" "t" #'agile-gtd-agenda-toggle-tickler
       :desc "Add to Tickler" "T" #'agile-gtd-agenda-set-tickler
       :desc "Remove Someday/Maybe" "r" #'agile-gtd-agenda-remove-someday
-
-      :prefix ("v" . "View up to priority")
-      "v" #'agile-gtd-agenda-show-priorities
-      "l" #'agile-gtd-agenda-show-less-priorities
-      "m" #'agile-gtd-agenda-show-more-priorities
-      "r" #'agile-gtd-agenda-reset-show-priorities
+      :desc "View range" "v" #'agile-gtd-agenda-set-range
+      :desc "Narrower view range" "n" #'agile-gtd-agenda-narrower-range
+      :desc "Wider view range" "w" #'agile-gtd-agenda-wider-range
       )
 
 (map! :after org-ql
       :map org-ql-view-map
       "z" #'org-ql-view-dispatch)
 #+end_src
+
+The view range is ~agile-gtd~'s: ~sprint~, ~backlog~, ~all~ and ~someday~,
+narrowest first. Each agenda command opens at the range it declares, and
+rotating is local to the open agenda, so widening one view leaves every other
+one alone and quitting discards the widening.
+
+~agile-gtd-agenda-reset-show-priorities~ keeps a name but loses its key; it puts
+an agenda back to its declared range and is reachable with ~M-x~.
 
 ** Agenda options
 :PROPERTIES:
