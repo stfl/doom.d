@@ -458,8 +458,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (map! :after org-clock-projects
       :leader
       :prefix "n"
-      :desc "Check project clock data"    "e" #'org-clock-projects-check
-      :desc "Export project clock to CSV" "E" #'org-clock-projects-export)
+      :desc "Check project clock data"    "E" #'org-clock-projects-check
+      :desc "Export project clock to CSV" "e" #'org-clock-projects-export)
 
 (use-package org-clock-csv
   :after org
