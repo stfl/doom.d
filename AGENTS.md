@@ -148,10 +148,11 @@ These commands are commonly tried but do not load `config.el`:
 - When `doom doctor` reports `Symbol's value as variable is void`, check whether the symbol is defined later in config.el than it is used inside an `after!` body.
 
 ## Test Commands
-- Three harnesses live under `test/`, all driven through `test/bootstrap.el`:
+- Four harnesses live under `test/`, all driven through `test/bootstrap.el`:
   - `test/org-clock-projects-smoke.el` checks the *wiring* — that the configuration hands `org-clock-projects` the resolver, settings and keys it expects. It touches no Org data.
   - `test/org-clock-projects-live.el` checks the *behaviour* against the real Org corpus: it exports the previous month for a real project into a temporary directory and compares the result against an oracle built by text search over the same `CLOCK:` lines, and against Org's own clocktable total. It writes nothing outside `$TMPDIR`.
   - `test/agile-gtd-keys.el` checks the agenda priority, TODO-state and view-range key lookups, and that `agile-gtd` defines the range commands the bindings point at. Keymap coverage for `agile-gtd` belongs here rather than in the package, because only this repo knows which keys it binds.
+  - `test/agile-gtd-range-live.el` checks the *view ranges* against the real Org corpus: that every entry a range admits ranks inside that range's cutoff band, that widening never drops an entry, that work scheduled beyond today appears only at `someday`, and that the rendered agenda puts it under `Scheduled` — below the priority headings, above `Tickler`. The package's own suite proves these rules on a fixture; this proves them on the corpus they were written for. It reads Org files and renders an agenda, and writes nothing.
   - Run any of them with `emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l ~/.config/doom/test/<file>`; all exit non-zero on failure.
   - None is ERT. All assert against the live configuration and the real Org corpus, which a batch ERT run cannot reach, so they report one line per check and exit on the count. The "Prefer ERT" guidance below applies to tests of handwritten helpers, not to these.
 - Beyond those, verification is configuration loading, tangling, and `doom sync` success.
