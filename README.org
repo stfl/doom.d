@@ -1,21 +1,55 @@
-* My doom-emacs config
+#+TITLE: doom.d — a literate Doom Emacs configuration
 
-[[https://github.com/hlissner/doom-emacs][doom-emacs]]
+A personal [[https://github.com/doomemacs/doomemacs][Doom Emacs]] configuration built around Org-mode and an
+Agile-GTD workflow. Running on GNU Emacs 31.1.
 
-* Installation
+* Read config.org
 
-#+BEGIN_SRC sh
+[[file:config.org][config.org]] /is/ the configuration: 148 sections of annotated Elisp that tangle
+into ~config.el~, ~packages.el~, and the ~langserver/~ JSON files. Most sections
+say why the setting is there, not only what it sets. It is the only file you
+edit, and the only one worth reading end to end.
+
+* Install
+
+#+begin_src sh
 git clone --depth 1 git@github.com:doomemacs/doomemacs ~/.config/emacs
 git clone git@github.com:stfl/doom.d.git ~/.config/doom
 ~/.config/emacs/bin/doom install
-#+END_SRC
+#+end_src
 
-* Bootstrap org-mode files
+The Org corpus lives in its own repository and is synced, not pushed:
 
-first clone the repo.
-
-#+begin_src bash
+#+begin_src sh
 git clone git@github.com:stfl/org.git ~/.org
 #+end_src
 
-Setup Syncthing to sync the ~org~ share which excludes the .git/ dir.
+Set up Syncthing to sync the ~org~ share, which excludes the ~.git/~ directory.
+
+* It is tested
+
+Four harnesses under ~test/~ assert against the live config and the real Org
+corpus rather than a fixture: that keybindings resolve to the commands they
+claim, that clock exports match an independent text-search oracle, and that
+agenda view ranges admit exactly the entries they should.
+
+* What this isn't
+
+- *Not a starter kit.* One person's configuration, with hardcoded paths — ~~/.org~
+  for the Org corpus, ~~/work/agile-gtd~ and ~~/work/org-mcp~ for local package
+  checkouts.
+- *The live tests need that corpus.* Two of the four read real Org files and will
+  not pass on a fresh clone without one.
+- *No CI.* Tests are run by hand.
+- *Org is the centre of gravity.* Tooling outside the Org/GTD workflow is thin and
+  follows Doom defaults.
+
+* Where to go next
+
+| Page                        | Answers                                          |
+|-----------------------------+--------------------------------------------------|
+| [[file:docs/running-and-testing.md][docs/running-and-testing.md]] | Tangle, sync, lint, run the test harnesses       |
+| [[file:docs/batch-emacs.md][docs/batch-emacs.md]]         | Query a live Emacs, or load the config in batch  |
+| [[file:docs/debugging.md][docs/debugging.md]]           | The config won't load                            |
+| [[file:docs/local-packages.md][docs/local-packages.md]]      | ~agile-gtd~ and ~org-mcp~ from local checkouts   |
+| [[file:CLAUDE.md][CLAUDE.md]]                   | Conventions and invariants for changing the code |

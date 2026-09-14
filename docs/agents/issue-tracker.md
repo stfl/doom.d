@@ -4,7 +4,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 ## Before publishing anything: this repo is PUBLIC
 
-`stfl/doom.d` is a public repository. `AGENTS.md` (`## Issue Tracking` →
+`stfl/doom.d` is a public repository. `CLAUDE.md` (`## Issue Tracking` →
 `### stfl/doom.d is a PUBLIC repository`) is the authority; read it before any
 skill writes to the tracker. In short:
 
