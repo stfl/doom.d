@@ -866,6 +866,33 @@ clock-in made while no clock is running.
       :desc "Export project clock to CSV" "e" #'org-clock-projects-export)
 #+end_src
 
+*** Wiring check
+
+The recipe above tracks GitHub without a =:pin=, so every =doom sync -u= can
+change the package underneath this configuration. What breaks then is invisible
+from here: advice that no longer attaches to =org-clock-in=, a handler no longer
+swapped into =kill-emacs-query-functions=, a resolver record that stops carrying
+=:tag=, =:name= and =:file= separately. None of it raises an error. The clocks
+simply stop behaving the way this section describes.
+
+=test/org-clock-projects-smoke.el= asserts those seams, together with the CSV
+contract configured under "org-clock-csv row format" below:
+
+#+begin_src sh :tangle no
+emacs -q --batch -l ~/.config/doom/test/bootstrap.el \
+                 -l ~/.config/doom/test/org-clock-projects-smoke.el
+#+end_src
+
+*Run it after any =doom sync -u= that moves this package, and change it in the
+same commit as the configuration it describes.* It holds the seam between the
+two, so a package release that renames =org-clock-projects--clock-in-advice= or
+reshapes a project record has to land beside the assertion that names it.
+
+The test asserts nothing this file already sets. A check that goes red only
+because a setting here changed on purpose catches no bug and is repaired by
+copying the new value across, so values, paths and keybindings stay out of it;
+keymap coverage lives in =test/agile-gtd-keys.el=.
+
 ** org-clock-csv row format
 
 The columns an exported CSV carries. =org-clock-projects-export= heads the file

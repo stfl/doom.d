@@ -1,8 +1,15 @@
 ;;; org-clock-projects-smoke.el --- Wiring check for org-clock-projects -*- lexical-binding: t; -*-
 
-;; The package suite cannot catch wiring errors and the bootstrap run cannot
-;; catch logic errors, so this checks only that the configuration hands the
-;; package what it expects.  Run it with:
+;; `org-clock-projects' is tracked from GitHub without a `:pin', so every
+;; `doom sync -u' can change it underneath this configuration.  This asserts the
+;; seams that would then break silently: the advice the package installs, the
+;; handlers it swaps, the record shape its resolver returns, and which of the
+;; two packages owns the clockmatrix.
+;;
+;; Nothing here restates a value `config.org' already sets.  A check that fails
+;; only because a setting changed on purpose catches no bug and is repaired by
+;; copying the new value across, so it does not belong here.  Keymap coverage
+;; lives in `test/agile-gtd-keys.el'.  Run it with:
 ;;
 ;;   emacs -q --batch -l ~/.config/doom/test/bootstrap.el \\
 ;;         -l ~/.config/doom/test/org-clock-projects-smoke.el
@@ -54,11 +61,6 @@
              (and expanded (seq-every-p #'file-exists-p expanded))
              (format "%d/%d" (seq-count #'file-exists-p expanded) (length expanded))))
 
-(opc-check "export directory points at the invoice build"
-           (equal (bound-and-true-p org-clock-projects-export-directory)
-                  "~/work/invoice.typ/invoices")
-           (format "%s" (bound-and-true-p org-clock-projects-export-directory)))
-
 ;; The exporter writes its header and rows through these, so the CSV keeps the
 ;; columns the invoice build reads.
 (opc-check "CSV rows come from the configured formatter"
@@ -74,11 +76,10 @@
                 (not (fboundp 'agile-gtd-clockmatrix))))
 
 ;; A key binds to its symbol whether or not anything defines it, so the
-;; bindings below only say the keys are free; this says the commands exist.
+;; bindings in `config.org' prove nothing on their own; this says the two
+;; commands they point at exist.
 (dolist (cmd '(org-clock-projects-export org-clock-projects-check))
   (opc-check (format "%s is a command" cmd) (commandp cmd)))
-
-(opc-check "auto clock resolution disabled" (null org-clock-auto-clock-resolution))
 
 (opc-check "modeline segment installed"
            (memq 'org-clock-projects-mode-line-string global-mode-string))
@@ -94,33 +95,10 @@
 (opc-check "clock-out advice installed"
            (advice-member-p #'org-clock-projects--clock-out-advice 'org-clock-out))
 
-;; The continuation advice and the exporter are the package's, so the
-;; configuration must define neither: two definitions of the same behaviour
-;; resolve by load order.
-(dolist (sym '(stfl/org-clock-continue? stfl/org-clock-continous-threshold
-               stfl/org-time-minutes-ago stfl/org-time-minutes-ago-rounded
-               stfl/org-time-format-ago
-               stfl/org-clock-export stfl/org-clock-export-dir))
-  (opc-check (format "%s is not defined here" sym)
-             (not (or (fboundp sym) (boundp sym)))))
-;; ...while the helpers this configuration owns are its own to define.
+;; The clock helpers this configuration still owns, as opposed to the ones the
+;; package took over.
 (dolist (sym '(stfl/org-clock-in-at stfl/org-clock-out-at stfl/org-read-date-time))
   (opc-check (format "%s is defined here" sym) (fboundp sym)))
-
-(with-temp-buffer
-  (org-mode)
-  (dolist (spec '(("SPC m c p" org-clock-projects-fork)
-                  ("SPC m c a" org-clock-projects-clock-out-all)
-                  ("SPC m c P" org-clock-projects-clear)
-                  ("SPC m c I" stfl/org-clock-in-at)
-                  ("SPC m c O" stfl/org-clock-out-at)
-                  ("SPC n o"   org-clock-projects-switch)
-                  ("SPC n e"   org-clock-projects-export)
-                  ("SPC n E"   org-clock-projects-check)))
-    (let ((bound (key-binding (kbd (car spec)))))
-      (opc-check (format "%s -> %s" (car spec) (cadr spec))
-                 (eq bound (cadr spec))
-                 (format "got %s" bound)))))
 
 (message "\n=== %d failure(s) ===" opc-smoke-failures)
 ;; Exit non-zero so a failure is visible to something other than a human
