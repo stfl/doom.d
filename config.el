@@ -811,21 +811,22 @@ Not added when either:
 (setq org-pandoc-options '((standalone . t) (embed-resources . t)))
 
 (setq org-pandoc-options-for-typst-pdf
-      `((lua-filter . "table-widths.lua")
-        (include-in-header
-         . ,(expand-file-name
-             "pandoc/table-style.typ"
-             (or (getenv "XDG_DATA_HOME") "~/.local/share")))
-        (variable . "mainfont:Libertinus Serif")))
+      '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
 
 (setq org-pandoc-options-for-docx
       '((lua-filter . "table-widths.lua")))
 
-;; ox-pandoc defines the typst-pdf backend but ships its dispatch entry
-;; commented out, so bind the key here.
-(add-to-list 'org-pandoc-menu-entry
-             '(?< "to typst-pdf." org-pandoc-export-to-typst-pdf)
-             t)
+;; ox-pandoc defines the typst-pdf backend but ships its dispatch entries
+;; commented out. The entries are baked into the backend when ox-pandoc
+;; loads, so setting `org-pandoc-menu-entry' afterwards changes nothing —
+;; the live backend has to be amended instead.
+(after! ox-pandoc
+  (let ((menu (org-export-backend-menu (org-export-get-backend 'pandoc))))
+    (setcar (nthcdr 2 menu)
+            (append (nth 2 menu)
+                    '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
+                      (?T "to typst-pdf and open."
+                          org-pandoc-export-to-typst-pdf-and-open))))))
 
 (after! text-mode
   (add-hook! 'text-mode-hook

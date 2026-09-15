@@ -1613,19 +1613,26 @@ Identity is the same ed25519 SSH key used by agenix ([[file:~/.config/dotfiles/s
 :ID:       535b2018-8890-4e62-a293-a92df0734c07
 :END:
 
-How a table looks in an exported document is settled in pandoc's user data
-directory, not here: =~/.local/share/pandoc= holds a column-width Lua filter,
-a Typst header include and a docx reference document, all installed by
-=modules/home/pandoc.nix= in the dotfiles flake. Pandoc finds =reference.docx=
-on its own; the options below are what points ox-pandoc at the other two.
+The document look is settled in pandoc's user data directory, not here.
+=~/.local/share/pandoc/defaults/pdf.yaml= names the whole PDF export — Typst as
+the engine, A4, the body font, a column-width filter and a Typst style include —
+and =reference.docx= beside it does the same for Word. All of it is installed by
+=modules/home/pandoc.nix= in the dotfiles flake, so the same export works from a
+shell:
 
-Typst is the PDF engine, so no TeX distribution is involved. Its template
-needs a =mainfont= — without one pandoc fails with /font fallback list must
-not be empty/.
+#+BEGIN_SRC sh :tangle no
+pandoc report.org -o report.pdf --defaults=pdf
+#+END_SRC
 
-Each document exported this way wants =#+OPTIONS: ^:nil= in its header. Org
-reads =cpu_temperature_sensor= as =cpu= with a subscript, which mangles every
-identifier in a table.
+ox-pandoc stats every file-valued option before it runs, so =defaults= has to be
+spelled as a path here rather than as the bare name pandoc would resolve itself.
+
+A document keeps control of what is its own, through its own keywords:
+
+| =#+LANGUAGE: de=            | hyphenation and the heading /Inhaltsverzeichnis/ |
+| =#+OPTIONS: ^:nil=          | stops Org reading =a_b= as a subscript             |
+| =#+PANDOC_OPTIONS: toc:t=   | asks for a table of contents                     |
+| =#+EMAIL:=                  | sets the address on its own line under the author |
 
 Export with =C-c C-e p <= for PDF, =C-c C-e p d= for Word.
 
@@ -1633,21 +1640,22 @@ Export with =C-c C-e p <= for PDF, =C-c C-e p d= for Word.
 (setq org-pandoc-options '((standalone . t) (embed-resources . t)))
 
 (setq org-pandoc-options-for-typst-pdf
-      `((lua-filter . "table-widths.lua")
-        (include-in-header
-         . ,(expand-file-name
-             "pandoc/table-style.typ"
-             (or (getenv "XDG_DATA_HOME") "~/.local/share")))
-        (variable . "mainfont:Libertinus Serif")))
+      '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
 
 (setq org-pandoc-options-for-docx
       '((lua-filter . "table-widths.lua")))
 
-;; ox-pandoc defines the typst-pdf backend but ships its dispatch entry
-;; commented out, so bind the key here.
-(add-to-list 'org-pandoc-menu-entry
-             '(?< "to typst-pdf." org-pandoc-export-to-typst-pdf)
-             t)
+;; ox-pandoc defines the typst-pdf backend but ships its dispatch entries
+;; commented out. The entries are baked into the backend when ox-pandoc
+;; loads, so setting `org-pandoc-menu-entry' afterwards changes nothing —
+;; the live backend has to be amended instead.
+(after! ox-pandoc
+  (let ((menu (org-export-backend-menu (org-export-get-backend 'pandoc))))
+    (setcar (nthcdr 2 menu)
+            (append (nth 2 menu)
+                    '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
+                      (?T "to typst-pdf and open."
+                          org-pandoc-export-to-typst-pdf-and-open))))))
 #+END_SRC
 
 ** ansi colors in plaintext files
