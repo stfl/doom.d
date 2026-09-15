@@ -22,6 +22,8 @@
 
 (setq calendar-week-start-day 1)
 
+(setq calendar-week-start-day 1)
+
 (when (executable-find "brave")
   (setq! browse-url-browser-function 'browse-url-chromium
          browse-url-chromium-program "brave"))
@@ -120,6 +122,8 @@
     :foreground unspecified :background unspecified :inherit unspecified
     :underline (:style wave :color ,(doom-blend 'red 'bg 0.5)))
 )
+
+(setq! tab-width 4)
 
 (setq! tab-width 4)
 
@@ -364,6 +368,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 )
 
 (after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
+
+(after! org (require 'org-checklist))
 
 (after! org (require 'org-checklist))
 
@@ -808,25 +814,33 @@ Not added when either:
 ;;         :leader
 ;;         :desc "Define word at point" "@" #'define-word-at-point))
 
-(setq org-pandoc-options '((standalone . t) (embed-resources . t)))
+;; Doom's `:lang org +pandoc' sets `org-pandoc-options' in the ox-pandoc
+;; use-package `:init', which runs when ox loads — after this file. A
+;; top-level setq here is overwritten, so everything pandoc waits for the
+;; package to load first.
+(with-eval-after-load 'ox-pandoc
+  (setq org-pandoc-options
+        '((standalone . t)
+          (embed-resources . t)
+          (mathjax . t)
+          (variable . "revealjs-url=https://revealjs.com")))
 
-(setq org-pandoc-options-for-typst-pdf
-      '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
+  (setq org-pandoc-options-for-typst-pdf
+        '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
 
-(setq org-pandoc-options-for-docx
-      '((lua-filter . "table-widths.lua")))
+  (setq org-pandoc-options-for-docx
+        '((lua-filter . "table-widths.lua")))
 
-;; ox-pandoc defines the typst-pdf backend but ships its dispatch entries
-;; commented out. The entries are baked into the backend when ox-pandoc
-;; loads, so setting `org-pandoc-menu-entry' afterwards changes nothing —
-;; the live backend has to be amended instead.
-(after! ox-pandoc
+  ;; ox-pandoc bakes its dispatch entries into the backend when it loads, so
+  ;; setting `org-pandoc-menu-entry' afterwards changes nothing — the live
+  ;; backend has to be amended instead.
   (let ((menu (org-export-backend-menu (org-export-get-backend 'pandoc))))
-    (setcar (nthcdr 2 menu)
-            (append (nth 2 menu)
-                    '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
-                      (?T "to typst-pdf and open."
-                          org-pandoc-export-to-typst-pdf-and-open))))))
+    (unless (assq ?t (nth 2 menu))
+      (setcar (nthcdr 2 menu)
+              (append (nth 2 menu)
+                      '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
+                        (?T "to typst-pdf and open."
+                            org-pandoc-export-to-typst-pdf-and-open)))))))
 
 (after! text-mode
   (add-hook! 'text-mode-hook
@@ -1031,6 +1045,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (map! :map flycheck-mode-map
         :leader
         "c x" #'consult-flycheck))
+
+(map! :leader ":" #'ielm)
 
 (map! :leader ":" #'ielm)
 

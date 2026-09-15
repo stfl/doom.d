@@ -62,6 +62,9 @@ bind it to ~SPC h d c~
 #+END_SRC
 
 *** Auto-saving all buffers
+:PROPERTIES:
+:ID:       a7b6af80-732c-4999-ac31-d328bf5788cd
+:END:
 
 #+BEGIN_SRC elisp
 (setq auto-save-default t)
@@ -69,6 +72,9 @@ bind it to ~SPC h d c~
 #+END_SRC
 
 ** Calendar
+:PROPERTIES:
+:ID:       687712a4-c515-4910-9ee1-d4f0bb994678
+:END:
 
 Start the week on Monday, matching the =de_AT= locale; Emacs defaults to Sunday.
 This governs how the calendar is drawn — =M-x calendar=, the =org-read-date=
@@ -84,6 +90,9 @@ never reads =calendar-week-start-day=, and takes its week start from the
 #+END_SRC
 
 ** Open External Browser
+:PROPERTIES:
+:ID:       d199ad7a-c9b4-4452-9eca-fe45320851a5
+:END:
 
 Use Brave browser if availible. The default should actually respect the $BROWSER env
 
@@ -94,6 +103,9 @@ Use Brave browser if availible. The default should actually respect the $BROWSER
 #+end_src
 
 ** Resizing window with the mouse
+:PROPERTIES:
+:ID:       1a52abb7-a016-4ca4-bb0f-7fdc2cdf4fd3
+:END:
 
 Resizing a window vertically with the mouse in emacs requires you to hit the 1px
 thick line between windows.
@@ -169,6 +181,9 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 ** Garbage Collection
+:PROPERTIES:
+:ID:       50de3043-f7dc-4e82-bd21-3c931f64aa9a
+:END:
 
 Disable automatic garbage collection and run when emacs is idle.
 
@@ -181,6 +196,9 @@ https://jackjamison.xyz/blog/emacs-garbage-collection/
 #+end_src
 
 ** Mouse Window and Frame selection
+:PROPERTIES:
+:ID:       e5fd33fe-83ec-4c3b-8e6c-a1f5236c3b9e
+:END:
 
 Sway automatically focues a frame when moving the mouse over. Emacs does not
 register this and mouse clicks are registed on the wrong frame.
@@ -191,6 +209,9 @@ register this and mouse clicks are registed on the wrong frame.
 #+END_SRC
 
 ** Find files and directories using fd
+:PROPERTIES:
+:ID:       2ba1d830-2515-4104-b3b0-8e024da10150
+:END:
 
 #+begin_src elisp
 (after! consult
@@ -331,6 +352,9 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 #+end_src
 
 ** tab-width
+:PROPERTIES:
+:ID:       ae3f2bb8-24b3-4326-baf1-c6b13e9d97bf
+:END:
 
 #+begin_src elisp
 (setq! tab-width 4)
@@ -370,6 +394,9 @@ also rebuild that via org-roam
 #+end_src
 
 ** agile-gtd
+:PROPERTIES:
+:ID:       b82acc8f-f3ba-448b-be37-cf5990b7727e
+:END:
 
 #+begin_src elisp :tangle packages.el
 ;; Local dev — switch to GitHub recipe once published:
@@ -404,6 +431,9 @@ also rebuild that via org-roam
 #+end_src
 
 ** org-mcp
+:PROPERTIES:
+:ID:       1523bb4e-9612-452f-b7fa-834f09dd4a89
+:END:
 
 MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Code).
 
@@ -511,6 +541,9 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+end_src
 
 ** Tag colors
+:PROPERTIES:
+:ID:       04f7619c-a558-45c0-9e30-99e476a8304a
+:END:
 
 #+begin_src elisp
 (after! org
@@ -533,6 +566,9 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 #+end_src
 
 ** Auto-saving org-mode files
+:PROPERTIES:
+:ID:       c19637f8-fb6a-4697-98fd-da028d35969f
+:END:
 
 Automatically saving all org-buffers when emacs is idle for 30 seconds.
 
@@ -717,6 +753,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 #+END_SRC
 
 ** org-checklist
+:PROPERTIES:
+:ID:       2c3b9bf8-b761-45cc-8a68-c8dc3bf83407
+:END:
 
 [[https://orgmode.org/worg/org-contrib/org-checklist.html][org-checklist]] can be used to automatically reset the checkboxes in a recurring task
 
@@ -727,6 +766,9 @@ set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 #+end_src
 
 ** org-habit
+:PROPERTIES:
+:ID:       a3b7de50-1a49-47fe-b49d-7f580fd9ac7a
+:END:
 
 load org-habit because many of the functions in ~org-helpers.el~ require it...
 
@@ -744,6 +786,9 @@ load org-habit because many of the functions in ~org-helpers.el~ require it...
 #+END_SRC
 
 ** org-clock
+:PROPERTIES:
+:ID:       29144cf1-c672-4f69-98a2-e7dead92ad04
+:END:
 
 #+begin_src elisp
 (after! org-clock
@@ -796,6 +841,9 @@ last clock-out is =org-clock-projects='s, scoped to a project.
 #+end_src
 
 ** org-clock-projects
+:PROPERTIES:
+:ID:       7afb18e0-0f6c-48dd-9e63-b5aae3533e86
+:END:
 
 Per-project parallel Org clocks: each project file owns at most one open clock
 and its own last clock-out time, so time spent bouncing between engagements is
@@ -894,6 +942,9 @@ copying the new value across, so values, paths and keybindings stay out of it;
 keymap coverage lives in =test/agile-gtd-keys.el=.
 
 ** org-clock-csv row format
+:PROPERTIES:
+:ID:       c43b236b-8e46-4bfe-93a8-54fa8054c060
+:END:
 
 The columns an exported CSV carries. =org-clock-projects-export= heads the file
 with =org-clock-csv-header= and writes each row through
@@ -1229,6 +1280,9 @@ Not added when either:
 #+end_src
 
 *** Individual startup visibility with :hidden
+:PROPERTIES:
+:ID:       97a5ea17-5a69-4553-80ac-2ea7a227e4fe
+:END:
 
 https://emacs.stackexchange.com/a/44923/30180
 
@@ -1255,6 +1309,9 @@ https://emacs.stackexchange.com/a/44923/30180
 #+END_SRC
 
 ** Org Pandoc Import
+:PROPERTIES:
+:ID:       7ce596c3-39b2-47b6-914c-1a4152d46e50
+:END:
 
 https://github.com/tecosaur/org-pandoc-import
 
@@ -1270,6 +1327,9 @@ https://github.com/tecosaur/org-pandoc-import
 #+end_src
 
 ** Org Tree Slide (+present)
+:PROPERTIES:
+:ID:       8321fb56-4978-4833-bcbe-d740fbd971ee
+:END:
 
 Don't emphasize the heading -> it's way too big
 
@@ -1295,6 +1355,9 @@ https://github.com/doomemacs/doomemacs/issues/7058
 #+end_src
 
 ** Orgzly compatability format
+:PROPERTIES:
+:ID:       09296f88-0c61-4a88-afd4-a9a7109cc402
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! orgzly-formatter
@@ -1315,6 +1378,9 @@ specific cases.
 #+end_src
 
 ** ox-hugo
+:PROPERTIES:
+:ID:       0cca10e7-aec0-4e0b-8711-672dadb943a7
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! ox-hugo)
@@ -1325,6 +1391,9 @@ specific cases.
 #+end_src
 
 ** ox-zola
+:PROPERTIES:
+:ID:       f7100dd9-c142-4e29-9a45-5523f8b04512
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! ox-zola
@@ -1340,6 +1409,9 @@ specific cases.
 
 * [#D] Org Agenda
 ** Key bindings
+:PROPERTIES:
+:ID:       d2e72fb9-7e0e-4eb5-9572-baa52d992809
+:END:
 
 Three chord families act on the agenda line under point and on the view around
 it. Both vertical pairs run along the priority axis, and up means toward =A= in
@@ -1512,6 +1584,9 @@ These commands are provided by ~agile-gtd~.
 Agile GTD requires ~org-ql~ directly from the module.
 
 ** Intermediate checkbox state
+:PROPERTIES:
+:ID:       b6ab1892-a09d-4320-8cdf-20e1b70b3705
+:END:
 
 Doom binds ~SPC m x~ to ~org-toggle-checkbox~, which flips =[ ]= ↔ =[X]=. ~SPC m X~
 sits next to it and sets the intermediate =[-]=. Plain ~org-toggle-checkbox~
@@ -1531,6 +1606,9 @@ under evil where ~C-u~ scrolls.
 #+end_src
 
 ** Recurring Checkboxes org-checklist
+:PROPERTIES:
+:ID:       0448573b-0543-451d-b006-cec1b874389c
+:END:
 
 #+begin_src elisp
 (after! org-contrib
@@ -1539,6 +1617,9 @@ under evil where ~C-u~ scrolls.
 
 * Module Settings
 ** auth-sources and passwords
+:PROPERTIES:
+:ID:       91fbc4e4-614e-4c18-ae12-95251ccdf295
+:END:
 
 function to load a secret from an auth-source. [[https://gist.github.com/letoh/5497116][letoh/creation-prompt.el]]
 
@@ -1571,6 +1652,9 @@ get-password
 #+end_src
 
 ** age.el — read agenix-encrypted files
+:PROPERTIES:
+:ID:       f2a884c9-3ec5-4e37-a6f7-29782c148c4e
+:END:
 
 Transparently decrypt/encrypt =.age= files (agenix secrets under
 =~/.config/dotfiles/secrets/=) when visiting them, analogous to =epa-file= for GPG.
@@ -1629,33 +1713,45 @@ spelled as a path here rather than as the bare name pandoc would resolve itself.
 
 A document keeps control of what is its own, through its own keywords:
 
-| =#+LANGUAGE: de=            | hyphenation and the heading /Inhaltsverzeichnis/ |
-| =#+OPTIONS: ^:nil=          | stops Org reading =a_b= as a subscript             |
-| =#+PANDOC_OPTIONS: toc:t=   | asks for a table of contents                     |
-| =#+EMAIL:=                  | sets the address on its own line under the author |
+| =#+LANGUAGE: de=          | hyphenation, and the heading /Inhaltsverzeichnis/     |
+| =#+OPTIONS: ^:nil=        | stops Org reading =a_b= as a subscript                |
+| =#+OPTIONS: email:t=      | carries =#+EMAIL:= into the source pandoc is handed   |
+| =#+EMAIL:=                | the address, on its own line under the author       |
+| =#+PANDOC_OPTIONS: toc:t= | asks for a table of contents                        |
 
-Export with =C-c C-e p <= for PDF, =C-c C-e p d= for Word.
+Org drops =#+EMAIL:= from the source it generates for pandoc unless
+=email:t= is set, so the address needs both keywords to appear.
+
+Export with =C-c C-e p t= for PDF, =C-c C-e p d= for Word.
 
 #+BEGIN_SRC elisp
-(setq org-pandoc-options '((standalone . t) (embed-resources . t)))
+;; Doom's `:lang org +pandoc' sets `org-pandoc-options' in the ox-pandoc
+;; use-package `:init', which runs when ox loads — after this file. A
+;; top-level setq here is overwritten, so everything pandoc waits for the
+;; package to load first.
+(with-eval-after-load 'ox-pandoc
+  (setq org-pandoc-options
+        '((standalone . t)
+          (embed-resources . t)
+          (mathjax . t)
+          (variable . "revealjs-url=https://revealjs.com")))
 
-(setq org-pandoc-options-for-typst-pdf
-      '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
+  (setq org-pandoc-options-for-typst-pdf
+        '((defaults . "~/.local/share/pandoc/defaults/pdf.yaml")))
 
-(setq org-pandoc-options-for-docx
-      '((lua-filter . "table-widths.lua")))
+  (setq org-pandoc-options-for-docx
+        '((lua-filter . "table-widths.lua")))
 
-;; ox-pandoc defines the typst-pdf backend but ships its dispatch entries
-;; commented out. The entries are baked into the backend when ox-pandoc
-;; loads, so setting `org-pandoc-menu-entry' afterwards changes nothing —
-;; the live backend has to be amended instead.
-(after! ox-pandoc
+  ;; ox-pandoc bakes its dispatch entries into the backend when it loads, so
+  ;; setting `org-pandoc-menu-entry' afterwards changes nothing — the live
+  ;; backend has to be amended instead.
   (let ((menu (org-export-backend-menu (org-export-get-backend 'pandoc))))
-    (setcar (nthcdr 2 menu)
-            (append (nth 2 menu)
-                    '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
-                      (?T "to typst-pdf and open."
-                          org-pandoc-export-to-typst-pdf-and-open))))))
+    (unless (assq ?t (nth 2 menu))
+      (setcar (nthcdr 2 menu)
+              (append (nth 2 menu)
+                      '((?t "to typst-pdf." org-pandoc-export-to-typst-pdf)
+                        (?T "to typst-pdf and open."
+                            org-pandoc-export-to-typst-pdf-and-open)))))))
 #+END_SRC
 
 ** ansi colors in plaintext files
@@ -1732,6 +1828,9 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 ** Typst
+:PROPERTIES:
+:ID:       6a243e55-0025-47a3-a084-f44780050e1a
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! typst-ts-mode
@@ -1825,18 +1924,27 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 ** pdf-tools
+:PROPERTIES:
+:ID:       e803cc94-94f5-44db-acff-dd2f7e30f3bc
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! pdf-tools :built-in 'prefer)
 #+end_src
 
 ** systemd units as conf-mode
+:PROPERTIES:
+:ID:       5933613a-bb9c-47c3-8413-5808a0b007f2
+:END:
 
 #+begin_src elisp
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 #+end_src
 
 ** ssh-deploy
+:PROPERTIES:
+:ID:       a6bc4c2c-7141-4d64-944b-3e0661ba2dc1
+:END:
 
 #+begin_src elisp
 (defvar stfl/upload-local-mappings nil
@@ -1903,6 +2011,9 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 #+end_src
 
 ** zoxide
+:PROPERTIES:
+:ID:       ae6f3ad6-e503-4f5b-80ab-cb308eabe56d
+:END:
 
 #+begin_src elisp
 (when (executable-find "zoxide")
@@ -1962,6 +2073,9 @@ marginalia annotations and embark actions on the candidates; =zoxide.el='s own
 #+end_src
 
 * Coding
+:PROPERTIES:
+:ID:       bc8bb4b1-bd36-47cb-9e57-b2cad1c8ae6a
+:END:
 
 #+begin_src elisp
 (after! flycheck
@@ -1971,6 +2085,9 @@ marginalia annotations and embark actions on the candidates; =zoxide.el='s own
 #+end_src
 
 ** ielm REPL
+:PROPERTIES:
+:ID:       9fba0fb4-8826-4db4-89b8-66fc265f477c
+:END:
 
 map ielm to ~SPC :~
 
@@ -1979,6 +2096,9 @@ map ielm to ~SPC :~
 #+end_src
 
 ** lsp-mode
+:PROPERTIES:
+:ID:       7acba454-67fe-4109-9c4b-7d2ef4001020
+:END:
 
 I am not using lsp-mode anymore
 
@@ -1988,6 +2108,9 @@ I am not using lsp-mode anymore
 #+end_src
 
 *** Key Mappings
+:PROPERTIES:
+:ID:       bcce84aa-9ee4-41e0-89ae-3f64b93d099b
+:END:
 
 #+begin_src elisp
 (map! :after lsp-mode
@@ -1998,6 +2121,9 @@ I am not using lsp-mode anymore
 #+end_src
 
 *** Options
+:PROPERTIES:
+:ID:       92a1e07d-27f2-493b-baf0-fe44e6b6a874
+:END:
 
 [[https://emacs-lsp.github.io/lsp-mode/page/settings/mode/#lsp-inlay-hint-enable][lsp-mode settings]]
 
@@ -2012,6 +2138,9 @@ Enable hinlay hints and make the font a little smaller than the rest
 #+end_src
 
 *** emacs-lsp-booster
+:PROPERTIES:
+:ID:       62ad3196-eb07-4d88-bc4b-3187b1684df7
+:END:
 
 #+begin_src elisp
 (when (executable-find "emacs-lsp-booster")
@@ -2033,6 +2162,9 @@ Enable hinlay hints and make the font a little smaller than the rest
 #+end_src
 
 ** Flyover
+:PROPERTIES:
+:ID:       62d522b2-0bdb-4ca1-a04b-fd20d5a63874
+:END:
 
 https://github.com/konrad1977/flyover
 
@@ -2077,6 +2209,9 @@ https://github.com/konrad1977/flyover
 #+end_src
 
 ** Code Formatting
+:PROPERTIES:
+:ID:       74b872e2-13dd-432f-870f-be4e36a0f3ba
+:END:
 
 mapping doom's ~+format/buffer~ and ~+format/region~
 
@@ -2108,6 +2243,9 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 #+END_SRC
 
 ** Python
+:PROPERTIES:
+:ID:       3a459807-776b-4969-8e8d-366b2b3fe8a1
+:END:
 
 #+begin_src elisp
 (after! lsp-bridge
@@ -2115,6 +2253,9 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 #+end_src
 
 *** poetry
+:PROPERTIES:
+:ID:       28809999-fe05-492d-9fad-0f11d22ed045
+:END:
 
 Poetry needs to scan for a project whenever a new file is opened. Tracking via
 projectile speeds this up significantly.
@@ -2124,6 +2265,9 @@ projectile speeds this up significantly.
 #+end_src
 
 *** conda
+:PROPERTIES:
+:ID:       acf4f133-1f92-4ce4-865c-cbb25f2058f8
+:END:
 
 automatically activate a conda environment if present in a project
 
@@ -2145,6 +2289,9 @@ projectile does not recognize conda projects
 #+end_src
 
 *** numpydoc.el
+:PROPERTIES:
+:ID:       fcd296a2-e589-4ff5-815d-4484119f1538
+:END:
 
 #+begin_src elisp :tangle packages.el
 ;; (package! numpydoc)
@@ -2162,6 +2309,9 @@ projectile does not recognize conda projects
 #+end_src
 
 *** emacs ipython notebook (ein)
+:PROPERTIES:
+:ID:       ff74a51f-2141-4800-b316-6bb7681d4739
+:END:
 
 ein displays images in a separate window by default. Use inline images instead
 
@@ -2192,6 +2342,9 @@ org babel integration for ein
 #+end_src
 
 *** emacs-jupyter
+:PROPERTIES:
+:ID:       fa329006-bdaa-44c3-bc67-ce78ce627a70
+:END:
 
 header arguments to for jupyter-python to work with plotly
 
@@ -2211,6 +2364,9 @@ header arguments to for jupyter-python to work with plotly
 #+end_src
 
 *** Debug Test at point workaround
+:PROPERTIES:
+:ID:       d1bed36f-3297-4f46-945f-b46343c72c33
+:END:
 
 debugging python tests at point do not work with the default configuration.
 might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
@@ -2227,6 +2383,9 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 #+end_src
 
 ** Rust
+:PROPERTIES:
+:ID:       1daf5203-a457-4bae-a1e7-0d5f2d237582
+:END:
 
 #+begin_src elisp
 (map! :mode rustic-mode
@@ -2280,6 +2439,9 @@ configre dap-mode for rust
 #+end_src
 
 ** Nix
+:PROPERTIES:
+:ID:       71ef306f-1cef-46c7-9556-f6745b06cac4
+:END:
 
 configure alejandra, an alternative nix formatter
 
@@ -2395,6 +2557,9 @@ EDBI has some dependencies has some dependencies
 #+end_src
 
 ** Practice coding with Exercism
+:PROPERTIES:
+:ID:       c99ebabb-3530-4c9c-8181-54eadb8ff64a
+:END:
 
 [[https://exercism.org][Exercism]] is a platform for learning various programing languages by solving
 small exercises. The exercises can can be solved locally.
@@ -2419,6 +2584,9 @@ small exercises. The exercises can can be solved locally.
 
 ** Javascript | Typescript
 *** Jest Testing Framework
+:PROPERTIES:
+:ID:       238198c7-685d-4b4d-8f04-daf1ff0ff958
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! jest :disable t)
@@ -2437,6 +2605,9 @@ small exercises. The exercises can can be solved locally.
 #+end_src
 
 ** JSON
+:PROPERTIES:
+:ID:       db2bae45-fcb9-484f-acb3-0f851db125e5
+:END:
 
 The =:lang json= module handles =.json= → =json-ts-mode= via tree-sitter.
 =json-ts-mode= natively supports =//= and =/* */= comments, so =.jsonc= files can use it too.
@@ -2446,6 +2617,9 @@ The =:lang json= module handles =.json= → =json-ts-mode= via tree-sitter.
 #+end_src
 
 ** Perl
+:PROPERTIES:
+:ID:       94cafd40-5143-4ef0-bbce-30a204374409
+:END:
 
 always use the better cperl-mode instead of perl-mode.
 This will be the default in Emacs 30 (if I remember correctly)
@@ -2455,6 +2629,9 @@ This will be the default in Emacs 30 (if I remember correctly)
 #+end_src
 
 ** Logview
+:PROPERTIES:
+:ID:       3616b25e-953f-4156-ae59-1c94d6995560
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! logview :disable t)
@@ -2474,6 +2651,9 @@ switch to evil-emacs-mode ~C-z~ to use the keybindings.
 
 ** Spell- Grammer Checking
 *** LTEX
+:PROPERTIES:
+:ID:       81fcbed1-64ea-4d05-9ebb-06f401bed754
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! lsp-ltex :disable t)
@@ -2507,6 +2687,9 @@ manually add adoc-mode to the list.. I don't like that...
 #+end_src
 
 *** ispell
+:PROPERTIES:
+:ID:       676bb9b3-b404-47ab-8857-10cd52f67f68
+:END:
 
 #+begin_src elisp
 (after! ispell
@@ -2521,6 +2704,9 @@ manually add adoc-mode to the list.. I don't like that...
 _tangle is disabled for the entire section_ and is only kept as a reference!
 
 *** AsciiDoc (adoc)
+:PROPERTIES:
+:ID:       c8a49076-4191-41a5-9b9c-70198386dc77
+:END:
 
 #+begin_src elisp :tangle packages.el
 ;; bbatsov/adoc-mode
@@ -2724,6 +2910,9 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 ** ssh-config-mode
+:PROPERTIES:
+:ID:       6cf36285-c9d8-4e84-92f1-fb85c013e5fa
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! ssh-config-mode)
@@ -2734,6 +2923,9 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 ** BitBake
+:PROPERTIES:
+:ID:       96efe644-1aa3-437c-9756-fdc2aaef7ead
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! bitbake-ts-mode)
@@ -2788,6 +2980,9 @@ Alternative bitbake lsp from the vscode-bitbake project.
     "command": [ "language-server-bitbake", "--stdio" ],
 
 ** Meson build system
+:PROPERTIES:
+:ID:       be3dbfd3-334e-4b59-aea5-69d16d356146
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! meson-mode :disable t)
@@ -2799,6 +2994,9 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 ** C/C++
+:PROPERTIES:
+:ID:       ee43f254-70ea-43cb-a736-0c52cd29a890
+:END:
 
 #+begin_src elisp
 (after! projectile
@@ -2829,6 +3027,9 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 ** Turbo Log
+:PROPERTIES:
+:ID:       78fbe186-31b7-4974-bfa8-322a08204ea8
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! turbo-log
@@ -2853,6 +3054,9 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 ** just
+:PROPERTIES:
+:ID:       29eab315-d708-42fe-9e95-c3a3a28d26c7
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! just-mode)
@@ -2878,12 +3082,19 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+END_SRC
 
 ** Magit
+:PROPERTIES:
+:ID:       ca5c16c5-fadc-4c44-b4b2-9b286deae2ba
+:END:
+
 #+begin_src elisp
 (with-eval-after-load 'git-commit
   (setq git-commit-summary-max-length 100))
 #+end_src
 
 *** Enable granular diff-highlights for all hunks
+:PROPERTIES:
+:ID:       f5268c2a-667d-4db6-8131-ae71f0db1c7f
+:END:
 
 By default, changes are highlighted *line-wise* for all but the selected hunk. This
 has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You can enable character-wise highlights for all
@@ -2912,6 +3123,9 @@ display more columns in forge list topic
 #+END_SRC
 
 *** forge-azure
+:PROPERTIES:
+:ID:       04ac7ce6-9e67-4860-a793-c8ab47ac5762
+:END:
 
 Azure DevOps backend for forge, so ÖBB pull requests are reviewable from magit.
 
@@ -2936,6 +3150,9 @@ comes from =azure.user= in git config, set globally from =oebb.nix=.
 #+end_src
 
 *** magit-todos
+:PROPERTIES:
+:ID:       b93de293-9ed1-43e9-8d6b-435433c1423b
+:END:
 
 #+begin_src elisp :tangle packages.el
 (package! magit-todos)
@@ -2957,6 +3174,9 @@ activate magit-todo to display the TODOs section in magit buffer
 :END:
 
 *** mailscripts.el
+:PROPERTIES:
+:ID:       74b33175-e7d9-4cfa-a40d-898f4b332a85
+:END:
 
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
 
@@ -3136,6 +3356,9 @@ forcing text comparison even if diff thinks files are binary
 #+end_src
 
 ** diffview
+:PROPERTIES:
+:ID:       6b680599-8922-4de7-9aff-3607e847c731
+:END:
 
 Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format. This comes in handy for reading patches from mailing lists (or from whencever you might acquire them).
 
@@ -3153,6 +3376,9 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
 #+end_src
 
 ** blamer.el
+:PROPERTIES:
+:ID:       af3f1e2d-4f51-43a3-948e-ffc014645d82
+:END:
 
 https://github.com/Artawower/blamer.el
 git blame lenses
@@ -3189,6 +3415,9 @@ git blame lenses
 #+end_src
 
 ** beads.el
+:PROPERTIES:
+:ID:       c95f10fe-5d12-44ac-9d2b-2304694f27bf
+:END:
 
 [[https://github.com/r0man/beads.el][r0man/beads.el]] — an Emacs interface to the
 [[https://github.com/steveklabnik/beads][Beads]] git-backed issue tracker (the
@@ -3265,6 +3494,9 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 #+end_src
 
 * AI
+:PROPERTIES:
+:ID:       2e541c46-3fc4-4e52-bd1c-3d032ff5249a
+:END:
 
 #+begin_src elisp
 (map!
@@ -3357,6 +3589,9 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 #+end_src
 
 ** gptel
+:PROPERTIES:
+:ID:       8a59e4db-5f9c-45ec-aa0e-bb8141796553
+:END:
 
 If get-password does not reply a proper key.. manually clear the auth-source cache with:
 #+begin_src elisp :tangle no :results silent
@@ -3439,6 +3674,9 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 #+end_src
 
 ** gptel-magit
+:PROPERTIES:
+:ID:       db208ba3-eca2-4511-bdbd-355f37f0bceb
+:END:
 
 #+begin_src elisp
 (use-package! gptel-magit
@@ -3471,3 +3709,4 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
   (setq gptel-magit-backend (gptel-get-backend "Z.ai")
         gptel-magit-model 'glm-5.1-fast))
 #+end_src
+
