@@ -808,7 +808,24 @@ Not added when either:
 ;;         :leader
 ;;         :desc "Define word at point" "@" #'define-word-at-point))
 
-(setq org-pandoc-options '((standalone . t) (self-contained . t)))
+(setq org-pandoc-options '((standalone . t) (embed-resources . t)))
+
+(setq org-pandoc-options-for-typst-pdf
+      `((lua-filter . "table-widths.lua")
+        (include-in-header
+         . ,(expand-file-name
+             "pandoc/table-style.typ"
+             (or (getenv "XDG_DATA_HOME") "~/.local/share")))
+        (variable . "mainfont:Libertinus Serif")))
+
+(setq org-pandoc-options-for-docx
+      '((lua-filter . "table-widths.lua")))
+
+;; ox-pandoc defines the typst-pdf backend but ships its dispatch entry
+;; commented out, so bind the key here.
+(add-to-list 'org-pandoc-menu-entry
+             '(?< "to typst-pdf." org-pandoc-export-to-typst-pdf)
+             t)
 
 (after! text-mode
   (add-hook! 'text-mode-hook
