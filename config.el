@@ -860,16 +860,6 @@ Not added when either:
   (setq! vterm-tramp-shells '(("docker" "/bin/sh")
                               ("ssh" "/bin/bash"))))
 
-(use-package! eat
-  :config
-  ;; Enable eat with eshell
-  (eat-eshell-mode)
-
-  ;; Use semi-char mode by default for better interaction
-  (setq! eat-term-scrollback-size 50000
-         eat-enable-yank-to-terminal t
-         eat-enable-kill-from-terminal t))
-
 (use-package! typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
@@ -1573,7 +1563,6 @@ does not work and `bd' must connect to a shared Dolt server instead.")
     (add-hook 'special-mode-hook #'stfl/beads--evil-emacs-state-h)))
 
 (map!
-      ;; "C-c a" #'aidermacs-transient-menu
       :leader
       (:prefix ("j" . "AI")
        ;; "m" #'gptel-menu
@@ -1585,31 +1574,7 @@ does not work and `bd' must connect to a shared Dolt server instead.")
        ;; "w" #'gptel-rewrite-menu
        ;; "t" #'gptel-org-set-topic
        ;; "P" #'gptel-org-set-properties
-
-       ;; "a" #'aidermacs-transient-menu
-       ;; "a" #'aider-transient-menu
-
-       "o" #'claude-code-ide-menu
-
-       (:prefix ("c" . "Copilot Chat")
-        ;; "" #'copilot-chat-reset  ;; reset everything including history, buffers and frontend.
-        "c" #'copilot-chat-display  ;; display copilot chat buffers.
-        "s" #'copilot-chat-explain-symbol-at-line  ;; ask Copilot to explain symbol under point.
-        "e" #'copilot-chat-explain  ;; ask copilot to explain selected code.
-        "r" #'copilot-chat-review  ;; ask copilot to review selected code.
-        "d" #'copilot-chat-doc  ;; ask copilot to document selected code.
-        "f" #'copilot-chat-fix  ;; ask copilot to fix selected code.
-        "o" #'copilot-chat-optimize  ;; ask copilot to optimize selected code.
-        "t" #'copilot-chat-test  ;; ask copilot to write tests for selected code.
-        ;; :n "" #'copilot-chat-custom-prompt-selection  ;; ask for a prompt in minibuffer and pastes selection after it before sending it to copilot.
-        "b" #'copilot-chat-add-current-buffer  ;; add current buffer to copilot chat. Its content will be sent with every request.
-        "B" #'copilot-chat-del-current-buffer  ;; remove current buffer.
-        "l" #'copilot-chat-list  ;; open buffer list.
-        ;; "" #'copilot-chat-prompt-history-previous  ;; insert previous prompt from history in prompt buffer.
-        ;; "" #'copilot-chat-prompt-history-next  ;; insert next prompt from history in prompt buffer.
-        "a" #'copilot-chat-ask-and-insert  ;; ask for a custom prompt and write answer in current buffer at point.
-        "m" #'copilot-chat-insert-commit-message  ;; Insert in the current buffer a copilot generated commit message.
-        )))
+       ))
 
 (defun stfl/setup-api-keys ()
   (interactive)
@@ -1666,89 +1631,6 @@ does not work and `bd' must connect to a shared Dolt server instead.")
   ;; /run/current-system/sw/bin is a stable symlink that nixos-rebuild updates,
   ;; so this keeps tracking the system package across upgrades.
   (setq copilot-server-executable "/run/current-system/sw/bin/copilot-language-server")
-  )
-
-(use-package copilot-chat
-  :after org
-  :commands (copilot-chat-insert-commit-message copilot-chat-fix copilot-chat-doc)
-  :config (setq! copilot-chat-model "claude-4.6-sonnet"
-                 copilot-chat-frontend 'org)
-
-  ;; (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
-  ;; Or call manually (copilot-chat-insert-commit-message) when in the commit message buffer.
-  )
-
-(use-package! codeium
-  :defer t  ;; TODO to start it, manually call codeium-init
-
-  ;; if you use straight
-  ;; :straight '(:type git :host github :repo "Exafunction/codeium.el")
-  ;; otherwise, make sure that the codeium.el file is on load-path
-
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-  ;; (add-to-list 'company-frontends #'company-preview-frontend)
-  (setq company-minimum-prefix-length 0)
-
-  ;; or on a hook
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
-
-  ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local completion-at-point-functions
-  ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
-
-  ;; TODO for completion at point to work need to add codeium-completion-at-point to completion-at-point-an
-
-  ;; functions async company-backend is coming soon!
-
-  ;; codeium-completion-at-point is autoloaded, but you can
-  ;; optionally set a timer, which might speed up things as the
-  ;; codeium local language server takes ~0.2s to start up
-  ;; (add-hook 'emacs-startup-hook
-  ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
-
-  :config
-  (setq use-dialog-box nil) ;; do not use popup boxes
-
-  ;; if you don't want to use customize to save the api-key
-  (setq codeium/metadata/api_key (password-store-get "API/Codeium"))
-
-  ;; get codeium status in the modeline
-  (setq codeium-mode-line-enable
-        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-  ;; alternatively for a more extensive mode-line
-  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
-
-  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-  (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-  ;; you can also set a config for a single buffer like this:
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-  ;; You can overwrite all the codeium configs!
-  ;; for example, we recommend limiting the string sent to codeium for better performance
-  (defun my-codeium/document/text ()
-    (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-  ;; if you change the text, you should also change the cursor_offset
-  ;; warning: this is measured by UTF-8 encoded bytes
-  (defun my-codeium/document/cursor_offset ()
-    (codeium-utf8-byte-length
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-  (setq codeium/document/text 'my-codeium/document/text)
-  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset)
-
-  (let ((codeium-exe (executable-find "codeium_language_server")))
-    (when codeium-exe
-      (setq codeium-command-executable codeium-exe)))
   )
 
 (after! gptel
@@ -1853,17 +1735,3 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 
   (setq gptel-magit-backend (gptel-get-backend "Z.ai")
         gptel-magit-model 'glm-5.1-fast))
-
-(use-package! claude-code-ide
-  :commands (claude-code-ide-menu)
-  :config
-  ;; (stfl/setup-api-keys)
-  (setq! claude-code-ide-terminal-backend 'vterm
-         claude-code-ide-switch-tab-on-ediff t
-         claude-code-ide-focus-claude-after-ediff t)
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
-
-(require 'acp)
-(require 'agent-shell)
-
-(use-package agent-shell)

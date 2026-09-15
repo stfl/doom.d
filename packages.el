@@ -53,16 +53,6 @@
 
 (package! vterm :disable t)
 
-(package! eat
-  :recipe (:type git
-           :host codeberg
-           :repo "akib/emacs-eat"
-           :files ("*.el" ("term" "term/*.el") "*.texi"
-                   "*.ti" ("terminfo/e" "terminfo/e/*")
-                   ("terminfo/65" "terminfo/65/*")
-                   ("integration" "integration/*")
-                   (:exclude ".dir-locals.el" "*-tests.el"))))
-
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"
@@ -163,21 +153,3 @@
   :recipe (:host github
            :repo "zerolfx/copilot.el"
            :files ("*.el" "dist")))
-
-(package! copilot-chat
-  :recipe (:host github
-           :repo "chep/copilot-chat.el"
-           :files ("*.el")))
-
-(package! codeium
-  :recipe (:host github
-           :repo "Exafunction/codeium.el")
-  :disable t)
-
-(package! claude-code-ide
-  :recipe (:host github
-           :repo "manzaltu/claude-code-ide.el"))
-
-(package! shell-maker)
-(package! acp)
-(package! agent-shell)
