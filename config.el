@@ -171,26 +171,12 @@
 
 (use-package org-mcp
   :after (org agile-gtd)
-  :custom
-  (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
-                                 (rank . agile-gtd--item-rank)))
-  (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
-  (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
-  (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
-  (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   :config
   (unless (file-exists-p (org-mcp--installed-script-path))
     (org-mcp-install))
   (if mcp-server-lib--running
       (message "org-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
-
-;; Set org-mcp-allowed-files after agile-gtd-enable has populated org-agenda-files.
-;; Must be a separate (after! org …) block registered AFTER the use-package forms
-;; above so it fires as a later hook — after agile-gtd-enable completes.
-(with-eval-after-load 'org
-  (setopt org-mcp-allowed-files
-          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files)))
 
 (after! org
   (setq! org-auto-align-tags nil

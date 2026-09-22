@@ -20,10 +20,10 @@
 
 (agk-check "package loads" (featurep 'agile-gtd))
 
-;; The four named ranges are the vocabulary every binding below selects from.
+;; The five named ranges are the vocabulary every binding below selects from.
 (agk-check "range vocabulary is narrowest-first"
            (equal (bound-and-true-p agile-gtd-view-ranges)
-                  '(sprint backlog all someday))
+                  '(today sprint backlog all someday))
            (format "%S" (bound-and-true-p agile-gtd-view-ranges)))
 
 (dolist (cmd '(agile-gtd-agenda-set-range

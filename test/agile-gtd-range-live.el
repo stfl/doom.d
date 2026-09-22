@@ -42,7 +42,7 @@
     :action (lambda () (cons (org-get-heading t t t t) (agile-gtd--item-rank)))))
 
 (dolist (range agile-gtd-view-ranges)
-  (let ((top (agile-gtd--rank-band-top (agile-gtd-view-range-priority range))))
+  (let ((top (agile-gtd-view-range-cutoff range)))
     (dolist (spec (list (cons "next actions"
                               (agile-gtd-agenda-query-next-actions nil range t))
                         (cons "backlog"
@@ -82,7 +82,7 @@
   (when-let ((sc (org-element-property :scheduled (org-element-at-point))))
     (> (time-to-days (org-timestamp-to-time sc)) (time-to-days (current-time)))))
 
-(dolist (range '(sprint backlog all))
+(dolist (range '(today sprint backlog all))
   (dolist (spec (list (cons "next actions"
                             (agile-gtd-agenda-query-next-actions nil range t))
                       (cons "backlog"
