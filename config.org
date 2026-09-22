@@ -66,9 +66,21 @@ bind it to ~SPC h d c~
 :ID:       a7b6af80-732c-4999-ac31-d328bf5788cd
 :END:
 
+=auto-save-default= is Emacs's separate crash-recovery mechanism: it
+periodically writes =#file#= snapshots without touching the visited
+file itself.
+
+=auto-save-visited-mode= saves every visited buffer to its actual file
+once it has been idle for =auto-save-visited-interval= seconds. That
+interval is set to 30 seconds rather than the 5-second default,
+because =before-save-hook= does expensive work on some files (org
+encryption, formatters), so a longer interval avoids re-running that
+on every short pause.
+
 #+BEGIN_SRC elisp
 (setq auto-save-default t)
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
+(setq auto-save-visited-interval 30)
+(auto-save-visited-mode 1)
 #+END_SRC
 
 ** Calendar
@@ -381,16 +393,24 @@ always generate an id for a link
         org-id-track-globally t))
 #+END_SRC
 
-rebuild orgid file on start at the first time emacs is idle for 20 sec
+Rebuild the ID index once Emacs has been idle for 25 seconds after start. The
+index is built from configuration alone: org-roam files, agenda files and
+=org-id-extra-files=. Files that held IDs in an earlier session only because
+they were open are not carried over, so the index after a restart depends only
+on configuration.
 
 #+begin_src elisp
-(after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
+(after! org-roam
+  (run-with-idle-timer
+   25 nil
+   (lambda ()
+     ;; `org-id-files' carries files over from the previous session, and the
+     ;; checksum lets `org-id-update-id-locations' skip an unchanged scan.
+     (setq org-id-files nil
+           org-id--locations-checksum nil)
+     (org-roam-update-org-id-locations))))
 #+end_src
 
-also rebuild that via org-roam
-
-#+begin_src elisp
-(after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
 #+end_src
 
 ** agile-gtd
@@ -564,17 +584,6 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
                          ))
   )
 #+end_src
-
-** Auto-saving org-mode files
-:PROPERTIES:
-:ID:       c19637f8-fb6a-4697-98fd-da028d35969f
-:END:
-
-Automatically saving all org-buffers when emacs is idle for 30 seconds.
-
-#+BEGIN_SRC elisp
-(after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
-#+END_SRC
 
 ** org-mode Startup
 :PROPERTIES:
