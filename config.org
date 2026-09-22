@@ -529,15 +529,50 @@ so the installed script matches upstream's documented layout.
     (mcp-server-lib-install)))
 #+end_src
 
+A view is a named question, a filter a named restriction, and a range how
+much. Composing the three reaches every agenda this workflow has out of two
+small lists, so =org-view= answers what the agenda commands answer. A filter is
+always a *name*: a caller handed an expression slot invents predicates that do
+not exist, and =org-query= is there for one that genuinely wants to write a
+query.
+
+=org-mcp-filters= is left unset. The filters belong to the workflow rather than
+to this file: one per project tag, built the way agile-gtd builds the tag
+filter of that project's own agenda command, so a filter narrows a view
+exactly as the agenda narrows. That makes it something =agile-gtd= sets as it
+loads, beside the query builders the views already name, and it lands with the
+workflow rework.
+
+Until then the four views run unrestricted, and naming a filter is refused with
+an empty list of valid names rather than a wrong one.
+
 #+begin_src elisp
 (use-package org-mcp
   :after (org agile-gtd)
   :custom
-  (org-mcp-ql-extra-properties '((parent-priority . agile-gtd--direct-parent-priority)
-                                 (rank . agile-gtd--item-rank)))
-  (org-mcp-query-inbox-fn   #'agile-gtd-agenda-query-inbox)
-  (org-mcp-query-backlog-fn #'agile-gtd-agenda-query-backlog)
-  (org-mcp-query-next-fn    #'agile-gtd-agenda-query-next-actions)
+  ;; Values this workflow works out as a node is read.  They arrive under
+  ;; `computed', apart from the node's own fields and from its Org drawer,
+  ;; so a client cannot write one back as though the file held it.
+  (org-mcp-computed-fields '((parent-priority . agile-gtd--direct-parent-priority)
+                             (rank . agile-gtd--item-rank)))
+  ;; Each view is called with the parameters it declares and no others, in
+  ;; the order filter then range, which is exactly the argument order the
+  ;; agile-gtd query builders take.  The first range listed is the one the
+  ;; view runs at unasked.
+  (org-mcp-views
+   '((inbox   :name "Inbox"
+              :query agile-gtd-agenda-query-inbox)
+     (stuck   :name "Stuck Projects"
+              :query agile-gtd-agenda-query-stuck-projects
+              :filter t)
+     (next    :name "Next Actions"
+              :query agile-gtd-agenda-query-next-actions
+              :filter t
+              :range (sprint backlog all someday))
+     (backlog :name "Backlog"
+              :query agile-gtd-agenda-query-backlog
+              :filter t
+              :range (all sprint backlog someday))))
   (org-mcp-query-sort-fn    #'agile-gtd--item-rank<)
   :config
   (unless (file-exists-p (org-mcp--installed-script-path))
@@ -546,12 +581,17 @@ so the installed script matches upstream's documented layout.
       (message "org-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
 
-;; Set org-mcp-allowed-files after agile-gtd-enable has populated org-agenda-files.
-;; Must be a separate (after! org …) block registered AFTER the use-package forms
-;; above so it fires as a later hook — after agile-gtd-enable completes.
-(with-eval-after-load 'org
-  (setopt org-mcp-allowed-files
-          (mapcar (lambda (f) (expand-file-name f org-directory)) org-agenda-files)))
+;; nil lets org-mcp resolve `org-agenda-files' on every call, so a file added
+;; during the session — by agile-gtd or by `org-agenda-file-to-front' — is in
+;; scope at once.
+(setopt org-mcp-allowed-files nil)
+
+;; t lets a call reach an Org file outside the allowed ones by naming its
+;; path, the decision-loop DECISIONS.org files among them.  The permission
+;; covers writing as well as reading, and lasts only for the call that names
+;; the file: an ID, or the file of the running clock, still resolves within
+;; the allowed files.
+(setopt org-mcp-file-scope-override t)
 #+end_src
 
 ** Appearance
