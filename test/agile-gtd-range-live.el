@@ -31,7 +31,7 @@
 
 ;;; Every range admits only what its own groups can hold.
 
-;; This is the contract the reported bug broke: a `backlog' agenda grew [#F]
+;; This is the contract the reported bug broke: an `upcoming' agenda grew [#F]
 ;; and [#G] headings because the filter read a missing cookie as the default
 ;; while the rank read the parent's cookie.  One number decides both now, so
 ;; an entry past the cutoff cannot be on screen at all.
@@ -82,7 +82,7 @@
   (when-let ((sc (org-element-property :scheduled (org-element-at-point))))
     (> (time-to-days (org-timestamp-to-time sc)) (time-to-days (current-time)))))
 
-(dolist (range '(today sprint backlog all))
+(dolist (range '(today sprint upcoming all))
   (dolist (spec (list (cons "next actions"
                             (agile-gtd-agenda-query-next-actions nil range t))
                       (cons "backlog"
@@ -120,15 +120,15 @@
               (substring txt (string-match "Next Actions" txt)))))
       (when-let ((b (get-buffer org-agenda-buffer-name))) (kill-buffer b)))))
 
-(defvar agr-backlog-section (agr-render 'backlog))
+(defvar agr-upcoming-section (agr-render 'upcoming))
 (defvar agr-someday-section (agr-render 'someday))
 
 (let ((over (cl-loop for prio from (1+ agile-gtd-priority-default)
                      to agile-gtd-priority-lowest
                      when (string-match-p (format "\\[#%c\\] Priority %c" prio prio)
-                                          agr-backlog-section)
+                                          agr-upcoming-section)
                      collect prio)))
-  (agr-check "rendered [backlog] has no heading past the default"
+  (agr-check "rendered [upcoming] has no heading past the default"
              (null over)
              (if over (format "found %S" (mapcar #'char-to-string over)) "")))
 

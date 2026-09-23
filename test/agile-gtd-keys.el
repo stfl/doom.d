@@ -23,7 +23,7 @@
 ;; The five named ranges are the vocabulary every binding below selects from.
 (agk-check "range vocabulary is narrowest-first"
            (equal (bound-and-true-p agile-gtd-view-ranges)
-                  '(today sprint backlog all someday))
+                  '(today sprint upcoming all someday))
            (format "%S" (bound-and-true-p agile-gtd-view-ranges)))
 
 (dolist (cmd '(agile-gtd-agenda-set-range

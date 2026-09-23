@@ -1527,7 +1527,7 @@ exactly, including where it stops at the ends.
       "z" #'org-ql-view-dispatch)
 #+end_src
 
-The view range is ~agile-gtd~'s: ~sprint~, ~backlog~, ~all~ and ~someday~,
+The view range is ~agile-gtd~'s: ~sprint~, ~upcoming~, ~all~ and ~someday~,
 narrowest first. Each agenda command opens at the range it declares, and
 rotating is local to the open agenda, so widening one view leaves every other
 one alone and quitting discards the widening.
