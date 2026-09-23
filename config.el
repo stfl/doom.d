@@ -219,8 +219,16 @@ the first heading."
 (use-package org-records-mcp
   :after (org agile-gtd)
   :config
-  (unless (file-exists-p (org-records-mcp--installed-script-path))
-    (org-records-mcp-install))
+  (let ((source (org-records-mcp--package-script-path))
+        (target (org-records-mcp--installed-script-path)))
+    (unless (and (file-exists-p target)
+                 (string= (with-temp-buffer (insert-file-contents source)
+                                            (buffer-string))
+                          (with-temp-buffer (insert-file-contents target)
+                                            (buffer-string))))
+      (make-directory (file-name-directory target) t)
+      (copy-file source target t)
+      (set-file-modes target #o755)))
   (if mcp-server-lib--running
       (message "org-records-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
