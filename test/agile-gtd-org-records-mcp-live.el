@@ -1,6 +1,6 @@
-;;; agile-gtd-org-mcp-live.el --- org-mcp view keys against the real Org corpus -*- lexical-binding: t; -*-
+;;; agile-gtd-org-records-mcp-live.el --- org-records-mcp view keys against the real Org corpus -*- lexical-binding: t; -*-
 
-;; agile-gtd configures org-mcp as it loads: one view per key, the rank sort,
+;; agile-gtd configures org-records-mcp as it loads: one view per key, the rank sort,
 ;; the computed fields and the file scope.  The package's own suite proves the
 ;; keys on a fixture; this proves them on the loaded configuration, with every
 ;; registered project, and checks that a key answers what the agenda block it
@@ -9,31 +9,31 @@
 ;; Read-only.  It runs views and renders an agenda; it writes nothing.
 ;;
 ;;   emacs -q --batch -l ~/.config/doom/test/bootstrap.el \\
-;;         -l ~/.config/doom/test/agile-gtd-org-mcp-live.el
+;;         -l ~/.config/doom/test/agile-gtd-org-records-mcp-live.el
 
 ;;; Code:
 (require 'org)
 (require 'org-agenda)
 (require 'org-ql)
 (require 'agile-gtd)
-(require 'org-mcp)
+(require 'org-records-mcp)
 
 (defvar agm-failures 0)
 (defun agm-check (label ok &optional detail)
   (message "%s %-58s %s" (if ok "PASS" "FAIL") label (or detail ""))
   (unless ok (setq agm-failures (1+ agm-failures))))
 
-(agm-check "package loads" (and (featurep 'agile-gtd) (featurep 'org-mcp)))
+(agm-check "package loads" (and (featurep 'agile-gtd) (featurep 'org-records-mcp)))
 
 
 ;;; What agile-gtd sets
 
 (defvar agm-areas (agile-gtd-areas))
-(defvar agm-view-names (mapcar #'car org-mcp-views))
+(defvar agm-view-names (mapcar #'car org-records-mcp-views))
 
 (agm-check "one view per key: 13 per area, plus inbox and tangling"
-           (= (length org-mcp-views) (+ (* 13 (length agm-areas)) 2))
-           (format "%d views, %d areas" (length org-mcp-views) (length agm-areas)))
+           (= (length org-records-mcp-views) (+ (* 13 (length agm-areas)) 2))
+           (format "%d views, %d areas" (length org-records-mcp-views) (length agm-areas)))
 
 (let ((missing
        (cl-remove-if
@@ -51,14 +51,14 @@
                (format "%d projects" (length (agile-gtd-project-records))))))
 
 (agm-check "sort function is the rank"
-           (eq org-mcp-query-sort-fn #'agile-gtd--item-rank<))
+           (eq org-records-mcp-query-sort-fn #'agile-gtd--item-rank<))
 
 (dolist (field '(rank parent-priority blocked))
   (agm-check (format "computed field %s is set" field)
-             (functionp (alist-get field org-mcp-computed-fields))))
+             (functionp (alist-get field org-records-mcp-computed-fields))))
 
-(agm-check "org-mcp-allowed-files is nil" (null org-mcp-allowed-files))
-(agm-check "org-mcp-file-scope-override is t" (eq org-mcp-file-scope-override t))
+(agm-check "org-records-mcp-allowed-files is nil" (null org-records-mcp-allowed-files))
+(agm-check "org-records-mcp-file-scope-override is t" (eq org-records-mcp-file-scope-override t))
 
 
 ;;; The org-view description
@@ -67,12 +67,12 @@
 ;; one a connecting client would get, not the catalogue function's return.
 (let ((description
        (progn
-         (org-mcp-enable)
+         (org-records-mcp-enable)
          (unwind-protect
              (plist-get (gethash "org-view"
-                                 (gethash org-mcp--server-id mcp-server-lib--tools))
+                                 (gethash org-records-mcp--server-id mcp-server-lib--tools))
                         :description)
-           (org-mcp-disable)))))
+           (org-records-mcp-disable)))))
   (agm-check "org-view description states the key grammar"
              (and description
                   (string-search "[<area>-]<view>[-<range>]" description)))
@@ -86,7 +86,7 @@
 (defun agm-run (key &optional filter range)
   "Run the view KEY and return its parsed JSON, or the error it signals."
   (condition-case err
-      (json-parse-string (org-mcp--tool-view key filter range)
+      (json-parse-string (org-records-mcp--tool-view key filter range)
                          :object-type 'alist :array-type 'list
                          :false-object :json-false)
     (error err)))
@@ -110,7 +110,7 @@
                (format "%S" (seq-take ranks 8)))))
 
 (defun agm-refused-p (result)
-  "Non-nil when RESULT is the tool error org-mcp refuses a call with."
+  "Non-nil when RESULT is the tool error org-records-mcp refuses a call with."
   (eq (car-safe result) 'mcp-server-lib-tool-error))
 
 (agm-check "a key refuses a filter" (agm-refused-p (agm-run "oebb-next" "oebb")))
@@ -172,4 +172,4 @@
          (if (zerop agm-failures) "OK" "FAILURES") agm-failures)
 (kill-emacs (if (zerop agm-failures) 0 1))
 
-;;; agile-gtd-org-mcp-live.el ends here
+;;; agile-gtd-org-records-mcp-live.el ends here

@@ -4,7 +4,7 @@
 ;;   emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l /path/to/test.el 2>/dev/null
 ;;
 ;; After this file loads, (require 'org) fires all eval-after-load 'org hooks
-;; (agile-gtd, org-mcp, etc.) exactly as in interactive Emacs.
+;; (agile-gtd, org-records-mcp, etc.) exactly as in interactive Emacs.
 ;;
 ;; WARNING: do NOT set DOOMPROFILE in the environment before running.
 ;; When DOOMPROFILE is set, doom-data-dir switches to ~/.local/share/doom/

@@ -498,7 +498,7 @@ the first heading."
   (agile-gtd-enable))
 #+end_src
 
-** org-mcp
+** org-records-mcp
 :PROPERTIES:
 :ID:       1523bb4e-9612-452f-b7fa-834f09dd4a89
 :END:
@@ -507,10 +507,9 @@ MCP server for Org-mode, exposing agenda files to AI assistants (e.g. Claude Cod
 
 #+begin_src elisp :tangle packages.el
 (package! mcp-server-lib)
-(package! org-mcp
-  :recipe (:host github :repo "stfl/org-mcp"
-           :files (:defaults "org-mcp-stdio.sh")))
-  ;; :recipe  (:local-repo "~/work/org-mcp" :build (:not compile)))
+(package! org-records-mcp
+  :recipe (:host github :repo "stfl/org-records-mcp"
+           :files (:defaults "org-records-mcp-stdio.sh")))
 #+end_src
 
 Doom rebinds =user-emacs-directory= to =~/.config/emacs/.local/cache/=,
@@ -529,19 +528,19 @@ so the installed script matches upstream's documented layout.
     (mcp-server-lib-install)))
 #+end_src
 
-agile-gtd configures org-mcp as it loads: the views, their sort order, the
-computed fields and the file scope. This section only installs the stdio shim
-and starts the server, after agile-gtd so the views exist before the first
-call.
+agile-gtd configures org-records-mcp as it loads: the views, their sort
+order, the computed fields and the file scope. This section only installs the
+stdio shim and starts the server, after agile-gtd so the views exist before
+the first call.
 
 #+begin_src elisp
-(use-package org-mcp
+(use-package org-records-mcp
   :after (org agile-gtd)
   :config
-  (unless (file-exists-p (org-mcp--installed-script-path))
-    (org-mcp-install))
+  (unless (file-exists-p (org-records-mcp--installed-script-path))
+    (org-records-mcp-install))
   (if mcp-server-lib--running
-      (message "org-mcp: MCP server already running, skipping start")
+      (message "org-records-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
 #+end_src
 
