@@ -10,7 +10,7 @@ Use `emacsclient` to query the live Emacs state without touching the session:
 
 ```bash
 emacsclient -e '(length org-agenda-files)'
-emacsclient -e 'org-mcp-allowed-files'
+emacsclient -e 'org-records-mcp-allowed-files'
 emacsclient -e '(featurep (quote agile-gtd))'
 ```
 
@@ -29,7 +29,7 @@ To run tests or verify config changes without a running Emacs, use the checked-i
 emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l /tmp/your-test.el 2>/dev/null
 ```
 
-Write temporary test scripts to `/tmp/` — do not leave scratch `.el` files in the repo. After bootstrap, `(require 'org)` fires all `eval-after-load 'org` hooks (agile-gtd, org-mcp, etc.) exactly as in interactive Emacs. Use `(message ...)` for output — it goes to stderr, so redirect with `2>&1` or `2>/tmp/out.txt` to capture it.
+Write temporary test scripts to `/tmp/` — do not leave scratch `.el` files in the repo. After bootstrap, `(require 'org)` fires all `eval-after-load 'org` hooks (agile-gtd, org-records-mcp, etc.) exactly as in interactive Emacs. Use `(message ...)` for output — it goes to stderr, so redirect with `2>&1` or `2>/tmp/out.txt` to capture it.
 
 **Critical constraint — do NOT set `DOOMPROFILE` in the environment.** When `DOOMPROFILE` is set, `doom-data-dir` switches to `~/.local/share/doom/` and `doom-profile-init-file` resolves to a non-existent path. Leave `DOOMPROFILE` unset so `doom-profile` stays `nil` and `doom-data-dir` stays at `.local/etc/` where the generated init lives.
 

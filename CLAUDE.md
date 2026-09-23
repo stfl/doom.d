@@ -11,7 +11,7 @@ needs live in `docs/`:
 | [`docs/running-and-testing.md`](docs/running-and-testing.md) | How do I tangle, sync, lint, and run the test harnesses? |
 | [`docs/batch-emacs.md`](docs/batch-emacs.md) | How do I query a live Emacs, or load the config in batch? |
 | [`docs/debugging.md`](docs/debugging.md) | The config won't load — what do I run? |
-| [`docs/local-packages.md`](docs/local-packages.md) | How are `agile-gtd` and `org-mcp` wired in from local checkouts? |
+| [`docs/local-packages.md`](docs/local-packages.md) | Where do `agile-gtd` and `org-records-mcp` come from, and how do I switch them between local and GitHub? |
 
 A new fact earns a place in this file only by constraining how code is changed.
 A command, a procedure, or a troubleshooting recipe goes to `docs/` and is
