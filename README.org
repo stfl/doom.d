@@ -36,8 +36,8 @@ agenda view ranges admit exactly the entries they should.
 * What this isn't
 
 - *Not a starter kit.* One person's configuration, with hardcoded paths — ~~/.org~
-  for the Org corpus, ~~/work/agile-gtd~ and ~~/work/org-mcp~ for local package
-  checkouts.
+  for the Org corpus, ~~/work/agile-gtd~ and ~~/work/org-records-mcp~ for local
+  package checkouts.
 - *The live tests need that corpus.* Two of the four read real Org files and will
   not pass on a fresh clone without one.
 - *No CI.* Tests are run by hand.
@@ -51,5 +51,5 @@ agenda view ranges admit exactly the entries they should.
 | [[file:docs/running-and-testing.md][docs/running-and-testing.md]] | Tangle, sync, lint, run the test harnesses       |
 | [[file:docs/batch-emacs.md][docs/batch-emacs.md]]         | Query a live Emacs, or load the config in batch  |
 | [[file:docs/debugging.md][docs/debugging.md]]           | The config won't load                            |
-| [[file:docs/local-packages.md][docs/local-packages.md]]      | ~agile-gtd~ and ~org-mcp~ from local checkouts   |
+| [[file:docs/local-packages.md][docs/local-packages.md]]      | ~agile-gtd~ and ~org-records-mcp~: local or GitHub |
 | [[file:CLAUDE.md][CLAUDE.md]]                   | Conventions and invariants for changing the code |
