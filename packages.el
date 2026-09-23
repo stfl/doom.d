@@ -6,10 +6,9 @@
   :recipe (:local-repo "~/work/agile-gtd" :build (:not compile)))
 
 (package! mcp-server-lib)
-(package! org-mcp
-  :recipe (:host github :repo "stfl/org-mcp"
-           :files (:defaults "org-mcp-stdio.sh")))
-  ;; :recipe  (:local-repo "~/work/org-mcp" :build (:not compile)))
+(package! org-records-mcp
+  :recipe (:host github :repo "stfl/org-records-mcp"
+           :files (:defaults "org-records-mcp-stdio.sh")))
 
 ;; Swap the two recipes to develop against the local checkout.
 (package! org-clock-projects

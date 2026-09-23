@@ -18,9 +18,8 @@
       inhibit-compacting-font-caches t)
 
 (setq auto-save-default t)
-(run-with-idle-timer 60 t '(lambda () (save-some-buffers t)))
-
-(setq calendar-week-start-day 1)
+(setq auto-save-visited-interval 30)
+(auto-save-visited-mode 1)
 
 (setq calendar-week-start-day 1)
 
@@ -125,8 +124,6 @@
 
 (setq! tab-width 4)
 
-(setq! tab-width 4)
-
 (setq org-directory "~/.org")
 
 (after! org-id
@@ -134,9 +131,59 @@
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t))
 
-(after! org-id (run-with-idle-timer 20 nil 'org-id-update-id-locations))
+(after! org-roam
+  (run-with-idle-timer
+   25 nil
+   (lambda ()
+     ;; `org-id-files' carries files over from the previous session, and the
+     ;; checksum lets `org-id-update-id-locations' skip an unchanged scan.
+     (setq org-id-files nil
+           org-id--locations-checksum nil)
+     (org-roam-update-org-id-locations))))
 
-(after! org-roam (run-with-idle-timer 25 nil 'org-roam-update-org-id-locations))
+(defun stfl/org-id-indexed-file-p (&optional file)
+  "Non-nil if FILE lies under `org-directory' or `org-roam-directory'."
+  (when-let* ((file (or file (buffer-file-name (buffer-base-buffer)))))
+    (seq-some (lambda (dir) (and dir (file-in-directory-p file dir)))
+              (list org-directory (bound-and-true-p org-roam-directory)))))
+
+(defun stfl/org-heading-slug (title)
+  "Turn TITLE into a slug for use as an Org CUSTOM_ID."
+  (let ((slug (string-trim (replace-regexp-in-string
+                             "[^[:alnum:]]+" "-" (downcase title))
+                            "-+" "-+")))
+    (if (string-empty-p slug) "heading" slug)))
+
+(defun stfl/org-ensure-custom-id ()
+  "Give the heading at point a :CUSTOM_ID:, unless it already has one.
+The slug comes from the heading title and is made unique within the file,
+matching Org's own case-insensitive `#' link search."
+  (org-back-to-heading t)
+  (unless (org-entry-get nil "CUSTOM_ID")
+    (let* ((base (stfl/org-heading-slug (org-get-heading t t t t)))
+           (slug base)
+           (n 1))
+      (while (org-with-wide-buffer (org-find-property "CUSTOM_ID" slug))
+        (setq n (1+ n)
+              slug (format "%s-%d" base n)))
+      (org-entry-put nil "CUSTOM_ID" slug))))
+
+(defadvice! stfl/org-store-link-scope-ids-a (fn &optional arg interactive?)
+  "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
+Applies to interactive calls in Org buffers only; capture's %a and calls
+outside Org buffers are untouched. Never creates an :ID: or :CUSTOM_ID:
+in a file outside `org-directory' or `org-roam-directory', even before
+the first heading."
+  :around #'org-store-link
+  (if (not (and interactive? (derived-mode-p 'org-mode)))
+      (funcall fn arg interactive?)
+    (if (stfl/org-id-indexed-file-p)
+        (let ((org-id-link-to-org-use-id t))
+          (funcall fn arg interactive?))
+      (unless (org-before-first-heading-p)
+        (stfl/org-ensure-custom-id))
+      (let ((org-id-link-to-org-use-id nil))
+        (funcall fn arg interactive?)))))
 
 (use-package agile-gtd
   :after org
@@ -169,13 +216,13 @@
   (unless (file-exists-p (mcp-server-lib-installed-script-path))
     (mcp-server-lib-install)))
 
-(use-package org-mcp
+(use-package org-records-mcp
   :after (org agile-gtd)
   :config
-  (unless (file-exists-p (org-mcp--installed-script-path))
-    (org-mcp-install))
+  (unless (file-exists-p (org-records-mcp--installed-script-path))
+    (org-records-mcp-install))
   (if mcp-server-lib--running
-      (message "org-mcp: MCP server already running, skipping start")
+      (message "org-records-mcp: MCP server already running, skipping start")
     (mcp-server-lib-start)))
 
 (after! org
@@ -232,8 +279,6 @@
                          ;; ("emacs" . (:foreground "#c678dd"))
                          ))
   )
-
-(after! org (run-with-idle-timer 60 t #'org-save-all-org-buffers))
 
 (after! org
   (setq org-startup-indented 'indent
@@ -353,22 +398,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 %%?" date title date directory)))
 )
 
-(after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
-
 (after! org (require 'org-checklist))
-
-(after! org (require 'org-checklist))
-
-(use-package! org-habit
-  :after org-agenda
-  :config
-  (add-to-list 'org-modules 'org-habit)
-
-  (setq org-habit-show-habits t
-        org-habit-preceding-days 14
-        org-habit-following-days 7
-        ;; org-habit-graph-column 31 ;; Length of the habit graph
-        ))
 
 (after! org-clock
   (setq! org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
@@ -475,14 +505,6 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (setq org-clock-csv-header "task,parents,archive_parents,category,start,end,effort,ishabit,tags,archive_tags,ap,ticket"
         org-clock-csv-row-fmt #'stfl/org-clock-csv-row-fmt))
 
-(use-package! org-edna
-  :after org
-  ;; :hook org-mode-hook  ;; load package after hook
-  ;; :config (org-edna-mode)  ;; enable after load
-  )
-
-(add-hook! 'org-mode-hook #'org-edna-mode)
-
 (map! :after org
       :map org-mode-map
       :localleader
@@ -496,19 +518,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
   `(agile-gtd-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
   `(agile-gtd-todo-idea :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
 
-(after! org (setq org-log-state-notes-insert-after-drawers nil))
-
 (after! org
-  (setq org-log-into-drawer t
-        org-log-done 'time+note
-        org-log-repeat 'time
-        org-log-redeadline 'time
-        org-log-reschedule 'time
-        ))
-
-(after! org
-  (setq org-use-property-inheritance t ; We like to inherit properties from their parents
-        org-catch-invisible-edits 'error ; Catch invisible edits
+  (setq org-catch-invisible-edits 'error ; Catch invisible edits
         org-track-ordered-property-with-tag t
         org-hierarchical-todo-statistics nil
         ))
@@ -533,7 +544,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (after! org-roam
   (setq! org-roam-directory org-directory
          org-roam-db-location (doom-path doom-local-dir "roam.db")
-         org-roam-file-exclude-regexp "\\.org/\\(?:jira\\|\\.stversions\\)/"))
+         ;; Keep hidden files and directories out of org-roam, matching what
+         ;; `org-roam-list-files' (fd) skips.
+         org-roam-file-exclude-regexp "\\(?:\\`\\|/\\)\\."))
 
 (after! org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
@@ -713,39 +726,16 @@ Not added when either:
 
 ;; (after! org
 (setq!
-       ;; org-agenda-dim-blocked-tasks t
-       org-agenda-dim-blocked-tasks 'invisible
-       org-agenda-use-time-grid t
        ;; org-agenda-hide-tags-regexp "\\w+"
        ;; org-agenda-compact-blocks t
        ;; org-agenda-block-separator ?\n
        org-agenda-block-separator ?-
        org-agenda-tags-column 0
-       org-agenda-skip-scheduled-if-done t
-       org-agenda-skip-unavailable-files t
-       org-agenda-skip-deadline-if-done t
-       org-agenda-skip-timestamp-if-done t
        org-agenda-window-setup 'current-window
-       org-agenda-start-on-weekday nil
-       org-agenda-span 'day
-       org-agenda-start-day "-0d"
-       org-deadline-warning-days 7
-       org-agenda-show-future-repeats t
-       org-agenda-skip-deadline-prewarning-if-scheduled t
-       org-agenda-tags-todo-honor-ignore-options t
-       org-agenda-skip-scheduled-delay-if-deadline t
-       org-agenda-skip-scheduled-if-deadline-is-shown t
-       org-agenda-skip-timestamp-if-deadline-is-shown t
        ;; org-agenda-todo-ignore-with-date nil
        ;; org-agenda-todo-ignore-deadlines nil
        ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-todo-list-sublevels t
-       org-agenda-include-deadlines t
        org-agenda-sticky nil)
-
-(after! org
-  (setq org-enforce-todo-checkbox-dependencies nil
-        org-enforce-todo-dependencies nil))
 
 (after! (org-super-agenda evil-org-agenda)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map))
@@ -1031,8 +1021,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (map! :map flycheck-mode-map
         :leader
         "c x" #'consult-flycheck))
-
-(map! :leader ":" #'ielm)
 
 (map! :leader ":" #'ielm)
 
