@@ -795,9 +795,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :ID:       8d07f343-cde2-4a1c-9700-d0ae563823d3
 :END:
 
-#+BEGIN_SRC elisp
-(after! org (setq org-archive-location (doom-path org-directory "archive/%s::datetree")))
-#+END_SRC
+The archive location is configured in ~agile-gtd~ (see its =docs/org-settings.org=).
 
 ** org-checklist
 :PROPERTIES:
@@ -817,20 +815,7 @@ set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 :ID:       a3b7de50-1a49-47fe-b49d-7f580fd9ac7a
 :END:
 
-load org-habit because many of the functions in ~org-helpers.el~ require it...
-
-#+BEGIN_SRC elisp
-(use-package! org-habit
-  :after org-agenda
-  :config
-  (add-to-list 'org-modules 'org-habit)
-
-  (setq org-habit-show-habits t
-        org-habit-preceding-days 14
-        org-habit-following-days 7
-        ;; org-habit-graph-column 31 ;; Length of the habit graph
-        ))
-#+END_SRC
+org-habit is loaded and configured in ~agile-gtd~ (see its =docs/org-settings.org=).
 
 ** org-clock
 :PROPERTIES:
@@ -1034,16 +1019,8 @@ Org writes when a subtree is archived, and the =AP= and =TICKET= properties.
 (package! org-edna)
 #+end_src
 
-Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks
-#+BEGIN_SRC elisp
-(use-package! org-edna
-  :after org
-  ;; :hook org-mode-hook  ;; load package after hook
-  ;; :config (org-edna-mode)  ;; enable after load
-  )
-
-(add-hook! 'org-mode-hook #'org-edna-mode)
-#+END_SRC
+Extensible Dependencies ’N’ Actions (EDNA) for Org Mode tasks.
+~org-edna-mode~ and the TODO dependency options are configured in ~agile-gtd~ (see its =docs/org-settings.org=).
 
 Helper commands to wire tasks into sequential dependency chains (defined in ~agile-gtd~).
 #+BEGIN_SRC elisp
@@ -1089,21 +1066,7 @@ After much feedback and discussing with other users, I decided to simplify the k
 :ID:       28e25bba-6724-4710-b3b9-570cc8da948c
 :END:
 
-For the logging drawers, we like to keep our notes and clock history *seperate* from our properties drawer...
-#+BEGIN_SRC elisp
-(after! org (setq org-log-state-notes-insert-after-drawers nil))
-#+END_SRC
-
-Next, we like to keep a history of our activity of a task so we *track* when changes occur, and we also keep our notes logged in *their own drawer*. Optionally you can also add the following in-buffer settings to override the =org-log-into-drawer= function. ~#+STARTUP: logdrawer~ or ~#+STARTUP: nologdrawer~
-#+BEGIN_SRC elisp
-(after! org
-  (setq org-log-into-drawer t
-        org-log-done 'time+note
-        org-log-repeat 'time
-        org-log-redeadline 'time
-        org-log-reschedule 'time
-        ))
-#+END_SRC
+This is configured in ~agile-gtd~ (see its =docs/org-settings.org=). A file can override the drawer with ~#+STARTUP: logdrawer~ or ~#+STARTUP: nologdrawer~.
 
 ** Properties
 :PROPERTIES:
@@ -1112,8 +1075,7 @@ Next, we like to keep a history of our activity of a task so we *track* when cha
 
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-use-property-inheritance t ; We like to inherit properties from their parents
-        org-catch-invisible-edits 'error ; Catch invisible edits
+  (setq org-catch-invisible-edits 'error ; Catch invisible edits
         org-track-ordered-property-with-tag t
         org-hierarchical-todo-statistics nil
         ))
@@ -1539,44 +1501,21 @@ an agenda back to its declared range and is reachable with ~M-x~.
 :ID:       5158cdfa-b98d-4fe9-9bad-13c965cca570
 :END:
 
+The agenda behaviour, blocked-task hiding and TODO dependency options are configured in ~agile-gtd~ (see its =docs/org-settings.org=). What stays here only changes how the agenda looks.
+
 #+begin_src elisp
 ;; (after! org
 (setq!
-       ;; org-agenda-dim-blocked-tasks t
-       org-agenda-dim-blocked-tasks 'invisible
-       org-agenda-use-time-grid t
        ;; org-agenda-hide-tags-regexp "\\w+"
        ;; org-agenda-compact-blocks t
        ;; org-agenda-block-separator ?\n
        org-agenda-block-separator ?-
        org-agenda-tags-column 0
-       org-agenda-skip-scheduled-if-done t
-       org-agenda-skip-unavailable-files t
-       org-agenda-skip-deadline-if-done t
-       org-agenda-skip-timestamp-if-done t
        org-agenda-window-setup 'current-window
-       org-agenda-start-on-weekday nil
-       org-agenda-span 'day
-       org-agenda-start-day "-0d"
-       org-deadline-warning-days 7
-       org-agenda-show-future-repeats t
-       org-agenda-skip-deadline-prewarning-if-scheduled t
-       org-agenda-tags-todo-honor-ignore-options t
-       org-agenda-skip-scheduled-delay-if-deadline t
-       org-agenda-skip-scheduled-if-deadline-is-shown t
-       org-agenda-skip-timestamp-if-deadline-is-shown t
        ;; org-agenda-todo-ignore-with-date nil
        ;; org-agenda-todo-ignore-deadlines nil
        ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-todo-list-sublevels t
-       org-agenda-include-deadlines t
        org-agenda-sticky nil)
-#+end_src
-
-#+begin_src elisp
-(after! org
-  (setq org-enforce-todo-checkbox-dependencies nil
-        org-enforce-todo-dependencies nil))
 #+end_src
 
 ** org super agenda
