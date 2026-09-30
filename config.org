@@ -529,9 +529,12 @@ so the installed script matches upstream's documented layout.
 #+end_src
 
 agile-gtd configures org-records-mcp as it loads: the views, their sort
-order, the computed fields and the file scope. This section only installs the
-stdio shim and starts the server, after agile-gtd so the views exist before
-the first call.
+order, the computed fields and the file scope. This section installs the
+stdio shim, starts the server and registers the tools, after agile-gtd so the
+views exist before the first call. The registration is Emacs's own, so a
+client whose bridge outlives an Emacs restart still finds every tool. Its
+=org-view= description, which lists the view keys, is fixed when Emacs
+starts: a project added to agile-gtd reaches clients after a restart.
 
 The shim MCP clients launch is a copy of the one the package ships, so it is
 copied again whenever the two differ: a package update that changes the shim
@@ -553,7 +556,10 @@ reaches the client on the next start, with no prompt.
       (set-file-modes target #o755)))
   (if mcp-server-lib--running
       (message "org-records-mcp: MCP server already running, skipping start")
-    (mcp-server-lib-start)))
+    (mcp-server-lib-start))
+  ;; A standing registration: the tools survive an Emacs restart under a
+  ;; running stdio bridge, whose enable/disable pairs count above it.
+  (org-records-mcp-enable))
 #+end_src
 
 ** Appearance

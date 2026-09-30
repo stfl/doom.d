@@ -231,7 +231,10 @@ the first heading."
       (set-file-modes target #o755)))
   (if mcp-server-lib--running
       (message "org-records-mcp: MCP server already running, skipping start")
-    (mcp-server-lib-start)))
+    (mcp-server-lib-start))
+  ;; A standing registration: the tools survive an Emacs restart under a
+  ;; running stdio bridge, whose enable/disable pairs count above it.
+  (org-records-mcp-enable))
 
 (after! org
   (setq! org-auto-align-tags nil
