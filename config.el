@@ -24,8 +24,8 @@
 (setq calendar-week-start-day 1)
 
 (when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
+  (setopt browse-url-browser-function 'browse-url-chromium
+          browse-url-chromium-program "brave"))
 
 (global-set-key [M-drag-mouse-2] #'mouse-drag-vertical-line)
 
@@ -37,18 +37,18 @@
 
 ;; (global-set-key [left-fringe drag-mouse-1] #'mouse-drag-left-line)
 
-(after! evil-snipe
+(with-eval-after-load 'evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
 
 (map! :leader "f ." #'find-file-at-point)
 
-(setq! tab-always-indent 'complete)
+(setopt tab-always-indent 'complete)
 
-(after! evil-escape
+(with-eval-after-load 'evil-escape
   (setq evil-escape-key-sequence "jk"))
 
-(use-package! drag-stuff
+(use-package drag-stuff
   :defer t
   :init
   (map! "<M-up>"    #'drag-stuff-up
@@ -60,17 +60,17 @@
 
 (run-with-idle-timer 1.2 t 'garbage-collect)
 
-(setq! focus-follows-mouse 'auto-raise
-       mouse-autoselect-window nil)
+(setopt focus-follows-mouse 'auto-raise
+        mouse-autoselect-window nil)
 
-(after! consult
-  (setq! consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
-                           "--color=never"
-                           ;; "--full-path"
-                           ;; "--absolute-path"
-                           "--hidden"
-                           "--exclude .git"
-                           (if (featurep :system 'windows) "--path-separator=/")))
+(with-eval-after-load 'consult
+  (setopt consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
+                            "--color=never"
+                            ;; "--full-path"
+                            ;; "--absolute-path"
+                            "--hidden"
+                            "--exclude .git"
+                            (if (featurep :system 'windows) "--path-separator=/")))
 
   (defun stfl/consult-fd (&optional arg)
     (interactive "P")
@@ -100,8 +100,8 @@
 
 (setq doom-theme 'doom-one)
 
-(setq! display-line-numbers-type t)
-(setq! which-key-idle-delay 0.3)
+(setopt display-line-numbers-type t)
+(setopt which-key-idle-delay 0.3)
 
 (let ((font "JetBrains Mono Nerd Font Mono"))
   (setq doom-font (font-spec :family font :size 13)
@@ -122,16 +122,16 @@
     :underline (:style wave :color ,(doom-blend 'red 'bg 0.5)))
 )
 
-(setq! tab-width 4)
+(setopt tab-width 4)
 
 (setq org-directory "~/.org")
 
-(after! org-id
+(with-eval-after-load 'org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t))
 
-(after! org-roam
+(with-eval-after-load 'org-roam
   (run-with-idle-timer
    25 nil
    (lambda ()
@@ -168,13 +168,12 @@ matching Org's own case-insensitive `#' link search."
               slug (format "%s-%d" base n)))
       (org-entry-put nil "CUSTOM_ID" slug))))
 
-(defadvice! stfl/org-store-link-scope-ids-a (fn &optional arg interactive?)
+(define-advice org-store-link (:around (fn &optional arg interactive?) stfl/scope-ids)
   "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
 Applies to interactive calls in Org buffers only; capture's %a and calls
 outside Org buffers are untouched. Never creates an :ID: or :CUSTOM_ID:
 in a file outside `org-directory' or `org-roam-directory', even before
 the first heading."
-  :around #'org-store-link
   (if (not (and interactive? (derived-mode-p 'org-mode)))
       (funcall fn arg interactive?)
     (if (stfl/org-id-indexed-file-p)
@@ -237,12 +236,12 @@ the first heading."
   ;; running stdio bridge, whose enable/disable pairs count above it.
   (org-records-mcp-enable))
 
-(after! org
-  (setq! org-auto-align-tags nil
-         org-tags-column 0
-         org-fold-catch-invisible-edits 'show-and-error
-         org-ellipsis "…"
-         org-indent-indentation-per-level 2)
+(with-eval-after-load 'org
+  (setopt org-auto-align-tags nil
+          org-tags-column 0
+          org-fold-catch-invisible-edits 'show-and-error
+          org-ellipsis "…"
+          org-indent-indentation-per-level 2)
 
   (auto-fill-mode))
 
@@ -274,25 +273,25 @@ the first heading."
           :short-face nil))
   )
 
-(after! org
-  (setq! org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
-                         (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         (,agile-gtd-someday-tag . (:slant italic :weight bold))
-                         ;; ("finance" . (:foreground "goldenrod"))
-                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
-                         ("#inbox" . (:strike-through t))
-                         ("3datax" . (:foreground ,(doom-color 'green)))
-                         ("oebb" . (:foreground ,(doom-color 'green)))
-                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
-                         (,agile-gtd-work-tag . (:foreground ,(doom-color 'blue)))
-                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
-                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
-                         ;; ("emacs" . (:foreground "#c678dd"))
-                         ))
+(with-eval-after-load 'org
+  (setopt org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
+                          (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                          (,agile-gtd-someday-tag . (:slant italic :weight bold))
+                          ;; ("finance" . (:foreground "goldenrod"))
+                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                          ("#inbox" . (:strike-through t))
+                          ("3datax" . (:foreground ,(doom-color 'green)))
+                          ("oebb" . (:foreground ,(doom-color 'green)))
+                          ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
+                          (,agile-gtd-work-tag . (:foreground ,(doom-color 'blue)))
+                          ;; ("#work" . (:foreground ,(doom-color 'blue)))
+                          ("@ikea" . (:foreground ,(doom-color 'yellow)))
+                          ("@amazon" . (:foreground ,(doom-color 'yellow)))
+                          ;; ("emacs" . (:foreground "#c678dd"))
+                          ))
   )
 
-(after! org
+(with-eval-after-load 'org
   (setq org-startup-indented 'indent
         org-startup-folded 'fold
         org-startup-with-inline-images t
@@ -302,8 +301,7 @@ the first heading."
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
 
-(defadvice! no-errors/+org-inline-image-data-fn (_protocol link _description)
-  :override #'+org-inline-image-data-fn
+(define-advice +org-inline-image-data-fn (:override (_protocol link _description) stfl/ignore-errors)
   "Interpret LINK as base64-encoded image data. Ignore all errors."
   (ignore-errors
     (base64-decode-string link)))
@@ -372,14 +370,14 @@ Org-mode properties drawer already, keep the headline and don’t insert
             :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
-(after! org-roam
-  (setq! org-roam-capture-templates
-         `(("d" "default" plain "%?"
-            :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
-                               "#+title: ${title}\n")
-            :unnarrowed t))))
+(with-eval-after-load 'org-roam
+  (setopt org-roam-capture-templates
+          `(("d" "default" plain "%?"
+             :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
+                                "#+title: ${title}\n")
+             :unnarrowed t))))
 
-(after! org
+(with-eval-after-load 'org
   (defun stfl/org-capture-versicherung-post ()
     (unless org-note-abort
       (mkdir (org-capture-get :directory) t)))
@@ -410,22 +408,22 @@ Org-mode properties drawer already, keep the headline and don’t insert
 %%?" date title date directory)))
 )
 
-(after! org (require 'org-checklist))
+(with-eval-after-load 'org (require 'org-checklist))
 
-(after! org-clock
-  (setq! org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
-         org-time-stamp-rounding-minutes '(0 15)
-         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
-         org-clock-report-include-clocking-task t  ;; include current task in the clocktable
-         org-log-note-clock-out t
-         org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
-         ))
+(with-eval-after-load 'org-clock
+  (setopt org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
+          org-time-stamp-rounding-minutes '(0 15)
+          org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
+          org-log-note-clock-out t
+          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
+          ))
 
-(after! org-clock
+(with-eval-after-load 'org-clock
   ;; Continuation is decided per project by `org-clock-projects'.
-  (setq! org-clock-continuously nil))
+  (setopt org-clock-continuously nil))
 
-(after! org
+(with-eval-after-load 'org
   (defun stfl/org-read-date-time ()
     (let ((now (org-current-time org-clock-rounding-minutes t)))
       (org-read-date t t nil nil now (format-time-string "%H:%M" now))))
@@ -455,8 +453,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
         :desc "clock IN at time" "I" #'stfl/org-clock-in-at
         :desc "clock OUT at time" "O" #'stfl/org-clock-out-at))
 
-(after! org-clock
-  (setq! org-clock-auto-clock-resolution nil))
+(with-eval-after-load 'org-clock
+  (setopt org-clock-auto-clock-resolution nil))
 
 (use-package org-clock-projects
   :after (org-clock agile-gtd)
@@ -530,7 +528,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
   `(agile-gtd-todo-cancel :foreground ,(doom-blend (doom-color 'red) (doom-color 'base5) 0.35) :inherit (bold org-done))
   `(agile-gtd-todo-idea :foreground ,(doom-darken (doom-color 'green) 0.4) :inherit (bold org-todo)))
 
-(after! org
+(with-eval-after-load 'org
   (setq org-catch-invisible-edits 'error ; Catch invisible edits
         org-track-ordered-property-with-tag t
         org-hierarchical-todo-statistics nil
@@ -553,29 +551,29 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       (:endgrouptag)
                       ))
 
-(after! org-roam
-  (setq! org-roam-directory org-directory
-         org-roam-db-location (doom-path doom-local-dir "roam.db")
-         ;; Keep hidden files and directories out of org-roam, matching what
-         ;; `org-roam-list-files' (fd) skips.
-         org-roam-file-exclude-regexp "\\(?:\\`\\|/\\)\\."))
+(with-eval-after-load 'org-roam
+  (setopt org-roam-directory org-directory
+          org-roam-db-location (doom-path doom-local-dir "roam.db")
+          ;; Keep hidden files and directories out of org-roam, matching what
+          ;; `org-roam-list-files' (fd) skips.
+          org-roam-file-exclude-regexp "\\(?:\\`\\|/\\)\\."))
 
-(after! org-roam
+(with-eval-after-load 'org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 
-(after! org-roam-mode
+(with-eval-after-load 'org-roam-mode
   (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t))
 
-(after! org-roam
+(with-eval-after-load 'org-roam
   (setq org-roam-dailies-capture-templates
         '(("d" "default"
            entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
            :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 
-;; (use-package! websocket
+;; (use-package websocket
 ;;     :after org-roam)
 
-;; (use-package! org-roam-ui
+;; (use-package org-roam-ui
 ;;     :after org-roam ;; or :after org
 ;; ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;; ;;         a hookable mode anymore, you're advised to pick something yourself
@@ -587,8 +585,8 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;;           org-roam-ui-update-on-save t
 ;;           org-roam-ui-open-on-start nil))
 
-(after! org-gcal
-;; (use-package! org-gcal
+(with-eval-after-load 'org-gcal
+;; (use-package org-gcal
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
@@ -619,16 +617,16 @@ Org-mode properties drawer already, keep the headline and don’t insert
    "f" #'org-gcal-fetch
    "F" #'org-gcal-fetch-buffer)
 
-(use-package! ob-mermaid
+(use-package ob-mermaid
   :after org
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
-(use-package! mermaid-ts-mode
+(use-package mermaid-ts-mode
   :mode ("\\.mmd\\'" . mermaid-ts-mode)
   :mode ("\\.mermaid\\'" . mermaid-ts-mode))
 
-(after! org
+(with-eval-after-load 'org
   (add-to-list 'org-src-lang-modes '("mermaid" . mermaid-ts)))
 
 (add-transient-hook! #'org-babel-execute-src-block
@@ -637,13 +635,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (defvar org-babel-auto-async-languages '()
   "Babel languages which should be executed asyncronously by default.")
 
-(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+(define-advice org-babel-get-src-block-info (:around (orig-fn &optional light datum) stfl/eager-async)
   "Eagarly add an :async parameter to the src information, unless it seems problematic.
 This only acts o languages in `org-babel-auto-async-languages'.
 Not added when either:
 + session is not \"none\"
 + :sync is set"
-  :around #'org-babel-get-src-block-info
   (let ((result (funcall orig-fn light datum)))
     (when (and (string= "none" (cdr (assoc :session (caddr result))))
                (member (car result) org-babel-auto-async-languages)
@@ -652,7 +649,7 @@ Not added when either:
       (push '(:async) (caddr result)))
     result))
 
-(after! org
+(with-eval-after-load 'org
   (defun individual-visibility-source-blocks ()
     "Fold some blocks in the current buffer with property :hidden"
     (interactive)
@@ -672,15 +669,15 @@ Not added when either:
 
   (add-hook 'org-mode-hook #'individual-visibility-source-blocks))
 
-;; (use-package! org-pandoc-import :after org)
+;; (use-package org-pandoc-import :after org)
 
-(after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
+(with-eval-after-load 'org-tree-slide (setq org-tree-slide-heading-emphasis nil))
 
-(after! org-tree-slide
+(with-eval-after-load 'org-tree-slide
   (add-hook 'org-tree-slide-play-hook #'doom-disable-line-numbers-h)
   (add-hook 'org-tree-slide-stop-hook #'doom-disable-line-numbers-h))
 
-(after! org-tree-slide
+(with-eval-after-load 'org-tree-slide
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
 
@@ -690,9 +687,9 @@ Not added when either:
 (with-eval-after-load 'ws-butler
   (add-to-list 'ws-butler-global-exempt-modes 'org-mode))
 
-(use-package! ox-hugo :after ox)
+(use-package ox-hugo :after ox)
 
-(use-package! ox-zola
+(use-package ox-zola
   :after ox
   :config
   (require 'ox-hugo))
@@ -741,21 +738,22 @@ Not added when either:
       :map org-ql-view-map
       "z" #'org-ql-view-dispatch)
 
-;; (after! org
-(setq!
-       ;; org-agenda-hide-tags-regexp "\\w+"
-       ;; org-agenda-compact-blocks t
-       ;; org-agenda-block-separator ?\n
-       org-agenda-block-separator ?-
-       org-agenda-tags-column 0
-       org-agenda-window-setup 'current-window
-       ;; org-agenda-todo-ignore-with-date nil
-       ;; org-agenda-todo-ignore-deadlines nil
-       ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-sticky nil)
+;; (with-eval-after-load 'org
+(setopt
+        ;; org-agenda-hide-tags-regexp "\\w+"
+        ;; org-agenda-compact-blocks t
+        ;; org-agenda-block-separator ?\n
+        org-agenda-block-separator ?-
+        org-agenda-tags-column 0
+        org-agenda-window-setup 'current-window
+        ;; org-agenda-todo-ignore-with-date nil
+        ;; org-agenda-todo-ignore-deadlines nil
+        ;; org-agenda-todo-ignore-timestamp nil
+        org-agenda-sticky nil)
 
-(after! (org-super-agenda evil-org-agenda)
-  (setq org-super-agenda-header-map evil-org-agenda-mode-map))
+(with-eval-after-load 'org-super-agenda
+  (with-eval-after-load 'evil-org-agenda
+    (setq org-super-agenda-header-map evil-org-agenda-mode-map)))
 
 (defun stfl/org-checkbox-intermediate ()
   "Set the checkbox at point to the intermediate state [-]."
@@ -767,7 +765,7 @@ Not added when either:
       :localleader
       :desc "Toggle checkbox [-]" "X" #'stfl/org-checkbox-intermediate)
 
-(after! org-contrib
+(with-eval-after-load 'org-contrib
   (require 'org-checklist))
 
 (defun get-auth-info (host user &optional port)
@@ -788,9 +786,9 @@ Not added when either:
     (when result
       (funcall (plist-get (car result) :secret)))))
 
-;; (setq! auth-sources 'password-store)
+;; (setopt auth-sources 'password-store)
 
-(use-package! age
+(use-package age
   :demand t
   :custom
   (age-default-identity "~/.ssh/id_ed25519_stfl")
@@ -799,7 +797,7 @@ Not added when either:
   :config
   (age-file-enable))
 
-;; (use-package! define-word
+;; (use-package define-word
 ;;   :after org
 ;;   :config
 ;;   (map! :after org
@@ -835,16 +833,16 @@ Not added when either:
                         (?T "to typst-pdf and open."
                             org-pandoc-export-to-typst-pdf-and-open)))))))
 
-(after! text-mode
+(with-eval-after-load 'text-mode
   (add-hook! 'text-mode-hook
              ;; Apply ANSI color codes
              (with-silent-modifications
                (ansi-color-apply-on-region (point-min) (point-max)))))
 
-(after! vterm
-  (setq! vterm-max-scrollback 200000
-         ;; vterm-min-window-width 5000
-         )) ;; do not wrap long lines per default
+(with-eval-after-load 'vterm
+  (setopt vterm-max-scrollback 200000
+          ;; vterm-min-window-width 5000
+          )) ;; do not wrap long lines per default
 
 (map!
  :after vterm
@@ -856,7 +854,7 @@ Not added when either:
  :i "TAB" #'vterm-send-tab
  :i "<tab>" #'vterm-send-tab)
 
-(after! vterm
+(with-eval-after-load 'vterm
   (defun vterm-send-return ()
     "Send `C-m' to the libvterm."
     (interactive)
@@ -864,16 +862,16 @@ Not added when either:
     (when vterm--term
       (process-send-string vterm--process "\C-m"))))
 
-(after! vterm
-  (setq! vterm-tramp-shells '(("docker" "/bin/sh")
-                              ("ssh" "/bin/bash"))))
+(with-eval-after-load 'vterm
+  (setopt vterm-tramp-shells '(("docker" "/bin/sh")
+                               ("ssh" "/bin/bash"))))
 
-(use-package! typst-ts-mode
+(use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
-  (setq! typst-ts-watch-options "--open"
-         typst-ts-indent-offset 2
-         typst-ts-enable-raw-blocks-highlight t)
+  (setopt typst-ts-watch-options "--open"
+          typst-ts-indent-offset 2
+          typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
@@ -886,11 +884,11 @@ Not added when either:
   (add-to-list 'treesit-language-source-alist
                '(typst "https://github.com/uben0/tree-sitter-typst")))
 
-(after! eglot
+(with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ("tinymist"))))
 
-(after! lsp-mode
+(with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
 
   (lsp-register-client
@@ -898,7 +896,7 @@ Not added when either:
                     :activation-fn (lsp-activate-on "typst")
                     :server-id 'tinymist)))
 
-(after! org
+(with-eval-after-load 'org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
 
   ;; Set up babel support for Typst
@@ -923,7 +921,7 @@ Not added when either:
           out-file
           (format "[[file:%s]]" out-file))))))
 
-(use-package! ox-typst :after ox)
+(use-package ox-typst :after ox)
 
 (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-space-mode))
 
@@ -978,8 +976,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
               (cons (cons local-file remote-path)
                     (assoc-delete-all local-file stfl/upload-local-mappings)))))))
 
-(after! ssh-deploy
-  (setq! ssh-deploy-async 1))
+(with-eval-after-load 'ssh-deploy
+  (setopt ssh-deploy-async 1))
 
 (map! :map ssh-deploy-menu-map
     :leader
@@ -1031,17 +1029,17 @@ global mapping list. Updates or replaces any existing mapping for the current fi
     :items    ,#'consult-dir--zoxide-dirs)
   "Zoxide directory source for `consult-dir'.")
 
-(after! consult-dir
+(with-eval-after-load 'consult-dir
   (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
 
-(after! flycheck
+(with-eval-after-load 'flycheck
   (map! :map flycheck-mode-map
         :leader
         "c x" #'consult-flycheck))
 
 (map! :leader ":" #'ielm)
 
-(after! lsp-treemacs
+(with-eval-after-load 'lsp-treemacs
   (lsp-treemacs-sync-mode 1))
 
 (map! :after lsp-mode
@@ -1050,15 +1048,15 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       :prefix "c"
       :desc "Diagnostic for Workspace" "X" #'lsp-treemacs-errors-list)
 
-(after! lsp-mode
-  (setq! lsp-inlay-hint-enable t
-         lsp-headerline-breadcrumb-enable t
-         lsp-ui-sideline-enable nil)
+(with-eval-after-load 'lsp-mode
+  (setopt lsp-inlay-hint-enable t
+          lsp-headerline-breadcrumb-enable t
+          lsp-ui-sideline-enable nil)
   )
 
 (when (executable-find "emacs-lsp-booster")
-  (after! lsp-mode
-    (setq! lsp-use-plists t)
+  (with-eval-after-load 'lsp-mode
+    (setopt lsp-use-plists t)
 
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
@@ -1073,37 +1071,37 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           orig-result)))
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 
-(use-package! flyover
+(use-package flyover
   :disabled
   :after flycheck
   :config
-  (setq! flyover-checkers '(flycheck)
-         ;; flyover-levels '(error warning info)  ; Show all levels
-         ;; flyover-levels '(error warning)
-         flyover-levels '(error)
+  (setopt flyover-checkers '(flycheck)
+          ;; flyover-levels '(error warning info)  ; Show all levels
+          ;; flyover-levels '(error warning)
+          flyover-levels '(error)
 
-         flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
-         flyover-background-lightness 35; Adjust background lightness (lower values = darker)
-         ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
-         flyover-text-tint nil ; 'lighter ;; or 'darker or nil
-         ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
-         flyover-debug nil ;; Enable debug messages
-         ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
+          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
+          flyover-background-lightness 35; Adjust background lightness (lower values = darker)
+          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
+          flyover-text-tint nil ; 'lighter ;; or 'darker or nil
+          ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
+          flyover-debug nil ;; Enable debug messages
+          ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
 
-         ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
-         flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
+          ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
+          flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
 
-         flyover-hide-checker-name t
+          flyover-hide-checker-name t
 
-         flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
-         ;; flyover-virtual-line-type 'straight-arrow
+          flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
+          ;; flyover-virtual-line-type 'straight-arrow
 
-         flyover-line-position-offset 1
+          flyover-line-position-offset 1
 
-         flyover-show-at-eol t ;;; show at end of the line instead.
-         flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
-         flyover-virtual-line-icon " ──► " ;;; default its nil
-         )
+          flyover-show-at-eol t ;;; show at end of the line instead.
+          flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
+          flyover-virtual-line-icon " ──► " ;;; default its nil
+          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
 )
 
@@ -1115,24 +1113,25 @@ global mapping list. Updates or replaces any existing mapping for the current fi
        (:prefix "b"
         :desc "Format Buffer" "f" #'+format/buffer)))
 
-(after! (lsp-mode php-mode)
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
-        lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
-        lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
-                                         "**/node_modules/**" "**/bower_components/**"
-                                         "**/vendor/**/{Test,test,Tests,tests}/**"]
-        lsp-auto-guess-root nil
-        lsp-idle-delay 0.8))
+(with-eval-after-load 'lsp-mode
+  (with-eval-after-load 'php-mode
+    (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
+          lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
+          lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+                                           "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                           "**/node_modules/**" "**/bower_components/**"
+                                           "**/vendor/**/{Test,test,Tests,tests}/**"]
+          lsp-auto-guess-root nil
+          lsp-idle-delay 0.8)))
 
-(after! lsp-bridge
-  (setq! lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
+(with-eval-after-load 'lsp-bridge
+  (setopt lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
 
-(after! poetry (setq poetry-tracking-strategy 'projectile))
+(with-eval-after-load 'poetry (setq poetry-tracking-strategy 'projectile))
 
-(after! conda (conda-env-autoactivate-mode))
+(with-eval-after-load 'conda (conda-env-autoactivate-mode))
 
-(after! projectile
+(with-eval-after-load 'projectile
   (projectile-register-project-type 'python-conda '("environment.yml")
                                     :project-file "environment.yml"
                                     :compile "conda build"  ;; does not exist
@@ -1141,7 +1140,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                                     :test-prefix "test_"
                                     :test-suffix"_test"))
 
-;; (use-package! numpydoc
+;; (use-package numpydoc
 ;;   :after python-mode
 ;;   :commands numpydoc-generate
 ;;   :config
@@ -1150,17 +1149,17 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 ;;         :prefix ("d" . "docstring")
 ;;         :desc "Generate Docstring" "d" #'numpydoc-generate))
 
-(after! ein
-  (setq! ein:output-area-inlined-images t
-         ein:worksheet-warn-obsolesced-keybinding nil))
+(with-eval-after-load 'ein
+  (setopt ein:output-area-inlined-images t
+          ein:worksheet-warn-obsolesced-keybinding nil))
 
 (when (modulep! :tools ein)
-  (after! org
+  (with-eval-after-load 'org
     (require 'ob-ein)))
 
 (set-popup-rule! "^\\*ein:" :ignore t :quit nil)
 
-(after! org
+(with-eval-after-load 'org
   (setq org-babel-default-header-args:jupyter-python
         '((:results . "value")
           (:session . "jupyter")
@@ -1173,49 +1172,51 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           (:tangle . "no")
           (:eval . "never-export"))))
 
-(after! (python-mode dap-mode)
-  (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
-                             (list :type "python-test-at-point  "
-                                   :args ""
-                                   :program nil
-                                   :module "pytest"
-                                   :request "launch"
-                                   :name "Python :: Run pytest (at point)")))
+(with-eval-after-load 'python-mode
+  (with-eval-after-load 'dap-mode
+    (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
+                               (list :type "python-test-at-point  "
+                                     :args ""
+                                     :program nil
+                                     :module "pytest"
+                                     :request "launch"
+                                     :name "Python :: Run pytest (at point)"))))
 
 (map! :mode rustic-mode
       :map rustic-mode-map
       :localleader
       :desc "rerun test" "t r" #'rustic-cargo-test-rerun)
 
-(after! rustic
+(with-eval-after-load 'rustic
   (when (executable-find "cargo-nextest")
-    (setq! rustic-cargo-test-runner 'nextest)))
+    (setopt rustic-cargo-test-runner 'nextest)))
 
-(after! lsp-rust
-  (setq! lsp-rust-analyzer-binding-mode-hints t
-  ;;        lsp-rust-analyzer-display-chaining-hints t
-  ;;        lsp-rust-analyzer-display-closure-return-type-hints t
-         lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
-  ;;        lsp-rust-analyzer-display-parameter-hints t
-  ;;        lsp-rust-analyzer-hide-named-constructor t
-         lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
-         )
+(with-eval-after-load 'lsp-rust
+  (setopt lsp-rust-analyzer-binding-mode-hints t
+   ;;        lsp-rust-analyzer-display-chaining-hints t
+   ;;        lsp-rust-analyzer-display-closure-return-type-hints t
+          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+   ;;        lsp-rust-analyzer-display-parameter-hints t
+   ;;        lsp-rust-analyzer-hide-named-constructor t
+          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
+          )
   )
 
-(after! eglot
+(with-eval-after-load 'eglot
   (setq eglot-workspace-configuration
         (plist-put eglot-workspace-configuration
                    :rust-analyzer
                    '(:inlayHints (:maxLength 40)))))
 
-(after! (rust-mode dap-mode)
-  (dap-register-debug-template "Rust::GDB Run Configuration"
-                               (list :type "gdb"
-                                     :request "launch"
-                                     :name "GDB::Run"
-                                     :gdbpath "rust-gdb"
-                                     :target nil
-                                     :cwd nil)))
+(with-eval-after-load 'rust-mode
+  (with-eval-after-load 'dap-mode
+    (dap-register-debug-template "Rust::GDB Run Configuration"
+                                 (list :type "gdb"
+                                       :request "launch"
+                                       :name "GDB::Run"
+                                       :gdbpath "rust-gdb"
+                                       :target nil
+                                       :cwd nil))))
 
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 
@@ -1223,40 +1224,46 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (add-to-list 'auto-mode-alist '("\\.mq[45h]\\'" . cpp-mode))
 
-;; (use-package! gitlab-ci-mode
+;; (use-package gitlab-ci-mode
 ;;   :mode ".gitlab-ci.yml"
 ;;   )
 
-;; (use-package! gitlab-ci-mode-flycheck
+;; (use-package gitlab-ci-mode-flycheck
 ;;   :after flycheck gitlab-ci-mode
 ;;   :init
 ;;   (gitlab-ci-mode-flycheck-enable))
 
-(use-package! kubernetes
+(use-package kubernetes
+  :disabled
   :commands (kubernetes-overview))
 
-(use-package! kubernetes-evil
+(use-package kubernetes-evil
+  :disabled
   :after kubernetes)
 
-(use-package! kubernetes-helm
+(use-package kubernetes-helm
+  :disabled
   :commands kubernetes-helm-status)
 
-(use-package! k8s-mode
+(use-package k8s-mode
+  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 
-(use-package! sql-indent
+(use-package sql-indent
   :after sql-mode)
 
-(use-package! edbi
+(use-package edbi
+  :disabled
   :commands 'edbi:open-db-viewer)
 
-(use-package! edbi-minor-mode
+(use-package edbi-minor-mode
+  :disabled
   :after sql-mode
   :hook sql-mode-hook)
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
-(use-package! exercism-mode
+(use-package exercism-mode
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -1277,7 +1284,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 
 (add-to-list 'major-mode-remap-alist '(perl-mode . cperl-mode))
 
-(use-package! logview
+(use-package logview
+  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -1294,7 +1302,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                               rst-mode
                               adoc-mode))
 
-(use-package! lsp-ltex
+(use-package lsp-ltex
+  :disabled
   :after lsp-ltex-active-modes
   :hook (adoc-mode . (lambda ()
                        (require 'lsp-ltex)
@@ -1305,10 +1314,10 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         lsp-ltex-mother-tongue "de-AT"
         lsp-ltex-user-rules-path (doom-path doom-user-dir "lsp-ltex")))
 
-(after! ispell
-  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
+(with-eval-after-load 'ispell
+  (setopt ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
 
-(use-package! ssh-config-mode :defer t)
+(use-package ssh-config-mode :defer t)
 
 (with-eval-after-load 'treesit
   (add-to-list 'treesit-language-source-alist
@@ -1319,20 +1328,21 @@ global mapping list. Updates or replaces any existing mapping for the current fi
   (add-to-list 'auto-mode-alist '("\\.inc$" . bitbake-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.bbclass" . bitbake-ts-mode)))
 
-(after! lsp-bridge
+(with-eval-after-load 'lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
                ;; '(bitbake-ts-mode . "bitbake-language-server")
                '(bitbake-ts-mode . "language-server-bitbake"))
   (add-to-list 'lsp-bridge-default-mode-hooks 'bitbake-ts-mode-hook t))
 
-(use-package! meson-mode
+(use-package meson-mode
+  :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 
-(after! projectile
+(with-eval-after-load 'projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
-(after! lsp-bridge
-  (setq! lsp-bridge-c-lsp-server "ccls"))
+(with-eval-after-load 'lsp-bridge
+  (setopt lsp-bridge-c-lsp-server "ccls"))
 
 (defun run-ctest (arg)
   (interactive "P")
@@ -1350,7 +1360,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       ;; :n "l" #'gtest-list
       )
 
-(use-package! turbo-log
+(use-package turbo-log
   :after prog-mode
   :config
   (map! :leader
@@ -1361,21 +1371,21 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         "l [" #'turbo-log-paste-as-logger
         "l ]" #'turbo-log-paste-as-logger-immediately
         "l d" #'turbo-log-delete-all-logs)
-  (setq! turbo-log-msg-format-template "\"🚀: %s\""
-         turbo-log-allow-insert-without-treesit-p t))
+  (setopt turbo-log-msg-format-template "\"🚀: %s\""
+          turbo-log-allow-insert-without-treesit-p t))
 
-(use-package! just-mode
+(use-package just-mode
   :defer t)
 
-(use-package! ztree)
+(use-package ztree :disabled)
 
 (with-eval-after-load 'git-commit
   (setq git-commit-summary-max-length 100))
 
-(after! magit
+(with-eval-after-load 'magit
   (setq magit-diff-refine-hunk 'all))
 
-(after! forge (setq forge-topic-list-columns
+(with-eval-after-load 'forge (setq forge-topic-list-columns
                     '(("#" 5 t (:right-align t) number nil)
                       ("Title" 60 t nil title  nil)
                       ("State" 6 t nil state nil)
@@ -1384,15 +1394,15 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                       ("Assignees" 10 t nil assignees nil)
                       ("Updated" 10 t nill updated nil))))
 
-(use-package! forge-azure
+(use-package forge-azure
   :after forge
   :config
   (setq forge-azure-auth 'pat))
 
-(use-package! magit-todos
+(use-package magit-todos
   :after magit
   :config
-  (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+  (setopt magit-todos-exclude-globs '(".git/" "node_modules/"))
   (magit-todos-mode 1))
 
 ;; (set-email-account! "gmail"
@@ -1417,7 +1427,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 ;;     )
 ;;   t)
 
-(after! mu4e
+(with-eval-after-load 'mu4e
   ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
   (setq mu4e-context-policy 'ask-if-none
         mu4e-compose-context-policy 'always-ask)
@@ -1447,11 +1457,11 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           ))
   )
 
-(after! mu4e-alert
+(with-eval-after-load 'mu4e-alert
   (setq mu4e-alert-interesting-mail-query
            "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
 
-(after! mu4e
+(with-eval-after-load 'mu4e
   (setq mu4e-headers-fields
         '((:flags . 6)
           (:account-stripe . 2)
@@ -1467,7 +1477,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         mu4e-index-cleanup t)
 
   (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
+  (cl-callf append mu4e-header-info-custom
             '((:folder .
                (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
                 (lambda (msg)
@@ -1475,14 +1485,14 @@ global mapping list. Updates or replaces any existing mapping for the current fi
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
 
-(after! mu4e
+(with-eval-after-load 'mu4e
   (setq sendmail-program "/usr/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from") ; , "--read-recipients")
         message-send-mail-function #'message-send-mail-with-sendmail))
 
-;; (use-package! mu4e-views
+;; (use-package mu4e-views
 ;;   :after mu4e
 ;;   )
 
@@ -1494,7 +1504,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       :after org-msg
       :n "G" #'org-msg-goto-body)
 
-(after! ediff
+(with-eval-after-load 'ediff
   (setq ediff-diff-options "--text"
         ediff-diff3-options "--text"
         ediff-toggle-skip-similar t
@@ -1504,25 +1514,26 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         ediff-floating-control-frame t
         ))
 
-(use-package! diffview
+(use-package diffview
+  :disabled
   :commands diffview-current
   :config
   (map!
    :after notmuch
    :localleader "d" #'diffview-current))
 
-(use-package! blamer
+(use-package blamer
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
   (map! :leader "g i" #'blamer-show-posframe-commit-info)
-  (setq! blamer-idle-time 0.3
-         blamer-max-commit-message-length 80
-         ;; blamer-max-lines 100
-         blamer-type 'visual
-         ;; blamer-type 'posframe-popup
-         ;; blamer-type 'overlay-popup
-         blamer-min-offset 40)
+  (setopt blamer-idle-time 0.3
+          blamer-max-commit-message-length 80
+          ;; blamer-max-lines 100
+          blamer-type 'visual
+          ;; blamer-type 'posframe-popup
+          ;; blamer-type 'overlay-popup
+          blamer-min-offset 40)
 
   ;; (custom-set-faces!
   ;;   `(blamer-face :inherit font-lock-comment-face
@@ -1542,7 +1553,7 @@ Leave nil to let `bd' use the embedded Dolt store under `.beads/'.
 Set to a port number only when `.beads' auto-discovery / embedded Dolt
 does not work and `bd' must connect to a shared Dolt server instead.")
 
-(use-package! beads
+(use-package beads
   :commands (beads beads-issue-at-point)
   :config
   (when stfl/beads-dolt-port
@@ -1593,7 +1604,7 @@ does not work and `bd' must connect to a shared Dolt server instead.")
   (setenv "PERPLEXITYAI_API_KEY" (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
   (setenv "OPENROUTER_API_KEY" (password-store-get "API/Openrouter-emacs")))
 
-(use-package! copilot
+(use-package copilot
   ;; copilot-nes-mode = Next Edit Suggestions; needs copilot-mode in the same
   ;; buffer (NES reuses copilot-mode's language server). TAB accepts / C-g
   ;; dismisses a pending NES edit; those bindings only bind while one is pending.
@@ -1626,8 +1637,8 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
 
-  (setq! copilot-indent-offset-warning-disable t
-         copilot-max-char-warning-disable t)
+  (setopt copilot-indent-offset-warning-disable t
+          copilot-max-char-warning-disable t)
 
   (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
 
@@ -1641,7 +1652,7 @@ does not work and `bd' must connect to a shared Dolt server instead.")
   (setq copilot-server-executable "/run/current-system/sw/bin/copilot-language-server")
   )
 
-(after! gptel
+(with-eval-after-load 'gptel
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -1702,19 +1713,19 @@ does not work and `bd' must connect to a shared Dolt server instead.")
                :context-window 256
                :request-params (:model "kimi-for-coding" :thinking (:type "disabled")))))
 
-  (setq! gptel-default-mode 'org-mode
-         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (password-store-get "API/OpenAI-emacs")
-         ;; gptel-model 'gpt-4o
-         gptel-backend (gptel-get-backend "Z.ai")
-         gptel-model 'glm-5.1
-         gptel-log-level 'info
-         ;; gptel-use-curl nil
-         gptel-use-curl t
-         gptel-stream t)
+  (setopt gptel-default-mode 'org-mode
+          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
+          gptel-api-key (password-store-get "API/OpenAI-emacs")
+          ;; gptel-model 'gpt-4o
+          gptel-backend (gptel-get-backend "Z.ai")
+          gptel-model 'glm-5.1
+          gptel-log-level 'info
+          ;; gptel-use-curl nil
+          gptel-use-curl t
+          gptel-stream t)
   )
 
-(use-package! gptel-magit
+(use-package gptel-magit
   :hook (magit-mode . gptel-magit-install)
   :config
   (setq gptel-magit-commit-prompt

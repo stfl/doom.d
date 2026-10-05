@@ -223,7 +223,7 @@
         ;; +contacts     ; Enable [[doom-package:org-contacts]] integration.
         +pandoc          ; export-with-pandoc support
         ;; +pomodoro        ; be fruitful with the tomato technique
-        +roam2
+        +roam
         ;; +gnuplot
         ;; +present      ; using org-mode for presentations
         )

@@ -110,8 +110,8 @@ Use Brave browser if availible. The default should actually respect the $BROWSER
 
 #+begin_src elisp
 (when (executable-find "brave")
-  (setq! browse-url-browser-function 'browse-url-chromium
-         browse-url-chromium-program "brave"))
+  (setopt browse-url-browser-function 'browse-url-chromium
+          browse-url-chromium-program "brave"))
 #+end_src
 
 ** Resizing window with the mouse
@@ -152,7 +152,7 @@ But this would active again resizing to the right...
 limit evil-snipe to the bufffer
 
 #+BEGIN_SRC elisp
-(after! evil-snipe
+(with-eval-after-load 'evil-snipe
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible))
 #+END_SRC
@@ -165,11 +165,11 @@ Always indent the line when pressing tab regardles of the cursor position.
 If the line is already correctly indented, try to complete.
 
 #+begin_src elisp
-(setq! tab-always-indent 'complete)
+(setopt tab-always-indent 'complete)
 #+end_src
 
 #+begin_src elisp
-(after! evil-escape
+(with-eval-after-load 'evil-escape
   (setq evil-escape-key-sequence "jk"))
 #+end_src
 
@@ -183,7 +183,7 @@ If the line is already correctly indented, try to complete.
 #+end_src
 
 #+begin_src elisp
-(use-package! drag-stuff
+(use-package drag-stuff
   :defer t
   :init
   (map! "<M-up>"    #'drag-stuff-up
@@ -216,8 +216,8 @@ Sway automatically focues a frame when moving the mouse over. Emacs does not
 register this and mouse clicks are registed on the wrong frame.
 
 #+BEGIN_SRC elisp
-(setq! focus-follows-mouse 'auto-raise
-       mouse-autoselect-window nil)
+(setopt focus-follows-mouse 'auto-raise
+        mouse-autoselect-window nil)
 #+END_SRC
 
 ** Find files and directories using fd
@@ -226,14 +226,14 @@ register this and mouse clicks are registed on the wrong frame.
 :END:
 
 #+begin_src elisp
-(after! consult
-  (setq! consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
-                           "--color=never"
-                           ;; "--full-path"
-                           ;; "--absolute-path"
-                           "--hidden"
-                           "--exclude .git"
-                           (if (featurep :system 'windows) "--path-separator=/")))
+(with-eval-after-load 'consult
+  (setopt consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
+                            "--color=never"
+                            ;; "--full-path"
+                            ;; "--absolute-path"
+                            "--hidden"
+                            "--exclude .git"
+                            (if (featurep :system 'windows) "--path-separator=/")))
 
   (defun stfl/consult-fd (&optional arg)
     (interactive "P")
@@ -273,8 +273,8 @@ register this and mouse clicks are registed on the wrong frame.
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(setq! display-line-numbers-type t)
-(setq! which-key-idle-delay 0.3)
+(setopt display-line-numbers-type t)
+(setopt which-key-idle-delay 0.3)
 #+END_SRC
 
 ** Font
@@ -369,7 +369,7 @@ font detection taken from tecosaur https://tecosaur.github.io/emacs-config/confi
 :END:
 
 #+begin_src elisp
-(setq! tab-width 4)
+(setopt tab-width 4)
 #+end_src
 
 * [#D] Org mode settings
@@ -387,7 +387,7 @@ Org directory
 always generate an id for a link
 
 #+BEGIN_SRC elisp
-(after! org-id
+(with-eval-after-load 'org-id
   (setq org-id-link-to-org-use-id t
         org-id-locations-file (doom-path doom-local-dir "org-id-locations")
         org-id-track-globally t))
@@ -400,7 +400,7 @@ they were open are not carried over, so the index after a restart depends only
 on configuration.
 
 #+begin_src elisp
-(after! org-roam
+(with-eval-after-load 'org-roam
   (run-with-idle-timer
    25 nil
    (lambda ()
@@ -443,13 +443,12 @@ matching Org's own case-insensitive `#' link search."
               slug (format "%s-%d" base n)))
       (org-entry-put nil "CUSTOM_ID" slug))))
 
-(defadvice! stfl/org-store-link-scope-ids-a (fn &optional arg interactive?)
+(define-advice org-store-link (:around (fn &optional arg interactive?) stfl/scope-ids)
   "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
 Applies to interactive calls in Org buffers only; capture's %a and calls
 outside Org buffers are untouched. Never creates an :ID: or :CUSTOM_ID:
 in a file outside `org-directory' or `org-roam-directory', even before
 the first heading."
-  :around #'org-store-link
   (if (not (and interactive? (derived-mode-p 'org-mode)))
       (funcall fn arg interactive?)
     (if (stfl/org-id-indexed-file-p)
@@ -573,12 +572,12 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 - Extra options for headline-bullets-list: "◉" "●" "○" "∴"
 
 #+BEGIN_SRC elisp
-(after! org
-  (setq! org-auto-align-tags nil
-         org-tags-column 0
-         org-fold-catch-invisible-edits 'show-and-error
-         org-ellipsis "…"
-         org-indent-indentation-per-level 2)
+(with-eval-after-load 'org
+  (setopt org-auto-align-tags nil
+          org-tags-column 0
+          org-fold-catch-invisible-edits 'show-and-error
+          org-ellipsis "…"
+          org-indent-indentation-per-level 2)
 
   (auto-fill-mode))
 #+END_SRC
@@ -622,22 +621,22 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 :END:
 
 #+begin_src elisp
-(after! org
-  (setq! org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
-                         (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
-                         (,agile-gtd-someday-tag . (:slant italic :weight bold))
-                         ;; ("finance" . (:foreground "goldenrod"))
-                         ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
-                         ("#inbox" . (:strike-through t))
-                         ("3datax" . (:foreground ,(doom-color 'green)))
-                         ("oebb" . (:foreground ,(doom-color 'green)))
-                         ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
-                         (,agile-gtd-work-tag . (:foreground ,(doom-color 'blue)))
-                         ;; ("#work" . (:foreground ,(doom-color 'blue)))
-                         ("@ikea" . (:foreground ,(doom-color 'yellow)))
-                         ("@amazon" . (:foreground ,(doom-color 'yellow)))
-                         ;; ("emacs" . (:foreground "#c678dd"))
-                         ))
+(with-eval-after-load 'org
+  (setopt org-tag-faces `((,agile-gtd-lastmile-tag . (:foreground ,(doom-color 'red) :strike-through t))
+                          (,agile-gtd-habit-tag . (:foreground ,(doom-darken (doom-color 'orange) 0.2)))
+                          (,agile-gtd-someday-tag . (:slant italic :weight bold))
+                          ;; ("finance" . (:foreground "goldenrod"))
+                          ;; ("#inbox" . (:background ,(doom-color 'base4) :foregorund ,(doom-color 'base8)))
+                          ("#inbox" . (:strike-through t))
+                          ("3datax" . (:foreground ,(doom-color 'green)))
+                          ("oebb" . (:foreground ,(doom-color 'green)))
+                          ("pulswerk" . (:foreground ,(doom-color 'dark-blue)))
+                          (,agile-gtd-work-tag . (:foreground ,(doom-color 'blue)))
+                          ;; ("#work" . (:foreground ,(doom-color 'blue)))
+                          ("@ikea" . (:foreground ,(doom-color 'yellow)))
+                          ("@amazon" . (:foreground ,(doom-color 'yellow)))
+                          ;; ("emacs" . (:foreground "#c678dd"))
+                          ))
   )
 #+end_src
 
@@ -647,7 +646,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 :END:
 
 #+BEGIN_SRC elisp
-(after! org
+(with-eval-after-load 'org
   (setq org-startup-indented 'indent
         org-startup-folded 'fold
         org-startup-with-inline-images t
@@ -660,8 +659,7 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 
 See https://github.com/hlissner/doom-emacs/issues/3185 - Invalid base64 data
 #+BEGIN_SRC elisp
-(defadvice! no-errors/+org-inline-image-data-fn (_protocol link _description)
-  :override #'+org-inline-image-data-fn
+(define-advice +org-inline-image-data-fn (:override (_protocol link _description) stfl/ignore-errors)
   "Interpret LINK as base64-encoded image data. Ignore all errors."
   (ignore-errors
     (base64-decode-string link)))
@@ -762,12 +760,12 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 #+begin_src elisp
 (setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
-(after! org-roam
-  (setq! org-roam-capture-templates
-         `(("d" "default" plain "%?"
-            :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
-                               "#+title: ${title}\n")
-            :unnarrowed t))))
+(with-eval-after-load 'org-roam
+  (setopt org-roam-capture-templates
+          `(("d" "default" plain "%?"
+             :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
+                                "#+title: ${title}\n")
+             :unnarrowed t))))
 #+end_src
 
 *** Capture Bills for Insurance Claims
@@ -776,7 +774,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
 :END:
 
 #+BEGIN_SRC elisp
-(after! org
+(with-eval-after-load 'org
   (defun stfl/org-capture-versicherung-post ()
     (unless org-note-abort
       (mkdir (org-capture-get :directory) t)))
@@ -825,7 +823,7 @@ The archive location is configured in ~agile-gtd~ (see its =docs/org-settings.or
 set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 
 #+begin_src elisp
-(after! org (require 'org-checklist))
+(with-eval-after-load 'org (require 'org-checklist))
 #+end_src
 
 ** org-habit
@@ -841,25 +839,25 @@ org-habit is loaded and configured in ~agile-gtd~ (see its =docs/org-settings.or
 :END:
 
 #+begin_src elisp
-(after! org-clock
-  (setq! org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
-         org-time-stamp-rounding-minutes '(0 15)
-         org-duration-format 'h:mm  ;; format hours and don't Xd (days)
-         org-clock-report-include-clocking-task t  ;; include current task in the clocktable
-         org-log-note-clock-out t
-         org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
-         ))
+(with-eval-after-load 'org-clock
+  (setopt org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
+          org-time-stamp-rounding-minutes '(0 15)
+          org-duration-format 'h:mm  ;; format hours and don't Xd (days)
+          org-clock-report-include-clocking-task t  ;; include current task in the clocktable
+          org-log-note-clock-out t
+          org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :stepskip0 t :fileskip0 t :hidefiles t :tags t)
+          ))
 #+end_src
 
 Clocking in and out at a time read from the minibuffer. Continuation from the
 last clock-out is =org-clock-projects='s, scoped to a project.
 
 #+begin_src elisp
-(after! org-clock
+(with-eval-after-load 'org-clock
   ;; Continuation is decided per project by `org-clock-projects'.
-  (setq! org-clock-continuously nil))
+  (setopt org-clock-continuously nil))
 
-(after! org
+(with-eval-after-load 'org
   (defun stfl/org-read-date-time ()
     (let ((now (org-current-time org-clock-rounding-minutes t)))
       (org-read-date t t nil nil now (format-time-string "%H:%M" now))))
@@ -923,8 +921,8 @@ automatic resolution otherwise prompts about every other project on each
 clock-in made while no clock is running.
 
 #+begin_src elisp
-(after! org-clock
-  (setq! org-clock-auto-clock-resolution nil))
+(with-eval-after-load 'org-clock
+  (setopt org-clock-auto-clock-resolution nil))
 
 (use-package org-clock-projects
   :after (org-clock agile-gtd)
@@ -1092,7 +1090,7 @@ This is configured in ~agile-gtd~ (see its =docs/org-settings.org=). A file can 
 :END:
 
 #+BEGIN_SRC elisp
-(after! org
+(with-eval-after-load 'org
   (setq org-catch-invisible-edits 'error ; Catch invisible edits
         org-track-ordered-property-with-tag t
         org-hierarchical-todo-statistics nil
@@ -1131,30 +1129,30 @@ This is configured in ~agile-gtd~ (see its =docs/org-settings.org=). A file can 
 Roam directory setup
 
 #+BEGIN_SRC elisp
-(after! org-roam
-  (setq! org-roam-directory org-directory
-         org-roam-db-location (doom-path doom-local-dir "roam.db")
-         ;; Keep hidden files and directories out of org-roam, matching what
-         ;; `org-roam-list-files' (fd) skips.
-         org-roam-file-exclude-regexp "\\(?:\\`\\|/\\)\\."))
+(with-eval-after-load 'org-roam
+  (setopt org-roam-directory org-directory
+          org-roam-db-location (doom-path doom-local-dir "roam.db")
+          ;; Keep hidden files and directories out of org-roam, matching what
+          ;; `org-roam-list-files' (fd) skips.
+          org-roam-file-exclude-regexp "\\(?:\\`\\|/\\)\\."))
 #+END_SRC
 
 do not automatically open the roam side-pane
 
 #+begin_src elisp
-(after! org-roam
+(with-eval-after-load 'org-roam
   (setq +org-roam-open-buffer-on-find-file nil))
 #+end_src
 
 customize the sections in the org-roam buffer
 
 #+begin_src elisp
-(after! org-roam-mode
+(with-eval-after-load 'org-roam-mode
   (add-to-list 'org-roam-mode-sections #'org-roam-unlinked-references-section t))
 #+end_src
 
 #+begin_src elisp
-(after! org-roam
+(with-eval-after-load 'org-roam
   (setq org-roam-dailies-capture-templates
         '(("d" "default"
            entry "* %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:\n\n"
@@ -1197,10 +1195,10 @@ customize the sections in the org-roam buffer
 #+end_src
 
 #+begin_src elisp
-;; (use-package! websocket
+;; (use-package websocket
 ;;     :after org-roam)
 
-;; (use-package! org-roam-ui
+;; (use-package org-roam-ui
 ;;     :after org-roam ;; or :after org
 ;; ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;; ;;         a hookable mode anymore, you're advised to pick something yourself
@@ -1219,8 +1217,8 @@ customize the sections in the org-roam buffer
 :END:
 
 #+BEGIN_SRC elisp
-(after! org-gcal
-;; (use-package! org-gcal
+(with-eval-after-load 'org-gcal
+;; (use-package org-gcal
   (setq org-gcal-client-id (get-auth-info "org-gcal-client-id" "ste.lendl@gmail.com")
         org-gcal-client-secret (get-auth-info "org-gcal-client-secret" "ste.lendl@gmail.com")
         org-gcal-fetch-file-alist
@@ -1273,16 +1271,16 @@ Its grammar comes from =treesit-grammars.with-all-grammars= in =emacs.nix=.
 #+end_src
 
 #+begin_src elisp
-(use-package! ob-mermaid
+(use-package ob-mermaid
   :after org
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
-(use-package! mermaid-ts-mode
+(use-package mermaid-ts-mode
   :mode ("\\.mmd\\'" . mermaid-ts-mode)
   :mode ("\\.mermaid\\'" . mermaid-ts-mode))
 
-(after! org
+(with-eval-after-load 'org
   (add-to-list 'org-src-lang-modes '("mermaid" . mermaid-ts)))
 #+end_src
 
@@ -1301,13 +1299,12 @@ https://tecosaur.github.io/emacs-config/config.html#babel
 (defvar org-babel-auto-async-languages '()
   "Babel languages which should be executed asyncronously by default.")
 
-(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+(define-advice org-babel-get-src-block-info (:around (orig-fn &optional light datum) stfl/eager-async)
   "Eagarly add an :async parameter to the src information, unless it seems problematic.
 This only acts o languages in `org-babel-auto-async-languages'.
 Not added when either:
 + session is not \"none\"
 + :sync is set"
-  :around #'org-babel-get-src-block-info
   (let ((result (funcall orig-fn light datum)))
     (when (and (string= "none" (cdr (assoc :session (caddr result))))
                (member (car result) org-babel-auto-async-languages)
@@ -1325,7 +1322,7 @@ Not added when either:
 https://emacs.stackexchange.com/a/44923/30180
 
 #+BEGIN_SRC elisp
-(after! org
+(with-eval-after-load 'org
   (defun individual-visibility-source-blocks ()
     "Fold some blocks in the current buffer with property :hidden"
     (interactive)
@@ -1361,7 +1358,7 @@ https://github.com/tecosaur/org-pandoc-import
 #+end_src
 
 #+begin_src elisp
-;; (use-package! org-pandoc-import :after org)
+;; (use-package org-pandoc-import :after org)
 #+end_src
 
 ** Org Tree Slide (+present)
@@ -1372,13 +1369,13 @@ https://github.com/tecosaur/org-pandoc-import
 Don't emphasize the heading -> it's way too big
 
 #+begin_src elisp
-(after! org-tree-slide (setq org-tree-slide-heading-emphasis nil))
+(with-eval-after-load 'org-tree-slide (setq org-tree-slide-heading-emphasis nil))
 #+end_src
 
 disable line numbers in presentations.
 
 #+begin_src elisp
-(after! org-tree-slide
+(with-eval-after-load 'org-tree-slide
   (add-hook 'org-tree-slide-play-hook #'doom-disable-line-numbers-h)
   (add-hook 'org-tree-slide-stop-hook #'doom-disable-line-numbers-h))
 #+end_src
@@ -1387,7 +1384,7 @@ Starting org-tree-slide fails with an error.
 https://github.com/doomemacs/doomemacs/issues/7058
 
 #+begin_src elisp
-(after! org-tree-slide
+(with-eval-after-load 'org-tree-slide
   (remove-hook 'org-tree-slide-play-hook #'+org-present-hide-blocks-h)
   (remove-hook 'org-tree-slide-stop-hook #'+org-present-hide-blocks-h))
 #+end_src
@@ -1425,7 +1422,7 @@ specific cases.
 #+end_src
 
 #+begin_src elisp
-(use-package! ox-hugo :after ox)
+(use-package ox-hugo :after ox)
 #+end_src
 
 ** ox-zola
@@ -1439,7 +1436,7 @@ specific cases.
 #+end_src
 
 #+begin_src elisp
-(use-package! ox-zola
+(use-package ox-zola
   :after ox
   :config
   (require 'ox-hugo))
@@ -1531,18 +1528,18 @@ an agenda back to its declared range and is reachable with ~M-x~.
 The agenda behaviour, blocked-task hiding and TODO dependency options are configured in ~agile-gtd~ (see its =docs/org-settings.org=). What stays here only changes how the agenda looks.
 
 #+begin_src elisp
-;; (after! org
-(setq!
-       ;; org-agenda-hide-tags-regexp "\\w+"
-       ;; org-agenda-compact-blocks t
-       ;; org-agenda-block-separator ?\n
-       org-agenda-block-separator ?-
-       org-agenda-tags-column 0
-       org-agenda-window-setup 'current-window
-       ;; org-agenda-todo-ignore-with-date nil
-       ;; org-agenda-todo-ignore-deadlines nil
-       ;; org-agenda-todo-ignore-timestamp nil
-       org-agenda-sticky nil)
+;; (with-eval-after-load 'org
+(setopt
+        ;; org-agenda-hide-tags-regexp "\\w+"
+        ;; org-agenda-compact-blocks t
+        ;; org-agenda-block-separator ?\n
+        org-agenda-block-separator ?-
+        org-agenda-tags-column 0
+        org-agenda-window-setup 'current-window
+        ;; org-agenda-todo-ignore-with-date nil
+        ;; org-agenda-todo-ignore-deadlines nil
+        ;; org-agenda-todo-ignore-timestamp nil
+        org-agenda-sticky nil)
 #+end_src
 
 ** org super agenda
@@ -1555,8 +1552,9 @@ The agenda behaviour, blocked-task hiding and TODO dependency options are config
 #+end_src
 
 #+begin_src elisp
-(after! (org-super-agenda evil-org-agenda)
-  (setq org-super-agenda-header-map evil-org-agenda-mode-map))
+(with-eval-after-load 'org-super-agenda
+  (with-eval-after-load 'evil-org-agenda
+    (setq org-super-agenda-header-map evil-org-agenda-mode-map)))
 #+end_src
 
 *** Custom priority grouping
@@ -1626,7 +1624,7 @@ under evil where ~C-u~ scrolls.
 :END:
 
 #+begin_src elisp
-(after! org-contrib
+(with-eval-after-load 'org-contrib
   (require 'org-checklist))
 #+end_src
 
@@ -1663,7 +1661,7 @@ get-password
 #+end_src
 
 #+begin_src elisp
-;; (setq! auth-sources 'password-store)
+;; (setopt auth-sources 'password-store)
 #+end_src
 
 ** age.el — read agenix-encrypted files
@@ -1682,7 +1680,7 @@ Identity is the same ed25519 SSH key used by agenix ([[file:~/.config/dotfiles/s
 #+end_src
 
 #+begin_src elisp
-(use-package! age
+(use-package age
   :demand t
   :custom
   (age-default-identity "~/.ssh/id_ed25519_stfl")
@@ -1698,7 +1696,7 @@ Identity is the same ed25519 SSH key used by agenix ([[file:~/.config/dotfiles/s
 :END:
 
 #+BEGIN_SRC elisp
-;; (use-package! define-word
+;; (use-package define-word
 ;;   :after org
 ;;   :config
 ;;   (map! :after org
@@ -1777,7 +1775,7 @@ Export with =C-c C-e p t= for PDF, =C-c C-e p d= for Word.
 https://tecosaur.github.io/emacs-config/config.html#plaintext
 
 #+begin_src elisp
-(after! text-mode
+(with-eval-after-load 'text-mode
   (add-hook! 'text-mode-hook
              ;; Apply ANSI color codes
              (with-silent-modifications
@@ -1796,10 +1794,10 @@ disable vterm from straight because we installed it via nix
 #+end_src
 
 #+begin_src elisp
-(after! vterm
-  (setq! vterm-max-scrollback 200000
-         ;; vterm-min-window-width 5000
-         )) ;; do not wrap long lines per default
+(with-eval-after-load 'vterm
+  (setopt vterm-max-scrollback 200000
+          ;; vterm-min-window-width 5000
+          )) ;; do not wrap long lines per default
 #+end_src
 
 Allow to insert C-x. otherwise it's not possible to leave nano if exidently opened in vterm.
@@ -1825,7 +1823,7 @@ This breaks my zsh config, so I am forcing it to send C-m.
 Send C-j directly as configured above which then triggers history-substring-search-down
 
 #+begin_src elisp
-(after! vterm
+(with-eval-after-load 'vterm
   (defun vterm-send-return ()
     "Send `C-m' to the libvterm."
     (interactive)
@@ -1837,9 +1835,9 @@ Send C-j directly as configured above which then triggers history-substring-sear
 use bash when opening a vterm in a tramp dir:
 
 #+begin_src elisp
-(after! vterm
-  (setq! vterm-tramp-shells '(("docker" "/bin/sh")
-                              ("ssh" "/bin/bash"))))
+(with-eval-after-load 'vterm
+  (setopt vterm-tramp-shells '(("docker" "/bin/sh")
+                               ("ssh" "/bin/bash"))))
 #+end_src
 
 ** Typst
@@ -1868,12 +1866,12 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src elisp
-(use-package! typst-ts-mode
+(use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
-  (setq! typst-ts-watch-options "--open"
-         typst-ts-indent-offset 2
-         typst-ts-enable-raw-blocks-highlight t)
+  (setopt typst-ts-watch-options "--open"
+          typst-ts-indent-offset 2
+          typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
         "C-c C-c" #'typst-ts-tmenu
         :localleader
@@ -1888,13 +1886,13 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src elisp
-(after! eglot
+(with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ("tinymist"))))
 #+end_src
 
 #+begin_src emacs-lisp
-(after! lsp-mode
+(with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
 
   (lsp-register-client
@@ -1904,7 +1902,7 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src emacs-lisp
-(after! org
+(with-eval-after-load 'org
   (add-to-list 'org-src-lang-modes '("typst" . typst-ts))
 
   ;; Set up babel support for Typst
@@ -1935,7 +1933,7 @@ use bash when opening a vterm in a tramp dir:
 #+end_src
 
 #+begin_src elisp
-(use-package! ox-typst :after ox)
+(use-package ox-typst :after ox)
 #+end_src
 
 ** pdf-tools
@@ -2015,8 +2013,8 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 #+end_src
 
 #+begin_src elisp
-(after! ssh-deploy
-  (setq! ssh-deploy-async 1))
+(with-eval-after-load 'ssh-deploy
+  (setopt ssh-deploy-async 1))
 
 (map! :map ssh-deploy-menu-map
     :leader
@@ -2083,7 +2081,7 @@ marginalia annotations and embark actions on the candidates; =zoxide.el='s own
     :items    ,#'consult-dir--zoxide-dirs)
   "Zoxide directory source for `consult-dir'.")
 
-(after! consult-dir
+(with-eval-after-load 'consult-dir
   (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
 #+end_src
 
@@ -2093,7 +2091,7 @@ marginalia annotations and embark actions on the candidates; =zoxide.el='s own
 :END:
 
 #+begin_src elisp
-(after! flycheck
+(with-eval-after-load 'flycheck
   (map! :map flycheck-mode-map
         :leader
         "c x" #'consult-flycheck))
@@ -2118,7 +2116,7 @@ map ielm to ~SPC :~
 I am not using lsp-mode anymore
 
 #+begin_src elisp
-(after! lsp-treemacs
+(with-eval-after-load 'lsp-treemacs
   (lsp-treemacs-sync-mode 1))
 #+end_src
 
@@ -2145,10 +2143,10 @@ I am not using lsp-mode anymore
 Enable hinlay hints and make the font a little smaller than the rest
 
 #+begin_src elisp
-(after! lsp-mode
-  (setq! lsp-inlay-hint-enable t
-         lsp-headerline-breadcrumb-enable t
-         lsp-ui-sideline-enable nil)
+(with-eval-after-load 'lsp-mode
+  (setopt lsp-inlay-hint-enable t
+          lsp-headerline-breadcrumb-enable t
+          lsp-ui-sideline-enable nil)
   )
 #+end_src
 
@@ -2159,8 +2157,8 @@ Enable hinlay hints and make the font a little smaller than the rest
 
 #+begin_src elisp
 (when (executable-find "emacs-lsp-booster")
-  (after! lsp-mode
-    (setq! lsp-use-plists t)
+  (with-eval-after-load 'lsp-mode
+    (setopt lsp-use-plists t)
 
     (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
       "Prepend emacs-lsp-booster command to lsp CMD."
@@ -2188,37 +2186,37 @@ https://github.com/konrad1977/flyover
 #+end_src
 
 #+begin_src elisp
-(use-package! flyover
+(use-package flyover
   :disabled
   :after flycheck
   :config
-  (setq! flyover-checkers '(flycheck)
-         ;; flyover-levels '(error warning info)  ; Show all levels
-         ;; flyover-levels '(error warning)
-         flyover-levels '(error)
+  (setopt flyover-checkers '(flycheck)
+          ;; flyover-levels '(error warning info)  ; Show all levels
+          ;; flyover-levels '(error warning)
+          flyover-levels '(error)
 
-         flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
-         flyover-background-lightness 35; Adjust background lightness (lower values = darker)
-         ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
-         flyover-text-tint nil ; 'lighter ;; or 'darker or nil
-         ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
-         flyover-debug nil ;; Enable debug messages
-         ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
+          flyover-use-theme-colors t ;; Use theme colors for error/warning/info faces
+          flyover-background-lightness 35; Adjust background lightness (lower values = darker)
+          ;; flyover-percent-darker 40 ;; Make icon background darker than foreground
+          flyover-text-tint nil ; 'lighter ;; or 'darker or nil
+          ;; flyover-text-tint-percent 50 ;; "Percentage to lighten or darken the text when tinting is enabled."
+          flyover-debug nil ;; Enable debug messages
+          ;; flyover-debounce-interval 0.2 ;; Time in seconds to wait before checking and displaying errors after a change
 
-         ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
-         flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
+          ;; flyover-wrap-messages t ;; Enable wrapping of long error messages across multiple lines
+          flyover-max-line-length 100 ;; Maximum length of each line when wrapping messages
 
-         flyover-hide-checker-name t
+          flyover-hide-checker-name t
 
-         flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
-         ;; flyover-virtual-line-type 'straight-arrow
+          flyover-show-virtual-line t ;;; Show an arrow (or icon of your choice) before the error to highlight the error a bit more.
+          ;; flyover-virtual-line-type 'straight-arrow
 
-         flyover-line-position-offset 1
+          flyover-line-position-offset 1
 
-         flyover-show-at-eol t ;;; show at end of the line instead.
-         flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
-         flyover-virtual-line-icon " ──► " ;;; default its nil
-         )
+          flyover-show-at-eol t ;;; show at end of the line instead.
+          flyover-hide-when-cursor-is-on-same-line t ;;; Hide overlay when cursor is at same line, good for show-at-eol.
+          flyover-virtual-line-icon " ──► " ;;; default its nil
+          )
   (add-hook 'flycheck-mode-hook #'flyover-mode)
 )
 #+end_src
@@ -2246,15 +2244,16 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 :END:
 
 #+BEGIN_SRC elisp
-(after! (lsp-mode php-mode)
-  (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
-        lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
-        lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
-                                         "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
-                                         "**/node_modules/**" "**/bower_components/**"
-                                         "**/vendor/**/{Test,test,Tests,tests}/**"]
-        lsp-auto-guess-root nil
-        lsp-idle-delay 0.8))
+(with-eval-after-load 'lsp-mode
+  (with-eval-after-load 'php-mode
+    (setq lsp-intelephense-licence-key (get-auth-info "intelephense" "ste.lendl@gmail.com")
+          lsp-intelephense-files-associations '["*.php" "*.phtml" "*.inc"]
+          lsp-intelephense-files-exclude '["**update.php**" "**/js/**" "**/fonts/**" "**/gui/**" "**/upload/**"
+                                           "**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**"
+                                           "**/node_modules/**" "**/bower_components/**"
+                                           "**/vendor/**/{Test,test,Tests,tests}/**"]
+          lsp-auto-guess-root nil
+          lsp-idle-delay 0.8)))
 #+END_SRC
 
 ** Python
@@ -2263,8 +2262,8 @@ mapping doom's ~+format/buffer~ and ~+format/region~
 :END:
 
 #+begin_src elisp
-(after! lsp-bridge
-  (setq! lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
+(with-eval-after-load 'lsp-bridge
+  (setopt lsp-bridge-python-multi-lsp-server "basedpyright_ruff"))
 #+end_src
 
 *** poetry
@@ -2276,7 +2275,7 @@ Poetry needs to scan for a project whenever a new file is opened. Tracking via
 projectile speeds this up significantly.
 
 #+begin_src elisp
-(after! poetry (setq poetry-tracking-strategy 'projectile))
+(with-eval-after-load 'poetry (setq poetry-tracking-strategy 'projectile))
 #+end_src
 
 *** conda
@@ -2287,13 +2286,13 @@ projectile speeds this up significantly.
 automatically activate a conda environment if present in a project
 
 #+begin_src elisp
-(after! conda (conda-env-autoactivate-mode))
+(with-eval-after-load 'conda (conda-env-autoactivate-mode))
 #+end_src
 
 projectile does not recognize conda projects
 
 #+begin_src elisp
-(after! projectile
+(with-eval-after-load 'projectile
   (projectile-register-project-type 'python-conda '("environment.yml")
                                     :project-file "environment.yml"
                                     :compile "conda build"  ;; does not exist
@@ -2313,7 +2312,7 @@ projectile does not recognize conda projects
 #+end_src
 
 #+begin_src elisp
-;; (use-package! numpydoc
+;; (use-package numpydoc
 ;;   :after python-mode
 ;;   :commands numpydoc-generate
 ;;   :config
@@ -2331,9 +2330,9 @@ projectile does not recognize conda projects
 ein displays images in a separate window by default. Use inline images instead
 
 #+begin_src elisp
-(after! ein
-  (setq! ein:output-area-inlined-images t
-         ein:worksheet-warn-obsolesced-keybinding nil))
+(with-eval-after-load 'ein
+  (setopt ein:output-area-inlined-images t
+          ein:worksheet-warn-obsolesced-keybinding nil))
 #+end_src
 
 To enable this in the notebook, configure matplotlib to produce inline images.
@@ -2348,7 +2347,7 @@ org babel integration for ein
 
 #+begin_src elisp
 (when (modulep! :tools ein)
-  (after! org
+  (with-eval-after-load 'org
     (require 'ob-ein)))
 #+end_src
 
@@ -2364,7 +2363,7 @@ org babel integration for ein
 header arguments to for jupyter-python to work with plotly
 
 #+begin_src elisp
-(after! org
+(with-eval-after-load 'org
   (setq org-babel-default-header-args:jupyter-python
         '((:results . "value")
           (:session . "jupyter")
@@ -2387,14 +2386,15 @@ debugging python tests at point do not work with the default configuration.
 might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 
 #+begin_src elisp
-(after! (python-mode dap-mode)
-  (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
-                             (list :type "python-test-at-point  "
-                                   :args ""
-                                   :program nil
-                                   :module "pytest"
-                                   :request "launch"
-                                   :name "Python :: Run pytest (at point)")))
+(with-eval-after-load 'python-mode
+  (with-eval-after-load 'dap-mode
+    (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
+                               (list :type "python-test-at-point  "
+                                     :args ""
+                                     :program nil
+                                     :module "pytest"
+                                     :request "launch"
+                                     :name "Python :: Run pytest (at point)"))))
 #+end_src
 
 ** Rust
@@ -2410,9 +2410,9 @@ might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
 #+end_src
 
 #+begin_src elisp
-(after! rustic
+(with-eval-after-load 'rustic
   (when (executable-find "cargo-nextest")
-    (setq! rustic-cargo-test-runner 'nextest)))
+    (setopt rustic-cargo-test-runner 'nextest)))
 #+end_src
 
 Configure inlay type hints
@@ -2420,20 +2420,20 @@ Configure inlay type hints
 This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inlay Hints]]
 
 #+begin_src elisp
-(after! lsp-rust
-  (setq! lsp-rust-analyzer-binding-mode-hints t
-  ;;        lsp-rust-analyzer-display-chaining-hints t
-  ;;        lsp-rust-analyzer-display-closure-return-type-hints t
-         lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
-  ;;        lsp-rust-analyzer-display-parameter-hints t
-  ;;        lsp-rust-analyzer-hide-named-constructor t
-         lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
-         )
+(with-eval-after-load 'lsp-rust
+  (setopt lsp-rust-analyzer-binding-mode-hints t
+   ;;        lsp-rust-analyzer-display-chaining-hints t
+   ;;        lsp-rust-analyzer-display-closure-return-type-hints t
+          lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+   ;;        lsp-rust-analyzer-display-parameter-hints t
+   ;;        lsp-rust-analyzer-hide-named-constructor t
+          lsp-rust-analyzer-max-inlay-hint-length 40  ;; otherwise some types can get way out of hand
+          )
   )
 #+end_src
 
 #+begin_src elisp
-(after! eglot
+(with-eval-after-load 'eglot
   (setq eglot-workspace-configuration
         (plist-put eglot-workspace-configuration
                    :rust-analyzer
@@ -2443,14 +2443,15 @@ This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inla
 configre dap-mode for rust
 
 #+begin_src elisp
-(after! (rust-mode dap-mode)
-  (dap-register-debug-template "Rust::GDB Run Configuration"
-                               (list :type "gdb"
-                                     :request "launch"
-                                     :name "GDB::Run"
-                                     :gdbpath "rust-gdb"
-                                     :target nil
-                                     :cwd nil)))
+(with-eval-after-load 'rust-mode
+  (with-eval-after-load 'dap-mode
+    (dap-register-debug-template "Rust::GDB Run Configuration"
+                                 (list :type "gdb"
+                                       :request "launch"
+                                       :name "GDB::Run"
+                                       :gdbpath "rust-gdb"
+                                       :target nil
+                                       :cwd nil))))
 #+end_src
 
 ** Nix
@@ -2485,11 +2486,11 @@ select the formatter for nix
 :END:
 
 #+BEGIN_SRC elisp
-;; (use-package! gitlab-ci-mode
+;; (use-package gitlab-ci-mode
 ;;   :mode ".gitlab-ci.yml"
 ;;   )
 
-;; (use-package! gitlab-ci-mode-flycheck
+;; (use-package gitlab-ci-mode-flycheck
 ;;   :after flycheck gitlab-ci-mode
 ;;   :init
 ;;   (gitlab-ci-mode-flycheck-enable))
@@ -2509,22 +2510,26 @@ select the formatter for nix
 #+end_src
 
 #+begin_src elisp
-(use-package! kubernetes
+(use-package kubernetes
+  :disabled
   :commands (kubernetes-overview))
 #+end_src
 
 #+begin_src elisp
-(use-package! kubernetes-evil
+(use-package kubernetes-evil
+  :disabled
   :after kubernetes)
 #+end_src
 
 #+begin_src elisp
-(use-package! kubernetes-helm
+(use-package kubernetes-helm
+  :disabled
   :commands kubernetes-helm-status)
 #+end_src
 
 #+begin_src elisp
-(use-package! k8s-mode
+(use-package k8s-mode
+  :disabled
   :after yaml-mode
   :hook (k8s-mode . yas-minor-mode))
 #+end_src
@@ -2539,7 +2544,7 @@ select the formatter for nix
 #+end_src
 
 #+begin_src elisp
-(use-package! sql-indent
+(use-package sql-indent
   :after sql-mode)
 #+end_src
 
@@ -2559,13 +2564,15 @@ EDBI has some dependencies has some dependencies
 #+end_src
 
 #+begin_src elisp
-(use-package! edbi
+(use-package edbi
+  :disabled
   :commands 'edbi:open-db-viewer)
 #+end_src
 
 #+begin_src elisp
 
-(use-package! edbi-minor-mode
+(use-package edbi-minor-mode
+  :disabled
   :after sql-mode
   :hook sql-mode-hook)
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
@@ -2589,7 +2596,7 @@ small exercises. The exercises can can be solved locally.
 #+end_src
 
 #+begin_src elisp
-(use-package! exercism-mode
+(use-package exercism-mode
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -2653,7 +2660,8 @@ This will be the default in Emacs 30 (if I remember correctly)
 #+end_src
 
 #+begin_src elisp
-(use-package! logview
+(use-package logview
+  :disabled
   :commands logview-mode
   :config (setq truncate-lines t)
   (map! :map logview-mode-map
@@ -2689,7 +2697,8 @@ manually add adoc-mode to the list.. I don't like that...
 #+end_src
 
 #+begin_src elisp
-(use-package! lsp-ltex
+(use-package lsp-ltex
+  :disabled
   :after lsp-ltex-active-modes
   :hook (adoc-mode . (lambda ()
                        (require 'lsp-ltex)
@@ -2707,8 +2716,8 @@ manually add adoc-mode to the list.. I don't like that...
 :END:
 
 #+begin_src elisp
-(after! ispell
-  (setq! ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
+(with-eval-after-load 'ispell
+  (setopt ispell-personal-dictionary (expand-file-name "ispell/" doom-user-dir)))
 #+end_src
 
 ** Proxmox development
@@ -2731,7 +2740,7 @@ _tangle is disabled for the entire section_ and is only kept as a reference!
 ~TODO~ adoc-mode requires org due to inhereting the theme
 
 #+begin_src elisp
-(use-package! adoc-mode
+(use-package adoc-mode
   :defer t
   :config
   (map! :map adoc-mode-map
@@ -2756,14 +2765,14 @@ _tangle is disabled for the entire section_ and is only kept as a reference!
 #+end_src
 
 #+begin_src elisp
-(after! lsp-mode
+(with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(adoc-mode . "org") t))
 #+end_src
 
 *** Magit Default Sign-Off commits
 
 #+begin_src elisp
-(after! magit
+(with-eval-after-load 'magit
   (setq transient-values  '((magit-commit "--signoff"))))
 #+end_src
 
@@ -2786,7 +2795,7 @@ This is still broken...
 #+end_src
 
 #+begin_src elisp
-(after! js
+(with-eval-after-load 'js
   (setq js-indent-level 4
         js-jsx-indent-level 4
         tab-width 8))
@@ -2795,10 +2804,10 @@ This is still broken...
 *** Perl intendation style
 
 #+begin_src elisp
-(setq! cperl-indent-level 4
-       cperl-close-paren-offset -4
-       cperl-continued-statement-offset 4
-       cperl-indent-parens-as-block t)
+(setopt cperl-indent-level 4
+        cperl-close-paren-offset -4
+        cperl-continued-statement-offset 4
+        cperl-indent-parens-as-block t)
 #+end_src
 
 Proxmox specific Perl indentation style using a tab where 8 spaces would be used.
@@ -2812,7 +2821,7 @@ Proxmox specific Perl indentation style using a tab where 8 spaces would be used
 *** notmuch
 
 #+begin_src elisp
-(after! notmuch
+(with-eval-after-load 'notmuch
   (setq +notmuch-sync-backend 'mbsync
         +notmuch-mail-folder "~/Mail"
         notmuch-draft-folder "proxmox/Entw&APw-rfe"
@@ -2873,7 +2882,7 @@ Proxmox specific Perl indentation style using a tab where 8 spaces would be used
 Additional functions to apply tags according to my workflow
 
 #+begin_src elisp
-(after! notmuch
+(with-eval-after-load 'notmuch
   (defun stfl/notmuch-search-unwatch-thread (&optional unarchive beg end)
     (interactive (cons current-prefix-arg (notmuch-interactive-region)))
     (let ((notmuch-archive-tags stfl/notmuch-unwatch-tags))
@@ -2914,7 +2923,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(after! notmuch
+(with-eval-after-load 'notmuch
   (defun stfl/notmuch-hello-update-background ()
     "Update notmuch-hello buffer. If we are in another frame, allow switch to it so it will be formatted correctly."
     (let ((no-display (eq (selected-frame)
@@ -2934,7 +2943,7 @@ Use the (almost) default keybindings in evil normal-mode
 #+end_src
 
 #+begin_src elisp
-(use-package! ssh-config-mode :defer t)
+(use-package ssh-config-mode :defer t)
 #+end_src
 
 ** BitBake
@@ -2962,7 +2971,7 @@ Use the (almost) default keybindings in evil normal-mode
 Setup custom bitbake language server for bitbake-ts-mode via lsp-bridge.
 
 #+begin_src elisp
-(after! lsp-bridge
+(with-eval-after-load 'lsp-bridge
   (add-to-list 'lsp-bridge-single-lang-server-mode-list
                ;; '(bitbake-ts-mode . "bitbake-language-server")
                '(bitbake-ts-mode . "language-server-bitbake"))
@@ -3004,7 +3013,8 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp
-(use-package! meson-mode
+(use-package meson-mode
+  :disabled
   :config (add-hook! 'meson-mode-hook #'company-mode))
 #+end_src
 
@@ -3014,13 +3024,13 @@ Alternative bitbake lsp from the vscode-bitbake project.
 :END:
 
 #+begin_src elisp
-(after! projectile
+(with-eval-after-load 'projectile
   (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 #+end_src
 
 #+begin_src elisp
-(after! lsp-bridge
-  (setq! lsp-bridge-c-lsp-server "ccls"))
+(with-eval-after-load 'lsp-bridge
+  (setopt lsp-bridge-c-lsp-server "ccls"))
 #+end_src
 
 #+begin_src elisp
@@ -3053,7 +3063,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp
-(use-package! turbo-log
+(use-package turbo-log
   :after prog-mode
   :config
   (map! :leader
@@ -3064,8 +3074,8 @@ Alternative bitbake lsp from the vscode-bitbake project.
         "l [" #'turbo-log-paste-as-logger
         "l ]" #'turbo-log-paste-as-logger-immediately
         "l d" #'turbo-log-delete-all-logs)
-  (setq! turbo-log-msg-format-template "\"🚀: %s\""
-         turbo-log-allow-insert-without-treesit-p t))
+  (setopt turbo-log-msg-format-template "\"🚀: %s\""
+          turbo-log-allow-insert-without-treesit-p t))
 #+end_src
 
 ** just
@@ -3078,7 +3088,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp
-(use-package! just-mode
+(use-package just-mode
   :defer t)
 #+end_src
 
@@ -3093,7 +3103,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+BEGIN_SRC elisp
-(use-package! ztree)
+(use-package ztree :disabled)
 #+END_SRC
 
 ** Magit
@@ -3116,7 +3126,7 @@ has [[https://magit.vc/manual/magit/Performance.html][performance reasons]]. You
 visible hunks with:
 
 #+BEGIN_SRC elisp
-(after! magit
+(with-eval-after-load 'magit
   (setq magit-diff-refine-hunk 'all))
 #+END_SRC
 
@@ -3127,7 +3137,7 @@ visible hunks with:
 
 display more columns in forge list topic
 #+BEGIN_SRC elisp
-(after! forge (setq forge-topic-list-columns
+(with-eval-after-load 'forge (setq forge-topic-list-columns
                     '(("#" 5 t (:right-align t) number nil)
                       ("Title" 60 t nil title  nil)
                       ("State" 6 t nil state nil)
@@ -3158,7 +3168,7 @@ option: there is no ~az login~ session, only the PAT. The matching username
 comes from =azure.user= in git config, set globally from =oebb.nix=.
 
 #+begin_src elisp
-(use-package! forge-azure
+(use-package forge-azure
   :after forge
   :config
   (setq forge-azure-auth 'pat))
@@ -3176,10 +3186,10 @@ comes from =azure.user= in git config, set globally from =oebb.nix=.
 activate magit-todo to display the TODOs section in magit buffer
 
 #+begin_src elisp
-(use-package! magit-todos
+(use-package magit-todos
   :after magit
   :config
-  (setq! magit-todos-exclude-globs '(".git/" "node_modules/"))
+  (setopt magit-todos-exclude-globs '(".git/" "node_modules/"))
   (magit-todos-mode 1))
 #+end_src
 
@@ -3242,7 +3252,7 @@ notmuch-extract-{thread,message}-patches{,-to-project}.
 #+end_src
 
 #+begin_src elisp
-(after! mu4e
+(with-eval-after-load 'mu4e
   ;; (setq +mu4e-gmail-accounts '(("ste.lendl@gmail.com" . "/gmail")))
   (setq mu4e-context-policy 'ask-if-none
         mu4e-compose-context-policy 'always-ask)
@@ -3275,13 +3285,13 @@ notmuch-extract-{thread,message}-patches{,-to-project}.
 
 set up the query for mu4e-alert to also limit the search range
 #+begin_src elisp
-(after! mu4e-alert
+(with-eval-after-load 'mu4e-alert
   (setq mu4e-alert-interesting-mail-query
            "flag:unread and not flag:trashed and (m:/gmail/Inbox or m:/gmail/Categories/Updates or m:/pulswerk/INBOX or m:\"/pulswerk/Pulswerk Alle\" or m:/pulswerk/Jira or m:/pulswerk/Gitlab)"))
 #+end_src
 
 #+begin_src elisp
-(after! mu4e
+(with-eval-after-load 'mu4e
   (setq mu4e-headers-fields
         '((:flags . 6)
           (:account-stripe . 2)
@@ -3297,7 +3307,7 @@ set up the query for mu4e-alert to also limit the search range
         mu4e-index-cleanup t)
 
   (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
+  (cl-callf append mu4e-header-info-custom
             '((:folder .
                (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
                 (lambda (msg)
@@ -3312,7 +3322,7 @@ set up the query for mu4e-alert to also limit the search range
 :END:
 
 #+begin_src elisp
-(after! mu4e
+(with-eval-after-load 'mu4e
   (setq sendmail-program "/usr/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
@@ -3331,7 +3341,7 @@ it can still use the browser view.
 select via ~mu4e-views-mu4e-select-view-msg-method~
 
 #+begin_src elisp
-;; (use-package! mu4e-views
+;; (use-package mu4e-views
 ;;   :after mu4e
 ;;   )
 #+end_src
@@ -3358,7 +3368,7 @@ select via ~mu4e-views-mu4e-select-view-msg-method~
 
 forcing text comparison even if diff thinks files are binary
 #+begin_src elisp
-(after! ediff
+(with-eval-after-load 'ediff
   (setq ediff-diff-options "--text"
         ediff-diff3-options "--text"
         ediff-toggle-skip-similar t
@@ -3382,7 +3392,8 @@ Render a unified diff (top/bottom) in an easy-to-comprehend side-by-side format.
 #+end_src
 
 #+begin_src elisp
-(use-package! diffview
+(use-package diffview
+  :disabled
   :commands diffview-current
   :config
   (map!
@@ -3403,18 +3414,18 @@ git blame lenses
 #+end_src
 
 #+begin_src elisp
-(use-package! blamer
+(use-package blamer
   :commands global-blamer-mode
   :init (map! :leader "t B" #'global-blamer-mode)
   :config
   (map! :leader "g i" #'blamer-show-posframe-commit-info)
-  (setq! blamer-idle-time 0.3
-         blamer-max-commit-message-length 80
-         ;; blamer-max-lines 100
-         blamer-type 'visual
-         ;; blamer-type 'posframe-popup
-         ;; blamer-type 'overlay-popup
-         blamer-min-offset 40)
+  (setopt blamer-idle-time 0.3
+          blamer-max-commit-message-length 80
+          ;; blamer-max-lines 100
+          blamer-type 'visual
+          ;; blamer-type 'posframe-popup
+          ;; blamer-type 'overlay-popup
+          blamer-min-offset 40)
 
   ;; (custom-set-faces!
   ;;   `(blamer-face :inherit font-lock-comment-face
@@ -3479,7 +3490,7 @@ Leave nil to let `bd' use the embedded Dolt store under `.beads/'.
 Set to a port number only when `.beads' auto-discovery / embedded Dolt
 does not work and `bd' must connect to a shared Dolt server instead.")
 
-(use-package! beads
+(use-package beads
   :commands (beads beads-issue-at-point)
   :config
   (when stfl/beads-dolt-port
@@ -3553,7 +3564,7 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 #+end_src
 
 #+begin_src elisp
-(use-package! copilot
+(use-package copilot
   ;; copilot-nes-mode = Next Edit Suggestions; needs copilot-mode in the same
   ;; buffer (NES reuses copilot-mode's language server). TAB accepts / C-g
   ;; dismisses a pending NES edit; those bindings only bind while one is pending.
@@ -3586,8 +3597,8 @@ does not work and `bd' must connect to a shared Dolt server instead.")
 
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
 
-  (setq! copilot-indent-offset-warning-disable t
-         copilot-max-char-warning-disable t)
+  (setopt copilot-indent-offset-warning-disable t
+          copilot-max-char-warning-disable t)
 
   (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
 
@@ -3614,7 +3625,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 #+end_src
 
 #+begin_src elisp
-(after! gptel
+(with-eval-after-load 'gptel
   (defun +gptel-font-lock-update (pos pos-end)
     ;; used with the gptel-post-response-functions hook but swollows the arguments
     (font-lock-update))
@@ -3675,16 +3686,16 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
                :context-window 256
                :request-params (:model "kimi-for-coding" :thinking (:type "disabled")))))
 
-  (setq! gptel-default-mode 'org-mode
-         ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
-         gptel-api-key (password-store-get "API/OpenAI-emacs")
-         ;; gptel-model 'gpt-4o
-         gptel-backend (gptel-get-backend "Z.ai")
-         gptel-model 'glm-5.1
-         gptel-log-level 'info
-         ;; gptel-use-curl nil
-         gptel-use-curl t
-         gptel-stream t)
+  (setopt gptel-default-mode 'org-mode
+          ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
+          gptel-api-key (password-store-get "API/OpenAI-emacs")
+          ;; gptel-model 'gpt-4o
+          gptel-backend (gptel-get-backend "Z.ai")
+          gptel-model 'glm-5.1
+          gptel-log-level 'info
+          ;; gptel-use-curl nil
+          gptel-use-curl t
+          gptel-stream t)
   )
 #+end_src
 
@@ -3694,7 +3705,7 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
 :END:
 
 #+begin_src elisp
-(use-package! gptel-magit
+(use-package gptel-magit
   :hook (magit-mode . gptel-magit-install)
   :config
   (setq gptel-magit-commit-prompt

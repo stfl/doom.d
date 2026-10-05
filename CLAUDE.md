@@ -105,15 +105,16 @@ Single-context: `CONTEXT.md` and `docs/adr/` at the repo root, both created lazi
 ## Imports and Dependencies
 - When inspecting dependency implementations, always prefer the local straight checkouts under `~/.config/emacs/.local/straight/repos/*` as the source of truth.
 - Prefer plain `with-eval-after-load`, `use-package`, and `setopt` in private config, following recent Doom upstream guidance.
-- Use Doom-specific macros such as `map!`, `add-hook!`, and `defadvice!` where they remain the clearest fit.
+- Do not use `after!`, `use-package!`, or `setq!`; Doom discourages them in private config, and `setq!` is an obsolete alias of `setopt`.
+- Write one-off advice with `define-advice`, naming it `stfl/<what>` so the function becomes `TARGET@stfl/<what>`; keep `defadvice!` or `defun` plus `advice-add` for advice another form calls or removes by name.
+- Doom macros without a vanilla replacement (`map!`, `add-hook!`, `setq-hook!`, `custom-set-faces!`, `set-*!`) remain the idiom.
 - Put package-specific configuration inside `with-eval-after-load` or `use-package` blocks unless a Doom-only form is required.
 - Use `require` only when eager loading is actually needed.
 - Add new packages in tangled `package!` blocks, not ad hoc runtime installs.
-- Disabled packages are expressed in `packages.el` as `:disable t`.
+- Disabled packages are expressed in `packages.el` as `:disable t`. Their `use-package` block also carries `:disabled`, because plain `use-package`, unlike Doom's `use-package!`, does not skip packages that `package!` disabled.
 
 ## Formatting Conventions
 - Prefer `setopt` for customizable variables and `setq` elsewhere.
-- Existing code still contains legacy `setq!`; do not mass-convert it unless the task calls for it.
 - Keep related settings grouped inside one form when it improves readability.
 - Multi-line forms usually place one binding per line.
 - Keybinding blocks are usually grouped with one `map!` per context.
@@ -141,7 +142,7 @@ Single-context: `CONTEXT.md` and `docs/adr/` at the repo root, both created lazi
 - If a function mutates user data or Org state, prefer explicit failure over partial silent success.
 
 ## Doom / Org Patterns To Preserve
-- Many settings are wrapped in `after! org`, `after! org-roam`, or other package-specific blocks.
+- Many settings are wrapped in `(with-eval-after-load 'org ...)`, `(with-eval-after-load 'org-roam ...)`, or other package-specific blocks. A block that waits on two features nests two `with-eval-after-load` forms.
 - Keybindings are organized with `:leader`, `:localleader`, `:prefix`, and mode maps.
 - Org code relies heavily on agenda queries, custom commands, capture templates, and property drawers.
 - Org-specific helpers often assume agenda markers, headline context, or inherited properties.
@@ -153,8 +154,7 @@ Single-context: `CONTEXT.md` and `docs/adr/` at the repo root, both created lazi
 - Do not perform broad stylistic rewrites.
 - Default to `config.org` for config changes and regenerate derived files instead of patching generated outputs.
 - Treat direct edits to `config.el` as incorrect unless the task is explicitly about generated output debugging.
-- Do not replace Doom macros with vanilla alternatives unless there is a strong repo-specific reason.
-- This repo still contains legacy `after!`, `use-package!`, and `setq!` usage; prefer newer forms in touched code when low-risk, but do not perform broad mechanical rewrites unless requested.
+- Do not replace the remaining Doom macros (`map!` and friends) with vanilla alternatives unless the task asks for it.
 - When changing literate config, update the Org source first and then regenerate outputs.
 - Mention any generated-file updates in your final note.
 
