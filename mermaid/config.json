@@ -1,0 +1,33 @@
+{
+  "theme": "base",
+  "htmlLabels": false,
+  "fontFamily": "JetBrainsMono Nerd Font, JetBrains Mono, monospace",
+  "flowchart": {
+    "curve": "basis",
+    "padding": 14,
+    "nodeSpacing": 40,
+    "rankSpacing": 60,
+    "wrappingWidth": 640
+  },
+  "themeVariables": {
+    "darkMode": false,
+    "background": "#ffffff",
+    "fontFamily": "JetBrainsMono Nerd Font, JetBrains Mono, monospace",
+    "fontSize": "14px",
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#1f2328",
+    "primaryBorderColor": "#8c959f",
+    "secondaryColor": "#f6f8fa",
+    "tertiaryColor": "#f6f8fa",
+    "lineColor": "#8c959f",
+    "textColor": "#1f2328",
+    "mainBkg": "#ffffff",
+    "nodeBorder": "#8c959f",
+    "nodeTextColor": "#1f2328",
+    "clusterBkg": "#f6f8fa",
+    "clusterBorder": "#d0d7de",
+    "titleColor": "#424a53",
+    "edgeLabelBackground": "#ffffff"
+  },
+  "themeCSS": "text, tspan { white-space: pre; } .edgeLabel rect.background { fill: #ffffff; opacity: 1; } .edgeLabel text { fill: #57606a; } .cluster-label tspan { font-weight: bold; } .cluster.virtual > rect { fill: none; stroke: #57606a; stroke-dasharray: 6 4; } .cluster.nested > rect { fill: #eaeef2; } .node rect, .cluster > rect { rx: 6px; ry: 6px; }"
+}

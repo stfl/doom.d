@@ -622,23 +622,37 @@ Org-mode properties drawer already, keep the headline and don’t insert
   :config
   (setopt ob-mermaid-default-config-file
           (expand-file-name "mermaid/config.json" doom-user-dir))
-  ;; ob-mermaid splices this into a shell command unquoted; a bare # starts a comment.
-  (add-to-list 'org-babel-default-header-args:mermaid
-               (cons :background-color (shell-quote-argument "#282c34")))
+  ;; ob-mermaid passes this to the shell unquoted: quote a #rrggbb value.
+  (add-to-list 'org-babel-default-header-args:mermaid '(:background-color . "white"))
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
-(define-advice org-babel-execute:mermaid (:after (_body params) stfl/svg-preserve-space)
-  "Mark a rendered SVG `xml:space=\"preserve\"'.
-Without HTML labels mermaid starts each word's <tspan> with a space,
-which librsvg, and therefore Emacs, collapses away."
+(define-advice org-babel-execute:mermaid (:after (_body params) stfl/svg-for-librsvg)
+  "Adapt a rendered SVG to librsvg, which draws Emacs's inline images.
+Mermaid starts each word's <tspan> with a space, which librsvg collapses
+unless the root says `xml:space=\"preserve\"'.  It also sets the
+background as CSS on the root, which librsvg does not paint, so a rect
+of that colour goes underneath."
   (let ((file (cdr (assq :file params))))
     (when (and file (string-suffix-p ".svg" file t) (file-exists-p file))
       (with-temp-file file
         (insert-file-contents file)
         (goto-char (point-min))
-        (when (and (re-search-forward "<svg " nil t)
-                   (not (looking-at-p "[^>]*xml:space=")))
-          (replace-match "<svg xml:space=\"preserve\" " t t))))))
+        (when (and (re-search-forward "<svg \\([^>]*\\)>" nil t)
+                   (not (string-match-p "xml:space=" (match-string 1))))
+          (let* ((beg (match-beginning 0))
+                 (end (match-end 0))
+                 (attrs (match-string 1))
+                 (bg (and (string-match "background-color: *\\([^;\"]+\\)" attrs)
+                          (match-string 1 attrs)))
+                 (box (and (string-match "viewBox=\"\\([^\"]+\\)\"" attrs)
+                           (split-string (match-string 1 attrs)))))
+            (delete-region beg end)
+            (goto-char beg)
+            (insert "<svg xml:space=\"preserve\" " attrs ">")
+            (when (and bg (= (length box) 4))
+              (insert (apply #'format
+                             "<rect x=\"%s\" y=\"%s\" width=\"%s\" height=\"%s\" fill=\"%s\"/>"
+                             (append box (list bg)))))))))))
 
 (use-package mermaid-ts-mode
   :mode ("\\.mmd\\'" . mermaid-ts-mode)
