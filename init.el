@@ -231,7 +231,7 @@
        (php                ; perl's insecure younger brother
         +lsp
         +tree-sitter)
-       plantuml          ; diagrams for confusing people more
+       ;;plantuml        ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python             ; beautiful is better than ugly
         +lsp
