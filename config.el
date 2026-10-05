@@ -626,6 +626,27 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (add-to-list 'org-babel-default-header-args:mermaid '(:background-color . "white"))
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
+(define-advice org-babel-execute:mermaid (:filter-args (args) stfl/inline-img-files)
+  "Embed the local files of `img:' node shapes as data URIs.
+Mermaid drops file:// URLs and headless Chromium cannot load a relative
+path, so `img: \"icons/x.svg\"' is read relative to the org file instead."
+  (let ((re "img: *\"\\([^\":]+\\.\\(svg\\|png\\)\\)\""))
+    (cons (replace-regexp-in-string
+           re
+           (lambda (match)
+             (string-match re match)
+             (let ((file (expand-file-name (match-string 1 match)))
+                   (type (if (equal (match-string 2 match) "svg") "image/svg+xml" "image/png")))
+               (format "img: \"data:%s;base64,%s\"" type
+                       (base64-encode-string
+                        (with-temp-buffer
+                          (set-buffer-multibyte nil)
+                          (insert-file-contents-literally file)
+                          (buffer-string))
+                        t))))
+           (car args) t t)
+          (cdr args))))
+
 (define-advice org-babel-execute:mermaid (:after (_body params) stfl/svg-for-librsvg)
   "Adapt a rendered SVG to librsvg, which draws Emacs's inline images.
 Mermaid starts each word's <tspan> with a space, which librsvg collapses
