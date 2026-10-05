@@ -1257,24 +1257,33 @@ customize the sections in the org-roam buffer
 
 ** Drawing Diagrams with Mermaid
 :PROPERTIES:
-:ID:       819cb74f-3d27-4a76-bb81-06b9d1b714b5
+:CUSTOM_ID: drawing-diagrams-with-mermaid
 :END:
 
-Org babel to generate mermaid diagrams from org src blocks
+Org babel to generate mermaid diagrams from org src blocks.
+Rendering shells out to =mmdc= (=mermaid-cli=, installed by the dotfiles' =emacs.nix=), found on =exec-path=.
 
+
+=mermaid-ts-mode= edits =.mmd= files and mermaid src blocks (=C-c '=).
+Its grammar comes from =treesit-grammars.with-all-grammars= in =emacs.nix=.
 
 #+begin_src elisp :tangle packages.el
-(package! ob-mermaid
-  :disable t)
+(package! ob-mermaid)
+(package! mermaid-ts-mode)
 #+end_src
 
 #+begin_src elisp
 (use-package! ob-mermaid
   :after org
-  :init
-  (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
+
+(use-package! mermaid-ts-mode
+  :mode ("\\.mmd\\'" . mermaid-ts-mode)
+  :mode ("\\.mermaid\\'" . mermaid-ts-mode))
+
+(after! org
+  (add-to-list 'org-src-lang-modes '("mermaid" . mermaid-ts)))
 #+end_src
 
 ** org-babel

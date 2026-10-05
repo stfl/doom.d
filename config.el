@@ -621,10 +621,15 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (use-package! ob-mermaid
   :after org
-  :init
-  (setq ob-mermaid-cli-path "/home/stefan/.yarn/bin/mmdc")
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
+
+(use-package! mermaid-ts-mode
+  :mode ("\\.mmd\\'" . mermaid-ts-mode)
+  :mode ("\\.mermaid\\'" . mermaid-ts-mode))
+
+(after! org
+  (add-to-list 'org-src-lang-modes '("mermaid" . mermaid-ts)))
 
 (add-transient-hook! #'org-babel-execute-src-block
   (require 'ob-async))

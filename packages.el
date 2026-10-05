@@ -26,8 +26,8 @@
 ;;            :repo "org-roam/org-roam-ui"
 ;;            :files ("*.el" "out")))
 
-(package! ob-mermaid
-  :disable t)
+(package! ob-mermaid)
+(package! mermaid-ts-mode)
 
 ;; (package! org-pandoc-import
 ;;   :recipe (:host github
