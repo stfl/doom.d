@@ -1,3 +1,4 @@
+;;; custom.el -*- lexical-binding: t; -*-
 (put 'narrow-to-region 'disabled nil)
 
 (custom-set-variables

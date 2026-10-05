@@ -1,3 +1,5 @@
+;;; config.el -*- lexical-binding: t; -*-
+
 (setq user-full-name "Stefan Lendl"
       user-mail-address "contact@stfl.dev")
 
@@ -168,6 +170,7 @@ matching Org's own case-insensitive `#' link search."
               slug (format "%s-%d" base n)))
       (org-entry-put nil "CUSTOM_ID" slug))))
 
+(defvar org-id-link-to-org-use-id)
 (define-advice org-store-link (:around (fn &optional arg interactive?) stfl/scope-ids)
   "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
 Applies to interactive calls in Org buffers only; capture's %a and calls
@@ -296,15 +299,11 @@ the first heading."
         org-startup-folded 'fold
         org-startup-with-inline-images t
         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
-        org-image-actual-width (* (default-font-width) 40)
+        org-image-actual-width (list (* (default-font-width) 40))
+        org-image-max-width 'window
         ))
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
-
-(define-advice +org-inline-image-data-fn (:override (_protocol link _description) stfl/ignore-errors)
-  "Interpret LINK as base64-encoded image data. Ignore all errors."
-  (ignore-errors
-    (base64-decode-string link)))
 
 ;; (bind-key "<f6>" #'link-hint-copy-link)
 (map! :after org
@@ -330,6 +329,7 @@ the first heading."
 
 (defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
+(defvar org-refile-targets)
 (defun stfl/refile-to-roam ()
   (interactive)
   (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
@@ -620,7 +620,25 @@ Org-mode properties drawer already, keep the headline and don’t insert
 (use-package ob-mermaid
   :after org
   :config
+  (setopt ob-mermaid-default-config-file
+          (expand-file-name "mermaid/config.json" doom-user-dir))
+  ;; ob-mermaid splices this into a shell command unquoted; a bare # starts a comment.
+  (add-to-list 'org-babel-default-header-args:mermaid
+               (cons :background-color (shell-quote-argument "#282c34")))
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
+
+(define-advice org-babel-execute:mermaid (:after (_body params) stfl/svg-preserve-space)
+  "Mark a rendered SVG `xml:space=\"preserve\"'.
+Without HTML labels mermaid starts each word's <tspan> with a space,
+which librsvg, and therefore Emacs, collapses away."
+  (let ((file (cdr (assq :file params))))
+    (when (and file (string-suffix-p ".svg" file t) (file-exists-p file))
+      (with-temp-file file
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (when (and (re-search-forward "<svg " nil t)
+                   (not (looking-at-p "[^>]*xml:space=")))
+          (replace-match "<svg xml:space=\"preserve\" " t t))))))
 
 (use-package mermaid-ts-mode
   :mode ("\\.mmd\\'" . mermaid-ts-mode)
@@ -1172,16 +1190,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
           (:tangle . "no")
           (:eval . "never-export"))))
 
-(with-eval-after-load 'python-mode
-  (with-eval-after-load 'dap-mode
-    (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
-                               (list :type "python-test-at-point  "
-                                     :args ""
-                                     :program nil
-                                     :module "pytest"
-                                     :request "launch"
-                                     :name "Python :: Run pytest (at point)"))))
-
 (map! :mode rustic-mode
       :map rustic-mode-map
       :localleader
@@ -1207,16 +1215,6 @@ global mapping list. Updates or replaces any existing mapping for the current fi
         (plist-put eglot-workspace-configuration
                    :rust-analyzer
                    '(:inlayHints (:maxLength 40)))))
-
-(with-eval-after-load 'rust-mode
-  (with-eval-after-load 'dap-mode
-    (dap-register-debug-template "Rust::GDB Run Configuration"
-                                 (list :type "gdb"
-                                       :request "launch"
-                                       :name "GDB::Run"
-                                       :gdbpath "rust-gdb"
-                                       :target nil
-                                       :cwd nil))))
 
 (set-formatter! 'alejandra '("alejandra" "--quiet") :modes '(nix-ts-mode))
 
@@ -1264,6 +1262,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 ;; (add-hook 'sql-mode-hook 'edbi-minor-mode)
 
 (use-package exercism-mode
+  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -1344,6 +1343,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (with-eval-after-load 'lsp-bridge
   (setopt lsp-bridge-c-lsp-server "ccls"))
 
+(defvar projectile-project-test-cmd)
 (defun run-ctest (arg)
   (interactive "P")
   (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))

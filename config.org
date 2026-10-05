@@ -2,6 +2,10 @@
 #+startup: overview
 #+PROPERTY: header-args:elisp :noeval
 
+#+begin_src elisp
+;;; config.el -*- lexical-binding: t; -*-
+#+end_src
+
 * General
 ** User Information
 
@@ -389,6 +393,7 @@ matching Org's own case-insensitive `#' link search."
               slug (format "%s-%d" base n)))
       (org-entry-put nil "CUSTOM_ID" slug))))
 
+(defvar org-id-link-to-org-use-id)
 (define-advice org-store-link (:around (fn &optional arg interactive?) stfl/scope-ids)
   "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
 Applies to interactive calls in Org buffers only; capture's %a and calls
@@ -582,18 +587,11 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
         org-startup-folded 'fold
         org-startup-with-inline-images t
         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
-        org-image-actual-width (* (default-font-width) 40)
+        org-image-actual-width (list (* (default-font-width) 40))
+        org-image-max-width 'window
         ))
 (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
-#+END_SRC
-
-See https://github.com/hlissner/doom-emacs/issues/3185 - Invalid base64 data
-#+BEGIN_SRC elisp
-(define-advice +org-inline-image-data-fn (:override (_protocol link _description) stfl/ignore-errors)
-  "Interpret LINK as base64-encoded image data. Ignore all errors."
-  (ignore-errors
-    (base64-decode-string link)))
 #+END_SRC
 
 ** [#C] Key Bindings
@@ -633,6 +631,7 @@ refile to roam files by
 #+begin_src elisp
 (defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
+(defvar org-refile-targets)
 (defun stfl/refile-to-roam ()
   (interactive)
   (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
@@ -1138,6 +1137,10 @@ customize the sections in the org-roam buffer
 Org babel to generate mermaid diagrams from org src blocks.
 Rendering shells out to =mmdc= (=mermaid-cli=, installed by the dotfiles' =emacs.nix=), found on =exec-path=.
 
+Emacs draws SVG with librsvg, which ignores the HTML labels mermaid emits by default.
+=mermaid/config.json= turns them off and sets a doom-one palette; a diagram can override it in its own =config:= frontmatter.
+Size a result in the buffer with =#+attr_org: :width 100%= above its =#+RESULTS:= line.
+
 
 =mermaid-ts-mode= edits =.mmd= files and mermaid src blocks (=C-c '=).
 Its grammar comes from =treesit-grammars.with-all-grammars= in =emacs.nix=.
@@ -1151,7 +1154,25 @@ Its grammar comes from =treesit-grammars.with-all-grammars= in =emacs.nix=.
 (use-package ob-mermaid
   :after org
   :config
+  (setopt ob-mermaid-default-config-file
+          (expand-file-name "mermaid/config.json" doom-user-dir))
+  ;; ob-mermaid splices this into a shell command unquoted; a bare # starts a comment.
+  (add-to-list 'org-babel-default-header-args:mermaid
+               (cons :background-color (shell-quote-argument "#282c34")))
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
+
+(define-advice org-babel-execute:mermaid (:after (_body params) stfl/svg-preserve-space)
+  "Mark a rendered SVG `xml:space=\"preserve\"'.
+Without HTML labels mermaid starts each word's <tspan> with a space,
+which librsvg, and therefore Emacs, collapses away."
+  (let ((file (cdr (assq :file params))))
+    (when (and file (string-suffix-p ".svg" file t) (file-exists-p file))
+      (with-temp-file file
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (when (and (re-search-forward "<svg " nil t)
+                   (not (looking-at-p "[^>]*xml:space=")))
+          (replace-match "<svg xml:space=\"preserve\" " t t))))))
 
 (use-package mermaid-ts-mode
   :mode ("\\.mmd\\'" . mermaid-ts-mode)
@@ -2134,23 +2155,6 @@ header arguments to for jupyter-python to work with plotly
           (:eval . "never-export"))))
 #+end_src
 
-*** Debug Test at point workaround
-
-debugging python tests at point do not work with the default configuration.
-might be merged upstream: https://github.com/emacs-lsp/dap-mode/pull/590
-
-#+begin_src elisp
-(with-eval-after-load 'python-mode
-  (with-eval-after-load 'dap-mode
-    (dap-register-debug-template "Python :: Run pytest (at point) -- Workaround"
-                               (list :type "python-test-at-point  "
-                                     :args ""
-                                     :program nil
-                                     :module "pytest"
-                                     :request "launch"
-                                     :name "Python :: Run pytest (at point)"))))
-#+end_src
-
 ** Rust
 
 #+begin_src elisp
@@ -2189,20 +2193,6 @@ This requires ~lsp-inlay-hint-enable~ as configured in [[* Inlay Hints][LSP/Inla
         (plist-put eglot-workspace-configuration
                    :rust-analyzer
                    '(:inlayHints (:maxLength 40)))))
-#+end_src
-
-configre dap-mode for rust
-
-#+begin_src elisp
-(with-eval-after-load 'rust-mode
-  (with-eval-after-load 'dap-mode
-    (dap-register-debug-template "Rust::GDB Run Configuration"
-                                 (list :type "gdb"
-                                       :request "launch"
-                                       :name "GDB::Run"
-                                       :gdbpath "rust-gdb"
-                                       :target nil
-                                       :cwd nil))))
 #+end_src
 
 ** Nix
@@ -2327,6 +2317,7 @@ small exercises. The exercises can can be solved locally.
 
 #+begin_src elisp
 (use-package exercism-mode
+  :disabled
   :after projectile
   :if (executable-find "exercism")
   :commands exercism
@@ -2731,6 +2722,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
 #+end_src
 
 #+begin_src elisp
+(defvar projectile-project-test-cmd)
 (defun run-ctest (arg)
   (interactive "P")
   (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
