@@ -22,11 +22,12 @@ harnesses. The conventions an agent must follow when changing code live in
 - For risky Emacs Lisp edits, prefer byte-compilation or batch loading before finishing.
 
 ## Test Commands
-- Four harnesses live under `test/`, all driven through `test/bootstrap.el`:
+- Five harnesses live under `test/`, all driven through `test/bootstrap.el`:
   - `test/org-clock-projects-smoke.el` checks the *wiring* — that the configuration hands `org-clock-projects` the resolver, settings and keys it expects. It touches no Org data.
   - `test/org-clock-projects-live.el` checks the *behaviour* against the real Org corpus: it exports the previous month for a real project into a temporary directory and compares the result against an oracle built by text search over the same `CLOCK:` lines, and against Org's own clocktable total. It writes nothing outside `$TMPDIR`.
   - `test/agile-gtd-keys.el` checks the agenda priority, TODO-state and view-range key lookups, and that `agile-gtd` defines the range commands the bindings point at. Keymap coverage for `agile-gtd` belongs here rather than in the package, because only this repo knows which keys it binds.
   - `test/agile-gtd-range-live.el` checks the *view ranges* against the real Org corpus: that every entry a range admits ranks inside that range's cutoff band, that widening never drops an entry, that work scheduled beyond today appears only at `someday`, and that the rendered agenda puts it under `Scheduled` — below the priority headings, above `Tickler`. The package's own suite proves these rules on a fixture; this proves them on the corpus they were written for. It reads Org files and renders an agenda, and writes nothing.
+  - `test/agile-gtd-org-records-mcp-live.el` checks the *org-records-mcp view keys* against the real Org corpus: that `agile-gtd` configures one view per key with the rank sort and computed fields, that the tool schema types every parameter and lists every key and computed field, and that a key answers what the agenda block it mirrors shows. It runs views and renders an agenda, and writes nothing.
   - Run any of them with `emacs -q --batch -l ~/.config/doom/test/bootstrap.el -l ~/.config/doom/test/<file>`; all exit non-zero on failure.
   - None is ERT. All assert against the live configuration and the real Org corpus, which a batch ERT run cannot reach, so they report one line per check and exit on the count. The "Prefer ERT" guidance below applies to tests of handwritten helpers, not to these.
 - Beyond those, verification is configuration loading, tangling, and `doom sync` success.

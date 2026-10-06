@@ -431,9 +431,11 @@ agile-gtd configures org-records-mcp as it loads: the views, their sort
 order, the computed fields and the file scope. This section installs the
 stdio shim, starts the server and registers the tools, after agile-gtd so the
 views exist before the first call. The registration is Emacs's own, so a
-client whose bridge outlives an Emacs restart still finds every tool. Its
-=org-view= description, which lists the view keys, is fixed when Emacs
-starts: a project added to agile-gtd reaches clients after a restart.
+client whose bridge outlives an Emacs restart still finds every tool. The
+=org-view= description and the tool schema, which lists every view key as the
+only values its =view= parameter takes, are fixed when Emacs starts: a project
+added to agile-gtd reaches clients after a restart, and until then a client
+that checks its arguments against the schema refuses the project's keys.
 
 The shim MCP clients launch is a copy of the one the package ships, so it is
 copied again whenever the two differ: a package update that changes the shim

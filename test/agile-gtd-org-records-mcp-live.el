@@ -53,7 +53,7 @@
 (agm-check "sort function is the rank"
            (eq org-records-mcp-query-sort-fn #'agile-gtd--item-rank<))
 
-(dolist (field '(rank parent-priority blocked))
+(dolist (field '(rank parent-priority))
   (agm-check (format "computed field %s is set" field)
              (functionp (alist-get field org-records-mcp-computed-fields))))
 
@@ -81,12 +81,60 @@
                   (not (string-match-p "^ +[a-z-]+ - takes " description)))))
 
 
+;;; The tool schema
+
+;; The schema is built when the tools are registered, like the description,
+;; so this reads what a connecting client checks its arguments against.
+(defun agm-schemas ()
+  "Return (TOOL . INPUT-SCHEMA) for every org-records-mcp tool, as registered now."
+  (org-records-mcp-enable)
+  (unwind-protect
+      (let (schemas)
+        (maphash (lambda (id entry) (push (cons id (plist-get entry :schema)) schemas))
+                 (gethash org-records-mcp--server-id mcp-server-lib--tools))
+        schemas)
+    (org-records-mcp-disable)))
+
+(defun agm-param (schemas tool parameter)
+  "Return the schema fragment SCHEMAS gives TOOL's PARAMETER, a string."
+  (cdr (assoc parameter (alist-get 'properties (cdr (assoc tool schemas))))))
+
+(let* ((schemas (agm-schemas))
+       (untyped
+        (cl-loop for (tool . schema) in schemas
+                 append (cl-loop for (name . fragment) in (alist-get 'properties schema)
+                                 unless (or (assq 'type fragment) (assq 'anyOf fragment))
+                                 collect (format "%s.%s" tool name))))
+       (keys (append (alist-get 'enum (agm-param schemas "org-view" "view")) nil))
+       (computed (agm-param schemas "org-view" "computed"))
+       (computed-names
+        (let ((array (seq-find (lambda (branch) (equal (alist-get 'type branch) "array"))
+                               (alist-get 'anyOf computed))))
+          (append (alist-get 'enum (alist-get 'items array)) nil))))
+  (agm-check "every parameter of every tool carries a type"
+             (and schemas (null untyped))
+             (if untyped (format "UNTYPED: %S" (seq-take untyped 5))
+               (format "%d tools" (length schemas))))
+  (agm-check "org-view's view lists every key"
+             (equal (sort (copy-sequence keys) #'string<)
+                    (sort (mapcar #'symbol-name agm-view-names) #'string<))
+             (format "%d keys listed, %d views" (length keys) (length agm-view-names)))
+  (agm-check "org-view's computed lists rank and parent-priority"
+             (and (member "rank" computed-names) (member "parent-priority" computed-names))
+             (format "%S" computed-names))
+  (agm-check "a clearing after takes a string or null"
+             (equal (alist-get 'type (agm-param schemas "org-node-set-priority" "after"))
+                    ["string" "null"])))
+
+
 ;;; Keys against the corpus
 
 (defun agm-run (key &optional filter range)
-  "Run the view KEY and return its parsed JSON, or the error it signals."
+  "Run the view KEY and return its parsed JSON, or the error it signals.
+A match list is an overview that leaves out the file, so the call names the
+fields the checks below read."
   (condition-case err
-      (json-parse-string (org-records-mcp--tool-view key filter range)
+      (json-parse-string (org-records-mcp--tool-view key filter range ["title" "file"])
                          :object-type 'alist :array-type 'list
                          :false-object :json-false)
     (error err)))
