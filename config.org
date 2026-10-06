@@ -2764,8 +2764,7 @@ Alternative bitbake lsp from the vscode-bitbake project.
       (projectile-test-project arg))))
 
 
-(map! :mode c++-mode
-      :map c++-mode-map
+(map! :mode (c++-mode c++-ts-mode)
       :localleader
       :prefix ("t" . "test")
       :n "t" #'run-ctest

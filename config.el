@@ -1385,8 +1385,7 @@ global mapping list. Updates or replaces any existing mapping for the current fi
       (projectile-test-project arg))))
 
 
-(map! :mode c++-mode
-      :map c++-mode-map
+(map! :mode (c++-mode c++-ts-mode)
       :localleader
       :prefix ("t" . "test")
       :n "t" #'run-ctest
