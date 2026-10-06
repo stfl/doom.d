@@ -31,6 +31,14 @@ linked from the table above.
 - `custom.el` is Emacs Custom output; avoid manual edits to this file!
 - Extra handwritten files include `my-deft-title.el` and JSON files in `langserver/`.
 
+## Own Packages: agile-gtd and org-records-mcp
+- `agile-gtd` and `org-records-mcp` are the user's own packages, not third-party code. `agile-gtd` lives at `~/work/agile-gtd` (GitHub `stfl/agile-gtd.el`), `org-records-mcp` at `~/work/org-records-mcp` (GitHub `stfl/org-records-mcp`).
+- When a fix or feature falls inside what one of them does, make it in that package's repo and follow its `CLAUDE.md`. Do not work around it in `config.org` with advice, overrides or copied code.
+- `agile-gtd` owns the GTD workflow: TODO keywords, priorities and rank, agenda commands and view ranges, capture and refile, the Org settings it applies, its org-records-mcp views, and how `org-store-link` picks an identifier and copies links.
+- `org-records-mcp` owns the MCP server: its tools, link minting and resolution, and its file scope.
+- `config.org` keeps only the user's settings for them: the project list, extra agenda files, enabling, and starting the MCP server.
+- Doom installs both from GitHub, so a package change reaches this config only after it is pushed and the package is pulled, or once the local recipe is switched on; see [`docs/local-packages.md`](docs/local-packages.md). Say which one applies in the handoff, and do not push a package repo without the user's go.
+
 ## Tooling Baseline
 - Emacs version on this machine is `GNU Emacs 31.1`.
 - Doom CLI is available at `~/.config/emacs/bin/doom`.
@@ -48,6 +56,7 @@ linked from the table above.
 - Issues for this repo live as GitHub issues on `stfl/doom.d`: `gh issue create --repo stfl/doom.d ...`.
 - Do not track this repo's work in the `dotfiles` beads database, or in any other repo's tracker.
 - The split is by subject, not by which directory you happen to be in: Doom/Emacs/Org/package work goes to `stfl/doom.d` GitHub issues; NixOS, Home Manager, host, and system-level work stays in the `dotfiles` beads database (`bd create` from `~/.config/dotfiles`).
+- Work on the code of `agile-gtd` or `org-records-mcp` goes to that package's own GitHub issues (`stfl/agile-gtd.el`, `stfl/org-records-mcp`), not `stfl/doom.d`.
 - When a task spans both, file it where the fix lands and cross-reference the other tracker by ID.
 - Use an issue for anything deferred: temporary pins or forks, upstream PRs to follow, and workarounds to revert.
 - When a workaround lands in `config.org`, reference the issue number in a comment next to it so the two stay linked.

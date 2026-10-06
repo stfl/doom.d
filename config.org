@@ -361,85 +361,12 @@ on configuration.
      (org-roam-update-org-id-locations))))
 #+end_src
 
-Storing a link to a heading uses its :ID: when the file is indexed above, and
-a :CUSTOM_ID: slug otherwise, so links out of files org-id never scans still
-resolve.
-
-#+begin_src elisp
-(defun stfl/org-id-indexed-file-p (&optional file)
-  "Non-nil if FILE lies under `org-directory' or `org-roam-directory'."
-  (when-let* ((file (or file (buffer-file-name (buffer-base-buffer)))))
-    (seq-some (lambda (dir) (and dir (file-in-directory-p file dir)))
-              (list org-directory (bound-and-true-p org-roam-directory)))))
-
-(defun stfl/org-heading-slug (title)
-  "Turn TITLE into a slug for use as an Org CUSTOM_ID."
-  (let ((slug (string-trim (replace-regexp-in-string
-                             "[^[:alnum:]]+" "-" (downcase title))
-                            "-+" "-+")))
-    (if (string-empty-p slug) "heading" slug)))
-
-(defun stfl/org-ensure-custom-id ()
-  "Give the heading at point a :CUSTOM_ID:, unless it already has one.
-The slug comes from the heading title and is made unique within the file,
-matching Org's own case-insensitive `#' link search."
-  (org-back-to-heading t)
-  (unless (org-entry-get nil "CUSTOM_ID")
-    (let* ((base (stfl/org-heading-slug (org-get-heading t t t t)))
-           (slug base)
-           (n 1))
-      (while (org-with-wide-buffer (org-find-property "CUSTOM_ID" slug))
-        (setq n (1+ n)
-              slug (format "%s-%d" base n)))
-      (org-entry-put nil "CUSTOM_ID" slug))))
-
-(defvar org-id-link-to-org-use-id)
-(define-advice org-store-link (:around (fn &optional arg interactive?) stfl/scope-ids)
-  "Link indexed headings by :ID:, all others by :CUSTOM_ID:.
-Applies to interactive calls in Org buffers only; capture's %a and calls
-outside Org buffers are untouched. Never creates an :ID: or :CUSTOM_ID:
-in a file outside `org-directory' or `org-roam-directory', even before
-the first heading."
-  (if (not (and interactive? (derived-mode-p 'org-mode)))
-      (funcall fn arg interactive?)
-    (if (stfl/org-id-indexed-file-p)
-        (let ((org-id-link-to-org-use-id t))
-          (funcall fn arg interactive?))
-      (unless (org-before-first-heading-p)
-        (stfl/org-ensure-custom-id))
-      (let ((org-id-link-to-org-use-id nil))
-        (funcall fn arg interactive?)))))
-
-(defun stfl/org-link-for-kill-ring (link)
-  "Return LINK as a bare link with a `file:' path made absolute.
-The result is an `id:', `file:PATH', `file:PATH::#CUSTOM_ID' or
-`file:PATH::*TITLE' link as org-records-mcp accepts it; other link
-types come back unchanged."
-  (if (string-match "\\`file:\\(.*?\\)\\(::.*\\)?\\'" link)
-      (concat "file:" (expand-file-name (match-string 1 link))
-              (match-string 2 link))
-    link))
-
-(define-advice org-store-link (:around (fn &optional arg interactive?) stfl/copy-to-kill-ring)
-  "Also put an interactively stored link on the kill ring.
-When Org stores both an `id:' link and a `:CUSTOM_ID:' link for the
-heading at point, the `id:' link is the one copied.  Non-interactive
-calls, such as capture's %a or org-records-mcp, leave the kill ring
-alone."
-  (let ((stored (funcall fn arg interactive?)))
-    (when (and interactive? (consp stored))
-      (let* ((id (and (derived-mode-p 'org-mode)
-                      (not (org-before-first-heading-p))
-                      (org-entry-get nil "ID")))
-             (id-entry (and id (assoc (concat "id:" id)
-                                      (seq-take org-stored-links 2))))
-             (link (stfl/org-link-for-kill-ring (car (or id-entry stored)))))
-        (kill-new link)
-        (message "Stored and copied: %s" link)))
-    stored))
-#+end_src
-
 ** agile-gtd
+
+agile-gtd also owns how =org-store-link= behaves: an interactive call links a
+heading by =:ID:= under =org-directory= and by a =:CUSTOM_ID:= slug elsewhere,
+and copies the link to the clipboard with an absolute path for org-records-mcp.
+See =docs/storing-links.org= in agile-gtd.
 
 #+begin_src elisp :tangle packages.el
 (package! agile-gtd
