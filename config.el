@@ -187,6 +187,34 @@ the first heading."
       (let ((org-id-link-to-org-use-id nil))
         (funcall fn arg interactive?)))))
 
+(defun stfl/org-link-for-kill-ring (link)
+  "Return LINK as a bare link with a `file:' path made absolute.
+The result is an `id:', `file:PATH', `file:PATH::#CUSTOM_ID' or
+`file:PATH::*TITLE' link as org-records-mcp accepts it; other link
+types come back unchanged."
+  (if (string-match "\\`file:\\(.*?\\)\\(::.*\\)?\\'" link)
+      (concat "file:" (expand-file-name (match-string 1 link))
+              (match-string 2 link))
+    link))
+
+(define-advice org-store-link (:around (fn &optional arg interactive?) stfl/copy-to-kill-ring)
+  "Also put an interactively stored link on the kill ring.
+When Org stores both an `id:' link and a `:CUSTOM_ID:' link for the
+heading at point, the `id:' link is the one copied.  Non-interactive
+calls, such as capture's %a or org-records-mcp, leave the kill ring
+alone."
+  (let ((stored (funcall fn arg interactive?)))
+    (when (and interactive? (consp stored))
+      (let* ((id (and (derived-mode-p 'org-mode)
+                      (not (org-before-first-heading-p))
+                      (org-entry-get nil "ID")))
+             (id-entry (and id (assoc (concat "id:" id)
+                                      (seq-take org-stored-links 2))))
+             (link (stfl/org-link-for-kill-ring (car (or id-entry stored)))))
+        (kill-new link)
+        (message "Stored and copied: %s" link)))
+    stored))
+
 (use-package agile-gtd
   :after org
   :config
