@@ -1378,11 +1378,11 @@ global mapping list. Updates or replaces any existing mapping for the current fi
 (with-eval-after-load 'lsp-bridge
   (setopt lsp-bridge-c-lsp-server "ccls"))
 
-(defvar projectile-project-test-cmd)
-(defun run-ctest (arg)
-  (interactive "P")
-  (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
-    (projectile-test-project arg)))
+(with-eval-after-load 'projectile
+  (defun run-ctest (arg)
+    (interactive "P")
+    (let ((projectile-project-test-cmd "cmake --build build && ctest --test-dir build --output-on-failure --rerun-failed"))
+      (projectile-test-project arg))))
 
 
 (map! :mode c++-mode
