@@ -329,11 +329,11 @@ the first heading."
 
 (defun stfl/build-my-roam-files () (file-expand-wildcards (doom-path org-directory "roam/**/*.org")))
 
-(defvar org-refile-targets)
-(defun stfl/refile-to-roam ()
-  (interactive)
-  (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
-    (call-interactively 'org-refile)))
+(with-eval-after-load 'org-refile
+  (defun stfl/refile-to-roam ()
+    (interactive)
+    (let ((org-refile-targets '((stfl/build-my-roam-files :maxlevel . 1))))
+      (call-interactively 'org-refile))))
 
 (defun org-roam-create-note-from-headline ()
   "Create an Org-roam note from the current headline and jump to it.
