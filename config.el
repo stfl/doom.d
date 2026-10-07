@@ -878,7 +878,7 @@ Not added when either:
 (use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
   :config
-  (setopt typst-ts-watch-options "--open"
+  (setopt typst-ts-watch-options '("--open")
           typst-ts-indent-offset 2
           typst-ts-enable-raw-blocks-highlight t)
   (map! :map typst-ts-mode-map
