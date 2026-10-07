@@ -156,7 +156,9 @@
                                    "ikea.org"
                                    "emacs.org"
                                    "homelab.org"
-                                   "cafe-glas.org")))
+                                   "cafe-glas.org"
+                                   ;; A directory: Org lists its .org files on every agenda build
+                                   "decisions/")))
   (setq agile-gtd-projects '((:tag "oebb"       :name "ÖBB"        :key ?o)
                              (:tag "origina"    :name "Origina"    :key ?i)
                              (:tag "momentedge" :name "MomentEdge" :key ?m)
