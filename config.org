@@ -544,7 +544,10 @@ First I like to add some extra fancy stuff to make org-mode more appealing when 
 (with-eval-after-load 'org
   (setq org-startup-indented 'indent
         org-startup-folded 'fold
-        org-startup-with-inline-images t
+        ;; Previewing on open fetches remote images (Doom: 'download)
+        ;; and stalls on unreachable hosts; preview on demand with C-c C-x C-v
+        org-startup-with-inline-images nil
+        org-display-remote-inline-images 'skip
         ;; org-image-actual-width (round (* (font-get doom-font :size) 25))
         org-image-actual-width (list (* (default-font-width) 40))
         org-image-max-width 'window
