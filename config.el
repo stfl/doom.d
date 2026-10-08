@@ -330,11 +330,10 @@ Org-mode properties drawer already, keep the headline and don’t insert
             (function stfl/org-capture-template-versicherung)
             :root "~/Documents/Finanzielles/Einreichung Versicherung")))))
 
-(setq stfl/org-roam-absolute (doom-path org-directory "roam/"))
 (with-eval-after-load 'org-roam
   (setopt org-roam-capture-templates
-          `(("d" "default" plain "%?"
-             :target (file+head ,(doom-path stfl/org-roam-absolute "%<%Y%m%d%H%M%S>-${slug}.org")
+          '(("d" "default" plain "%?"
+             :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                 "#+title: ${title}\n")
              :unnarrowed t))))
 
@@ -513,7 +512,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
                       ))
 
 (with-eval-after-load 'org-roam
-  (setopt org-roam-directory org-directory
+  (setopt org-roam-directory (doom-path org-directory "roam/")
           org-roam-db-location (doom-path doom-local-dir "roam.db")
           ;; Keep hidden files and directories out of org-roam, matching what
           ;; `org-roam-list-files' (fd) skips.
