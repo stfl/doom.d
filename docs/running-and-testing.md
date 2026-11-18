@@ -2,7 +2,7 @@
 
 Every command for tangling, syncing, linting, and running this repo's test
 harnesses. The conventions an agent must follow when changing code live in
-[`../CLAUDE.md`](../CLAUDE.md).
+[`../AGENTS.md`](../AGENTS.md).
 
 ## High-Value Commands
 - Re-tangle the literate config after editing `config.org`: `~/.config/emacs/bin/doom +org tangle config.org`
