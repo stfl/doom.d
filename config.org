@@ -1763,11 +1763,54 @@ The Markdown adaptor targets =markdown-ts-mode=.
 #+end_src
 
 #+begin_src elisp
+(setopt pretty-tables-row-lines t)
+
+(defvar stfl/pretty-tables-min-width 60
+  "Narrowest table `stfl/pretty-tables-fit-window' sets.")
+
+(defvar stfl/pretty-tables-max-width 200
+  "Widest table `stfl/pretty-tables-fit-window' sets.")
+
+(defun stfl/pretty-tables-fit-window ()
+  "Bind `pretty-tables-width' in this buffer to its window's width.
+The width stays between `stfl/pretty-tables-min-width' and
+`stfl/pretty-tables-max-width'."
+  (when-let* ((window (get-buffer-window (current-buffer))))
+    (let ((width (min stfl/pretty-tables-max-width
+                      (max stfl/pretty-tables-min-width
+                           (window-max-chars-per-line window)))))
+      (unless (eq width pretty-tables-width)
+        (setq-local pretty-tables-width width)))))
+
+(defun stfl/pretty-tables-track-window ()
+  "Keep `pretty-tables-width' fitted to the window while the mode is on."
+  (if (or (bound-and-true-p pretty-tables-for-org-mode)
+          (bound-and-true-p pretty-tables-for-markdown-mode))
+      (progn
+        (add-hook 'window-configuration-change-hook #'stfl/pretty-tables-fit-window nil t)
+        (stfl/pretty-tables-fit-window))
+    (remove-hook 'window-configuration-change-hook #'stfl/pretty-tables-fit-window t)))
+
+(defun stfl/pretty-tables-toggle ()
+  "Toggle the pretty-tables mode of the buffer's major mode."
+  (interactive)
+  (cond ((derived-mode-p 'org-mode) (pretty-tables-for-org-mode 'toggle))
+        ((derived-mode-p 'markdown-ts-mode) (pretty-tables-for-markdown-mode 'toggle))
+        (t (user-error "No pretty-tables adaptor for %s" major-mode))))
+
 (use-package pretty-tables-for-org
-  :hook (org-mode . pretty-tables-for-org-mode))
+  :hook ((org-mode . pretty-tables-for-org-mode)
+         (pretty-tables-for-org-mode . stfl/pretty-tables-track-window)))
 
 (use-package pretty-tables-for-markdown
-  :hook (markdown-ts-mode . pretty-tables-for-markdown-mode))
+  :hook ((markdown-ts-mode . pretty-tables-for-markdown-mode)
+         (pretty-tables-for-markdown-mode . stfl/pretty-tables-track-window)))
+
+(map! :leader :desc "Pretty tables" "t T" #'stfl/pretty-tables-toggle)
+
+;; The stripe takes the default background; the other rows take `hl-line'.
+(custom-set-faces!
+  `(pretty-tables-stripe :background ,(doom-color 'bg)))
 #+end_src
 
 ** Typst
