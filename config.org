@@ -188,6 +188,25 @@ register this and mouse clicks are registed on the wrong frame.
         mouse-autoselect-window nil)
 #+END_SRC
 
+** Clipboard encoding
+
+Emacs offers its clipboard targets in the order of =selection-converter-alist=,
+which starts with the Latin-1 targets =TEXT= and =STRING=. Chromium-based
+browsers on Wayland request the first text target offered and decode it as
+UTF-8, so umlauts paste as =�= ([[https://debbugs.gnu.org/db/79/79967.html][bug#79967]]). Offering the UTF-8 targets first
+makes them the ones requested.
+
+Chromium 159 and later prefer the UTF-8 targets whatever the order ([[https://chromium-review.googlesource.com/c/chromium/src/+/8759766][fix]]), so
+this block only serves browsers built on an older Chromium.
+
+#+BEGIN_SRC elisp
+(with-eval-after-load 'select
+  (dolist (type '(UTF8_STRING text/plain\;charset=utf-8))
+    (when-let* ((converter (assq type selection-converter-alist)))
+      (setq selection-converter-alist
+            (cons converter (delq converter selection-converter-alist))))))
+#+END_SRC
+
 ** Find files and directories using fd
 
 #+begin_src elisp

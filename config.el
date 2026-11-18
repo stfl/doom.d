@@ -65,6 +65,12 @@
 (setopt focus-follows-mouse 'auto-raise
         mouse-autoselect-window nil)
 
+(with-eval-after-load 'select
+  (dolist (type '(UTF8_STRING text/plain\;charset=utf-8))
+    (when-let* ((converter (assq type selection-converter-alist)))
+      (setq selection-converter-alist
+            (cons converter (delq converter selection-converter-alist))))))
+
 (with-eval-after-load 'consult
   (setopt consult-fd-args '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
                             "--color=never"
