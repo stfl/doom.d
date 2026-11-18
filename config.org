@@ -1852,6 +1852,14 @@ The width stays between `stfl/pretty-tables-min-width' and
                `(typst-ts-mode . ("tinymist"))))
 #+end_src
 
+nil asks before every =nix flake archive= and leaves flake input evaluation off; answer both up front.
+
+#+begin_src elisp
+(with-eval-after-load 'eglot
+  (setq-default eglot-workspace-configuration
+                '(:nil (:nix (:flake (:autoArchive t :autoEvalInputs t))))))
+#+end_src
+
 #+begin_src emacs-lisp
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
