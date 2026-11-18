@@ -943,11 +943,54 @@ Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
   (setopt vterm-tramp-shells '(("docker" "/bin/sh")
                                ("ssh" "/bin/bash"))))
 
+(setopt pretty-tables-row-lines t)
+
+(defvar stfl/pretty-tables-min-width 60
+  "Narrowest table `stfl/pretty-tables-fit-window' sets.")
+
+(defvar stfl/pretty-tables-max-width 200
+  "Widest table `stfl/pretty-tables-fit-window' sets.")
+
+(defun stfl/pretty-tables-fit-window ()
+  "Bind `pretty-tables-width' in this buffer to its window's width.
+The width stays between `stfl/pretty-tables-min-width' and
+`stfl/pretty-tables-max-width'."
+  (when-let* ((window (get-buffer-window (current-buffer))))
+    (let ((width (min stfl/pretty-tables-max-width
+                      (max stfl/pretty-tables-min-width
+                           (window-max-chars-per-line window)))))
+      (unless (eq width pretty-tables-width)
+        (setq-local pretty-tables-width width)))))
+
+(defun stfl/pretty-tables-track-window ()
+  "Keep `pretty-tables-width' fitted to the window while the mode is on."
+  (if (or (bound-and-true-p pretty-tables-for-org-mode)
+          (bound-and-true-p pretty-tables-for-markdown-mode))
+      (progn
+        (add-hook 'window-configuration-change-hook #'stfl/pretty-tables-fit-window nil t)
+        (stfl/pretty-tables-fit-window))
+    (remove-hook 'window-configuration-change-hook #'stfl/pretty-tables-fit-window t)))
+
+(defun stfl/pretty-tables-toggle ()
+  "Toggle the pretty-tables mode of the buffer's major mode."
+  (interactive)
+  (cond ((derived-mode-p 'org-mode) (pretty-tables-for-org-mode 'toggle))
+        ((derived-mode-p 'markdown-ts-mode) (pretty-tables-for-markdown-mode 'toggle))
+        (t (user-error "No pretty-tables adaptor for %s" major-mode))))
+
 (use-package pretty-tables-for-org
-  :hook (org-mode . pretty-tables-for-org-mode))
+  :hook ((org-mode . pretty-tables-for-org-mode)
+         (pretty-tables-for-org-mode . stfl/pretty-tables-track-window)))
 
 (use-package pretty-tables-for-markdown
-  :hook (markdown-ts-mode . pretty-tables-for-markdown-mode))
+  :hook ((markdown-ts-mode . pretty-tables-for-markdown-mode)
+         (pretty-tables-for-markdown-mode . stfl/pretty-tables-track-window)))
+
+(map! :leader :desc "Pretty tables" "t T" #'stfl/pretty-tables-toggle)
+
+;; The stripe takes the default background; the other rows take `hl-line'.
+(custom-set-faces!
+  `(pretty-tables-stripe :background ,(doom-color 'bg)))
 
 (use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
@@ -970,6 +1013,10 @@ Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ("tinymist"))))
+
+(with-eval-after-load 'eglot
+  (setq-default eglot-workspace-configuration
+                '(:nil (:nix (:flake (:autoArchive t :autoEvalInputs t))))))
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(typst-ts-mode . "typst") t)
@@ -1704,8 +1751,6 @@ does not work and `bd' must connect to a shared Dolt server instead.")
   (setopt copilot-indent-offset-warning-disable t
           copilot-max-char-warning-disable t)
 
-  (setq copilot-lsp-settings '(:github (:copilot (:selectedCompletionModel "gpt-41-copilot"))))
-
   ;; Use the Nix-provided language server (modules/dev/default.nix:
   ;; llm-agents.copilot-language-server) instead of the npm copy
   ;; copilot-install-server drops into copilot-install-dir. An absolute path
@@ -1724,67 +1769,63 @@ does not work and `bd' must connect to a shared Dolt server instead.")
   ;; reload font-lock to fix syntax highlighting of org-babel src blocks
   (add-hook 'gptel-post-response-functions '+gptel-font-lock-update)
 
-  (gptel-make-gemini "Gemini" :stream t
-                     :key (password-store-get "API/Gemini-emacs"))
+  (gptel-make-gemini "Gemini" :stream t :key (password-store-get "API/Gemini-emacs"))
+  (gptel-make-anthropic "Claude" :stream t :key (password-store-get "API/Claude-emacs"))
+  (gptel-make-anthropic "OpenAI" :stream t :key (password-store-get "API/OpenAI-emacs"))
 
-  (gptel-make-anthropic "Claude"          ;Any name you want
-    :stream t                             ;Streaming responses
-    :key (password-store-get "API/Claude-emacs"))
+  ;; (gptel-make-perplexity "Perplexity"          ;Any name you want
+  ;;   :stream t                             ;Streaming responses
+  ;;   :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
 
-  (gptel-make-perplexity "Perplexity"          ;Any name you want
-    :stream t                             ;Streaming responses
-    :key (password-store-get "API/Perplexity-emacs-pro-ste.lendl"))
-
-  (gptel-make-gh-copilot "Copilot")
+  ;; (gptel-make-gh-copilot "Copilot")
 
   ;; OpenRouter offers an OpenAI compatible API
-  (gptel-make-openai "OpenRouter"               ;Any name you want
-    :host "openrouter.ai"
-    :endpoint "/api/v1/chat/completions"
-    :stream t
-    :key (password-store-get "API/Openrouter-emacs")
-    :models '(moonshotai/kimi-k2-thinking))
+  ;; (gptel-make-openai "OpenRouter"               ;Any name you want
+  ;;   :host "openrouter.ai"
+  ;;   :endpoint "/api/v1/chat/completions"
+  ;;   :stream t
+  ;;   :key (password-store-get "API/Openrouter-emacs")
+  ;;   :models '(moonshotai/kimi-k2-thinking))
 
   ;; Z.ai offers an OpenAI compatible API for GLM models.
   ;; Coding-plan keys MUST use /api/coding/paas/v4 — the general /api/paas/v4
   ;; endpoint returns error 1113 ("insufficient balance") for coding-plan keys.
-  (gptel-make-openai "Z.ai"
-    :host "api.z.ai"
-    :endpoint "/api/coding/paas/v4/chat/completions"
-    :stream t
-    :key (password-store-get "API/zai")
-    :models '(glm-5.1 glm-4.7 glm-5-turbo glm-4.5-air
-              (glm-5.1-fast
-               :description "GLM 5.1 (thinking disabled)"
-               :context-window 200
-               :request-params (:model "glm-5.1" :thinking (:type "disabled")))))
+  ;; (gptel-make-openai "Z.ai"
+  ;;   :host "api.z.ai"
+  ;;   :endpoint "/api/coding/paas/v4/chat/completions"
+  ;;   :stream t
+  ;;   :key (password-store-get "API/zai")
+  ;;   :models '(glm-5.1 glm-4.7 glm-5-turbo glm-4.5-air
+  ;;             (glm-5.1-fast
+  ;;              :description "GLM 5.1 (thinking disabled)"
+  ;;              :context-window 200
+  ;;              :request-params (:model "glm-5.1" :thinking (:type "disabled")))))
 
   ;; Kimi Code subscription API (requires KimiCLI User-Agent)
-  (gptel-make-openai "Kimi"
-    :host "api.kimi.com"
-    :endpoint "/coding/v1/chat/completions"
-    :stream t
-    :key (password-store-get "API/moonshot")
-    :header (lambda (_info)
-              (when-let* ((key (gptel--get-api-key)))
-                `(("Authorization" . ,(concat "Bearer " key))
-                  ("User-Agent" . "KimiCLI/1.38.0"))))
-    :models '((kimi-for-coding
-               :description "Kimi K2.6 for coding (thinking enabled)"
-               :context-window 256)
-              (kimi-for-coding-fast
-               :description "Kimi K2.6 for coding (thinking disabled)"
-               :context-window 256
-               :request-params (:model "kimi-for-coding" :thinking (:type "disabled")))))
+  ;; (gptel-make-openai "Kimi"
+  ;;   :host "api.kimi.com"
+  ;;   :endpoint "/coding/v1/chat/completions"
+  ;;   :stream t
+  ;;   :key (password-store-get "API/moonshot")
+  ;;   :header (lambda (_info)
+  ;;             (when-let* ((key (gptel--get-api-key)))
+  ;;               `(("Authorization" . ,(concat "Bearer " key))
+  ;;                 ("User-Agent" . "KimiCLI/1.38.0"))))
+  ;;   :models '((kimi-for-coding
+  ;;              :description "Kimi K2.6 for coding (thinking enabled)"
+  ;;              :context-window 256)
+  ;;             (kimi-for-coding-fast
+  ;;              :description "Kimi K2.6 for coding (thinking disabled)"
+  ;;              :context-window 256
+  ;;              :request-params (:model "kimi-for-coding" :thinking (:type "disabled")))))
 
   (setopt gptel-default-mode 'org-mode
           ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
           gptel-api-key (password-store-get "API/OpenAI-emacs")
           ;; gptel-model 'gpt-4o
           gptel-backend (gptel-get-backend "Claude")
-          gptel-model 'claude-sonnet-5
+          gptel-model 'claude-sonnet-5-5
           gptel-log-level 'info
-          ;; gptel-use-curl nil
           gptel-use-curl t
           gptel-stream t)
   )
@@ -1816,5 +1857,5 @@ does not work and `bd' must connect to a shared Dolt server instead.")
       (funcall orig-fn callback)))
   (advice-add 'gptel-magit--generate :around #'stfl/gptel-magit--inject-branch)
 
-  (setq gptel-magit-backend (gptel-get-backend "Z.ai")
-        gptel-magit-model 'glm-5.1-fast))
+  (setq gptel-magit-backend (gptel-get-backend "Claude")
+        gptel-magit-model 'haiku-5-5))
