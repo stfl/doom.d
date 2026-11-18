@@ -51,6 +51,10 @@
 
 (package! vterm :disable t)
 
+(package! pretty-tables
+  :recipe (:host github :repo "alberti42/pretty-tables.el"
+           :files ("pretty-tables*.el")))
+
 (package! typst-ts-mode
   :recipe (:type git :host codeberg
            :repo "meow_king/typst-ts-mode"

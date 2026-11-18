@@ -370,6 +370,20 @@ Org-mode properties drawer already, keep the headline and don’t insert
 
 (with-eval-after-load 'org (require 'org-checklist))
 
+(with-eval-after-load 'org
+  (setopt org-columns-default-format
+          "%TODO %40ITEM %EFFORT{:} %CLOCKSUM(Total) %CLOCKSUM_T(Today) %TAGS")
+
+  (defun stfl/org-columns-show-ticket-h ()
+    (when (org-with-wide-buffer
+           (goto-char (point-min))
+           (let ((case-fold-search t))
+             (re-search-forward "^[ \t]*:TICKET:" nil t)))
+      (setq-local org-columns-default-format
+                  "%TODO %TICKET %40ITEM %EFFORT{:} %CLOCKSUM(Total) %CLOCKSUM_T(Today) %TAGS")))
+
+  (add-hook 'org-mode-hook #'stfl/org-columns-show-ticket-h))
+
 (with-eval-after-load 'org-clock
   (setopt org-clock-rounding-minutes 15  ;; Clock in and out rounded to quarter hours.
           org-time-stamp-rounding-minutes '(0 15)
@@ -928,6 +942,12 @@ Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
 (with-eval-after-load 'vterm
   (setopt vterm-tramp-shells '(("docker" "/bin/sh")
                                ("ssh" "/bin/bash"))))
+
+(use-package pretty-tables-for-org
+  :hook (org-mode . pretty-tables-for-org-mode))
+
+(use-package pretty-tables-for-markdown
+  :hook (markdown-ts-mode . pretty-tables-for-markdown-mode))
 
 (use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
@@ -1761,8 +1781,8 @@ does not work and `bd' must connect to a shared Dolt server instead.")
           ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
           gptel-api-key (password-store-get "API/OpenAI-emacs")
           ;; gptel-model 'gpt-4o
-          gptel-backend (gptel-get-backend "Z.ai")
-          gptel-model 'glm-5.1
+          gptel-backend (gptel-get-backend "Claude")
+          gptel-model 'claude-sonnet-5
           gptel-log-level 'info
           ;; gptel-use-curl nil
           gptel-use-curl t

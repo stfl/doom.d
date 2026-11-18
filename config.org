@@ -699,6 +699,28 @@ set the ~RESET_CHECK_BOXES~ property to ~t~ to reset the checklist on repeat
 (with-eval-after-load 'org (require 'org-checklist))
 #+end_src
 
+** Column view
+
+The default column view. The =TICKET= column appears only in files where a
+heading carries a =TICKET= property; the check runs when the file is opened. A
+=#+COLUMNS:= line or a =COLUMNS= property still overrides it.
+
+#+begin_src elisp
+(with-eval-after-load 'org
+  (setopt org-columns-default-format
+          "%TODO %40ITEM %EFFORT{:} %CLOCKSUM(Total) %CLOCKSUM_T(Today) %TAGS")
+
+  (defun stfl/org-columns-show-ticket-h ()
+    (when (org-with-wide-buffer
+           (goto-char (point-min))
+           (let ((case-fold-search t))
+             (re-search-forward "^[ \t]*:TICKET:" nil t)))
+      (setq-local org-columns-default-format
+                  "%TODO %TICKET %40ITEM %EFFORT{:} %CLOCKSUM(Total) %CLOCKSUM_T(Today) %TAGS")))
+
+  (add-hook 'org-mode-hook #'stfl/org-columns-show-ticket-h))
+#+end_src
+
 ** org-habit
 
 org-habit is loaded and configured in ~agile-gtd~ (see its =docs/org-settings.org=).
@@ -888,7 +910,6 @@ Org writes when a subtree is archived, and the =AP= and =TICKET= properties.
 
 ** Task Dependencies (org-edna)
 
-
 #+begin_src elisp :tangle packages.el
 (package! org-edna)
 #+end_src
@@ -1024,7 +1045,6 @@ customize the sections in the org-roam buffer
   # )
 
 ** org-roam-ui
-
 
 #+begin_src elisp :tangle packages.el
 ;; (package! websocket)
@@ -1731,6 +1751,25 @@ use bash when opening a vterm in a tramp dir:
                                ("ssh" "/bin/bash"))))
 #+end_src
 
+** Pretty tables
+
+Aligned, wrapped tables in Org and Markdown buffers; the buffer text is untouched.
+The Markdown adaptor targets =markdown-ts-mode=.
+
+#+begin_src elisp :tangle packages.el
+(package! pretty-tables
+  :recipe (:host github :repo "alberti42/pretty-tables.el"
+           :files ("pretty-tables*.el")))
+#+end_src
+
+#+begin_src elisp
+(use-package pretty-tables-for-org
+  :hook (org-mode . pretty-tables-for-org-mode))
+
+(use-package pretty-tables-for-markdown
+  :hook (markdown-ts-mode . pretty-tables-for-markdown-mode))
+#+end_src
+
 ** Typst
 
 #+begin_src elisp :tangle packages.el
@@ -2273,7 +2312,6 @@ select the formatter for nix
 #+END_SRC
 
 ** Kubernetes
-
 
 #+begin_src elisp :tangle packages.el
 (package! kubernetes :disable t)
@@ -2902,7 +2940,6 @@ activate magit-todo to display the TODOs section in magit buffer
 #+end_src
 
 ** E-Mail
-
 *** mailscripts.el
 
 https://github.com/spwhitton/mailscripts/blob/master/mailscripts.el
@@ -3359,8 +3396,8 @@ If get-password does not reply a proper key.. manually clear the auth-source cac
           ;; gptel-response-prefix-alist '((org-mode . "**** Answer"))
           gptel-api-key (password-store-get "API/OpenAI-emacs")
           ;; gptel-model 'gpt-4o
-          gptel-backend (gptel-get-backend "Z.ai")
-          gptel-model 'glm-5.1
+          gptel-backend (gptel-get-backend "Claude")
+          gptel-model 'claude-sonnet-5
           gptel-log-level 'info
           ;; gptel-use-curl nil
           gptel-use-curl t
