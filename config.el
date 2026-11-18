@@ -815,44 +815,6 @@ Not added when either:
 
 ;; (setopt auth-sources 'password-store)
 
-(defvar stfl/age-agenix-secrets-dir "~/.config/dotfiles/secrets/"
-  "Directory of agenix secrets and the `secrets.nix' naming their recipients.")
-
-(defun stfl/age-agenix-recipients (file)
-  "Return the public keys `secrets.nix' declares for FILE.
-Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
-`user-error' when FILE is inside it but nix yields no keys for it."
-  (let ((dir (expand-file-name stfl/age-agenix-secrets-dir))
-        (file (expand-file-name file)))
-    (when (file-in-directory-p file dir)
-      (let* ((name (file-relative-name (file-truename file) (file-truename dir)))
-             (attr (format "\"%s\".publicKeys"
-                           (replace-regexp-in-string "[\\\"$]" "\\\\\\&" name)))
-             (stderr (make-temp-file "age-nix-eval"))
-             status keys)
-        (unwind-protect
-            (with-temp-buffer
-              (setq status
-                    (condition-case err
-                        (call-process "nix" nil (list t stderr) nil
-                                      "eval" "--json"
-                                      "-f" (expand-file-name "secrets.nix" dir)
-                                      attr)
-                      (error (error-message-string err))))
-              (unless (eql status 0)
-                (user-error "age: no recipients for %s: %s" name
-                            (if (stringp status)
-                                status
-                              (with-temp-buffer
-                                (insert-file-contents stderr)
-                                (string-trim (buffer-string))))))
-              (setq keys (ignore-errors
-                           (json-parse-string (buffer-string) :array-type 'list))))
-          (delete-file stderr))
-        (unless (and (consp keys) (seq-every-p #'stringp keys))
-          (user-error "age: secrets.nix lists no public keys for %s" name))
-        keys))))
-
 (use-package age
   :demand t
   :custom
@@ -860,19 +822,7 @@ Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
   (age-default-recipient
    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINGSjWr1X80phoVLQDpXyn26SAPytikVdGyTK1ifYxR6 s@stfl.dev")
   :config
-  (age-file-enable)
-
-  ;; age.el reads `age-file-encrypt-to' as the recipients; `silent' keeps
-  ;; `age-select-keys' from appending them to themselves.  The buffer-local
-  ;; binding is what `let' restores, so no list survives into the next save.
-  (define-advice age-file-write-region (:around (orig start end file &rest args) stfl/agenix-recipients)
-    (if-let* ((recipients (stfl/age-agenix-recipients file)))
-        (progn
-          (make-local-variable 'age-file-encrypt-to)
-          (let ((age-file-encrypt-to recipients)
-                (age-file-select-keys 'silent))
-            (apply orig start end file args)))
-      (apply orig start end file args))))
+  (age-file-enable))
 
 ;; (use-package define-word
 ;;   :after org

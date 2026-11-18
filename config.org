@@ -1540,57 +1540,12 @@ Transparently decrypt/encrypt =.age= files (agenix secrets under
 
 Identity is the same ed25519 SSH key used by agenix ([[file:~/.config/dotfiles/secrets/secrets.nix][secrets.nix]]).
 
-Saving a file under the secrets directory encrypts it to the =publicKeys= that
-=secrets.nix= declares for it, looked up with =nix eval= on every save, so a
-host key added there applies on the next save. A secret that =secrets.nix= does
-not declare, or a failing =nix eval=, aborts the save with a =user-error=
-instead of encrypting to a partial list. Any other =.age= file is encrypted to
-=age-default-recipient=.
-
 #+begin_src elisp :tangle packages.el
 (package! age
   :recipe (:host github :repo "anticomputer/age.el"))
 #+end_src
 
 #+begin_src elisp
-(defvar stfl/age-agenix-secrets-dir "~/.config/dotfiles/secrets/"
-  "Directory of agenix secrets and the `secrets.nix' naming their recipients.")
-
-(defun stfl/age-agenix-recipients (file)
-  "Return the public keys `secrets.nix' declares for FILE.
-Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
-`user-error' when FILE is inside it but nix yields no keys for it."
-  (let ((dir (expand-file-name stfl/age-agenix-secrets-dir))
-        (file (expand-file-name file)))
-    (when (file-in-directory-p file dir)
-      (let* ((name (file-relative-name (file-truename file) (file-truename dir)))
-             (attr (format "\"%s\".publicKeys"
-                           (replace-regexp-in-string "[\\\"$]" "\\\\\\&" name)))
-             (stderr (make-temp-file "age-nix-eval"))
-             status keys)
-        (unwind-protect
-            (with-temp-buffer
-              (setq status
-                    (condition-case err
-                        (call-process "nix" nil (list t stderr) nil
-                                      "eval" "--json"
-                                      "-f" (expand-file-name "secrets.nix" dir)
-                                      attr)
-                      (error (error-message-string err))))
-              (unless (eql status 0)
-                (user-error "age: no recipients for %s: %s" name
-                            (if (stringp status)
-                                status
-                              (with-temp-buffer
-                                (insert-file-contents stderr)
-                                (string-trim (buffer-string))))))
-              (setq keys (ignore-errors
-                           (json-parse-string (buffer-string) :array-type 'list))))
-          (delete-file stderr))
-        (unless (and (consp keys) (seq-every-p #'stringp keys))
-          (user-error "age: secrets.nix lists no public keys for %s" name))
-        keys))))
-
 (use-package age
   :demand t
   :custom
@@ -1598,19 +1553,7 @@ Return nil when FILE is outside `stfl/age-agenix-secrets-dir'.  Signal
   (age-default-recipient
    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINGSjWr1X80phoVLQDpXyn26SAPytikVdGyTK1ifYxR6 s@stfl.dev")
   :config
-  (age-file-enable)
-
-  ;; age.el reads `age-file-encrypt-to' as the recipients; `silent' keeps
-  ;; `age-select-keys' from appending them to themselves.  The buffer-local
-  ;; binding is what `let' restores, so no list survives into the next save.
-  (define-advice age-file-write-region (:around (orig start end file &rest args) stfl/agenix-recipients)
-    (if-let* ((recipients (stfl/age-agenix-recipients file)))
-        (progn
-          (make-local-variable 'age-file-encrypt-to)
-          (let ((age-file-encrypt-to recipients)
-                (age-file-select-keys 'silent))
-            (apply orig start end file args)))
-      (apply orig start end file args))))
+  (age-file-enable))
 #+end_src
 
 ** Define Word
